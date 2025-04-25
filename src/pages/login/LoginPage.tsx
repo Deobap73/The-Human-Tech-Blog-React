@@ -1,6 +1,6 @@
 // The-Human-Tech-Blog-React/src/pages/login/LoginPage.tsx
 
-import './LoginPage.scss';
+import './loginPage.scss';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
