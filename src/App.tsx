@@ -6,6 +6,7 @@ import LoginPage from './pages/login/LoginPage';
 import AdminPage from './pages/AdminPage/AdminPage';
 import Navbar from './components/navbar/Navbar';
 import HomePage from './pages/HomePage';
+import RegisterPage from './pages/RegisterPage/RegisterPage';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Routes>
         <Route path='/' element={<HomePage />} />
         <Route path='/login' element={<LoginPage />} />
+        <Route path='/register' element={<RegisterPage />} />
         <Route
           path='/admin'
           element={

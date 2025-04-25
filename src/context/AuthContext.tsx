@@ -1,60 +1,35 @@
 // The-Human-Tech-Blog-React/src/context/AuthContext.tsx
 
-import { createContext, useContext, useEffect, useState } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from 'react';
+import api from '../utils/axios';
+import { AuthContext, User } from './AuthContextDef';
 
-// Define the User interface
-interface User {
-  _id: string;
-  name: string;
-  email: string;
-  avatar?: string;
-  role: 'user' | 'admin' | 'editor';
-}
-
-// Define the AuthContext type
-interface AuthContextType {
-  user: User | null;
-  loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-  refetchUser: () => Promise<void>;
-}
-
-// Create the AuthContext
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-// Create the AuthProvider component
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Function to fetch the user data
   const refetchUser = async () => {
     try {
-      const res = await axios.get('/api/auth/me', { withCredentials: true });
+      const res = await api.get('/auth/me');
       setUser(res.data.user);
-    } catch (error) {
+    } catch {
       setUser(null);
     } finally {
       setLoading(false);
     }
   };
 
-  // Load user on mount
   useEffect(() => {
     refetchUser();
   }, []);
 
-  // Login handler
   const login = async (email: string, password: string) => {
-    await axios.post('/api/auth/login', { email, password }, { withCredentials: true });
+    await api.post('/auth/login', { email, password });
     await refetchUser();
   };
 
-  // Logout handler
   const logout = async () => {
-    await axios.post('/api/auth/logout', {}, { withCredentials: true });
+    await api.post('/auth/logout');
     setUser(null);
   };
 
@@ -63,13 +38,4 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       {children}
     </AuthContext.Provider>
   );
-};
-
-// Custom hook to use the AuthContext
-export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
-  }
-  return context;
 };

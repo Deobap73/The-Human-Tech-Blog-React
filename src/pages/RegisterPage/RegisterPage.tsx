@@ -1,14 +1,22 @@
 // src/pages/RegisterPage/RegisterPage.tsx
 
 import './RegisterPage.scss';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios, { AxiosError } from 'axios';
-import { useAuth } from '../../context/AuthContext';
+import api from '@/utils/axios'; // Import your axios instance
+import { useAuth } from '@/context/AuthContext';
+import { AxiosError } from 'axios'; // Import AxiosError for type checking
+
+interface FormValues {
+  name: string;
+  email: string;
+  password: string;
+  avatar: string;
+}
 
 const RegisterPage = () => {
   const { login } = useAuth();
-  const [form, setForm] = useState({ name: '', email: '', password: '', avatar: '' });
+  const [form, setForm] = useState<FormValues>({ name: '', email: '', password: '', avatar: '' });
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -21,11 +29,10 @@ const RegisterPage = () => {
     setError('');
 
     try {
-      await axios.post('/api/auth/register', form, { withCredentials: true });
-      await login(form.email, form.password); // login automático após registro
+      await api.post('/auth/register', form);
+      await login(form.email, form.password);
       navigate('/');
     } catch (error) {
-      // Changed from err to error
       if (error instanceof AxiosError) {
         setError(error.response?.data?.message || 'Registration failed');
       } else if (error instanceof Error) {
@@ -35,6 +42,7 @@ const RegisterPage = () => {
       }
     }
   };
+
   return (
     <div className='register-container'>
       <h2>Register</h2>
