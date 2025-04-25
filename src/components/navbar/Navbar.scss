@@ -1,1 +1,33 @@
-// src/components/navbar/Navbar.scss
+// The-Human-Tech-Blog-React/src/components/navbar/Navbar.scss
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background-color: #1f2937;
+  color: white;
+
+  .logo {
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+
+    a,
+    button {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    button:hover {
+      text-decoration: underline;
+    }
+  }
+}

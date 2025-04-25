@@ -1,6 +1,7 @@
 // The-Human-Tech-Blog-React/src/main.tsx
 
 import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { AuthProvider } from './context/AuthContext';
@@ -9,7 +10,9 @@ import './global.scss'; // Global SCSS styles
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <AuthProvider>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </AuthProvider>
   </React.StrictMode>
 );
