@@ -1,1 +1,26 @@
 // src/components/authLinks/AuthLinks.scss
+.social-login {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+
+  button {
+    padding: 0.75rem;
+    border: none;
+    font-weight: bold;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .google {
+    background-color: #ea4335;
+    color: white;
+  }
+
+  .github {
+    background-color: #333;
+    color: white;
+  }
+}

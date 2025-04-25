@@ -4,7 +4,8 @@ import './loginPage.scss';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
+import AuthSocial from '../../components/authLinks/AuthLinks';
 
 const LoginPage = () => {
   const { login } = useAuth();
@@ -54,7 +55,11 @@ const LoginPage = () => {
         {error && <div className='error'>{error}</div>}
 
         <button type='submit'>Login</button>
+
+        {/* ...input fields */}
+        <button type='submit'>Login</button>
       </form>
+      <AuthSocial /> {/* 👈 botão social login */}
     </div>
   );
 };

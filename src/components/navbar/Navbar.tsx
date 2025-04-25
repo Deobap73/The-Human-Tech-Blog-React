@@ -1,7 +1,7 @@
 // The-Human-Tech-Blog-React/src/components/navbar/Navbar.tsx
 
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 import './Navbar.scss';
 
 const Navbar = () => {

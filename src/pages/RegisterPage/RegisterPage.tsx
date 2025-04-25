@@ -3,8 +3,8 @@
 import './RegisterPage.scss';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '@/utils/axios'; // Import your axios instance
-import { useAuth } from '@/context/AuthContext';
+import api from '../../utils/axios'; // Import your axios instance
+import { useAuth } from '../../hooks/useAuth';
 import { AxiosError } from 'axios'; // Import AxiosError for type checking
 
 interface FormValues {
