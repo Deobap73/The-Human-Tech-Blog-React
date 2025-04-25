@@ -76,7 +76,7 @@ src/
 1. Clone the repository
 
 ```txt
-git clone [git@github.com:Deobap73/The-Human-Tech-Blog.git](https://github.com/Deobap73/The-Human-Tech-Blog)
+git clone [git@github.com:Deobap73/The-Human-Tech-Blog.git](git@github.com:Deobap73/The-Human-Tech-Blog-React.git)
 cd The-Human-Tech-Blog
 ```
 
