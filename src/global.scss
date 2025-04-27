@@ -124,37 +124,32 @@
   --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
   /* Light Theme Defaults */
-  --light-bg: #d7e4ea;
-  --light-softBg: #fdfeff;
-  --light-primaryTextColor: #3a4a50;
-  --light-secondaryTextColor: #f2fcfa;
-  --light-cardBg: #566b73;
-  --light-primaryHover: #e9c246;
+  --light-bg: #fcfcfc;
+  --light-primaryTextColor: #23262f;
+  --light-secondaryTextColor: #393c43;
+  --light-tertiaryTextColor: #1da1f2;
+  --light-primaryHover: #1da1f2;
 
   /* Dark Theme Defaults */
-  --dark-bg: #0f172a;
-  --dark-softBg: #1f273a;
-  --dark-primaryTextColor: #f2fcfa; // Corrigido para manter consistência (TexColor)
-  --dark-secondaryTextColor: #0d0d0d;
-  --dark-cardBg: #3a4a50; // Cor diferente do light
-  --dark-primaryHover: #3a4a50; // Cor diferente do light
+  --dark-bg: #23262f;
+  --dark-primaryTextColor: #fcfcfc;
+  --dark-secondaryTextColor: #393c43;
+  --dark-tertiaryTextColor: #1da1f2;
+  --dark-primaryHover: #1da1f2;
 
   /* Default to light theme */
   --bg: var(--light-bg);
   --textColor: var(--light-primaryTextColor);
-  --softBg: var(--light-softBg);
-  --softTextColor: var(--light-softTextColor);
   --secondaryTextColor: var(--light-secondaryTextColor);
+  --tertiaryTextColor: var(--light-tertiaryTextColor);
   --primaryHover: #e9c246;
-  --cardBg: var(--light-cardBg);
 
   /* Category Colors (same for both themes) */
-  --category-style: #789cff;
-  --category-fashion: #ff7887;
-  --category-food: #7fb881;
-  --category-travel: #ff7857;
-  --category-culture: #ffb14f;
-  --category-coding: #775aec;
+  --category-agileProjects: #98a1be;
+  --category-frontendUx: #966096;
+  --category-teckCareer: #eb7853;
+  --category-teckTools: #6cdce0;
+  --category-personalReflections: #b07941;
 
   /* Card Shadows */
 
@@ -310,21 +305,19 @@ button {
 .light {
   --bg: var(--light-bg);
   --textColor: var(--light-primaryTextColor);
-  --softBg: var(--light-softBg);
   --softTextColor: var(--light-secondaryTextColor); // Adicione esta linha se necessário
   --secondaryTextColor: var(--light-secondaryTextColor);
+  --tertiaryTextColor: var(--light-tertiaryTextColor);
   --primaryHover: var(--light-primaryHover);
-  --cardBg: var(--light-cardBg);
 }
 
 .dark {
   --bg: var(--dark-bg);
   --textColor: var(--dark-primaryTextColor);
-  --softBg: var(--dark-softBg);
   --softTextColor: var(--dark-secondaryTextColor); // Adicione esta linha se necessário
   --secondaryTextColor: var(--dark-secondaryTextColor);
+  --tertiaryTextColor: var(--dark-tertiaryTextColor);
   --primaryHover: var(--dark-primaryHover);
-  --cardBg: var(--dark-cardBg);
 }
 
 /* Utility Classes */
