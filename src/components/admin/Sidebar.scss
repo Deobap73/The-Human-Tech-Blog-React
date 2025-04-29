@@ -1,0 +1,20 @@
+/*The-Human-Tech-Blog-React/src/components/admin/Sidebar.scss*/
+.admin-sidebar {
+  width: 200px;
+  background: var(--bg);
+  padding: var(--padding-base);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-base);
+  height: 100vh;
+  border-right: 1px solid #eee;
+
+  a {
+    color: var(--textColor);
+    text-decoration: none;
+
+    &.active {
+      font-weight: bold;
+    }
+  }
+}

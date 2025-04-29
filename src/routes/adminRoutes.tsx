@@ -4,6 +4,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import AdminPage from '../pages/AdminPage/AdminPage';
 import PrivateRoute from './PrivateRoute';
 import DashboardHome from '../pages/AdminPage/dashboard/DashboardHome';
+import PostsList from '../pages/AdminPage/posts/PostsList';
 
 const AdminRoutes = () => {
   return (
@@ -16,7 +17,7 @@ const AdminRoutes = () => {
           </PrivateRoute>
         }>
         <Route index element={<DashboardHome />} />
-        {/* Futuras rotas: <Route path="posts" element={<PostManager />} /> */}
+        <Route path='posts' element={<PostsList />} />
       </Route>
       <Route path='*' element={<Navigate to='/' />} />
     </Routes>

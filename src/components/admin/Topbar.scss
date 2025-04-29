@@ -1,0 +1,10 @@
+/* The-Human-Tech-Blog-React/src/components/admin/Topbar.scss*/
+.admin-topbar {
+  height: 60px;
+  background: var(--light-bg);
+  padding: var(--padding-base);
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
