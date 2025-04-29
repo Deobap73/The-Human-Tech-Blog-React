@@ -1,10 +1,12 @@
 // The-Human-Tech-Blog-React/src/pages/AdminPage/posts/PostsList.tsx
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../../../utils/axios';
 import { PostType } from '../../../types/Post';
 import './PostsList.scss';
 
 const PostsList = () => {
+  const navigate = useNavigate();
   const [posts, setPosts] = useState<PostType[]>([]);
 
   const fetchPosts = async () => {
@@ -51,6 +53,7 @@ const PostsList = () => {
               <td>{post.status}</td>
               <td>{post.author?.name}</td>
               <td>
+                <button onClick={() => navigate('/admin/posts/create')}>New Post</button>
                 <button onClick={() => alert(`TODO: Edit ${post._id}`)}>Edit</button>
                 <button onClick={() => deletePost(post._id)}>Delete</button>
               </td>

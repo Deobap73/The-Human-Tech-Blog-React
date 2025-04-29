@@ -1,0 +1,25 @@
+/* The-Human-Tech-Blog-React/src/pages/AdminPage/posts/PostForm.scss*/
+
+.post-form {
+  padding: var(--padding-base);
+  max-width: 800px;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-base);
+
+    input,
+    textarea,
+    select {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      align-self: flex-start;
+      background-color: var(--tertiaryTextColor);
+    }
+  }
+}

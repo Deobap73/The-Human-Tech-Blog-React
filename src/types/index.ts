@@ -25,9 +25,11 @@ export interface Post {
 
 export interface Category {
   _id: string;
+  name: string;
   title: string;
   slug: string;
   img?: string;
+  logo?: string;
   createdAt: string;
   updatedAt: string;
 }
