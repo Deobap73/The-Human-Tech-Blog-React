@@ -1,5 +1,4 @@
 // The-Human-Tech-Blog-React/src/pages/login/LoginPage.tsx
-
 import './loginPage.scss';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -12,23 +11,26 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
     try {
       await login(email, password);
-      navigate('/'); // Redireciona após login
+      navigate('/');
     } catch (error) {
-      // Changed 'err' to 'error'
       if (error instanceof AxiosError) {
         setError(error.response?.data?.message || 'Login failed');
       } else if (error instanceof Error) {
-        setError(error.message || 'An unexpected error occurred.');
+        setError(error.message);
       } else {
-        setError('An unexpected error occurred.');
+        setError('Unexpected error occurred');
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -43,7 +45,6 @@ const LoginPage = () => {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-
         <input
           type='password'
           placeholder='Password'
@@ -51,15 +52,12 @@ const LoginPage = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-
         {error && <div className='error'>{error}</div>}
-
-        <button type='submit'>Login</button>
-
-        {/* ...input fields */}
-        <button type='submit'>Login</button>
+        <button type='submit' disabled={loading}>
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
       </form>
-      <AuthSocial /> {/* 👈 botão social login */}
+      <AuthSocial />
     </div>
   );
 };

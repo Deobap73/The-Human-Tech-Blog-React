@@ -1,11 +1,10 @@
-// src/pages/RegisterPage/RegisterPage.tsx
-
+// The-Human-Tech-Blog-React/src/pages/RegisterPage/RegisterPage.tsx
 import './RegisterPage.scss';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../utils/axios'; // Import your axios instance
+import api from '../../utils/axios';
 import { useAuth } from '../../hooks/useAuth';
-import { AxiosError } from 'axios'; // Import AxiosError for type checking
+import { AxiosError } from 'axios';
 
 interface FormValues {
   name: string;
@@ -18,6 +17,7 @@ const RegisterPage = () => {
   const { login } = useAuth();
   const [form, setForm] = useState<FormValues>({ name: '', email: '', password: '', avatar: '' });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,7 +27,7 @@ const RegisterPage = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
+    setLoading(true);
     try {
       await api.post('/auth/register', form);
       await login(form.email, form.password);
@@ -36,10 +36,12 @@ const RegisterPage = () => {
       if (error instanceof AxiosError) {
         setError(error.response?.data?.message || 'Registration failed');
       } else if (error instanceof Error) {
-        setError(error.message || 'An unexpected error occurred.');
+        setError(error.message || 'Unexpected error occurred');
       } else {
-        setError('An unexpected error occurred.');
+        setError('Unexpected error occurred');
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -79,7 +81,9 @@ const RegisterPage = () => {
           onChange={handleChange}
         />
         {error && <div className='error'>{error}</div>}
-        <button type='submit'>Create Account</button>
+        <button type='submit' disabled={loading}>
+          {loading ? 'Creating account...' : 'Create Account'}
+        </button>
       </form>
     </div>
   );

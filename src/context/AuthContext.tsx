@@ -11,8 +11,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const refetchUser = async () => {
     try {
       const res = await api.get('/auth/me');
+      console.log('[GET /me response]', res.data);
       setUser(res.data.user);
     } catch {
+      console.warn('[AuthContext] User not authenticated');
       setUser(null);
     } finally {
       setLoading(false);
