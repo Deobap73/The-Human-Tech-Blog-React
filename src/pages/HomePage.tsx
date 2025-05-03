@@ -13,6 +13,7 @@ import { Sponsors } from '../components/sponsors/Sponsors';
 import { MyFavoritePost } from '../components/myFavoritePost/MyFavoritePost';
 import { Post } from '../types/Post';
 
+// mockpost de exemplo para fase de programação
 const mockPosts: Post[] = [
   {
     id: 1,
@@ -118,7 +119,7 @@ const mockPosts: Post[] = [
 ];
 
 export const HomePage = () => {
-  // Filtrar apenas posts publicados para exibição na página inicial
+  // Filtrar apenas posts publicados para exibição na página inicial exemplos para fase de programação
   const publishedPosts = mockPosts.filter((post) => post.status === 'published');
 
   return (
@@ -135,13 +136,13 @@ export const HomePage = () => {
 
         <Sponsors />
 
-        {/* <MenuPosts
-            title='Most Popular Posts'
-            posts={publishedPosts
+        {/*     <MenuPosts
+          title='Most Popular Posts'
+          posts={publishedPosts
             .slice()
             .sort((a, b) => b.views - a.views)
             .slice(0, 3)}
-            /> */}
+        /> */}
 
         <MyFavoritePost post={publishedPosts[3]} />
       </div>
