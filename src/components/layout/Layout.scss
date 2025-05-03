@@ -1,1 +1,10 @@
-// src/components/layout/Layout.scss
+/* The-Human-Tech-Blog-React\src\components\layout\Layout.scss */
+
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg);
+  color: var(--textColor);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}

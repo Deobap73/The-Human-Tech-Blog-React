@@ -1,1 +1,9 @@
 /* The-Human-Tech-Blog-React/src/pages/HomePage.scss */
+
+.homeContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+  padding: var(--padding-lg) var(--padding-xl);
+  margin: 0 var(--margin-5);
+}

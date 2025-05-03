@@ -1,0 +1,10 @@
+/* The-Human-Tech-Blog-React\src\components\recentPosts\RecentPosts.scss*/
+
+.recentPosts {
+  display: flex;
+  justify-content: space-between;
+  max-height: 25rem;
+  gap: var(--gap-md);
+  margin: var(--margin-10) 0;
+  padding: var(--padding-md);
+}

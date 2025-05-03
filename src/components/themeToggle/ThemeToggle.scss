@@ -1,1 +1,55 @@
-// src/components/ThemeToggle.scss
+/* The-Human-Tech-Blog-React\src\components\themeToggle\ThemeToggle.scss */
+
+.theme-toggle {
+  width: 42px;
+  height: 22px;
+  border-radius: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  padding: 0 4px;
+  border: none;
+  background-color: var(--toggle-bg);
+  /* transition: background-color 0.3s ease; */
+  overflow: hidden;
+
+  &__icon {
+    width: 14px;
+    height: 14px;
+    z-index: 1;
+    transition: opacity 0.3s ease;
+  }
+
+  &__ball {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    position: absolute;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2;
+
+    &--dark {
+      left: 2px;
+      background-color: var(--toggle-ball-light);
+      transform: translateX(0);
+    }
+
+    &--light {
+      left: 2px;
+      background-color: var(--toggle-ball-light);
+      transform: translateX(20px);
+    }
+  }
+
+  &:focus {
+    outline: 2px solid var(--secondaryTexColor);
+    outline-offset: 2px;
+  }
+
+  &:hover {
+    background-color: var(--toggle-bg);
+    opacity: 0.9;
+  }
+}

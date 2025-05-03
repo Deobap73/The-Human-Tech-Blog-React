@@ -44,6 +44,10 @@ export interface Comment {
 }
 
 export type Theme = 'light' | 'dark';
+export type ThemeContextType = {
+  theme: Theme;
+  toggleTheme: () => void;
+};
 
 export interface ThemeColors {
   bg: string;

@@ -1,0 +1,40 @@
+/* https://github.com/Deobap73/The-Human-Tech-Blog-React/blob/main/src/components/sponsors/Sponsors.scss */
+
+.sponsors {
+  background: var(--bg);
+  padding: var(--padding-md);
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+  margin-bottom: var(--spacing-md);
+
+  .title {
+    font-size: var(--font-size-2b);
+    margin-bottom: var(--margin-md);
+    color: var(--tertiaryTextColor);
+  }
+
+  .sponsorsList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-md);
+
+    .sponsorItem {
+      display: flex;
+      align-items: center;
+      gap: var(--gap-md);
+      padding: var(--padding-xs) 0;
+
+      .sponsorLogo {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .sponsorName {
+        font-size: var(--font-size-1s);
+        color: var(--secondaryTextColor);
+      }
+    }
+  }
+}

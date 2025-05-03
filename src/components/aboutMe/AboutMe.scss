@@ -1,0 +1,89 @@
+/* The-Human-Tech-Blog-React\src\components\aboutMe\AboutMe.scss */
+
+.aboutMeHome {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 20rem;
+  margin: 0 var(--margin-10);
+
+  &__yearsExperience {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-around;
+    width: 15rem;
+    height: 8rem;
+    border-left: 4px solid var(--primaryHover);
+    border-right: 4px solid var(--primaryHover);
+    background-image: linear-gradient(
+        to right,
+        var(--primaryHover) 15%,
+        transparent 15%,
+        transparent 85%,
+        var(--primaryHover) 85%
+      ),
+      /* Borda superior */
+        linear-gradient(
+          to right,
+          var(--primaryHover) 15%,
+          transparent 15%,
+          transparent 85%,
+          var(--primaryHover) 85%
+        ); /* Borda inferior */
+    background-repeat: no-repeat, no-repeat;
+    background-position: top, bottom;
+    background-size: 100% 4px, 100% 4px;
+
+    &__number {
+      font-size: 5rem;
+      color: var(--primaryHover);
+    }
+
+    &__text {
+      width: 5rem;
+    }
+  }
+
+  &__slogan {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    width: 20rem;
+    height: 12rem;
+
+    &__title {
+      font-weight: 300;
+      margin-bottom: var(--margin-4xs);
+    }
+
+    &__sloganText {
+      font-size: 2rem;
+      font-weight: bold;
+    }
+  }
+
+  &__myStorie {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    width: 25rem;
+    height: 12rem;
+
+    &__description {
+      font-size: 1rem;
+      margin-bottom: var(--margin-1b);
+    }
+
+    &__buttonAboutPage {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 14rem;
+      border-radius: 2rem;
+    }
+  }
+}

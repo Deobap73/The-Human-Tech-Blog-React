@@ -1,0 +1,94 @@
+/* The-Human-Tech-Blog-React\src\components\lastPost\LastPost.scss */
+.lastPost {
+  background: var(--bg);
+  padding: var(--padding-lg);
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+  margin-bottom: var(--spacing-lg);
+
+  .title {
+    font-size: var(--font-size-3b);
+    margin-bottom: var(--margin-lg);
+    color: var(--tertiaryTextColor);
+    text-align: center;
+  }
+
+  .content {
+    display: flex;
+    gap: var(--gap-lg);
+    align-items: center;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+    }
+
+    .postImage {
+      width: 50%;
+      height: auto;
+      border-radius: 8px;
+      object-fit: cover;
+
+      @media (max-width: 768px) {
+        width: 100%;
+      }
+    }
+
+    .details {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap-md);
+
+      @media (max-width: 768px) {
+        width: 100%;
+      }
+
+      .category {
+        display: flex;
+        align-items: center;
+        gap: var(--gap-xs);
+        margin-bottom: var(--margin-xs);
+
+        .categoryLogo {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+        }
+
+        .categoryName {
+          font-size: var(--font-size-1s);
+          color: var(--secondaryTextColor);
+          text-transform: capitalize;
+        }
+      }
+
+      .postTitle {
+        font-size: var(--font-size-2b);
+        color: var(--textColor);
+        margin-bottom: var(--margin-xs);
+      }
+
+      .excerpt {
+        font-size: var(--font-size-1s);
+        color: var(--secondaryTextColor);
+        line-height: 1.6;
+        margin-bottom: var(--margin-md);
+      }
+
+      .readMore {
+        align-self: flex-start;
+        background-color: var(--tertiaryTextColor);
+        color: white;
+        padding: var(--padding-xs) var(--padding-md);
+        border-radius: 20px;
+        font-size: var(--font-size-1s);
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: var(--primaryHover);
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+}

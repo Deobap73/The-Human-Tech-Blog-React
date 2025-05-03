@@ -1,0 +1,54 @@
+/* The-Human-Tech-Blog-React\src\components\myFavoritePost\MyFavoritePost.scss */
+
+.favoritePost {
+  background: var(--bg);
+  padding: var(--padding-md);
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+  margin-bottom: var(--spacing-md);
+
+  .title {
+    font-size: var(--font-size-2b);
+    margin-bottom: var(--margin-md);
+    color: var(--tertiaryTextColor);
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-md);
+
+    .postImage {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .postTitle {
+      font-size: var(--font-size-1b);
+      color: var(--textColor);
+    }
+
+    .excerpt {
+      font-size: var(--font-size-1s);
+      color: var(--secondaryTextColor);
+      line-height: 1.4;
+    }
+
+    .readMore {
+      align-self: flex-start;
+      background-color: var(--tertiaryTextColor);
+      color: white;
+      padding: var(--padding-xs) var(--padding-md);
+      border-radius: 20px;
+      font-size: var(--font-size-1s);
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: var(--primaryHover);
+        transform: translateY(-2px);
+      }
+    }
+  }
+}

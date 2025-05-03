@@ -1,1 +1,56 @@
-// src/components/card/Card.scss
+/* The-Human-Tech-Blog-React\src\components\card\Card.scss */
+
+.cardPost {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 18.75rem;
+  height: 25rem;
+  overflow: hidden;
+  background: var(--bg);
+  border-radius: 8px;
+
+  &__image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25rem;
+    object-fit: fill;
+    z-index: 0;
+  }
+
+  &__descriptionContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 25rem;
+    padding: var(--padding-1b);
+
+    &__category {
+      width: 4.2rem;
+      font-weight: bold;
+      background-color: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(3px);
+      display: inline-block;
+      border-radius: 0.3rem;
+    }
+
+    &__textContainer {
+      &__excerpt {
+        background-color: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(3px);
+        border-radius: 0.3rem;
+        display: inline-block;
+      }
+      &__readMore {
+        margin-top: 2rem;
+      }
+    }
+  }
+}

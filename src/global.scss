@@ -1,4 +1,6 @@
-/* src/global.scss */
+/* The-Human-Tech-Blog-React\src\global.scss */
+
+/* Font and Base Style Setup */
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -8,16 +10,11 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* Typography */
-  --font-size-xxl: 76px;
-  --font-size-xl: 40px;
-  --font-size-lg: 20px;
-
-  /* Text Styles */
+  /* Text Settings */
   --text-uppercase: uppercase;
   --letter-spacing-small: 0.5px;
 
-  /* font sizes */
+  /* Typography */
   --font-size-xs: 0.25rem; /*  4px */
   --font-size-1xs: 0.313rem; /*  5px */
   --font-size-2xs: 0.625rem; /* 10px */
@@ -52,9 +49,9 @@
   --gap-2b: 1.25rem; /* 20px */
   --gap-3b: 1.375rem; /* 22px */
   --gap-4b: 1.5rem; /* 24px */
-  --gap-4b: 1.625rem; /* 26px */
-  --gap-5b: 1.75rem; /* 28px */
-  --gap-6b: 1.875rem; /* 30px */
+  --gap-5b: 1.625rem; /* 26px */
+  --gap-6b: 1.75rem; /* 28px */
+  --gap-7b: 1.875rem; /* 30px */
   --gap-m: 2rem; /* 32px */
   --gap-2m: 2.25rem; /* 36px */
   --gap-3m: 2.5rem; /* 40px */
@@ -77,9 +74,9 @@
   --padding-2b: 1.25rem; /* 20px */
   --padding-3b: 1.375rem; /* 22px */
   --padding-4b: 1.5rem; /* 24px */
-  --padding-4b: 1.625rem; /* 26px */
-  --padding-5b: 1.75rem; /* 28px */
-  --padding-6b: 1.875rem; /* 30px */
+  --padding-5b: 1.625rem; /* 26px */
+  --padding-6b: 1.75rem; /* 28px */
+  --padding-7b: 1.875rem; /* 30px */
   --padding-m: 2rem; /* 32px */
   --padding-2m: 2.25rem; /* 36px */
   --padding-3m: 2.5rem; /* 40px */
@@ -102,9 +99,9 @@
   --margin-2b: 1.25rem; /* 20px */
   --margin-3b: 1.375rem; /* 22px */
   --margin-4b: 1.5rem; /* 24px */
-  --margin-4b: 1.625rem; /* 26px */
-  --margin-5b: 1.75rem; /* 28px */
-  --margin-6b: 1.875rem; /* 30px */
+  --margin-5b: 1.625rem; /* 26px */
+  --margin-6b: 1.75rem; /* 28px */
+  --margin-7b: 1.875rem; /* 30px */
   --margin-m: 2rem; /* 32px */
   --margin-2m: 2.25rem; /* 36px */
   --margin-3m: 2.5rem; /* 40px */
@@ -114,127 +111,100 @@
   --margin-2xl: 4.75rem; /* 76px */
   --margin-xxl: 5rem; /* 80px */
 
-  /* Spacing */
-  --spacing-xxl: 60px;
-  --spacing-xl: 50px;
-  --spacing-lg: 30px;
-  --spacing-md: 20px;
+  /* Percentage margin*/
+  --margin-5: 5%;
+  --margin-10: 10%;
+  --margin-15: 15%;
+  --margin-20: 20%;
+  --margin-25: 25%;
+  --margin-30: 30%;
+  --margin-35: 35%;
+  --margin-40: 40%;
+  --margin-45: 45%;
+  --margin-50: 50%;
 
-  /* Effects */
+  /* Layout */
+  --layout-max-width: 1536px;
+  --layout-padding-x: 80px;
+  --layout-padding-y: 0;
+
+  /* Breakpoints */
+  --breakpoint-xs: 475px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-xxl: 1536px;
+
+  /* Shadows */
   --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
-  /* Light Theme Defaults */
-  --light-bg: #fcfcfc;
-  --light-primaryTextColor: #23262f;
-  --light-secondaryTextColor: #393c43;
-  --light-tertiaryTextColor: #1da1f2;
-  --light-primaryHover: #1da1f2;
+  /* Theme Toggle */
+  --toggle-bg: #3a4a50;
+  --toggle-ball-light: white;
+  --toggle-ball-dark: #3a4a50;
 
-  /* Dark Theme Defaults */
-  --dark-bg: #23262f;
-  --dark-primaryTextColor: #fcfcfc;
-  --dark-secondaryTextColor: #393c43;
-  --dark-tertiaryTextColor: #1da1f2;
-  --dark-primaryHover: #1da1f2;
+  /* Default Theme (Light) */
+  --bg: #fcfcfc;
+  --textColor: #23262f;
+  --secondaryTextColor: #393c43;
+  --tertiaryTextColor: #1da1f2;
+  --primaryHover: #1da1f2;
 
-  /* Default to light theme */
-  --bg: var(--light-bg);
-  --textColor: var(--light-primaryTextColor);
-  --secondaryTextColor: var(--light-secondaryTextColor);
-  --tertiaryTextColor: var(--light-tertiaryTextColor);
-  --primaryHover: #e9c246;
-
-  /* Category Colors (same for both themes) */
+  /* Category Colors */
   --category-agileProjects: #98a1be;
   --category-frontendUx: #966096;
   --category-teckCareer: #eb7853;
   --category-teckTools: #6cdce0;
   --category-personalReflections: #b07941;
 
-  /* Card Shadows */
-
-  /* Layout Variables */
-  --layout-max-width: 1536px;
-  --layout-padding-x: 80px;
-  --layout-padding-y: 0;
-
-  /* Breakpoint Variables */
-  --breakpoint-xxl: 1536px;
-  --breakpoint-xl: 1280px;
-  --breakpoint-lg: 1024px;
-  --breakpoint-md: 768px;
-  --breakpoint-sm: 640px;
-  --breakpoint-xs: 475px;
-
-  /* Menu Specific Variables */
-  --menu-gap: 40px;
-  --menu-section-gap: 20px;
-  --menu-title-size: 28px;
-  --menu-subtitle-size: 16px;
-
-  /* Navbar Specific */
-  --navbar-height: 100px;
-  --navbar-z-index: 1000;
-  --navbar-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-  /* Theme Toggle Colors */
-  --toggle-bg: #3a4a50; /* Dark mode background */
-  --toggle-ball-light: white;
-  --toggle-ball-dark: #3a4a50;
-
-  /* Blog Page Specific */
-  --blog-page-gap: 50px;
-
-  /* Social Login Colors */
-  --google-red: #566b73;
-  --github-black: #24292e;
-  --facebook-blue: #1877f2;
-
-  /* Login Page Specific */
-  --login-card-padding: 4rem 6rem;
-  --login-card-padding-md: 3rem 4rem;
-  --login-card-padding-sm: 2rem;
-
-  /* Single Post Specific */
-  --post-title-size: 4rem;
-  --post-body-size: 1.25rem;
-  --post-spacing: 3rem;
-
-  /* Editor Colors */
+  /* Utility */
   --successColor: #1a8917;
   --successHover: #1a9c17;
+
+  /* Editor */
   --editor-bg: var(--bg);
   --editor-text: var(--textColor);
   --editor-border: var(--borderColor);
 
-  /* Quill Editor Overrides */
-  .ql-toolbar.ql-bubble {
-    border: none !important;
-    background: var(--softBg) !important;
-    border-radius: 4px !important;
-  }
-
-  .ql-bubble .ql-stroke {
-    stroke: var(--textColor) !important;
-  }
-
-  .ql-bubble .ql-fill {
-    fill: var(--textColor) !important;
-  }
-
+  /* Page-Specific */
+  --blog-page-gap: 50px;
   --home-content-gap: 3rem;
+  --post-title-size: 4rem;
+  --post-body-size: 1.25rem;
+  --post-spacing: 3rem;
+
+  /* Login */
+  --login-card-padding: 4rem 6rem;
+  --login-card-padding-md: 3rem 4rem;
+  --login-card-padding-sm: 2rem;
+
+  /* Social Colors */
+  --google-red: #566b73;
+  --github-black: #24292e;
+  --facebook-blue: #1877f2;
 }
 
+/* Dark Mode Variables (Auto-Detected) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #23262f;
+    --textColor: #fcfcfc;
+    --secondaryTextColor: #393c43;
+    --tertiaryTextColor: #1da1f2;
+    --primaryHover: #1da1f2;
+    color-scheme: dark;
+  }
+}
+
+/* Element Reset */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Body */
-
 body {
-  margin: 0;
   min-width: 320px;
   min-height: 100vh;
   background-color: var(--bg);
@@ -242,22 +212,13 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-@font-face {
-  font-family: 'Arial';
-  src: url('./Fonts/ARIAL.TTF') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-}
-
 a {
   font-weight: 500;
-  color: var(--secondaryTexColor);
+  color: var(--secondaryTextColor);
   text-decoration: none;
-  transition: color 0.2s ease;
 
   &:hover {
-    color: #21b3e7;
-    text-decoration: none;
+    background-color: var(--primaryHover);
   }
 }
 
@@ -268,7 +229,6 @@ h4,
 h5,
 h6 {
   color: var(--textColor);
-  margin-top: 0;
   line-height: 1.2;
 }
 
@@ -279,8 +239,8 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: var(--secondaryTexColor);
-  color: white;
+  background-color: var(--primaryHover);
+  color: var(--secondaryTextColor);
   cursor: pointer;
   transition: all 0.25s ease;
 
@@ -291,7 +251,7 @@ button {
 
   &:focus,
   &:focus-visible {
-    outline: 4px auto var(--secondaryTexColor);
+    outline: 4px auto var(--secondaryTextColor);
   }
 
   &:disabled {
@@ -299,25 +259,6 @@ button {
     color: var(--softTextColor);
     cursor: not-allowed;
   }
-}
-
-/* Theme Classes */
-.light {
-  --bg: var(--light-bg);
-  --textColor: var(--light-primaryTextColor);
-  --softTextColor: var(--light-secondaryTextColor); // Adicione esta linha se necessário
-  --secondaryTextColor: var(--light-secondaryTextColor);
-  --tertiaryTextColor: var(--light-tertiaryTextColor);
-  --primaryHover: var(--light-primaryHover);
-}
-
-.dark {
-  --bg: var(--dark-bg);
-  --textColor: var(--dark-primaryTextColor);
-  --softTextColor: var(--dark-secondaryTextColor); // Adicione esta linha se necessário
-  --secondaryTextColor: var(--dark-secondaryTextColor);
-  --tertiaryTextColor: var(--dark-tertiaryTextColor);
-  --primaryHover: var(--dark-primaryHover);
 }
 
 /* Utility Classes */
@@ -344,27 +285,17 @@ button {
   }
 }
 
-/* Responsive Media Queries */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --font-size-xxl: 48px;
-    --font-size-xl: 32px;
-    color-scheme: dark;
-  }
-}
-
+/* Responsive Layout Adjustments */
 @media screen and (max-width: 1536px) {
   :root {
     --layout-max-width: 1366px;
   }
 }
-
 @media screen and (max-width: 1280px) {
   :root {
     --layout-max-width: 1024px;
   }
 }
-
 @media screen and (max-width: 1024px) {
   :root {
     --layout-max-width: 768px;
@@ -376,12 +307,9 @@ button {
     --home-content-gap: 2rem;
   }
 }
-
 @media screen and (max-width: 768px) {
   :root {
     --layout-max-width: 640px;
-    --font-size-xxl: 48px;
-    --font-size-xl: 32px;
     --login-card-padding: var(--login-card-padding-md);
     --post-title-size: 2.25rem;
   }
@@ -389,12 +317,10 @@ button {
     padding: 0 1rem;
   }
 }
-
 @media screen and (max-width: 640px) {
   :root {
     --layout-max-width: 475px;
     --layout-padding-x: 20px;
-    --font-size-xxl: 36px;
     --login-card-padding: var(--login-card-padding-sm);
     --post-title-size: 1.8rem;
     --post-body-size: 1rem;
