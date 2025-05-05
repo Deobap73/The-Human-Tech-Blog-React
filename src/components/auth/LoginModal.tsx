@@ -25,6 +25,10 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
     }
   };
 
+  if (showRegister) {
+    return <RegisterModal onClose={onClose} />;
+  }
+
   const handleOAuthLogin = (provider: 'google' | 'github') => {
     window.open(`${import.meta.env.VITE_API_BASE_URL}/auth/${provider}`, '_self');
   };

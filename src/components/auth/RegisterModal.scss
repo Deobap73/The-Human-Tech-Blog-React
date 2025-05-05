@@ -17,6 +17,10 @@
   border-radius: 8px;
   width: 90%;
   max-width: 400px;
+  border-radius: var(--br-xl);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.386), #14181b5e);
+  -webkit-backdrop-filter: blur(25px);
+  backdrop-filter: blur(5px);
 
   &__close {
     background: none;

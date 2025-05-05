@@ -4,6 +4,7 @@ import './RegisterModal.scss';
 import { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { LoginModal } from './LoginModal';
 
 export const RegisterModal = ({ onClose }: { onClose: () => void }) => {
   const { login } = useAuth();
@@ -13,6 +14,7 @@ export const RegisterModal = ({ onClose }: { onClose: () => void }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [showLogin, setShowLogin] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,6 +34,10 @@ export const RegisterModal = ({ onClose }: { onClose: () => void }) => {
       setError('Registration failed');
     }
   };
+
+  if (showLogin) {
+    return <LoginModal onClose={onClose} />;
+  }
 
   return (
     <div className='modal-overlay'>
@@ -70,6 +76,17 @@ export const RegisterModal = ({ onClose }: { onClose: () => void }) => {
             Create Account
           </button>
         </form>
+        <p className='modal__footer'>
+          Already have an account?{' '}
+          <button
+            type='button'
+            onClick={() => {
+              setShowLogin(true);
+            }}
+            className='modal__link'>
+            Login here
+          </button>
+        </p>
       </div>
     </div>
   );
