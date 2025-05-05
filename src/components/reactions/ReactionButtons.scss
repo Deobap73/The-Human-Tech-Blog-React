@@ -1,0 +1,49 @@
+/* The-Human-Tech-Blog-React/src/components/reactions/ReactionButtons.scss */
+
+.reactions {
+  display: flex;
+  gap: var(--gap-base);
+  margin-top: var(--margin-base);
+
+  &__btn {
+    padding: 0.4rem 1rem;
+    border: 1px solid var(--secondaryTextColor);
+    border-radius: 4px;
+    background-color: transparent;
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover {
+      background-color: var(--primaryHover);
+      color: #fff;
+    }
+
+    &.active {
+      background-color: var(--successColor);
+      color: #fff;
+    }
+
+    &--like {
+      /* optional custom style */
+    }
+    &--love {
+      /* optional custom style */
+    }
+    &--funny {
+      /* optional custom style */
+    }
+    &--sad {
+      /* optional custom style */
+    }
+    &--angry {
+      /* optional custom style */
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .reactions {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
