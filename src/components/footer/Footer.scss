@@ -1,120 +1,118 @@
-/* The-Human-Tech-Blog-React\src\components\footer\Footer.scss */
+/* The-Human-Tech-Blog-React/src/components/footer/Footer.scss */
 
 .footer {
   background-color: var(--dark-bg);
   color: var(--dark-primaryTextColor);
-  padding: var(--padding-xl) 0 var(--padding-md);
+  padding: var(--padding-xl) 0 var(--padding-m);
 
-  .container {
+  &__container {
     max-width: var(--layout-max-width);
     margin: 0 auto;
     padding: 0 var(--padding-xl);
 
     @media (max-width: 768px) {
-      padding: 0 var(--padding-md);
+      padding: 0 var(--padding-m);
     }
   }
 
-  .footerContent {
+  &__content {
     display: flex;
     justify-content: space-between;
     margin-bottom: var(--margin-xl);
-    gap: var(--gap-lg);
+    gap: var(--gap-l);
 
     @media (max-width: 768px) {
       flex-direction: column;
       gap: var(--gap-xl);
     }
+  }
 
-    .left {
-      flex: 1;
+  &__left {
+    flex: 1;
+  }
 
-      .logo {
-        display: flex;
-        align-items: center;
-        gap: var(--gap-md);
-        margin-bottom: var(--margin-md);
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-m);
+    margin-bottom: var(--margin-m);
 
-        .logoImage {
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-        }
+    &-image {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
 
-        .logoText {
-          font-size: var(--font-size-1b);
-          font-weight: bold;
-        }
-      }
+    &-text {
+      font-size: var(--font-size-1b);
+      font-weight: bold;
+    }
+  }
 
-      .description {
-        font-size: var(--font-size-1s);
-        line-height: 1.6;
-        color: rgba(255, 255, 255, 0.7);
+  &__description {
+    font-size: var(--font-size-1s);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  &__right {
+    flex: 1;
+    display: flex;
+    justify-content: space-around;
+    gap: var(--gap-xl);
+
+    @media (max-width: 480px) {
+      flex-direction: column;
+      gap: var(--gap-l);
+    }
+  }
+
+  &__links,
+  &__social {
+    .footer__title {
+      font-size: var(--font-size-1b);
+      margin-bottom: var(--margin-m);
+      color: white;
+    }
+
+    .footer__list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap-m);
+    }
+
+    .footer__item a {
+      color: rgba(255, 255, 255, 0.7);
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: white;
       }
     }
 
-    .right {
-      flex: 1;
+    .footer__icons {
       display: flex;
-      justify-content: space-around;
-      gap: var(--gap-xl);
+      gap: var(--gap-m);
+    }
 
-      @media (max-width: 480px) {
-        flex-direction: column;
-        gap: var(--gap-lg);
-      }
+    .footer__icon {
+      color: rgba(255, 255, 255, 0.7);
+      transition: color 0.3s ease;
 
-      .links,
-      .social {
-        .title {
-          font-size: var(--font-size-1b);
-          margin-bottom: var(--margin-md);
-          color: white;
-        }
-
-        .list {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-          display: flex;
-          flex-direction: column;
-          gap: var(--gap-md);
-
-          .item {
-            a {
-              color: rgba(255, 255, 255, 0.7);
-              transition: color 0.3s ease;
-
-              &:hover {
-                color: white;
-              }
-            }
-          }
-        }
-
-        .icons {
-          display: flex;
-          gap: var(--gap-md);
-
-          .icon {
-            color: rgba(255, 255, 255, 0.7);
-            transition: color 0.3s ease;
-
-            &:hover {
-              color: white;
-            }
-          }
-        }
+      &:hover {
+        color: white;
       }
     }
   }
 
-  .copyright {
+  &__copyright {
     text-align: center;
     font-size: var(--font-size-s);
     color: rgba(255, 255, 255, 0.5);
-    padding-top: var(--padding-md);
+    padding-top: var(--padding-m);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
 }

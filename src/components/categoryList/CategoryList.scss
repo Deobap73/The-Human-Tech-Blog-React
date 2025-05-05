@@ -1,1 +1,28 @@
-// src/components/categoryList/CategoryList.scss
+/* The-Human-Tech-Blog-React/src/components/categoryList/CategoryList.scss */
+
+.category-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-base);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  &__item {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    font-size: var(--font-size-1s);
+    transition: transform 0.2s;
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
+}

@@ -1,61 +1,58 @@
-// The-Human-Tech-Blog-React\src\components\footer\Footer.tsx
+// The-Human-Tech-Blog-React/src/components/footer/Footer.tsx
 
 import './Footer.scss';
+import logo from '../../assets/theHumanTechBlogLogo.webp';
 
 export const Footer = () => {
   return (
     <footer className='footer'>
-      <div className='container'>
-        <div className='footerContent'>
-          <div className='left'>
-            <div className='logo'>
-              <img
-                src='/src/assets/theHumanTechBlogLogo.webp'
-                alt='The Human Tech Blog'
-                className='logoImage'
-              />
-              <span className='logoText'>The Human Tech Blog</span>
+      <div className='footer__container'>
+        <div className='footer__content'>
+          <div className='footer__left'>
+            <div className='footer__logo'>
+              <img src={logo} alt='The Human Tech Blog' className='footer__logo-image' />
+              <span className='footer__logo-text'>The Human Tech Blog</span>
             </div>
-            <p className='description'>
+            <p className='footer__description'>
               Exploring the human side of technology through stories, reflections, and insights from
               the tech world.
             </p>
           </div>
-          <div className='right'>
-            <div className='links'>
-              <h4 className='title'>Quick Links</h4>
-              <ul className='list'>
-                <li className='item'>
+          <div className='footer__right'>
+            <div className='footer__links'>
+              <h4 className='footer__title'>Quick Links</h4>
+              <ul className='footer__list'>
+                <li className='footer__item'>
                   <a href='/'>Home</a>
                 </li>
-                <li className='item'>
+                <li className='footer__item'>
                   <a href='/about'>About</a>
                 </li>
-                <li className='item'>
+                <li className='footer__item'>
                   <a href='/blog'>Blog</a>
                 </li>
-                <li className='item'>
+                <li className='footer__item'>
                   <a href='/contact'>Contact</a>
                 </li>
               </ul>
             </div>
-            <div className='social'>
-              <h4 className='title'>Follow Us</h4>
-              <div className='icons'>
-                <a href='#' className='icon'>
+            <div className='footer__social'>
+              <h4 className='footer__title'>Follow Us</h4>
+              <div className='footer__icons'>
+                <a href='#' className='footer__icon'>
                   Twitter
                 </a>
-                <a href='#' className='icon'>
+                <a href='#' className='footer__icon'>
                   LinkedIn
                 </a>
-                <a href='#' className='icon'>
+                <a href='#' className='footer__icon'>
                   GitHub
                 </a>
               </div>
             </div>
           </div>
         </div>
-        <div className='copyright'>
+        <div className='footer__copyright'>
           © {new Date().getFullYear()} The Human Tech Blog. All rights reserved.
         </div>
       </div>
