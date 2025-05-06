@@ -1,9 +1,9 @@
 // The-Human-Tech-Blog-React/src/types/Post.ts
 
 export interface Post {
-  id: number;
+  _id: string;
   title: string;
-  excerpt: string;
+  description: string;
   image: string;
   category: string;
   createdAt: Date;
@@ -14,4 +14,10 @@ export interface Post {
   author?: {
     name: string;
   };
+  slug: string;
+  categories: {
+    name: string;
+    slug: string;
+    logo: string;
+  }[];
 }

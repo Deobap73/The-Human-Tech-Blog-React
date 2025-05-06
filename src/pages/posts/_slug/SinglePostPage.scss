@@ -1,1 +1,53 @@
-// src/pages/posts/slug/SinglePostPage.scss
+/* The-Human-Tech-Blog-React/src/pages/posts/_slug/SinglePostPage.scss */
+
+.single-post {
+  max-width: var(--layout-max-width);
+  margin: var(--margin-3m) auto;
+  padding: 0 var(--padding-xl);
+  color: var(--textColor);
+
+  &__title {
+    font-size: var(--post-title-size);
+    font-weight: bold;
+    margin-bottom: var(--margin-base);
+    text-align: center;
+  }
+
+  &__image {
+    width: 100%;
+    height: auto;
+    margin-bottom: var(--margin-2b);
+    border-radius: 8px;
+  }
+
+  &__excerpt {
+    font-size: var(--post-body-size);
+    line-height: 1.8;
+    margin-bottom: var(--margin-2b);
+  }
+
+  button.bookmark-button {
+    float: right;
+    margin-top: -3rem;
+    margin-right: var(--margin-base);
+    position: relative;
+    z-index: 2;
+  }
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .single-post {
+    padding: 0 var(--padding-base);
+
+    &__title {
+      font-size: var(--font-size-2b);
+    }
+
+    button.bookmark-button {
+      float: none;
+      display: block;
+      margin: var(--margin-base) auto var(--margin-base) 0;
+    }
+  }
+}

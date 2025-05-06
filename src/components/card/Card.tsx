@@ -2,23 +2,38 @@
 
 import './Card.scss';
 import { Post } from '../../types/Post';
+import { BookmarkButton } from '../bookmarks/BookmarkButton';
+import { Link } from 'react-router-dom';
+import { isValidPost } from '../../utils/validation';
 
-// CardProps receives a Post object for rendering preview content
 type CardProps = {
-  post: Post;
+  post?: Post;
 };
 
 export const Card = ({ post }: CardProps) => {
-  const excerpt = post.excerpt.length > 60 ? `${post.excerpt.substring(0, 60)}...` : post.excerpt;
+  if (!post || !isValidPost(post)) return null;
 
   return (
-    <div className='card'>
-      <img src={post.image} alt={post.title} className='card__image' />
-      <div className='card__body'>
-        <span className='card__category'>{post.category}</span>
-        <div className='card__text'>
-          <p className='card__excerpt'>{excerpt}</p>
-          <button className='card__read-more'>Read More</button>
+    <div className='cardPost'>
+      <img src={post.image} alt={post.title} className='cardPost__image' />
+      <div className='cardPost__descriptionContainer'>
+        <span className='cardPost__descriptionContainer__category'>
+          {post.categories?.[0]?.name}
+        </span>
+        <div className='cardPost__descriptionContainer__textContainer'>
+          <p className='cardPost__descriptionContainer__textContainer__description'>
+            {post.description.length > 60
+              ? post.description.substring(0, 60) + '...'
+              : post.description}
+          </p>
+          <div>
+            <Link to={`/posts/${post.slug}`}>
+              <button className='cardPost__descriptionContainer__textContainer__readMore'>
+                Read More
+              </button>
+            </Link>
+            <BookmarkButton postId={post._id} />
+          </div>
         </div>
       </div>
     </div>

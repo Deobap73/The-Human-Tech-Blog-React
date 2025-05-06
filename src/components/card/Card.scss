@@ -1,6 +1,6 @@
 /* The-Human-Tech-Blog-React/src/components/card/Card.scss */
 
-.card {
+.cardPost {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -21,7 +21,7 @@
     z-index: 0;
   }
 
-  &__body {
+  &__descriptionContainer {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -29,40 +29,39 @@
     height: 100%;
     padding: var(--padding-1b);
     z-index: 1;
-  }
+    &__category {
+      width: fit-content;
+      padding: 0.25rem 0.5rem;
+      font-weight: bold;
+      background-color: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(3px);
+      border-radius: 0.3rem;
+    }
 
-  &__category {
-    width: fit-content;
-    padding: 0.25rem 0.5rem;
-    font-weight: bold;
-    background-color: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(3px);
-    border-radius: 0.3rem;
-  }
+    &__textContainer {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
 
-  &__text {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
+      &__excerpt {
+        font-size: 0.9rem;
+        line-height: 1.4;
+        background-color: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(3px);
+        border-radius: 0.3rem;
+        padding: 0.5rem;
+      }
 
-  &__excerpt {
-    font-size: 0.9rem;
-    line-height: 1.4;
-    background-color: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(3px);
-    border-radius: 0.3rem;
-    padding: 0.5rem;
-  }
-
-  &__read-more {
-    align-self: flex-start;
-    padding: 0.4rem 1rem;
-    border: none;
-    background-color: var(--primary);
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+      &__read-more {
+        align-self: flex-start;
+        padding: 0.4rem 1rem;
+        border: none;
+        background-color: var(--primary);
+        color: white;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+    }
   }
 }

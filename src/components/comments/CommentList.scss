@@ -1,0 +1,43 @@
+/* SCSS: The-Human-Tech-Blog-React/src/components/comments/CommentList.scss */
+
+.comment-list {
+  margin-top: var(--margin-3b);
+  padding: var(--padding-base);
+  background-color: var(--bg);
+  border-radius: 8px;
+
+  &__title {
+    font-size: var(--font-size-2b);
+    font-weight: bold;
+    margin-bottom: var(--margin-base);
+  }
+
+  &__empty {
+    color: var(--secondaryTextColor);
+    font-style: italic;
+  }
+
+  &__items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-base);
+  }
+
+  &__item {
+    padding: var(--padding-base);
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+
+    &__user {
+      font-weight: 600;
+      margin-bottom: var(--margin-2xs);
+    }
+
+    &__text {
+      line-height: 1.5;
+    }
+  }
+}

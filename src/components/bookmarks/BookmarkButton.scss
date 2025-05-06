@@ -1,0 +1,24 @@
+/* The-Human-Tech-Blog-React/src/components/bookmarks/BookmarkButton.scss */
+
+.bookmark-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--textColor);
+  font-size: 1.5rem;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &.active {
+    color: var(--tertiaryTextColor);
+  }
+}
+
+@media (max-width: 768px) {
+  .bookmark-button {
+    font-size: 1.2rem;
+  }
+}

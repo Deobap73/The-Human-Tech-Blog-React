@@ -7,6 +7,7 @@ import { HomePage } from './pages/HomePage';
 import AboutPage from './pages/about/AboutPage';
 import LoginPage from './pages/login/LoginPage';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
+import { SinglePostPage } from './pages/posts/_slug/SinglePostPage';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path='/register' element={<RegisterPage />} />
           <Route path='/admin/*' element={<AdminRoutes />} />
           <Route path='/about' element={<AboutPage />} />
+          <Route path='/posts/:slug' element={<SinglePostPage />} />
         </Routes>
       </ThemeProvider>
     </AuthProvider>

@@ -33,6 +33,10 @@ export const Comments = ({ postId }: { postId: string }) => {
   };
 
   useEffect(() => {
+    const fetchComments = async () => {
+      const res = await axios.get(`/comments/${postId}`);
+      setComments(res.data);
+    };
     fetchComments();
   }, [postId]);
 

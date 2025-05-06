@@ -1,17 +1,19 @@
-// The-Human-Tech-Blog-React\src\components\myFavoritePost\MyFavoritePost.tsx
+// The-Human-Tech-Blog-React/src/components/myFavoritePost/MyFavoritePost.tsx
 
 import './MyFavoritePost.scss';
 import { Post } from '../../types/Post';
+import { isValidPost } from '../../utils/validation';
 
-export const MyFavoritePost = ({ post }: { post: Post }) => {
+export const MyFavoritePost = ({ post }: { post?: Post }) => {
+  if (!post || !isValidPost(post)) return null;
+
   return (
-    <div className='favoritePost'>
-      <h3 className='title'>My Favorite Post</h3>
-      <div className='content'>
-        <img src={post.image} alt={post.title} className='postImage' />
-        <h4 className='postTitle'>{post.title}</h4>
-        <p className='excerpt'>{post.excerpt.substring(0, 100)}...</p>
-        <button className='readMore'>Read More</button>
+    <div className='myFavoritePost'>
+      <img className='myFavoritePost__image' src={post.image} alt={post.title} />
+      <div className='myFavoritePost__text'>
+        <span className='myFavoritePost__text__category'>{post.categories?.[0]?.name}</span>
+        <h2 className='myFavoritePost__text__title'>{post.title}</h2>
+        <p className='myFavoritePost__text__excerpt'>{post.description}</p>
       </div>
     </div>
   );
