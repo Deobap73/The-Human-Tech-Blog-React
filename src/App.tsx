@@ -1,13 +1,13 @@
 // The-Human-Tech-Blog-React/src/App.tsx
 import { Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import { ThemeProvider } from './context/ThemeContext';
+import { AuthProvider } from './shared/context/AuthContext';
+import { ThemeProvider } from './shared/context/ThemeProvider';
 import AdminRoutes from './routes/adminRoutes';
-import { HomePage } from './pages/HomePage';
-import AboutPage from './pages/about/AboutPage';
-import LoginPage from './pages/login/LoginPage';
-import RegisterPage from './pages/RegisterPage/RegisterPage';
-import { SinglePostPage } from './pages/posts/_slug/SinglePostPage';
+import { HomePage } from './features/home/pages/HomePage';
+import AboutPage from './features/about/pages/AboutPage';
+import LoginPage from './features/auth/pages/LoginPage';
+import RegisterPage from './features/auth/pages/RegisterPage';
+import { SinglePostPage } from './features/post/pages/SinglePostPage';
 
 function App() {
   return (

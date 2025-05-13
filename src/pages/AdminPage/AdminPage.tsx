@@ -1,8 +1,8 @@
 // The-Human-Tech-Blog-React/src/pages/AdminPage/AdminPage.tsx
 
 import { Outlet } from 'react-router-dom';
-import Sidebar from '../../components/admin/Sidebar';
-import Topbar from '../../components/admin/Topbar';
+import Sidebar from '../../features/admin/components/Sidebar';
+import Topbar from '../../features/admin/components/Topbar';
 import './AdminPage.scss';
 
 const AdminPage = () => {

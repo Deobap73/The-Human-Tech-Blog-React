@@ -6,6 +6,7 @@
     "declaration": true,
     "outDir": "./dist",
     "target": "es2020",
+    "types": ["node"],
     "module": "ESNext",
     "moduleResolution": "Node",
     "allowJs": true,
@@ -24,6 +25,6 @@
       "@/*": ["*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "scripts"],
   "exclude": ["node_modules"]
 }

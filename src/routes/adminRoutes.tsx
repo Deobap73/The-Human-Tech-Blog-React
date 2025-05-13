@@ -4,7 +4,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import AdminPage from '../pages/AdminPage/AdminPage';
 import PostForm from '../pages/AdminPage/posts/PostForm';
 import PrivateRoute from './PrivateRoute';
-import DashboardHome from '../pages/AdminPage/dashboard/DashboardHome';
+import DashboardHome from '../features/admin/pages/DashboardHome';
 import PostsList from '../pages/AdminPage/posts/PostsList';
 
 const AdminRoutes = () => {

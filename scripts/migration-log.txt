@@ -1,0 +1,14 @@
+✔ Moved: hooks/useAuth.ts → features/auth/services/useAuth.ts
+✔ Moved: hooks/usePosts.ts → features/post/services/usePosts.ts
+✔ Moved: hooks/useTheme.ts → shared/hooks/useTheme.ts
+✔ Updated import in PrivateRoute.tsx
+✔ Updated import in Navbar.tsx
+✔ Updated import in LoginModal.tsx
+✔ Updated import in RegisterModal.tsx
+✔ Updated import in LoginPage.tsx
+✔ Updated import in RegisterPage.tsx
+✔ Updated import in BookmarkButton.tsx
+✔ Updated import in Comments.tsx
+✔ Updated import in ReactionButtons.tsx
+✔ Updated import in Navbar.tsx
+✔ Updated import in ThemeToggle.tsx

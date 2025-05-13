@@ -1,8 +1,8 @@
 // The-Human-Tech-Blog-React/src/pages/AdminPage/posts/PostForm.tsx
 import { useEffect, useState } from 'react';
-import api from '../../../utils/axios';
+import api from '../../../shared/utils/axios';
 import { useNavigate } from 'react-router-dom';
-import { Category } from '../../../types/index';
+import { Category } from '../../../shared/types/index';
 // import tiptap editor
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';

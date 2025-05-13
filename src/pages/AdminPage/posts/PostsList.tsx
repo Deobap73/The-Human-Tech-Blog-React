@@ -1,13 +1,13 @@
 // The-Human-Tech-Blog-React/src/pages/AdminPage/posts/PostsList.tsx
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../../utils/axios';
-import { PostType } from '../../../types/Post';
+import api from '../../../shared/utils/axios';
+import { Post } from '../../../shared/types/Post';
 import './PostsList.scss';
 
 const PostsList = () => {
   const navigate = useNavigate();
-  const [posts, setPosts] = useState<PostType[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
 
   const fetchPosts = async () => {
     try {
