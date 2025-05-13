@@ -1,6 +1,6 @@
 // src/utils/validation.ts
 
-import { Post } from './shared/types/Post';
+import { Post } from '../types/Post';
 
 /**
  * Validates whether a post object has required fields for display.
