@@ -1,11 +1,11 @@
 // The-Human-Tech-Blog-React/src/routes/adminRoutes.tsx
 
 import { Navigate, Route, Routes } from 'react-router-dom';
-import AdminPage from '../pages/AdminPage/AdminPage';
-import PostForm from '../pages/AdminPage/posts/PostForm';
+import AdminPage from '../features/admin/pages/AdminPage';
+import PostForm from '../features/admin/posts/PostForm';
 import PrivateRoute from './PrivateRoute';
 import DashboardHome from '../features/admin/pages/DashboardHome';
-import PostsList from '../pages/AdminPage/posts/PostsList';
+import PostsList from '../features/admin/posts/PostsList';
 
 const AdminRoutes = () => {
   return (
