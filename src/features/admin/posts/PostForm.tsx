@@ -6,7 +6,7 @@ import { Category } from '../../../shared/types/index';
 // import tiptap editor
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import './PostForm.scss';
+import '../styles/PostForm.scss';
 
 const PostForm = () => {
   const [title, setTitle] = useState('');

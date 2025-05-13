@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../shared/utils/axios';
 import { Post } from '../../../shared/types/Post';
-import './PostsList.scss';
+import '../styles/PostsList.scss';
 
 const PostsList = () => {
   const navigate = useNavigate();
