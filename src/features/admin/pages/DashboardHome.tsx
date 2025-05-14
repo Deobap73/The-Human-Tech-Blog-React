@@ -1,4 +1,5 @@
-//The-Human-Tech-Blog-React/src/pages/AdminPage/dashboard/DashboardHome.tsx
+// The-Human-Tech-Blog-React/src/features/admin/pages/DashboardHome.tsx
+
 const DashboardHome = () => {
   return (
     <div style={{ padding: '2rem' }}>
