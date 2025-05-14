@@ -1,6 +1,6 @@
 // The-Human-Tech-Blog-React/src/features/admin/components/Sidebar.tsx
 import { NavLink } from 'react-router-dom';
-import '../../styles/Sidebar.scss';
+import '../styles/Sidebar.scss';
 
 const Sidebar = () => {
   return (
