@@ -4,11 +4,18 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import api from '../../../shared/utils/axios';
 import { useAuth } from '../../../features/auth/services/useAuth';
+import { z } from 'zod';
+
+const schema = z.object({
+  title: z.string().min(5, 'Title is too short'),
+  content: z.string().min(10, 'Content too short'),
+});
 
 const WritePage = () => {
   const { user } = useAuth();
   const [title, setTitle] = useState('');
   const [cover, setCover] = useState<File | null>(null);
+  const [error, setError] = useState('');
 
   const editor = useEditor({
     extensions: [StarterKit],
@@ -16,7 +23,14 @@ const WritePage = () => {
   });
 
   const handleSubmit = async () => {
-    if (!title || !editor || !editor.getHTML()) return;
+    if (!editor) return;
+
+    const content = editor.getHTML();
+    const result = schema.safeParse({ title, content });
+    if (!result.success) {
+      setError(result.error.issues[0].message);
+      return;
+    }
 
     let coverUrl = '';
     if (cover) {
@@ -33,7 +47,7 @@ const WritePage = () => {
 
     await api.post('/api/posts', {
       title,
-      content: editor.getHTML(),
+      content,
       author: user?._id,
       cover: coverUrl,
     });
@@ -42,6 +56,7 @@ const WritePage = () => {
   return (
     <div className='write-page'>
       <h2>Create New Post</h2>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       <input
         type='text'
         placeholder='Post title'
