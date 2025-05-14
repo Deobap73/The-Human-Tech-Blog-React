@@ -3,9 +3,9 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import AdminPage from '../features/admin/pages/AdminPage';
 import PostForm from '../features/admin/posts/PostForm';
-import PrivateRoute from './PrivateRoute';
 import DashboardHome from '../features/admin/pages/DashboardHome';
 import PostsList from '../features/admin/posts/PostsList';
+import AdminRoute from './adminRoute';
 
 const AdminRoutes = () => {
   return (
@@ -13,9 +13,9 @@ const AdminRoutes = () => {
       <Route
         path='/admin'
         element={
-          <PrivateRoute>
+          <AdminRoute>
             <AdminPage />
-          </PrivateRoute>
+          </AdminRoute>
         }>
         <Route index element={<DashboardHome />} />
         <Route path='posts' element={<PostsList />} />
