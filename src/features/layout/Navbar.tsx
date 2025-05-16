@@ -2,7 +2,7 @@
 
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { useAuth } from '../../features/auth/services/useAuth';
+import { useAuth } from '../../shared/hooks/useAuth';
 import { useTheme } from '../../shared/hooks/useTheme';
 import frontPageImage from '../../assets/frontPage.webp';
 import logo from '../../assets/Logo.webp';

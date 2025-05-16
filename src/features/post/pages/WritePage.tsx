@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import api from '../../../shared/utils/axios';
-import { useAuth } from '../../../features/auth/services/useAuth';
+import { useAuth } from '../../../shared/hooks/useAuth';
 import { z } from 'zod';
 
 const schema = z.object({

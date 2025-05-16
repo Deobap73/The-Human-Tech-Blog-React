@@ -1,7 +1,7 @@
 // src/hooks/usePosts.ts
 import { useEffect, useState } from 'react';
-import axios from './shared/utils/axios';
-import { Post } from './shared/types/Post';
+import axios from '../../../shared/utils/axios';
+import { Post } from '../../../shared/types/Post';
 
 export const usePosts = () => {
   const [posts, setPosts] = useState<Post[]>([]);

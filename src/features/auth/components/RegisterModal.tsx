@@ -2,7 +2,7 @@
 
 import '../styles/RegisterModal.scss';
 import { useState } from 'react';
-import { useAuth } from '../../../features/auth/services/useAuth';
+import { useAuth } from '../../../shared/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { LoginModal } from './LoginModal';
 

@@ -1,7 +1,7 @@
 // The-Human-Tech-Blog-React/src/routes/PrivateRoute.tsx
 
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../features/auth/services/useAuth';
+import { useAuth } from '../shared/hooks/useAuth';
 
 interface Props {
   children: React.ReactNode;

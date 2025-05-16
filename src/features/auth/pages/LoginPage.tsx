@@ -3,7 +3,7 @@ import '../styles/LoginPage.scss';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
-import { useAuth } from '../../../features/auth/services/useAuth';
+import { useAuth } from '../../../shared/hooks/useAuth';
 import AuthSocial from '../../../features/auth/components/AuthLinks';
 
 const LoginPage = () => {

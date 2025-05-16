@@ -1,7 +1,7 @@
 // src/features/admin/components/AdminMessageInput.tsx
 import { useState } from 'react';
 import api from '../../../shared/utils/axios';
-import { useAuth } from '../../../features/auth/services/useAuth';
+import { useAuth } from '../../../shared/hooks/useAuth';
 
 interface Props {
   conversationId: string;

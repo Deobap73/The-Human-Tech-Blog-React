@@ -1,8 +1,8 @@
 // The-Human-Tech-Blog-React/src/components/comments/Comments.tsx
 
 import { useEffect, useState } from 'react';
-import { useAuth } from './features/auth/services/useAuth';
-import axios from './shared/utils/axios';
+import { useAuth } from '../../../shared/hooks/useAuth';
+import axios from '../../../shared/utils/axios';
 import '../styles/Comments.scss';
 
 interface Comment {

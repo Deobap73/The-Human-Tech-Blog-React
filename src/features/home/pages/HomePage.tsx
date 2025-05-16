@@ -1,9 +1,6 @@
 // src/pages/HomePage.tsx
 
 import '../styles/HomePage.scss';
-import { Layout } from '../../../features/layout/Layout';
-import Navbar from '../../../features/layout/Navbar';
-import { Footer } from '../../../features/layout/Footer';
 import { AboutMe } from '../../../features/about/components/AboutMe';
 import { RecentPosts } from '../../../features/post/components/RecentPosts';
 import { LastPost } from '../../../features/post/components/LastPost';
@@ -32,24 +29,15 @@ export const HomePage = () => {
 
   const publishedPosts = posts.filter((post) => post.status === 'published');
   console.log('[HomePage] Published posts:', publishedPosts);
-  console.log('[HomePage] First post:', posts[0]);
+  console.log('[HomePage] First post:', publishedPosts[0]);
 
   return (
-    <Layout>
-      <Navbar />
-      <div className='homeContainer'>
-        <AboutMe />
-
-        <RecentPosts posts={publishedPosts.slice(0, 4)} />
-
-        {publishedPosts.length > 0 && <LastPost post={publishedPosts[0]} />}
-
-        <Sponsors />
-
-        <MyFavoritePost post={publishedPosts[3]} />
-      </div>
-
-      <Footer />
-    </Layout>
+    <div className='homeContainer'>
+      <AboutMe />
+      <RecentPosts posts={publishedPosts.slice(0, 4)} />
+      {publishedPosts.length > 0 && <LastPost post={publishedPosts[0]} />}
+      <Sponsors />
+      {publishedPosts.length > 3 && <MyFavoritePost post={publishedPosts[3]} />}
+    </div>
   );
 };

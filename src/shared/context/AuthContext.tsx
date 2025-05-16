@@ -1,43 +1,5 @@
-// ✅ The-Human-Tech-Blog-React/src/context/AuthContext.tsx
+// AuthContext.ts
+import { createContext } from 'react';
+import { AuthContextType } from './AuthContextDef';
 
-import { useState, useEffect } from 'react';
-import api from '../../shared/utils/axios';
-import { AuthContext, User } from '../context/AuthContextDef';
-
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const refetchUser = async () => {
-    try {
-      const res = await api.get('/auth/me');
-      console.log('[GET /me response]', res.data);
-      setUser(res.data.user);
-    } catch {
-      console.warn('[AuthContext] User not authenticated');
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    refetchUser();
-  }, []);
-
-  const login = async (email: string, password: string) => {
-    await api.post('/auth/login', { email, password });
-    await refetchUser();
-  };
-
-  const logout = async () => {
-    await api.post('/auth/logout');
-    setUser(null);
-  };
-
-  return (
-    <AuthContext.Provider value={{ user, loading, login, logout, refetchUser }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);

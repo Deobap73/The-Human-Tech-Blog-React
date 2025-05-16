@@ -1,7 +1,7 @@
 // src/features/admin/components/AdminChatSidebar.tsx
 import { useEffect, useState } from 'react';
 import api from '../../../shared/utils/axios';
-import { useAuth } from '../../auth/services/useAuth';
+import { useAuth } from '../../../shared/hooks/useAuth';
 
 interface IUser {
   _id: string;

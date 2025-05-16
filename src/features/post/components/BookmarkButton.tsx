@@ -3,7 +3,7 @@
 import '../styles/BookmarkButton.scss';
 import { useState, useEffect, useCallback } from 'react';
 import axios from '../../../shared/utils/axios';
-import { useAuth } from '../../../features/auth/services/useAuth';
+import { useAuth } from '../../../shared/hooks/useAuth';
 import { FaBookmark, FaRegBookmark } from 'react-icons/fa';
 
 interface BookmarkResponse {

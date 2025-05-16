@@ -4,7 +4,7 @@ import '../styles/RegisterPage.scss';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../shared/utils/axios';
-import { useAuth } from '../services/useAuth';
+import { useAuth } from '../../../shared/hooks/useAuth';
 import { AxiosError } from 'axios';
 
 interface FormValues {

@@ -1,7 +1,5 @@
 // ✅ The-Human-Tech-Blog-React/src/context/AuthContextDef.ts
 
-import { createContext } from 'react';
-
 export interface User {
   _id: string;
   name: string;
@@ -16,6 +14,5 @@ export interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   refetchUser: () => Promise<void>;
+  getAccessTokenSecurely: () => Promise<void>;
 }
-
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);

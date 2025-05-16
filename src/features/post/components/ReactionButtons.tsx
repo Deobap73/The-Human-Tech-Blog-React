@@ -2,8 +2,8 @@
 
 import '../styles/ReactionButtons.scss';
 import { useCallback, useEffect, useState } from 'react';
-import axios from './shared/utils/axios';
-import { useAuth } from './features/auth/services/useAuth';
+import axios from '../../../shared/utils/axios';
+import { useAuth } from '../../../shared/hooks/useAuth';
 
 interface Reaction {
   _id: string;

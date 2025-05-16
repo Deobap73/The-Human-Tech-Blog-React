@@ -1,7 +1,7 @@
 // src/features/admin/components/AdminMessageViewer.tsx
 import { useEffect, useState, useCallback } from 'react';
 import api from '../../../shared/utils/axios';
-import { useAuth } from '../../../features/auth/services/useAuth';
+import { useAuth } from '../../../shared/hooks/useAuth';
 import AdminMessageInput from './AdminMessageInput';
 
 interface Message {
