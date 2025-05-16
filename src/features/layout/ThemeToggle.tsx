@@ -1,4 +1,4 @@
-// The-Human-Tech-Blog-React\src\components\themeToggle\ThemeToggle.tsx
+// The-Human-Tech-Blog-React/src/components/themeToggle/ThemeToggle.tsx
 'use client';
 
 import { useTheme } from '../../shared/hooks/useTheme';

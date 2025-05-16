@@ -20,6 +20,7 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
     try {
       await login(email, password);
       navigate('/');
+      onClose();
     } catch {
       setError('Invalid credentials');
     }

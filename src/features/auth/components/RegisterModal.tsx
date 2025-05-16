@@ -30,6 +30,7 @@ export const RegisterModal = ({ onClose }: { onClose: () => void }) => {
 
       await login(email, password);
       navigate('/');
+      onClose();
     } catch {
       setError('Registration failed');
     }

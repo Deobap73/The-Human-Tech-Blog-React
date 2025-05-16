@@ -9,15 +9,16 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
-    if (storedTheme) {
-      setTheme(storedTheme);
-    }
+    const defaultTheme = storedTheme || 'light';
+    setTheme(defaultTheme);
+    document.body.setAttribute('data-theme', defaultTheme);
   }, []);
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
+    document.body.setAttribute('data-theme', newTheme);
   };
 
   const contextValue: ThemeContextType = {

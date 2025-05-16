@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import { useAuth } from '../../../shared/hooks/useAuth';
-import AuthSocial from '../../../features/auth/components/AuthLinks';
+import AuthSocial from '../components/AuthLinks';
 
 const LoginPage = () => {
   const { login } = useAuth();

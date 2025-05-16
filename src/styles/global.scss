@@ -1,6 +1,5 @@
 /* The-Human-Tech-Blog-React\src\global.scss */
 
-/* Font and Base Style Setup */
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -15,101 +14,101 @@
   --letter-spacing-small: 0.5px;
 
   /* Typography */
-  --font-size-xs: 0.25rem; /*  4px */
-  --font-size-1xs: 0.313rem; /*  5px */
-  --font-size-2xs: 0.625rem; /* 10px */
-  --font-size-s: 0.75rem; /* 12px */
-  --font-size-1s: 0.875rem; /* 14px */
-  --font-size-2s: 0.938rem; /* 15px */
-  --font-size-base: 1rem; /* 16px */
-  --font-size-1b: 1.125rem; /* 18px */
-  --font-size-2b: 1.25rem; /* 20px */
-  --font-size-3b: 1.5rem; /* 24px */
-  --font-size-4b: 1.75rem; /* 28px */
-  --font-size-5b: 1.875rem; /* 30px */
-  --font-size-m: 2rem; /* 32px */
-  --font-size-2m: 2.25rem; /* 36px */
-  --font-size-3m: 2.5rem; /* 40px */
-  --font-size-l: 3rem; /* 48px */
-  --font-size-xl: 4rem; /* 64px */
-  --font-size-1xl: 4.5rem; /* 72px */
-  --font-size-2xl: 4.75rem; /* 76px */
-  --font-size-xxl: 5rem; /* 80px */
+  --font-size-xs: 0.25rem;
+  --font-size-1xs: 0.313rem;
+  --font-size-2xs: 0.625rem;
+  --font-size-s: 0.75rem;
+  --font-size-1s: 0.875rem;
+  --font-size-2s: 0.938rem;
+  --font-size-base: 1rem;
+  --font-size-1b: 1.125rem;
+  --font-size-2b: 1.25rem;
+  --font-size-3b: 1.5rem;
+  --font-size-4b: 1.75rem;
+  --font-size-5b: 1.875rem;
+  --font-size-m: 2rem;
+  --font-size-2m: 2.25rem;
+  --font-size-3m: 2.5rem;
+  --font-size-l: 3rem;
+  --font-size-xl: 4rem;
+  --font-size-1xl: 4.5rem;
+  --font-size-2xl: 4.75rem;
+  --font-size-xxl: 5rem;
 
   /* Gaps */
-  --gap-xss: 0.125rem; /*  2px */
-  --gap-xs: 0.25rem; /*  4px */
-  --gap-1xs: 0.375rem; /*  6px */
-  --gap-2xs: 0.5rem; /*  8px */
-  --gap-3xs: 0.625rem; /* 10px */
-  --gap-4xs: 0.75rem; /* 12px */
-  --gap-5xs: 0.875rem; /* 14px */
-  --gap-base: 1rem; /* 16px */
-  --gap-1b: 1.125rem; /* 18px */
-  --gap-2b: 1.25rem; /* 20px */
-  --gap-3b: 1.375rem; /* 22px */
-  --gap-4b: 1.5rem; /* 24px */
-  --gap-5b: 1.625rem; /* 26px */
-  --gap-6b: 1.75rem; /* 28px */
-  --gap-7b: 1.875rem; /* 30px */
-  --gap-m: 2rem; /* 32px */
-  --gap-2m: 2.25rem; /* 36px */
-  --gap-3m: 2.5rem; /* 40px */
-  --gap-l: 3rem; /* 48px */
-  --gap-xl: 4rem; /* 64px */
-  --gap-1xl: 4.5rem; /* 72px */
-  --gap-2xl: 4.75rem; /* 76px */
-  --gap-xxl: 5rem; /* 80px */
+  --gap-xss: 0.125rem;
+  --gap-xs: 0.25rem;
+  --gap-1xs: 0.375rem;
+  --gap-2xs: 0.5rem;
+  --gap-3xs: 0.625rem;
+  --gap-4xs: 0.75rem;
+  --gap-5xs: 0.875rem;
+  --gap-base: 1rem;
+  --gap-1b: 1.125rem;
+  --gap-2b: 1.25rem;
+  --gap-3b: 1.375rem;
+  --gap-4b: 1.5rem;
+  --gap-5b: 1.625rem;
+  --gap-6b: 1.75rem;
+  --gap-7b: 1.875rem;
+  --gap-m: 2rem;
+  --gap-2m: 2.25rem;
+  --gap-3m: 2.5rem;
+  --gap-l: 3rem;
+  --gap-xl: 4rem;
+  --gap-1xl: 4.5rem;
+  --gap-2xl: 4.75rem;
+  --gap-xxl: 5rem;
 
   /* paddings */
-  --padding-xss: 0.125rem; /*  2px */
-  --padding-xs: 0.25rem; /*  4px */
-  --padding-1xs: 0.375rem; /*  6px */
-  --padding-2xs: 0.5rem; /*  8px */
-  --padding-3xs: 0.625rem; /* 10px */
-  --padding-4xs: 0.75rem; /* 12px */
-  --padding-5xs: 0.875rem; /* 14px */
-  --padding-base: 1rem; /* 16px */
-  --padding-1b: 1.125rem; /* 18px */
-  --padding-2b: 1.25rem; /* 20px */
-  --padding-3b: 1.375rem; /* 22px */
-  --padding-4b: 1.5rem; /* 24px */
-  --padding-5b: 1.625rem; /* 26px */
-  --padding-6b: 1.75rem; /* 28px */
-  --padding-7b: 1.875rem; /* 30px */
-  --padding-m: 2rem; /* 32px */
-  --padding-2m: 2.25rem; /* 36px */
-  --padding-3m: 2.5rem; /* 40px */
-  --padding-l: 3rem; /* 48px */
-  --padding-xl: 4rem; /* 64px */
-  --padding-1xl: 4.5rem; /* 72px */
-  --padding-2xl: 4.75rem; /* 76px */
-  --padding-xxl: 5rem; /* 80px */
+  --padding-xss: 0.125rem;
+  --padding-xs: 0.25rem;
+  --padding-1xs: 0.375rem;
+  --padding-2xs: 0.5rem;
+  --padding-3xs: 0.625rem;
+  --padding-4xs: 0.75rem;
+  --padding-5xs: 0.875rem;
+  --padding-base: 1rem;
+  --padding-1b: 1.125rem;
+  --padding-2b: 1.25rem;
+  --padding-3b: 1.375rem;
+  --padding-4b: 1.5rem;
+  --padding-5b: 1.625rem;
+  --padding-6b: 1.75rem;
+  --padding-7b: 1.875rem;
+  --padding-m: 2rem;
+  --padding-2m: 2.25rem;
+  --padding-3m: 2.5rem;
+  --padding-l: 3rem;
+  --padding-xl: 4rem;
+  --padding-1xl: 4.5rem;
+  --padding-2xl: 4.75rem;
+  --padding-xxl: 5rem;
 
   /* Margin */
-  --margin-xss: 0.125rem; /*  2px */
-  --margin-xs: 0.25rem; /*  4px */
-  --margin-1xs: 0.375rem; /*  6px */
-  --margin-2xs: 0.5rem; /*  8px */
-  --margin-3xs: 0.625rem; /* 10px */
-  --margin-4xs: 0.75rem; /* 12px */
-  --margin-5xs: 0.875rem; /* 14px */
-  --margin-base: 1rem; /* 16px */
-  --margin-1b: 1.125rem; /* 18px */
-  --margin-2b: 1.25rem; /* 20px */
-  --margin-3b: 1.375rem; /* 22px */
-  --margin-4b: 1.5rem; /* 24px */
-  --margin-5b: 1.625rem; /* 26px */
-  --margin-6b: 1.75rem; /* 28px */
-  --margin-7b: 1.875rem; /* 30px */
-  --margin-m: 2rem; /* 32px */
-  --margin-2m: 2.25rem; /* 36px */
-  --margin-3m: 2.5rem; /* 40px */
-  --margin-l: 3rem; /* 48px */
-  --margin-xl: 4rem; /* 64px */
-  --margin-1xl: 4.5rem; /* 72px */
-  --margin-2xl: 4.75rem; /* 76px */
-  --margin-xxl: 5rem; /* 80px */
+  --margin-xss: 0.125rem;
+  --margin-xs: 0.25rem;
+  --margin-1xs: 0.375rem;
+  --margin-2xs: 0.5rem;
+  --margin-3xs: 0.625rem;
+  --margin-4xs: 0.75rem;
+  --margin-5xs: 0.875rem;
+  --margin-base: 1rem;
+  --margin-1b: 1.125rem;
+  --margin-2b: 1.25rem;
+  --margin-3b: 1.375rem;
+  --margin-4b: 1.5rem;
+  --margin-5b: 1.625rem;
+  --margin-6b: 1.75rem;
+  --margin-7b: 1.875rem;
+  --margin-m: 2rem;
+  --margin-2m: 2.25rem;
+  --margin-3m: 2.5rem;
+  --margin-l: 3rem;
+  --margin-xl: 4rem;
+  --margin-1xl: 4.5rem;
+  --margin-2xl: 4.75rem;
+  --margin-xxl: 5rem;
 
   /* Percentage margin*/
   --margin-5: 5%;
@@ -143,58 +142,23 @@
   --toggle-bg: #3a4a50;
   --toggle-ball-light: white;
   --toggle-ball-dark: #3a4a50;
+}
 
-  /* Default Theme (Light) */
+[data-theme='light'] {
   --bg: #fcfcfc;
   --textColor: #23262f;
   --secondaryTextColor: #393c43;
   --tertiaryTextColor: #1da1f2;
   --primaryHover: #1da1f2;
-
-  /* Category Colors */
-  --category-agileProjects: #98a1be;
-  --category-frontendUx: #966096;
-  --category-teckCareer: #eb7853;
-  --category-teckTools: #6cdce0;
-  --category-personalReflections: #b07941;
-
-  /* Utility */
-  --successColor: #1a8917;
-  --successHover: #1a9c17;
-
-  /* Editor */
-  --editor-bg: var(--bg);
-  --editor-text: var(--textColor);
-  --editor-border: var(--borderColor);
-
-  /* Page-Specific */
-  --blog-page-gap: 50px;
-  --home-content-gap: 3rem;
-  --post-title-size: 4rem;
-  --post-body-size: 1.25rem;
-  --post-spacing: 3rem;
-
-  /* Login */
-  --login-card-padding: 4rem 6rem;
-  --login-card-padding-md: 3rem 4rem;
-  --login-card-padding-sm: 2rem;
-
-  /* Social Colors */
-  --google-red: #566b73;
-  --github-black: #24292e;
-  --facebook-blue: #1877f2;
 }
 
-/* Dark Mode Variables (Auto-Detected) */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #23262f;
-    --textColor: #fcfcfc;
-    --secondaryTextColor: #393c43;
-    --tertiaryTextColor: #1da1f2;
-    --primaryHover: #1da1f2;
-    color-scheme: dark;
-  }
+[data-theme='dark'] {
+  --bg: #23262f;
+  --textColor: #fcfcfc;
+  --secondaryTextColor: #393c43;
+  --tertiaryTextColor: #1da1f2;
+  --primaryHover: #1da1f2;
+  color-scheme: dark;
 }
 
 /* Element Reset */

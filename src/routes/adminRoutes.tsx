@@ -1,5 +1,4 @@
-// The-Human-Tech-Blog-React/src/routes/adminRoutes.tsx
-
+// src/routes/adminRoutes.tsx
 import { Navigate, Route, Routes } from 'react-router-dom';
 import AdminPage from '../features/admin/pages/AdminPage';
 import PostForm from '../features/admin/posts/PostForm';
@@ -11,7 +10,7 @@ const AdminRoutes = () => {
   return (
     <Routes>
       <Route
-        path='/admin'
+        path='/'
         element={
           <AdminRoute>
             <AdminPage />

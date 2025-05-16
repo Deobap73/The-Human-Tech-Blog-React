@@ -1,10 +1,15 @@
-// src/features/post/pages/WritePage.tsx
+// The-Human-Tech-Blog-React/src/features/post/pages/WritePage.tsx
+
 import { useState } from 'react';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import Image from '@tiptap/extension-image';
+import Underline from '@tiptap/extension-underline';
+import Toolbar from '../components/EditorToolbar';
 import api from '../../../shared/utils/axios';
 import { useAuth } from '../../../shared/hooks/useAuth';
 import { z } from 'zod';
+import '../styles/WritePage.scss';
 
 const schema = z.object({
   title: z.string().min(5, 'Title is too short'),
@@ -18,7 +23,7 @@ const WritePage = () => {
   const [error, setError] = useState('');
 
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [StarterKit, Underline, Image],
     content: '',
   });
 
@@ -56,7 +61,7 @@ const WritePage = () => {
   return (
     <div className='write-page'>
       <h2>Create New Post</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className='error'>{error}</p>}
       <input
         type='text'
         placeholder='Post title'
@@ -64,6 +69,7 @@ const WritePage = () => {
         onChange={(e) => setTitle(e.target.value)}
       />
       <input type='file' accept='image/*' onChange={(e) => setCover(e.target.files?.[0] || null)} />
+      {editor && <Toolbar editor={editor} />}
       <EditorContent editor={editor} />
       <button onClick={handleSubmit}>Publish</button>
     </div>
