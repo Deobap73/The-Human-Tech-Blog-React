@@ -1,75 +1,74 @@
 // src/features/post/components/EditorToolbar.tsx
 import { Editor } from '@tiptap/react';
-import '../styles/EditorToolbar.scss';
+import {
+  Bold,
+  Italic,
+  Underline,
+  Strikethrough,
+  Image,
+  Heading,
+  List,
+  ListOrdered,
+  Undo2,
+  Redo2,
+} from 'lucide-react';
 
 interface EditorToolbarProps {
-  editor: Editor | null;
+  editor: Editor;
+  onSaveDraft: () => void;
+  onPublish: () => void;
 }
 
-type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
-type Attributes = { [key: string]: string | number | boolean | null | undefined };
-
-const headingLevels: HeadingLevel[] = [1, 2, 3, 4, 5, 6];
-
-const EditorToolbar = ({ editor }: EditorToolbarProps) => {
+const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
   if (!editor) return null;
 
-  const isActive = (type: string, attrs?: Attributes) =>
-    editor.isActive(type, attrs) ? 'active' : '';
-
   return (
-    <div className='editor-toolbar'>
-      <button
-        onClick={() => editor.chain().focus().toggleBold().run()}
-        className={isActive('bold')}>
-        Bold
+    <div className='toolbar'>
+      <button onClick={() => editor.chain().focus().toggleBold().run()}>
+        <Bold size={16} />
+      </button>
+      <button onClick={() => editor.chain().focus().toggleItalic().run()}>
+        <Italic size={16} />
+      </button>
+      <button onClick={() => editor.chain().focus().toggleUnderline().run()}>
+        <Underline size={16} />
+      </button>
+      <button onClick={() => editor.chain().focus().toggleStrike().run()}>
+        <Strikethrough size={16} />
+      </button>
+      <button onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}>
+        <Heading size={16} />
+      </button>
+      <button onClick={() => editor.chain().focus().toggleBulletList().run()}>
+        <List size={16} />
+      </button>
+      <button onClick={() => editor.chain().focus().toggleOrderedList().run()}>
+        <ListOrdered size={16} />
+      </button>
+      <button onClick={() => editor.chain().focus().undo().run()}>
+        <Undo2 size={16} />
+      </button>
+      <button onClick={() => editor.chain().focus().redo().run()}>
+        <Redo2 size={16} />
       </button>
       <button
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-        className={isActive('italic')}>
-        Italic
-      </button>
-      <button
-        onClick={() => editor.chain().focus().toggleStrike().run()}
-        className={isActive('strike')}>
-        Strike
-      </button>
-      <button
-        onClick={() => editor.chain().focus().setParagraph().run()}
-        className={isActive('paragraph')}>
-        P
+        onClick={() => {
+          const url = window.prompt('Image URL');
+          if (url) editor.chain().focus().setImage({ src: url }).run();
+        }}>
+        <Image size={16} />
       </button>
 
-      {headingLevels.map((level) => (
-        <button
-          key={level}
-          onClick={() => editor.chain().focus().toggleHeading({ level }).run()}
-          className={isActive('heading', { level })}>
-          H{level}
+      <div className='toolbar-actions'>
+        <button onClick={onSaveDraft} className='draft-btn'>
+          Save Draft
         </button>
-      ))}
-
-      <button
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
-        className={isActive('bulletList')}>
-        • List
-      </button>
-      <button
-        onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        className={isActive('orderedList')}>
-        1. List
-      </button>
-      <button onClick={() => editor.chain().focus().undo().run()} className=''>
-        Undo
-      </button>
-      <button onClick={() => editor.chain().focus().redo().run()} className=''>
-        Redo
-      </button>
-      <button onClick={() => editor.chain().focus().clearNodes().run()} className=''>
-        Clear
-      </button>
+        <button onClick={onPublish} className='publish-btn'>
+          Publish
+        </button>
+      </div>
     </div>
   );
 };
 
-export default EditorToolbar;
+export default Toolbar;

@@ -2,11 +2,10 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import AdminPage from '../features/admin/pages/AdminPage';
-import PostForm from '../features/admin/posts/PostForm';
 import DashboardHome from '../features/admin/pages/DashboardHome';
 import PostsList from '../features/admin/posts/PostsList';
 import AdminRoute from './adminRoute';
-import PostEditPage from '../features/admin/posts/PostEditPage';
+import WritePage from '../features/post/pages/WritePage';
 
 const AdminMessages = lazy(() => import('../features/admin/pages/AdminMessages'));
 const AdminSettings = lazy(() => import('../features/admin/pages/AdminSettings'));
@@ -22,8 +21,8 @@ const AdminRoutes = () => (
       }>
       <Route index element={<DashboardHome />} />
       <Route path='posts' element={<PostsList />} />
-      <Route path='posts/create' element={<PostForm />} />
-      <Route path='posts/edit/:id' element={<PostEditPage />} />
+      <Route path='posts/create' element={<WritePage />} />
+      <Route path='posts/edit/:id' element={<WritePage />} />
       <Route
         path='messages'
         element={
