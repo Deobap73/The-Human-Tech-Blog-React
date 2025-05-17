@@ -8,18 +8,18 @@ const Sidebar = () => {
 
   return (
     <aside className='admin-sidebar'>
-      <nav>
-        <NavLink to='/admin' className='admin-link'>
+      <nav className='admin-sidebar-Navbar'>
+        <NavLink to='/admin' className='admin-sidebar-Navbar-link'>
           Dashboard
         </NavLink>
-        <NavLink to='/admin/posts' className='admin-link'>
+        <NavLink to='/admin/posts' className='admin-sidebar-Navbar-link'>
           Posts
         </NavLink>
-        <NavLink to='/admin/messages' className='admin-link'>
+        <NavLink to='/admin/messages' className='admin-sidebar-Navbar-link'>
           Messages
         </NavLink>
         {user && user.role === 'admin' && (
-          <NavLink to='/admin/settings' className='admin-link'>
+          <NavLink to='/admin/settings' className='admin-sidebar-Navbar-link'>
             Settings
           </NavLink>
         )}

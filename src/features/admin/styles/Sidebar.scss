@@ -1,20 +1,30 @@
-/*The-Human-Tech-Blog-React/src/components/admin/Sidebar.scss*/
+/* The-Human-Tech-Blog-React/src/components/admin/Sidebar.scss */
 .admin-sidebar {
-  width: 200px;
+  width: 500px;
   background: var(--bg);
   padding: var(--padding-base);
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-base);
-  height: 100vh;
   border-right: 1px solid #eee;
 
-  a {
-    color: var(--textColor);
-    text-decoration: none;
+  &-Navbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: var(--gap-small);
 
-    &.active {
-      font-weight: bold;
+    &-link {
+      color: var(--textColor);
+      padding: var(--padding-small);
+      text-decoration: none;
+      transition: color 0.2s;
+
+      &:hover {
+        color: var(--primaryColor);
+      }
+
+      &.active {
+        font-weight: bold;
+        color: var(--primaryColor);
+      }
     }
   }
 }

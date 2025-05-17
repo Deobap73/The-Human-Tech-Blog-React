@@ -1,50 +1,74 @@
 // src/features/admin/components/AdminMessageViewer.tsx
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import api from '../../../shared/utils/axios';
-import { useAuth } from '../../../shared/hooks/useAuth';
-import AdminMessageInput from './AdminMessageInput';
+import { ChatMessage } from '../../../shared/types/ChatMessage';
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
+import { User } from '../../../shared/types/User';
+import '../styles/AdminMessageViewer.scss';
 
-interface Message {
-  _id: string;
-  text: string;
-  sender: string;
-  createdAt: string;
-}
-
-interface Props {
+interface AdminMessageViewerProps {
   conversationId: string;
 }
 
-const AdminMessageViewer = ({ conversationId }: Props) => {
-  const { user } = useAuth();
-  const [messages, setMessages] = useState<Message[]>([]);
+export const AdminMessageViewer = ({ conversationId }: AdminMessageViewerProps) => {
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const bottomRef = useRef<HTMLDivElement | null>(null);
 
-  const fetchMessages = useCallback(async () => {
-    try {
-      const res = await api.get(`/api/messages/${conversationId}`);
-      setMessages(res.data);
-    } catch (err) {
-      console.error('Failed to load messages', err);
-    }
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const res = await api.get(`/api/messages/${conversationId}`);
+        setMessages(res.data);
+      } catch {
+        setError('Failed to load messages');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMessages();
   }, [conversationId]);
 
   useEffect(() => {
-    if (conversationId) fetchMessages();
-  }, [conversationId, fetchMessages]);
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  if (loading) {
+    return (
+      <div className='admin-message-viewer'>
+        {[...Array(5)].map((_, i) => (
+          <div key={i} className='admin-message skeleton-message'></div>
+        ))}
+      </div>
+    );
+  }
+
+  if (error) return <p>{error}</p>;
 
   return (
-    <section className='admin-message-viewer'>
-      <h4>Conversation</h4>
-      <ul>
-        {messages.map((msg) => (
-          <li key={msg._id} className={msg.sender === user?._id ? 'sent' : 'received'}>
-            <p>{msg.text}</p>
-            <span>{new Date(msg.createdAt).toLocaleString()}</span>
-          </li>
-        ))}
-      </ul>
-      <AdminMessageInput conversationId={conversationId} onSent={fetchMessages} />
-    </section>
+    <div className='admin-message-viewer'>
+      {messages.map((msg) => {
+        const sender = msg.sender as User;
+        const isAdmin = sender?.role === 'admin';
+        const timestamp = new Date(msg.createdAt).toLocaleTimeString();
+        const contentHTML = DOMPurify.sanitize(marked.parse(msg.text) as string);
+
+        return (
+          <div
+            key={msg._id}
+            className={`admin-message ${isAdmin ? 'admin' : 'user'} ${
+              sender._id === msg.sender ? 'own-message' : ''
+            }`}>
+            <strong>{sender.name}</strong> <em>({timestamp})</em>:
+            <div dangerouslySetInnerHTML={{ __html: contentHTML }} />
+          </div>
+        );
+      })}
+      <div ref={bottomRef} />
+    </div>
   );
 };
 

@@ -1,52 +1,41 @@
-// src/features/admin/components/AdminChatSidebar.tsx
 import { useEffect, useState } from 'react';
-import api from '../../../shared/utils/axios';
 import { useAuth } from '../../../shared/hooks/useAuth';
-
-interface IUser {
-  _id: string;
-  name: string;
-  role: string;
-}
+import api from '../../../shared/utils/axios';
+import '../styles/Sidebar.scss';
 
 interface Conversation {
   _id: string;
-  participants: IUser[];
+  participants: { _id: string; name: string }[];
 }
 
-interface Props {
-  onSelect: (conversationId: string) => void;
-}
-
-const AdminChatSidebar = ({ onSelect }: Props) => {
+const AdminChatSidebar = ({ onSelect }: { onSelect: (id: string) => void }) => {
   const { user } = useAuth();
   const [conversations, setConversations] = useState<Conversation[]>([]);
 
   useEffect(() => {
     const fetchConversations = async () => {
-      if (!user || user.role !== 'admin') return;
       try {
-        const res = await api.get(`/api/conversations/${user._id}`);
+        const res = await api.get('/conversations');
         setConversations(res.data);
-      } catch (err) {
-        console.error('Failed to load conversations', err);
+      } catch {
+        console.error('Failed to load conversations');
       }
     };
-    fetchConversations();
+
+    if (user?.role === 'admin') {
+      fetchConversations();
+    }
   }, [user]);
 
   return (
-    <aside className='admin-chat-sidebar'>
+    <aside className='admin-sidebar'>
       <h3>Chats</h3>
-      <ul>
-        {conversations.map((conv) => {
-          const participant = conv.participants.find((p) => p._id !== user?._id);
-          return (
-            <li key={conv._id} onClick={() => onSelect(conv._id)}>
-              {participant?.name || 'Unknown User'}
-            </li>
-          );
-        })}
+      <ul className='admin-sidebar__list'>
+        {conversations.map((conv) => (
+          <li key={conv._id} onClick={() => onSelect(conv._id)} className='admin-sidebar__item'>
+            {conv.participants.map((p) => p.name).join(', ')}
+          </li>
+        ))}
       </ul>
     </aside>
   );

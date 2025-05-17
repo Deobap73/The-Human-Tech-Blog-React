@@ -1,4 +1,4 @@
-// The-Human-Tech-Blog-React/src/pages/AdminPage/AdminPage.tsx
+// src/features/admin/pages/AdminPage.tsx
 import { Outlet } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Topbar from '../components/Topbar';
