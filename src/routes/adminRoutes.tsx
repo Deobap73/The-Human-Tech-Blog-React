@@ -6,6 +6,7 @@ import PostForm from '../features/admin/posts/PostForm';
 import DashboardHome from '../features/admin/pages/DashboardHome';
 import PostsList from '../features/admin/posts/PostsList';
 import AdminRoute from './adminRoute';
+import PostEditPage from '../features/admin/posts/PostEditPage';
 
 const AdminMessages = lazy(() => import('../features/admin/pages/AdminMessages'));
 const AdminSettings = lazy(() => import('../features/admin/pages/AdminSettings'));
@@ -22,6 +23,7 @@ const AdminRoutes = () => (
       <Route index element={<DashboardHome />} />
       <Route path='posts' element={<PostsList />} />
       <Route path='posts/create' element={<PostForm />} />
+      <Route path='posts/edit/:id' element={<PostEditPage />} />
       <Route
         path='messages'
         element={

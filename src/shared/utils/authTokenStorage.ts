@@ -1,4 +1,4 @@
-// ✅ src/utils/authTokenStorage.ts
+// src/shared/utils/authTokenStorage.ts
 let accessToken: string | null = localStorage.getItem('access_token');
 
 export const setAccessToken = (token: string): void => {

@@ -11,7 +11,7 @@ const AdminSettingsPage = () => {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const res = await api.get<AdminSettings>('/api/admin/settings');
+        const res = await api.get<AdminSettings>('/admin/settings');
         setSettings(res.data);
       } catch {
         setError('Failed to fetch settings');
@@ -32,7 +32,7 @@ const AdminSettingsPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await api.put('/api/admin/settings', settings);
+      await api.put('/admin/settings', settings);
       alert('Settings updated');
     } catch {
       alert('Failed to update settings');

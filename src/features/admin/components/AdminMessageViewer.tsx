@@ -25,7 +25,7 @@ export const AdminMessageViewer = ({ conversationId }: AdminMessageViewerProps) 
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const res = await api.get(`/api/messages/${conversationId}`);
+        const res = await api.get(`/messages/${conversationId}`); // corrected endpoint
         setMessages(res.data);
       } catch (err) {
         console.error('Fetch failed:', err);

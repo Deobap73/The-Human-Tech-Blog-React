@@ -13,11 +13,10 @@ const AdminMessages = () => {
   useEffect(() => {
     const fetchConversations = async () => {
       try {
-        const res = await api.get<Conversation[]>('/api/conversations');
+        const res = await api.get<Conversation[]>('/conversations');
         setConversations(res.data);
         if (res.data.length > 0) setConversationId(res.data[0]._id);
       } catch (err: unknown) {
-        // Usando unknown em vez de any
         let errorMessage = 'Unable to fetch conversations. Please try again.';
 
         if (err instanceof AxiosError) {

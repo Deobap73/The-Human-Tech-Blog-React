@@ -54,7 +54,7 @@ const PostsList = () => {
               <td>{post.author?.name}</td>
               <td>
                 <button onClick={() => navigate('/admin/posts/create')}>New Post</button>
-                <button onClick={() => alert(`TODO: Edit ${post._id}`)}>Edit</button>
+                <button onClick={() => navigate(`/admin/posts/edit/${post._id}`)}>Edit</button>
                 <button onClick={() => deletePost(post._id)}>Delete</button>
               </td>
             </tr>
