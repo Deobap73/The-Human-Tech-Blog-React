@@ -2,14 +2,19 @@
 import { useEffect, useRef, useState } from 'react';
 import api from '../../../shared/utils/axios';
 import { ChatMessage } from '../../../shared/types/ChatMessage';
+import { ChatMessageSchema } from '../../../shared/schemas/ChatMessageSchema';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
+import { io } from 'socket.io-client';
 import { User } from '../../../shared/types/User';
-import '../styles/AdminMessageViewer.scss';
 
 interface AdminMessageViewerProps {
   conversationId: string;
 }
+
+const socket = io(import.meta.env.VITE_API_BASE_URL, {
+  withCredentials: true,
+});
 
 export const AdminMessageViewer = ({ conversationId }: AdminMessageViewerProps) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -22,7 +27,8 @@ export const AdminMessageViewer = ({ conversationId }: AdminMessageViewerProps) 
       try {
         const res = await api.get(`/api/messages/${conversationId}`);
         setMessages(res.data);
-      } catch {
+      } catch (err) {
+        console.error('Fetch failed:', err);
         setError('Failed to load messages');
       } finally {
         setLoading(false);
@@ -36,33 +42,54 @@ export const AdminMessageViewer = ({ conversationId }: AdminMessageViewerProps) 
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  if (loading) {
-    return (
-      <div className='admin-message-viewer'>
-        {[...Array(5)].map((_, i) => (
-          <div key={i} className='admin-message skeleton-message'></div>
-        ))}
-      </div>
-    );
-  }
+  useEffect(() => {
+    socket.emit('joinConversation', conversationId);
 
+    const handleNewMessage = (msg: unknown) => {
+      const parsed = ChatMessageSchema.safeParse(msg);
+      if (!parsed.success) return;
+
+      const safeMsg = parsed.data;
+      const message: ChatMessage = {
+        ...safeMsg,
+        sender:
+          typeof safeMsg.sender === 'string'
+            ? safeMsg.sender
+            : {
+                ...safeMsg.sender,
+                email: safeMsg.sender.email ?? '',
+                role: ['admin', 'editor', 'user'].includes(safeMsg.sender.role ?? '')
+                  ? (safeMsg.sender.role as 'admin' | 'editor' | 'user')
+                  : 'user',
+              },
+      };
+
+      setMessages((prev) => [...prev, message]);
+    };
+
+    socket.on('newMessage', handleNewMessage);
+
+    return () => {
+      socket.off('newMessage', handleNewMessage);
+      socket.emit('leaveConversation', conversationId);
+    };
+  }, [conversationId]);
+
+  if (loading) return <p>Loading messages...</p>;
   if (error) return <p>{error}</p>;
 
   return (
     <div className='admin-message-viewer'>
       {messages.map((msg) => {
         const sender = msg.sender as User;
-        const isAdmin = sender?.role === 'admin';
+        const senderName = typeof sender === 'object' && 'name' in sender ? sender.name : 'Unknown';
+        const isAdmin = typeof sender === 'object' && 'role' in sender && sender.role === 'admin';
         const timestamp = new Date(msg.createdAt).toLocaleTimeString();
         const contentHTML = DOMPurify.sanitize(marked.parse(msg.text) as string);
 
         return (
-          <div
-            key={msg._id}
-            className={`admin-message ${isAdmin ? 'admin' : 'user'} ${
-              sender._id === msg.sender ? 'own-message' : ''
-            }`}>
-            <strong>{sender.name}</strong> <em>({timestamp})</em>:
+          <div key={msg._id} className={`admin-message ${isAdmin ? 'admin' : ''}`}>
+            <strong>{senderName}</strong> <em>({timestamp})</em>:
             <div dangerouslySetInnerHTML={{ __html: contentHTML }} />
           </div>
         );
