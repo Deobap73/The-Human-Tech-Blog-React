@@ -1,4 +1,5 @@
 // The-Human-Tech-Blog-React/src/pages/AdminPage/posts/PostsList.tsx
+
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../shared/utils/axios';
@@ -35,7 +36,7 @@ const PostsList = () => {
     <div className='posts-admin'>
       <div className='posts-header'>
         <h2>All Posts</h2>
-        <button onClick={() => alert('TODO: Redirect to create page')}>New Post</button>
+        <button onClick={() => navigate('/admin/posts/create')}>New Post</button>
       </div>
       <table>
         <thead>
@@ -53,8 +54,13 @@ const PostsList = () => {
               <td>{post.status}</td>
               <td>{post.author?.name}</td>
               <td>
-                <button onClick={() => navigate('/admin/posts/create')}>New Post</button>
-                <button onClick={() => navigate(`/admin/posts/edit/${post._id}`)}>Edit</button>
+                {post.status === 'draft' ? (
+                  <button onClick={() => navigate(`/admin/posts/edit/${post._id}`)}>
+                    Continue Writing
+                  </button>
+                ) : (
+                  <button onClick={() => navigate(`/admin/posts/edit/${post._id}`)}>Edit</button>
+                )}
                 <button onClick={() => deletePost(post._id)}>Delete</button>
               </td>
             </tr>
