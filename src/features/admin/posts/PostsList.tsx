@@ -1,4 +1,4 @@
-// The-Human-Tech-Blog-React/src/pages/AdminPage/posts/PostsList.tsx
+// The-Human-Tech-Blog-React/src/features/admin/posts/PostsList.tsx
 
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +9,7 @@ import '../styles/PostsList.scss';
 const PostsList = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]);
+  const [drafts, setDrafts] = useState<Post[]>([]);
 
   const fetchPosts = async () => {
     try {
@@ -19,54 +20,53 @@ const PostsList = () => {
     }
   };
 
-  const deletePost = async (id: string) => {
+  const fetchDrafts = async () => {
     try {
-      await api.delete(`/posts/${id}`);
-      setPosts(posts.filter((p) => p._id !== id));
+      const res = await api.get('/drafts');
+      setDrafts(res.data);
     } catch (err) {
-      console.error('Delete failed', err);
+      console.error('Failed to fetch drafts', err);
+    }
+  };
+
+  const deleteDraft = async (id: string) => {
+    try {
+      await api.delete(`/drafts/${id}`);
+      setDrafts((prev) => prev.filter((draft) => draft._id !== id));
+    } catch (err) {
+      console.error('Failed to delete draft', err);
     }
   };
 
   useEffect(() => {
     fetchPosts();
+    fetchDrafts();
   }, []);
 
   return (
-    <div className='posts-admin'>
-      <div className='posts-header'>
-        <h2>All Posts</h2>
-        <button onClick={() => navigate('/admin/posts/create')}>New Post</button>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Status</th>
-            <th>Author</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {posts.map((post) => (
-            <tr key={post._id}>
-              <td>{post.title}</td>
-              <td>{post.status}</td>
-              <td>{post.author?.name}</td>
-              <td>
-                {post.status === 'draft' ? (
-                  <button onClick={() => navigate(`/admin/posts/edit/${post._id}`)}>
-                    Continue Writing
-                  </button>
-                ) : (
-                  <button onClick={() => navigate(`/admin/posts/edit/${post._id}`)}>Edit</button>
-                )}
-                <button onClick={() => deletePost(post._id)}>Delete</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className='posts-list'>
+      <h2>Published Posts</h2>
+      <ul>
+        {posts.map((post) => (
+          <li key={post._id}>
+            <span>{post.title}</span>
+            <span>{post.status}</span>
+            <button onClick={() => navigate(`/admin/posts/edit/${post._id}`)}>Edit</button>
+          </li>
+        ))}
+      </ul>
+
+      <h2>Drafts</h2>
+      <ul>
+        {drafts.map((draft) => (
+          <li key={draft._id}>
+            <span>{draft.title}</span>
+            <span>draft</span>
+            <button onClick={() => navigate(`/admin/posts/edit/${draft._id}`)}>Continue</button>
+            <button onClick={() => deleteDraft(draft._id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

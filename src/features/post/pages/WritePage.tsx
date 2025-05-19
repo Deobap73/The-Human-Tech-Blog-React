@@ -1,4 +1,4 @@
-// 📄 Caminho: The-Human-Tech-Blog-React/src/features/post/pages/WritePage.tsx
+// ✅ src/features/post/pages/WritePage.tsx
 
 'use client';
 
@@ -68,11 +68,11 @@ const WritePage = () => {
       }
       setSaveStatus('saved');
       setTimeout(() => setSaveStatus('idle'), 2000);
-      toast.success('Draft auto-saved');
+      toast.success('💾 Draft auto-saved');
     } catch (error) {
       console.error('Auto-save failed:', error);
       setSaveStatus('idle');
-      toast.error('Auto-save failed');
+      toast.error('❌ Auto-save failed');
     }
   }, [title, editor, user, draftId]);
 
@@ -96,8 +96,9 @@ const WritePage = () => {
     const content = editor.getHTML();
     const result = schema.safeParse({ title, content });
     if (!result.success) {
-      setError(result.error.issues[0].message);
-      toast.error(result.error.issues[0].message);
+      const msg = result.error.issues[0].message;
+      setError(msg);
+      toast.error(`⚠️ ${msg}`);
       return;
     }
 
@@ -106,12 +107,20 @@ const WritePage = () => {
       const formData = new FormData();
       formData.append('file', cover);
       formData.append('upload_preset', 'your_preset');
-      const res = await fetch('https://api.cloudinary.com/v1_1/your_cloud_name/image/upload', {
-        method: 'POST',
-        body: formData,
-      });
-      const data = await res.json();
-      coverUrl = data.secure_url;
+
+      try {
+        const res = await fetch('https://api.cloudinary.com/v1_1/your_cloud_name/image/upload', {
+          method: 'POST',
+          body: formData,
+        });
+        const data = await res.json();
+        coverUrl = data.secure_url;
+        toast.success('🖼️ Image uploaded');
+      } catch (error) {
+        console.error('Upload failed:', error);
+        toast.error('❌ Image upload failed');
+        return;
+      }
     }
 
     const payload = {
@@ -126,11 +135,11 @@ const WritePage = () => {
     try {
       await api.post('/posts', payload);
       if (draftId) await api.delete(`/drafts/${draftId}`);
-      toast.success('Post published');
+      toast.success('✅ Post published');
       navigate('/admin/posts');
     } catch (error) {
       console.error('Failed to publish post:', error);
-      toast.error('Failed to publish post');
+      toast.error('❌ Failed to publish post');
     }
   };
 
