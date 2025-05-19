@@ -1,32 +1,37 @@
-// src/shared/components/ConfirmDialog.tsx
+// The-Human-Tech-Blog-React/src/shared/components/ConfirmDialog.tsx
 
-import React from 'react';
 import './ConfirmDialog.scss';
+import { ReactNode } from 'react';
 
 interface ConfirmDialogProps {
-  title?: string;
   message: string;
   onConfirm: () => void;
   onCancel: () => void;
+  confirmText?: string;
+  cancelText?: string;
+  icon?: ReactNode;
 }
 
-const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
-  title = 'Confirm Action',
+const ConfirmDialog = ({
   message,
   onConfirm,
   onCancel,
-}) => {
+  confirmText = 'Yes',
+  cancelText = 'Cancel',
+  icon,
+}: ConfirmDialogProps) => {
   return (
-    <div className='confirm-dialog-backdrop'>
-      <div className='confirm-dialog'>
-        <h3>{title}</h3>
-        <p>{message}</p>
-        <div className='confirm-dialog-buttons'>
-          <button className='cancel' onClick={onCancel}>
-            Cancel
+    <div className='confirm-dialog'>
+      <div className='confirm-dialog__backdrop' onClick={onCancel} />
+      <div className='confirm-dialog__content'>
+        {icon && <div className='confirm-dialog__icon'>{icon}</div>}
+        <p className='confirm-dialog__message'>{message}</p>
+        <div className='confirm-dialog__actions'>
+          <button className='confirm-dialog__btn confirm-dialog__btn--confirm' onClick={onConfirm}>
+            {confirmText}
           </button>
-          <button className='confirm' onClick={onConfirm}>
-            Confirm
+          <button className='confirm-dialog__btn confirm-dialog__btn--cancel' onClick={onCancel}>
+            {cancelText}
           </button>
         </div>
       </div>

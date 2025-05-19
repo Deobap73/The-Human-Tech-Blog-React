@@ -1,15 +1,17 @@
-// The-Human-Tech-Blog-React/src/features/admin/posts/PostsList.tsx
+// The-Human-Tech-Blog-React/src/features/admin/pages/PostsList.tsx
 
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../shared/utils/axios';
 import { Post } from '../../../shared/types/Post';
 import '../styles/PostsList.scss';
+import ConfirmDialog from '../../../shared/components/ConfirmDialog';
 
 const PostsList = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]);
-  const [drafts, setDrafts] = useState<Post[]>([]);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [postToDelete, setPostToDelete] = useState<string | null>(null);
 
   const fetchPosts = async () => {
     try {
@@ -20,53 +22,49 @@ const PostsList = () => {
     }
   };
 
-  const fetchDrafts = async () => {
-    try {
-      const res = await api.get('/drafts');
-      setDrafts(res.data);
-    } catch (err) {
-      console.error('Failed to fetch drafts', err);
-    }
-  };
-
-  const deleteDraft = async (id: string) => {
-    try {
-      await api.delete(`/drafts/${id}`);
-      setDrafts((prev) => prev.filter((draft) => draft._id !== id));
-    } catch (err) {
-      console.error('Failed to delete draft', err);
-    }
-  };
-
   useEffect(() => {
     fetchPosts();
-    fetchDrafts();
   }, []);
+
+  const handleDelete = (id: string) => {
+    setPostToDelete(id);
+    setShowConfirm(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!postToDelete) return;
+    try {
+      await api.delete(`/posts/${postToDelete}`);
+      setPosts(posts.filter((post) => post._id !== postToDelete));
+    } catch (err) {
+      console.error('Failed to delete post', err);
+    } finally {
+      setPostToDelete(null);
+      setShowConfirm(false);
+    }
+  };
 
   return (
     <div className='posts-list'>
-      <h2>Published Posts</h2>
+      <h2>Posts</h2>
+      <button onClick={() => navigate('/admin/posts/create')}>➕ Create Post</button>
       <ul>
         {posts.map((post) => (
-          <li key={post._id}>
-            <span>{post.title}</span>
-            <span>{post.status}</span>
-            <button onClick={() => navigate(`/admin/posts/edit/${post._id}`)}>Edit</button>
+          <li key={post._id} className='posts-list__item'>
+            <span className='posts-list__title'>{post.title}</span>
+            <span className='posts-list__status'>{post.status}</span>
+            <button onClick={() => navigate(`/admin/posts/edit/${post._id}`)}>✏️ Edit</button>
+            <button onClick={() => handleDelete(post._id)}>🗑️ Delete</button>
           </li>
         ))}
       </ul>
-
-      <h2>Drafts</h2>
-      <ul>
-        {drafts.map((draft) => (
-          <li key={draft._id}>
-            <span>{draft.title}</span>
-            <span>draft</span>
-            <button onClick={() => navigate(`/admin/posts/edit/${draft._id}`)}>Continue</button>
-            <button onClick={() => deleteDraft(draft._id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+      {showConfirm && (
+        <ConfirmDialog
+          message='Are you sure you want to delete this post?'
+          onConfirm={confirmDelete}
+          onCancel={() => setShowConfirm(false)}
+        />
+      )}
     </div>
   );
 };
