@@ -1,4 +1,4 @@
-// src/features/post/pages/WritePage.tsx
+// ✅ src/features/post/pages/WritePage.tsx
 
 'use client';
 
@@ -13,6 +13,7 @@ import { useAuth } from '../../../shared/hooks/useAuth';
 import { z } from 'zod';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../styles/WritePage.scss';
+import { getAccessToken } from '../../../shared/utils/authTokenStorage';
 
 const schema = z.object({
   title: z.string().min(5, 'Title is too short'),
@@ -30,28 +31,12 @@ const WritePage = () => {
   const [error, setError] = useState('');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
-  const [postId, setPostId] = useState<string | null>(id || null);
+  const [draftId, setDraftId] = useState<string | null>(null);
 
   const editor = useEditor({
     extensions: [StarterKit, Underline, Image],
     content: '',
   });
-
-  useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        const res = await api.get(`/posts/${id}`);
-        setTitle(res.data.title);
-        editor?.commands.setContent(res.data.content);
-        setStatus(res.data.status);
-      } catch (err) {
-        console.error(err);
-        setError('Failed to load post');
-      }
-    };
-
-    if (id && editor) fetchPost();
-  }, [id, editor]);
 
   useEffect(() => {
     return () => {
@@ -60,26 +45,25 @@ const WritePage = () => {
   }, [previewUrl]);
 
   const autoSaveDraft = useCallback(async () => {
-    if (!editor) return;
-    const content = editor.getHTML();
+    if (!editor || !user || !getAccessToken()) return; // ✅ guard
 
+    const content = editor.getHTML();
     setSaveStatus('saving');
 
     const draft = {
       title,
-      description: '',
+      description: editor?.getText().slice(0, 160) || '',
       content,
       image: '',
       tags: [],
-      status: 'draft',
     };
 
     try {
-      if (postId) {
-        await api.patch(`/posts/${postId}`, draft);
+      if (draftId) {
+        await api.patch(`/drafts/${draftId}`, draft);
       } else {
-        const res = await api.post('/posts', draft);
-        setPostId(res.data.post._id);
+        const res = await api.post('/drafts', draft);
+        setDraftId(res.data.draft._id);
       }
       setSaveStatus('saved');
       setTimeout(() => setSaveStatus('idle'), 2000);
@@ -87,10 +71,10 @@ const WritePage = () => {
       console.error('Auto-save failed:', error);
       setSaveStatus('idle');
     }
-  }, [title, editor, postId]);
+  }, [title, editor, user, draftId]);
 
   useEffect(() => {
-    if (!editor) return;
+    if (!editor || !getAccessToken()) return; // ✅ guard
 
     if (timeoutId) clearTimeout(timeoutId);
 
@@ -104,7 +88,7 @@ const WritePage = () => {
   }, [title, editor, autoSaveDraft]);
 
   const handleSubmit = async () => {
-    if (!editor) return;
+    if (!editor || !user) return;
 
     const content = editor.getHTML();
     const result = schema.safeParse({ title, content });
@@ -128,7 +112,7 @@ const WritePage = () => {
 
     const payload = {
       title,
-      description: '',
+      description: editor?.getText().slice(0, 160) || '',
       content,
       image: coverUrl,
       tags: [],
@@ -136,49 +120,17 @@ const WritePage = () => {
     };
 
     try {
-      if (postId) {
-        await api.patch(`/posts/${postId}`, payload);
-      } else {
-        const res = await api.post('/posts', payload);
-        setPostId(res.data.post._id);
-      }
+      await api.post('/posts', payload);
+      if (draftId) await api.delete(`/drafts/${draftId}`);
       navigate('/admin/posts');
     } catch (error) {
-      console.error('Failed to submit post:', error);
-      setError('Failed to submit post');
-    }
-  };
-
-  const handleSaveDraft = async () => {
-    if (!editor) return;
-    const content = editor.getHTML();
-
-    const draft = {
-      title,
-      description: '',
-      content,
-      image: '',
-      tags: [],
-      status: 'draft',
-    };
-
-    try {
-      if (postId) {
-        await api.patch(`/posts/${postId}`, draft);
-      } else {
-        const res = await api.post('/posts', draft);
-        setPostId(res.data.post._id);
-      }
-      setStatus('draft');
-    } catch (error) {
-      console.error('Failed to save draft:', error);
-      setError('Failed to save draft');
+      console.error('Failed to publish post:', error);
     }
   };
 
   return (
     <div className='write-page'>
-      <h2>{id ? 'Edit Post' : 'Create New Post'}</h2>
+      <h2>{draftId ? 'Edit Draft' : 'Create New Post'}</h2>
       {error && <p className='error'>{error}</p>}
       <p className='status-indicator'>
         Status: <strong>{status}</strong>
@@ -216,7 +168,7 @@ const WritePage = () => {
         }}
       />
 
-      {editor && <Toolbar editor={editor} onSaveDraft={handleSaveDraft} onPublish={handleSubmit} />}
+      {editor && <Toolbar editor={editor} onSaveDraft={autoSaveDraft} onPublish={handleSubmit} />}
       <EditorContent editor={editor} />
     </div>
   );
