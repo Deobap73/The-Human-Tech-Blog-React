@@ -1,6 +1,8 @@
 // src/features/post/pages/WritePage.tsx
 
-import { useEffect, useState } from 'react';
+'use client';
+
+import { useEffect, useState, useCallback } from 'react';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
@@ -25,6 +27,8 @@ const WritePage = () => {
   const [cover, setCover] = useState<File | null>(null);
   const [status, setStatus] = useState<'draft' | 'published'>('draft');
   const [error, setError] = useState('');
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
 
   const editor = useEditor({
     extensions: [StarterKit, Underline, Image],
@@ -46,6 +50,48 @@ const WritePage = () => {
 
     if (id && editor) fetchPost();
   }, [id, editor]);
+
+  const autoSaveDraft = useCallback(async () => {
+    if (!editor) return;
+    const content = editor.getHTML();
+
+    setSaveStatus('saving');
+
+    const draft = {
+      title,
+      content,
+      author: user?._id,
+      cover: '',
+      status: 'draft',
+    };
+
+    try {
+      if (id) {
+        await api.patch(`/posts/${id}`, draft);
+      } else {
+        await api.post('/api/posts', draft);
+      }
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 2000);
+    } catch (error) {
+      console.error('Auto-save failed:', error);
+      setSaveStatus('idle');
+    }
+  }, [title, editor, user, id]);
+
+  useEffect(() => {
+    if (!editor) return;
+
+    if (timeoutId) clearTimeout(timeoutId);
+
+    const tid = setTimeout(() => {
+      const content = editor.getHTML();
+      if (title.trim() || content.trim()) autoSaveDraft();
+    }, 4000);
+
+    setTimeoutId(tid);
+    return () => clearTimeout(tid);
+  }, [title, editor, autoSaveDraft]);
 
   const handleSubmit = async () => {
     if (!editor) return;
@@ -114,6 +160,10 @@ const WritePage = () => {
       {error && <p className='error'>{error}</p>}
       <p className='status-indicator'>
         Status: <strong>{status}</strong>
+      </p>
+      <p className='autosave-indicator'>
+        {saveStatus === 'saving' && '💾 Saving...'}
+        {saveStatus === 'saved' && '✅ Saved'}
       </p>
       <input
         type='text'
