@@ -30,6 +30,7 @@ const WritePage = () => {
   const [error, setError] = useState('');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+  const [postId, setPostId] = useState<string | null>(id || null);
 
   const editor = useEditor({
     extensions: [StarterKit, Underline, Image],
@@ -66,17 +67,19 @@ const WritePage = () => {
 
     const draft = {
       title,
+      description: '',
       content,
-      author: user?._id,
-      cover: '',
+      image: '',
+      tags: [],
       status: 'draft',
     };
 
     try {
-      if (id) {
-        await api.patch(`/posts/${id}`, draft);
+      if (postId) {
+        await api.patch(`/posts/${postId}`, draft);
       } else {
-        await api.post('/api/posts', draft);
+        const res = await api.post('/posts', draft);
+        setPostId(res.data.post._id);
       }
       setSaveStatus('saved');
       setTimeout(() => setSaveStatus('idle'), 2000);
@@ -84,7 +87,7 @@ const WritePage = () => {
       console.error('Auto-save failed:', error);
       setSaveStatus('idle');
     }
-  }, [title, editor, user, id]);
+  }, [title, editor, postId]);
 
   useEffect(() => {
     if (!editor) return;
@@ -125,19 +128,25 @@ const WritePage = () => {
 
     const payload = {
       title,
+      description: '',
       content,
-      author: user?._id,
-      cover: coverUrl,
+      image: coverUrl,
+      tags: [],
       status: 'published',
     };
 
-    if (id) {
-      await api.patch(`/posts/${id}`, payload);
-    } else {
-      await api.post('/api/posts', payload);
+    try {
+      if (postId) {
+        await api.patch(`/posts/${postId}`, payload);
+      } else {
+        const res = await api.post('/posts', payload);
+        setPostId(res.data.post._id);
+      }
+      navigate('/admin/posts');
+    } catch (error) {
+      console.error('Failed to submit post:', error);
+      setError('Failed to submit post');
     }
-
-    navigate('/admin/posts');
   };
 
   const handleSaveDraft = async () => {
@@ -146,19 +155,25 @@ const WritePage = () => {
 
     const draft = {
       title,
+      description: '',
       content,
-      author: user?._id,
-      cover: '',
+      image: '',
+      tags: [],
       status: 'draft',
     };
 
-    if (id) {
-      await api.patch(`/posts/${id}`, draft);
-    } else {
-      await api.post('/api/posts', draft);
+    try {
+      if (postId) {
+        await api.patch(`/posts/${postId}`, draft);
+      } else {
+        const res = await api.post('/posts', draft);
+        setPostId(res.data.post._id);
+      }
+      setStatus('draft');
+    } catch (error) {
+      console.error('Failed to save draft:', error);
+      setError('Failed to save draft');
     }
-
-    setStatus('draft');
   };
 
   return (
