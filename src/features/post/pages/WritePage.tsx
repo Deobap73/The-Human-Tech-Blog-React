@@ -25,6 +25,7 @@ const WritePage = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [cover, setCover] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [status, setStatus] = useState<'draft' | 'published'>('draft');
   const [error, setError] = useState('');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
@@ -50,6 +51,12 @@ const WritePage = () => {
 
     if (id && editor) fetchPost();
   }, [id, editor]);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
 
   const autoSaveDraft = useCallback(async () => {
     if (!editor) return;
@@ -165,13 +172,35 @@ const WritePage = () => {
         {saveStatus === 'saving' && '💾 Saving...'}
         {saveStatus === 'saved' && '✅ Saved'}
       </p>
+
+      {previewUrl && (
+        <div className='cover-preview'>
+          <img src={previewUrl} alt='Preview' className='preview-image' />
+        </div>
+      )}
+
       <input
         type='text'
         placeholder='Post title'
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
-      <input type='file' accept='image/*' onChange={(e) => setCover(e.target.files?.[0] || null)} />
+
+      <input
+        type='file'
+        accept='image/*'
+        onChange={(e) => {
+          const file = e.target.files?.[0] || null;
+          setCover(file);
+          if (file) {
+            const objectUrl = URL.createObjectURL(file);
+            setPreviewUrl(objectUrl);
+          } else {
+            setPreviewUrl(null);
+          }
+        }}
+      />
+
       {editor && <Toolbar editor={editor} onSaveDraft={handleSaveDraft} onPublish={handleSubmit} />}
       <EditorContent editor={editor} />
     </div>
