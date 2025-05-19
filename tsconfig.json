@@ -6,7 +6,7 @@
     "declaration": true,
     "outDir": "./dist",
     "target": "es2020",
-    "types": ["node"],
+    "types": ["node", "react", "react-dom"],
     "module": "ESNext",
     "moduleResolution": "Node",
     "allowJs": true,
