@@ -1,4 +1,4 @@
-// ✅ src/features/post/pages/WritePage.tsx
+// 📄 Caminho: The-Human-Tech-Blog-React/src/features/post/pages/WritePage.tsx
 
 'use client';
 
@@ -14,6 +14,7 @@ import { z } from 'zod';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../styles/WritePage.scss';
 import { getAccessToken } from '../../../shared/utils/authTokenStorage';
+import { toast } from 'react-hot-toast';
 
 const schema = z.object({
   title: z.string().min(5, 'Title is too short'),
@@ -45,7 +46,7 @@ const WritePage = () => {
   }, [previewUrl]);
 
   const autoSaveDraft = useCallback(async () => {
-    if (!editor || !user || !getAccessToken()) return; // ✅ guard
+    if (!editor || !user || !getAccessToken()) return;
 
     const content = editor.getHTML();
     setSaveStatus('saving');
@@ -67,14 +68,16 @@ const WritePage = () => {
       }
       setSaveStatus('saved');
       setTimeout(() => setSaveStatus('idle'), 2000);
+      toast.success('Draft auto-saved');
     } catch (error) {
       console.error('Auto-save failed:', error);
       setSaveStatus('idle');
+      toast.error('Auto-save failed');
     }
   }, [title, editor, user, draftId]);
 
   useEffect(() => {
-    if (!editor || !getAccessToken()) return; // ✅ guard
+    if (!editor || !getAccessToken()) return;
 
     if (timeoutId) clearTimeout(timeoutId);
 
@@ -94,6 +97,7 @@ const WritePage = () => {
     const result = schema.safeParse({ title, content });
     if (!result.success) {
       setError(result.error.issues[0].message);
+      toast.error(result.error.issues[0].message);
       return;
     }
 
@@ -122,9 +126,11 @@ const WritePage = () => {
     try {
       await api.post('/posts', payload);
       if (draftId) await api.delete(`/drafts/${draftId}`);
+      toast.success('Post published');
       navigate('/admin/posts');
     } catch (error) {
       console.error('Failed to publish post:', error);
+      toast.error('Failed to publish post');
     }
   };
 
