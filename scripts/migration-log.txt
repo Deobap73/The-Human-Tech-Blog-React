@@ -1,14 +1,3 @@
-✔ Moved: hooks/useAuth.ts → features/auth/services/useAuth.ts
-✔ Moved: hooks/usePosts.ts → features/post/services/usePosts.ts
-✔ Moved: hooks/useTheme.ts → shared/hooks/useTheme.ts
-✔ Updated import in PrivateRoute.tsx
-✔ Updated import in Navbar.tsx
-✔ Updated import in LoginModal.tsx
-✔ Updated import in RegisterModal.tsx
-✔ Updated import in LoginPage.tsx
-✔ Updated import in RegisterPage.tsx
-✔ Updated import in BookmarkButton.tsx
-✔ Updated import in Comments.tsx
-✔ Updated import in ReactionButtons.tsx
-✔ Updated import in Navbar.tsx
-✔ Updated import in ThemeToggle.tsx
+✘ Error moving hooks/useAuth.ts: ENOENT: no such file or directory, lstat '/home/berto/Blog projects/The-Human-Tech-Blog-React/src/hooks/useAuth.ts'
+✘ Error moving hooks/usePosts.ts: ENOENT: no such file or directory, lstat '/home/berto/Blog projects/The-Human-Tech-Blog-React/src/hooks/usePosts.ts'
+✘ Error moving hooks/useTheme.ts: ENOENT: no such file or directory, lstat '/home/berto/Blog projects/The-Human-Tech-Blog-React/src/hooks/useTheme.ts'
