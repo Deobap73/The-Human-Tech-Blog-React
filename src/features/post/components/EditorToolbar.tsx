@@ -15,8 +15,8 @@ import {
 
 interface EditorToolbarProps {
   editor: Editor;
-  onSaveDraft: () => void;
   onPublish: () => void;
+  onSaveDraft?: () => void;
 }
 
 const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
@@ -60,9 +60,11 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
       </button>
 
       <div className='toolbar-actions'>
-        <button onClick={onSaveDraft} className='draft-btn'>
-          Save Draft
-        </button>
+        {onSaveDraft && (
+          <button onClick={onSaveDraft} className='draft-btn'>
+            Save Draft
+          </button>
+        )}
         <button onClick={onPublish} className='publish-btn'>
           Publish
         </button>

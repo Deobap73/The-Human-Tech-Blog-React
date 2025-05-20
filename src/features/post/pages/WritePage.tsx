@@ -1,4 +1,4 @@
-// ✅ The-Human-Tech-Blog-React/src/features/post/pages/WritePage.tsx
+// The-Human-Tech-Blog-React/src/features/post/pages/WritePage.tsx
 
 'use client';
 
@@ -61,10 +61,12 @@ const WritePage = () => {
 
     try {
       if (draftId) {
-        await api.patch(`/drafts/${draftId}`, draft);
+        const res = await api.patch(`/drafts/${draftId}`, draft);
+        setStatus(res.data.draft.status);
       } else {
         const res = await api.post('/drafts', draft);
         setDraftId(res.data.draft._id);
+        setStatus(res.data.draft.status);
       }
       setSaveStatus('saved');
       setTimeout(() => setSaveStatus('idle'), 2000);
@@ -125,6 +127,7 @@ const WritePage = () => {
 
     try {
       await api.post('/posts', payload);
+      setStatus('published');
       if (draftId) await api.delete(`/drafts/${draftId}`);
       toast.success('Post published');
       navigate('/admin/posts');
@@ -136,7 +139,9 @@ const WritePage = () => {
 
   return (
     <div className='write-page'>
-      <h2>{draftId ? 'Edit Draft' : 'Create New Post'}</h2>
+      <h2>
+        {status === 'published' ? 'Published Post' : draftId ? 'Edit Draft' : 'Create New Post'}
+      </h2>
       {error && <p className='error'>{error}</p>}
       <p className='status-indicator'>
         Status: <strong>{status}</strong>
@@ -174,7 +179,7 @@ const WritePage = () => {
         }}
       />
 
-      {editor && <Toolbar editor={editor} onSaveDraft={autoSaveDraft} onPublish={handleSubmit} />}
+      {editor && <Toolbar editor={editor} onPublish={handleSubmit} />}
       <EditorContent editor={editor} />
     </div>
   );

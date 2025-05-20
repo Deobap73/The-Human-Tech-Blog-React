@@ -21,3 +21,13 @@ export interface Post {
     logo: string;
   }[];
 }
+
+export interface Draft {
+  _id: string;
+  title: string;
+  description: string;
+  content: string;
+  image?: string;
+  tags?: string[];
+  createdAt: Date;
+}

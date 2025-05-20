@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../../../shared/utils/axios';
 import { Post } from '../../../shared/types/Post';
 import '../styles/PostsList.scss';
+import { toast } from 'react-hot-toast';
 
 const PostsList = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const PostsList = () => {
       setPosts(res.data);
     } catch (err) {
       console.error('Failed to fetch posts', err);
+      toast.error('Failed to load posts');
     }
   };
 
@@ -22,8 +24,10 @@ const PostsList = () => {
     try {
       await api.delete(`/posts/${id}`);
       setPosts((prev) => prev.filter((p) => p._id !== id));
+      toast.success('Post deleted');
     } catch (err) {
       console.error('Failed to delete post', err);
+      toast.error('Failed to delete post');
     }
   };
 
