@@ -123,6 +123,7 @@ const WritePage = () => {
       image: coverUrl,
       tags: [],
       status: 'published',
+      draftId,
     };
 
     try {
