@@ -23,7 +23,8 @@ const AdminLogTable = () => {
 
   const fetchLogs = async () => {
     try {
-      const res = await api.get('/admin/logs');
+      const res = await api.get('/admin/settings/logs');
+
       setLogs(res.data);
     } catch (error) {
       console.error('Failed to fetch admin logs:', error);
