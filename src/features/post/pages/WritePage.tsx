@@ -34,17 +34,52 @@ const WritePage = () => {
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const [draftId, setDraftId] = useState<string | null>(null);
 
+  // Tiptap Editor initialization
   const editor = useEditor({
     extensions: [StarterKit, Underline, Image],
     content: '',
   });
 
+  // Clean up object URL on unmount
   useEffect(() => {
     return () => {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
     };
   }, [previewUrl]);
 
+  // Protection: only author can edit the draft
+  useEffect(() => {
+    if (!id || !user) return;
+
+    const fetchDraft = async () => {
+      try {
+        const res = await api.get(`/drafts/${id}`);
+        const fetchedDraft = res.data;
+
+        // If current user is not the author, block access and redirect
+        if (fetchedDraft.author !== user._id) {
+          toast.error('You are not allowed to edit this draft.');
+          navigate('/');
+        } else {
+          setTitle(fetchedDraft.title);
+          // Set content in editor
+          if (editor) {
+            editor.commands.setContent(fetchedDraft.content || '');
+          }
+          setDraftId(fetchedDraft._id);
+          setStatus(fetchedDraft.status || 'draft');
+        }
+      } catch (err) {
+        toast.error('Draft not found or inaccessible.');
+        navigate('/');
+      }
+    };
+
+    fetchDraft();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, user?._id, editor, navigate]);
+
+  // Auto-save draft logic
   const autoSaveDraft = useCallback(async () => {
     if (!editor || !user || !getAccessToken()) return;
 
@@ -78,6 +113,7 @@ const WritePage = () => {
     }
   }, [title, editor, user, draftId]);
 
+  // Debounced auto-save effect
   useEffect(() => {
     if (!editor || !getAccessToken()) return;
 
@@ -92,6 +128,7 @@ const WritePage = () => {
     return () => clearTimeout(tid);
   }, [title, editor, autoSaveDraft]);
 
+  // Submit handler to publish post
   const handleSubmit = async () => {
     if (!editor || !user) return;
 
@@ -107,7 +144,7 @@ const WritePage = () => {
     if (cover) {
       const formData = new FormData();
       formData.append('file', cover);
-      formData.append('upload_preset', 'your_preset');
+      formData.append('upload_preset', 'your_preset'); // Update your Cloudinary preset!
       const res = await fetch('https://api.cloudinary.com/v1_1/your_cloud_name/image/upload', {
         method: 'POST',
         body: formData,
