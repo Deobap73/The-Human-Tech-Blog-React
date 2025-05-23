@@ -1,1 +1,13 @@
-// src/components/cardList/CardList.scss
+/* src/features/post/styles/CardList.scss */
+.card-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: flex-start;
+}
+
+.empty-message {
+  font-size: 1.2rem;
+  color: #666;
+  padding: 2rem;
+}

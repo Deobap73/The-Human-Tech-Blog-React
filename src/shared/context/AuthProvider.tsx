@@ -64,9 +64,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const init = async () => {
       try {
-        await api.post('/auth/refresh'); // 🔄 tenta refresh
-        await getAccessTokenSecurely(); // 🔑 pega accessToken e injeta header
-        await refetchUser(); // 👤 carrega user
+        // 1. 🔐 Garante que o cookie CSRF é emitido
+        await api.get('/auth/csrf', { withCredentials: true });
+
+        // 2. 🔄 Faz o refresh agora que o cookie existe
+        await api.post('/auth/refresh');
+
+        // 3. 🔑 Atualiza accessToken e carrega o user
+        await getAccessTokenSecurely();
+        await refetchUser();
       } catch (err) {
         console.warn('⚠️ Refresh failed', err);
         setUser(null);

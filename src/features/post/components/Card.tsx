@@ -1,4 +1,4 @@
-// The-Human-Tech-Blog-React/src/components/card/Card.tsx
+// ✅ The-Human-Tech-Blog-React/src/components/card/Card.tsx
 
 import '../styles/Card.scss';
 import { Link } from 'react-router-dom';
@@ -12,6 +12,7 @@ type CardProps = {
 
 export const Card = ({ post }: CardProps) => {
   if (!post || !isValidPost(post)) return null;
+  console.log('[Card] Post foi recebido:', post);
 
   return (
     <div className='cardPost'>
@@ -32,6 +33,7 @@ export const Card = ({ post }: CardProps) => {
                 Read More
               </button>
             </Link>
+
             <BookmarkButton postId={post._id} />
           </div>
         </div>

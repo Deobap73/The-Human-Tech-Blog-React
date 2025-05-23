@@ -1,0 +1,27 @@
+/* ✅ The-Human-Tech-Blog-React/src/features/category/styles/CategoryPage.scss */
+
+.category-page {
+  padding: 2rem;
+  max-width: 1024px;
+  margin: 0 auto;
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #222;
+  }
+
+  .loading,
+  .empty {
+    font-style: italic;
+    color: #777;
+    margin-top: 2rem;
+  }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+}

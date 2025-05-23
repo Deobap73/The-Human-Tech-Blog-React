@@ -1,6 +1,7 @@
 // The-Human-Tech-Blog-React\src\components\lastPost\lastPost.tsx
 
 import '../styles/LastPost.scss';
+import { Link } from 'react-router-dom';
 import { Post } from '../../../shared/types/Post';
 import { isValidPost } from '../../../shared/utils/validation';
 
@@ -23,7 +24,9 @@ export const LastPost = ({ post }: { post?: Post }) => {
           </div>
           <h3 className='postTitle'>{post.title}</h3>
           <p className='excerpt'>{post.description}</p>
-          <button className='readMore'>Read More</button>
+          <Link to={`/posts/slug/${post.slug}`}>
+            <button className='readMore'>Read More</button>
+          </Link>
         </div>
       </div>
     </div>
