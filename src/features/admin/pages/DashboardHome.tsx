@@ -4,6 +4,7 @@ import api from '../../../shared/utils/axios';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import AdminLogTable from '../components/AdminLogTable';
 import '../styles/DashboardHome.scss';
+import NewsletterSubscribersTable from '../components/NewsletterSubscribersTable';
 
 const DashboardHome = () => {
   const [stats, setStats] = useState<any>(null);
@@ -42,6 +43,7 @@ const DashboardHome = () => {
           <Bar dataKey='count' fill='#007bff' radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
+      <NewsletterSubscribersTable />
 
       <AdminLogTable />
     </div>
