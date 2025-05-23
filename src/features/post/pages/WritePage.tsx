@@ -33,6 +33,7 @@ const WritePage = () => {
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const [draftId, setDraftId] = useState<string | null>(null);
+  const [postId, setPostId] = useState<string | null>(null);
 
   // Tiptap Editor initialization
   const editor = useEditor({
@@ -47,12 +48,14 @@ const WritePage = () => {
     };
   }, [previewUrl]);
 
-  // Protection: only author can edit the draft
+  // Universal protection: only author or admin can edit the draft or post
   useEffect(() => {
     if (!id || !user) return;
 
-    const fetchDraft = async () => {
+    // Tries to fetch as draft, then as post if not found
+    const fetchContent = async () => {
       try {
+        // 1. Try as draft
         const res = await api.get(`/drafts/${id}`);
         const fetchedDraft = res.data;
 
@@ -62,26 +65,43 @@ const WritePage = () => {
           navigate('/');
         } else {
           setTitle(fetchedDraft.title);
-          // Set content in editor
-          if (editor) {
-            editor.commands.setContent(fetchedDraft.content || '');
-          }
+          if (editor) editor.commands.setContent(fetchedDraft.content || '');
           setDraftId(fetchedDraft._id);
+          setPostId(null);
           setStatus(fetchedDraft.status || 'draft');
         }
-      } catch (err) {
-        toast.error('Draft not found or inaccessible.');
-        navigate('/');
+      } catch (draftErr) {
+        // 2. If not a draft, try as post
+        try {
+          const res = await api.get(`/posts/${id}`);
+          const fetchedPost = res.data;
+
+          // If not author or admin, block
+          if (fetchedPost.author !== user._id && user.role !== 'admin') {
+            toast.error('You are not allowed to edit this post.');
+            navigate('/');
+          } else {
+            setTitle(fetchedPost.title);
+            if (editor) editor.commands.setContent(fetchedPost.content || '');
+            setPostId(fetchedPost._id);
+            setDraftId(null);
+            setStatus('published');
+          }
+        } catch (postErr) {
+          toast.error('Draft or Post not found or inaccessible.');
+          navigate('/');
+        }
       }
     };
 
-    fetchDraft();
+    fetchContent();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, user?._id, editor, navigate]);
+  }, [id, user?._id, user?.role, editor, navigate]);
 
   // Auto-save draft logic
   const autoSaveDraft = useCallback(async () => {
     if (!editor || !user || !getAccessToken()) return;
+    if (postId) return; // Don't auto-save if editing a post
 
     const content = editor.getHTML();
     setSaveStatus('saving');
@@ -111,11 +131,11 @@ const WritePage = () => {
       setSaveStatus('idle');
       toast.error('Auto-save failed');
     }
-  }, [title, editor, user, draftId]);
+  }, [title, editor, user, draftId, postId]);
 
   // Debounced auto-save effect
   useEffect(() => {
-    if (!editor || !getAccessToken()) return;
+    if (!editor || !getAccessToken() || postId) return;
 
     if (timeoutId) clearTimeout(timeoutId);
 
@@ -126,9 +146,9 @@ const WritePage = () => {
 
     setTimeoutId(tid);
     return () => clearTimeout(tid);
-  }, [title, editor, autoSaveDraft]);
+  }, [title, editor, autoSaveDraft, postId]);
 
-  // Submit handler to publish post
+  // Submit handler to publish post or update post
   const handleSubmit = async () => {
     if (!editor || !user) return;
 
@@ -144,7 +164,7 @@ const WritePage = () => {
     if (cover) {
       const formData = new FormData();
       formData.append('file', cover);
-      formData.append('upload_preset', 'your_preset'); // Update your Cloudinary preset!
+      formData.append('upload_preset', 'your_preset');
       const res = await fetch('https://api.cloudinary.com/v1_1/your_cloud_name/image/upload', {
         method: 'POST',
         body: formData,
@@ -164,21 +184,34 @@ const WritePage = () => {
     };
 
     try {
-      await api.post('/posts', payload);
-      setStatus('published');
-      if (draftId) await api.delete(`/drafts/${draftId}`);
-      toast.success('Post published');
+      if (postId) {
+        // Update post (only for author/admin)
+        await api.patch(`/posts/${postId}`, payload);
+        toast.success('Post updated');
+      } else {
+        // Publish draft as post or create new post
+        await api.post('/posts', payload);
+        setStatus('published');
+        if (draftId) await api.delete(`/drafts/${draftId}`);
+        toast.success('Post published');
+      }
       navigate('/admin/posts');
     } catch (error) {
-      console.error('Failed to publish post:', error);
-      toast.error('Failed to publish post');
+      console.error('Failed to publish/update post:', error);
+      toast.error('Failed to publish/update post');
     }
   };
 
   return (
     <div className='write-page'>
       <h2>
-        {status === 'published' ? 'Published Post' : draftId ? 'Edit Draft' : 'Create New Post'}
+        {status === 'published'
+          ? postId
+            ? 'Edit Post'
+            : 'Published Post'
+          : draftId
+          ? 'Edit Draft'
+          : 'Create New Post'}
       </h2>
       {error && <p className='error'>{error}</p>}
       <p className='status-indicator'>
