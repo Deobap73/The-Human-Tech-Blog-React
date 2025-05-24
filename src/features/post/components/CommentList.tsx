@@ -5,6 +5,11 @@ import axios from '../../../shared/utils/axios';
 import { useAuth } from '../../../shared/hooks/useAuth';
 import { toast } from 'react-hot-toast';
 
+// Utilitário para garantir conversão segura de ID
+function toStrId(id: unknown): string {
+  return typeof id === 'string' ? id : (id as any)?.toString?.() ?? '';
+}
+
 interface Comment {
   _id: string;
   userId: string;
@@ -15,18 +20,19 @@ interface Comment {
 
 interface Props {
   postId: string;
-  reload: boolean;
+  reload?: boolean;
   onDelete?: () => void;
 }
 
-const CommentList = ({ postId, reload, onDelete }: Props) => {
+const CommentList = ({ postId, reload = false, onDelete }: Props) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const { user } = useAuth();
 
+  // Buscar comentários
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const res = await axios.get(`/comments/${postId}`);
+        const res = await axios.get<Comment[]>(`/comments/${postId}`);
         setComments(res.data);
       } catch {
         toast.error('Failed to fetch comments');
@@ -35,10 +41,12 @@ const CommentList = ({ postId, reload, onDelete }: Props) => {
     fetchComments();
   }, [postId, reload]);
 
+  // Apagar comentário
   const handleDelete = async (id: string) => {
     if (!window.confirm('Delete this comment?')) return;
     try {
       await axios.delete(`/comments/${id}`);
+      setComments((prev) => prev.filter((c) => c._id !== id));
       toast.success('Comment deleted');
       if (onDelete) onDelete();
     } catch {
@@ -53,7 +61,7 @@ const CommentList = ({ postId, reload, onDelete }: Props) => {
           <p className='comments__author'>{c.userName}</p>
           <p className='comments__text'>{c.text}</p>
           <span className='comments__date'>{new Date(c.createdAt).toLocaleString()}</span>
-          {user && (user._id === c.userId || user.role === 'admin') && (
+          {user && (toStrId(user._id) === toStrId(c.userId) || user.role === 'admin') && (
             <button className='comments__delete' onClick={() => handleDelete(c._id)}>
               Delete
             </button>
