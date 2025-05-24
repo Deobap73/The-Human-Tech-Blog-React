@@ -6,6 +6,7 @@ import AboutPage from '../features/about/pages/AboutPage';
 import { SinglePostPage } from '../features/post/pages/SinglePostPage';
 import WritePage from '../features/post/pages/WritePage';
 import AdminRoutes from './adminRoutes';
+import UserPage from '../features/user/pages/UserPage';
 
 const PublicRoutes = () => {
   return (
@@ -15,6 +16,7 @@ const PublicRoutes = () => {
         <Route path='about' element={<AboutPage />} />
         <Route path='posts/:slug' element={<SinglePostPage />} />
         <Route path='write' element={<WritePage />} />
+        <Route path='user' element={<UserPage />} />
         <Route path='admin/*' element={<AdminRoutes />} />
       </Route>
     </Routes>

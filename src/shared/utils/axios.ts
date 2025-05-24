@@ -1,8 +1,7 @@
 // src/shared/utils/axios.ts
-import axios from 'axios';
-import { getAccessToken } from './authTokenStorage';
 
-let csrfToken: string | null = null;
+import axios from 'axios';
+import { setAccessToken, getAccessToken } from './authTokenStorage';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
@@ -11,32 +10,36 @@ const api = axios.create({
   xsrfHeaderName: 'X-CSRF-Token',
 });
 
-api.interceptors.request.use(async (config) => {
-  const method = config.method?.toLowerCase() ?? 'get';
-
+// Authorization Header
+api.interceptors.request.use((config) => {
   const token = getAccessToken();
   if (token) {
     config.headers = config.headers || {};
     config.headers['Authorization'] = `Bearer ${token}`;
   }
-
-  if (!['get', 'head', 'options'].includes(method)) {
-    if (!csrfToken) {
-      try {
-        const { data } = await axios.get('/auth/csrf', {
-          baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
-          withCredentials: true,
-        });
-        csrfToken = data.csrfToken;
-      } catch (err) {
-        console.error('❌ Could not retrieve CSRF token', err);
-        throw err;
-      }
-    }
-    config.headers['X-CSRF-Token'] = csrfToken;
-  }
-
   return config;
 });
+
+// REFRESH automático em erro 401
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      try {
+        const res = await api.post('/auth/refresh');
+        const { accessToken } = res.data;
+        setAccessToken(accessToken);
+        api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+        originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
+        return api(originalRequest);
+      } catch (refreshError) {
+        localStorage.removeItem('access_token');
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default api;
