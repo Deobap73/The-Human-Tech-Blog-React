@@ -7,7 +7,8 @@ import PostsList from '../features/admin/posts/PostsList';
 import AdminRoute from './adminRoute';
 import WritePage from '../features/post/pages/WritePage';
 
-const AdminMessages = lazy(() => import('../features/admin/pages/AdminMessages'));
+// Correção: importar o chat a partir do path novo!
+const AdminChatPage = lazy(() => import('../features/chat/pages/ChatPage'));
 const AdminSettings = lazy(() => import('../features/admin/pages/AdminSettings'));
 
 const AdminRoutes = () => (
@@ -27,7 +28,7 @@ const AdminRoutes = () => (
         path='messages'
         element={
           <Suspense fallback={<div>Loading Messages...</div>}>
-            <AdminMessages />
+            <AdminChatPage />
           </Suspense>
         }
       />

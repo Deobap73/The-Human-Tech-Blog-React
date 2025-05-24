@@ -1,16 +1,15 @@
 /* The-Human-Tech-Blog-React\src\components\myFavoritePost\MyFavoritePost.scss */
 
-.favoritePost {
+.myFavoritePost {
+  width: 80vw;
   background: var(--bg);
   padding: var(--padding-md);
   border-radius: 8px;
   box-shadow: var(--card-shadow);
   margin-bottom: var(--spacing-md);
 
-  .title {
-    font-size: var(--font-size-2b);
-    margin-bottom: var(--margin-md);
-    color: var(--tertiaryTextColor);
+  &__image {
+    width: 80%;
   }
 
   .content {

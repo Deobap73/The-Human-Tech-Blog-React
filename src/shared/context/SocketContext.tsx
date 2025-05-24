@@ -1,3 +1,5 @@
+// The-Human-Tech-Blog-React/src/shared/context/SocketContext.tsx
+
 import { createContext, useContext } from 'react';
 import type { Socket } from 'socket.io-client';
 
