@@ -8,6 +8,8 @@ import { Post } from '../../../shared/types/Post';
 import { BookmarkButton } from '../../../features/post/components/BookmarkButton';
 import Comments from '../components/Comments';
 import { isValidPost } from '../../../shared/utils/validation';
+import ReactionButton from '../../reaction/components/ReactionButton';
+import ReactionList from '../../reaction/components/ReactionList';
 
 export const SinglePostPage = () => {
   const { slug } = useParams();
@@ -48,6 +50,9 @@ export const SinglePostPage = () => {
       <img src={post.image} alt={post.title} className='single-post__image' />
       <p className='single-post__excerpt'>{post.description}</p>
       <span className='single-post__category'>{post.categories?.[0]?.name}</span>
+      {/* Aqui sim! */}
+      <ReactionList targetType='post' targetId={post._id} />
+      <ReactionButton targetType='post' targetId={post._id} />
       <Comments postId={post._id} />
     </div>
   );
