@@ -1,0 +1,65 @@
+.user-page {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+
+  &__profile {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1.5rem;
+  }
+
+  &__avatar img {
+    border-radius: 50%;
+    border: 2px solid #007bff;
+    background: #f0f0f0;
+  }
+
+  &__info h2 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.5rem;
+    color: #222;
+  }
+
+  &__info p {
+    margin: 0;
+    color: #555;
+    font-size: 1rem;
+  }
+
+  &__edit-btn {
+    margin-top: 1rem;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+  }
+
+  &__favorites {
+    margin-top: 2rem;
+    h3 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+  }
+}
+
+.user-page__unauth {
+  max-width: 500px;
+  margin: 6rem auto 0;
+  padding: 2rem;
+  text-align: center;
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  h2 {
+    color: #c00;
+  }
+}

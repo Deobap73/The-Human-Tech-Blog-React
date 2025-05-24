@@ -13,8 +13,11 @@ interface BookmarkResponse {
 export const BookmarkButton = ({ postId }: { postId: string }) => {
   const { user } = useAuth();
   const [bookmarked, setBookmarked] = useState(false);
+  const [loading, setLoading] = useState(false);
 
+  // Obtém os favoritos do utilizador e atualiza estado
   const fetchBookmarks = useCallback(async () => {
+    if (!user) return;
     try {
       const res = await axios.get<BookmarkResponse[]>('/bookmarks');
       const found = res.data.find((item) => item.postId._id === postId);
@@ -22,26 +25,33 @@ export const BookmarkButton = ({ postId }: { postId: string }) => {
     } catch {
       setBookmarked(false);
     }
-  }, [postId]);
+  }, [user, postId]);
 
+  // Alterna favorito e atualiza estado real depois
   const toggleBookmark = async () => {
+    if (!user) return;
+    setLoading(true);
     try {
       await axios.post('/bookmarks', { postId });
-      setBookmarked((prev) => !prev);
+      // Refaz o fetch para garantir estado correto
+      await fetchBookmarks();
     } catch (err) {
       console.error('Bookmark failed', err);
+    } finally {
+      setLoading(false);
     }
   };
 
+  // Atualiza favoritos ao logar ou mudar postId
   useEffect(() => {
-    if (user) fetchBookmarks();
-  }, [user, fetchBookmarks]);
+    fetchBookmarks();
+  }, [fetchBookmarks]);
 
   return (
     <button
       className={`bookmark-button ${bookmarked ? 'active' : ''}`}
       onClick={toggleBookmark}
-      disabled={!user}
+      disabled={!user || loading}
       title={bookmarked ? 'Remove Bookmark' : 'Save to Bookmarks'}>
       {bookmarked ? <FaBookmark /> : <FaRegBookmark />}
     </button>
