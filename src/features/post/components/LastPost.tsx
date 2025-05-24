@@ -24,8 +24,10 @@ export const LastPost = ({ post }: { post?: Post }) => {
           </div>
           <h3 className='postTitle'>{post.title}</h3>
           <p className='excerpt'>{post.description}</p>
-          <Link to={`/posts/slug/${post.slug}`}>
-            <button className='readMore'>Read More</button>
+          <Link to={`/posts/${post.slug}`}>
+            <button className='cardPost__descriptionContainer__textContainer__readMore'>
+              Read More
+            </button>
           </Link>
         </div>
       </div>

@@ -22,6 +22,7 @@ const MessageViewer = ({ conversationId }: { conversationId: string }) => {
     const fetchMessages = async () => {
       try {
         const res = await api.get(`/messages/${conversationId}`);
+        console.log(res.data);
         setMessages(res.data);
       } finally {
         setLoading(false);
