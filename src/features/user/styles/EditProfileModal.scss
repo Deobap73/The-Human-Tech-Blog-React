@@ -1,0 +1,40 @@
+// src/features/user/components/EditProfileModal.scss
+.edit-profile-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.25);
+  }
+  &__content {
+    position: relative;
+    margin: 10vh auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 1rem;
+    width: 400px;
+    z-index: 1;
+  }
+  form label {
+    display: block;
+    margin: 1rem 0 0.25rem;
+  }
+  input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #eee;
+  }
+  &__actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+  }
+  &__error {
+    color: #c00;
+    margin-bottom: 1rem;
+  }
+}
