@@ -42,6 +42,22 @@ const Navbar = () => {
             </Link>
             {user ? (
               <div className='navbar__user'>
+                {/* Link to User Profile (UserPage) */}
+                <Link to='/user' className='navbar__user-profile' title='Profile'>
+                  {user.avatar ? (
+                    <img
+                      src={user.avatar}
+                      alt={user.name}
+                      className='navbar__user-avatar'
+                      style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover' }}
+                    />
+                  ) : (
+                    <IoPersonSharp size={28} style={{ verticalAlign: 'middle' }} />
+                  )}
+                  <span className='navbar__user-name' style={{ marginLeft: 8 }}>
+                    {user.name}
+                  </span>
+                </Link>
                 {(user.role === 'admin' || user.role === 'editor') && (
                   <Link to='/write' className='navbar__item'>
                     Write
@@ -52,7 +68,6 @@ const Navbar = () => {
                     Admin
                   </Link>
                 )}
-
                 <button onClick={handleLogout} className='navbar__user-logout'>
                   Logout
                 </button>
