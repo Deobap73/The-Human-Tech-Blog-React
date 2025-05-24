@@ -1,18 +1,27 @@
-// The-Human-Tech-Blog-React/src/components/comments/CommentList.tsx
+// src/components/comments/CommentList.tsx
 
-import '../styles/CommentList.scss';
 import { useEffect, useState } from 'react';
 import axios from '../../../shared/utils/axios';
+import { useAuth } from '../../../shared/hooks/useAuth';
+import { toast } from 'react-hot-toast';
 
 interface Comment {
   _id: string;
+  userId: string;
   userName: string;
   text: string;
   createdAt: string;
 }
 
-export const CommentList = ({ postId }: { postId: string }) => {
+interface Props {
+  postId: string;
+  reload: boolean;
+  onDelete?: () => void;
+}
+
+const CommentList = ({ postId, reload, onDelete }: Props) => {
   const [comments, setComments] = useState<Comment[]>([]);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -20,27 +29,42 @@ export const CommentList = ({ postId }: { postId: string }) => {
         const res = await axios.get(`/comments/${postId}`);
         setComments(res.data);
       } catch {
-        console.error('Failed to fetch comments');
+        toast.error('Failed to fetch comments');
       }
     };
     fetchComments();
-  }, [postId]);
+  }, [postId, reload]);
+
+  const handleDelete = async (id: string) => {
+    if (!window.confirm('Delete this comment?')) return;
+    try {
+      await axios.delete(`/comments/${id}`);
+      toast.success('Comment deleted');
+      if (onDelete) onDelete();
+    } catch {
+      toast.error('Failed to delete comment');
+    }
+  };
 
   return (
-    <div className='comment-list'>
-      <h3 className='comment-list__title'>Comments</h3>
-      {comments.length === 0 ? (
-        <p className='comment-list__empty'>No comments yet.</p>
-      ) : (
-        <ul className='comment-list__items'>
-          {comments.map((comment) => (
-            <li key={comment._id} className='comment-list__item'>
-              <div className='comment-list__item__user'>{comment.userName}</div>
-              <div className='comment-list__item__text'>{comment.text}</div>
-            </li>
-          ))}
-        </ul>
+    <ul className='comments__list'>
+      {comments.map((c) => (
+        <li key={c._id} className='comments__item'>
+          <p className='comments__author'>{c.userName}</p>
+          <p className='comments__text'>{c.text}</p>
+          <span className='comments__date'>{new Date(c.createdAt).toLocaleString()}</span>
+          {user && (user._id === c.userId || user.role === 'admin') && (
+            <button className='comments__delete' onClick={() => handleDelete(c._id)}>
+              Delete
+            </button>
+          )}
+        </li>
+      ))}
+      {comments.length === 0 && (
+        <li className='comments__item comments__item--empty'>No comments yet.</li>
       )}
-    </div>
+    </ul>
   );
 };
+
+export default CommentList;

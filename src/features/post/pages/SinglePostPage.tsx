@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import axios from '../../../shared/utils/axios';
 import { Post } from '../../../shared/types/Post';
 import { BookmarkButton } from '../../../features/post/components/BookmarkButton';
-import { CommentList } from '../../../features/post/components/CommentList';
+import Comments from '../components/Comments';
 import { isValidPost } from '../../../shared/utils/validation';
 
 export const SinglePostPage = () => {
@@ -48,7 +48,7 @@ export const SinglePostPage = () => {
       <img src={post.image} alt={post.title} className='single-post__image' />
       <p className='single-post__excerpt'>{post.description}</p>
       <span className='single-post__category'>{post.categories?.[0]?.name}</span>
-      <CommentList postId={post._id} />
+      <Comments postId={post._id} />
     </div>
   );
 };
