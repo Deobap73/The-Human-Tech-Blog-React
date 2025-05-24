@@ -31,18 +31,59 @@
     font-size: 1rem;
   }
 
-  &__edit-btn {
+  &__logout-btn {
     margin-top: 1rem;
-    background: #007bff;
+    background: #c00;
     color: #fff;
     border: none;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 1.25rem;
     border-radius: 0.5rem;
     cursor: pointer;
+    transition: background 0.2s;
+    &:hover {
+      background: #900;
+    }
+  }
+
+  &__myposts {
+    margin-top: 2rem;
+    h3 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+  }
+
+  &__postlist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__postitem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  &__postlink {
+    text-decoration: none;
+    color: #007bff;
+    &:hover {
+      text-decoration: underline;
+    }
+    font-weight: 500;
+  }
+
+  &__postdate {
+    font-size: 0.95rem;
+    color: #888;
   }
 
   &__favorites {
-    margin-top: 2rem;
+    margin-top: 2.5rem;
     h3 {
       font-size: 1.2rem;
       margin-bottom: 1rem;
