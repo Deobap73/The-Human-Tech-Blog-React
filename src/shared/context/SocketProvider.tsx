@@ -1,5 +1,3 @@
-// src/shared/context/SocketProvider.tsx
-
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
@@ -13,9 +11,15 @@ import api from '../utils/axios';
 export const SocketProvider = ({ children }: { children: ReactNode }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [notifications, setNotifications] = useState<any[]>([]);
+  const [reactionUpdates, setReactionUpdates] = useState<{
+    targetType: string;
+    targetId: string;
+    timestamp: number;
+  } | null>(null);
+
   const isConnected = useRef(false);
 
-  // Connect socket
+  // Socket connection
   useEffect(() => {
     const token = getAccessToken();
     const newSocket = io(import.meta.env.VITE_API_URL || 'http://localhost:5000', {
@@ -32,9 +36,14 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
       setSocket(null);
     });
 
-    // Listen for new notification
+    // Real-time notifications
     newSocket.on('notification:new', (notif) => {
       setNotifications((prev) => [notif, ...prev]);
+    });
+
+    // Real-time reaction updates
+    newSocket.on('reaction:updated', (payload) => {
+      setReactionUpdates({ ...payload, timestamp: Date.now() });
     });
 
     return () => {
@@ -42,7 +51,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
-  // Fetch initial notifications on mount
+  // Fetch notifications once on mount
   useEffect(() => {
     (async () => {
       try {
@@ -62,7 +71,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
     [socket]
   );
 
-  // Notificações
+  // Notificações helpers
   const markAsRead = useCallback(async (id: string) => {
     await api.patch(`/notifications/${id}`);
     setNotifications((prev) => prev.map((n) => (n._id === id ? { ...n, isRead: true } : n)));
@@ -81,6 +90,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
         notifications,
         markAsRead,
         deleteNotification,
+        reactionUpdates,
       }}>
       {children}
     </SocketContext.Provider>
