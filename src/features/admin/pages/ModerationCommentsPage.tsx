@@ -2,59 +2,56 @@
 
 import { useEffect, useState } from 'react';
 import api from '../../../shared/utils/axios';
-import { toast } from 'react-hot-toast';
+import { ModerationComment } from '../../../shared/types/Comment';
 import ModerationCommentRow from '../components/ModerationCommentRow';
-import { Comment } from '../../../shared/types';
 import '../styles/ModerationCommentsPage.scss';
 
 const ModerationCommentsPage = () => {
-  const [comments, setComments] = useState<Comment[]>([]);
+  const [comments, setComments] = useState<ModerationComment[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchPendingComments = async () => {
     setLoading(true);
     try {
-      const res = await api.get<Comment[]>('/comments?status=pending');
+      const res = await api.get<ModerationComment[]>('/comments/moderation');
       setComments(res.data);
     } catch {
-      toast.error('Failed to fetch pending comments');
+      setComments([]);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleApprove = async (id: string) => {
+    await api.patch(`/comments/${id}/approve`);
+    fetchPendingComments();
+  };
+
+  const handleReject = async (id: string) => {
+    await api.patch(`/comments/${id}/reject`);
+    fetchPendingComments();
   };
 
   useEffect(() => {
     fetchPendingComments();
   }, []);
 
-  const handleStatusChange = async (id: string, action: 'approve' | 'reject') => {
-    try {
-      await api.patch(`/comments/${id}/${action}`);
-      toast.success(`Comment ${action}d!`);
-      setComments(comments.filter((c) => c._id !== id));
-    } catch {
-      toast.error('Failed to update comment status');
-    }
-  };
-
-  if (loading) return <p>Loading...</p>;
-
   return (
     <div className='moderation-page'>
-      <h2>Moderate Comments</h2>
-      {comments.length === 0 ? (
-        <p>No comments to moderate 🎉</p>
+      <h2 className='moderation-page__title'>Comment Moderation</h2>
+      {loading ? (
+        <p>Loading comments...</p>
+      ) : comments.length > 0 ? (
+        comments.map((comment) => (
+          <ModerationCommentRow
+            key={comment._id}
+            comment={comment}
+            onApprove={() => handleApprove(comment._id)}
+            onReject={() => handleReject(comment._id)}
+          />
+        ))
       ) : (
-        <div className='moderation-comments-list'>
-          {comments.map((comment) => (
-            <ModerationCommentRow
-              key={comment._id}
-              comment={comment}
-              onApprove={() => handleStatusChange(comment._id, 'approve')}
-              onReject={() => handleStatusChange(comment._id, 'reject')}
-            />
-          ))}
-        </div>
+        <p>No comments pending moderation.</p>
       )}
     </div>
   );
