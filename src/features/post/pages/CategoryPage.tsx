@@ -1,4 +1,4 @@
-// ✅ The-Human-Tech-Blog-React/src/features/post/pages/CategoryPage.tsx
+// The-Human-Tech-Blog-React/src/features/post/pages/CategoryPage.tsx
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -21,14 +21,13 @@ const CategoryPage = () => {
     const fetchCategoryAndPosts = async () => {
       setLoading(true);
       try {
-        // 1. Busca a categoria pelo slug (para mostrar nome, logo, etc.)
-        const catRes = await api.get<Category[]>('/categories');
-        const cat = catRes.data.find((c) => c.slug === slug) || null;
-        setCategory(cat);
+        // 1. Busca a categoria pelo slug
+        const catRes = await api.get<Category>(`/categories/${slug}`);
+        setCategory(catRes.data);
 
         // 2. Busca os posts associados à categoria
-        const res = await api.get<Post[]>(`/categories/${slug}/posts`);
-        setPosts(res.data);
+        const postsRes = await api.get<Post[]>(`/categories/${slug}/posts`);
+        setPosts(postsRes.data);
       } catch (err) {
         toast.error('Failed to load category or posts');
         setCategory(null);
@@ -47,7 +46,6 @@ const CategoryPage = () => {
     <div className='category-page'>
       {category && (
         <div className='category-header'>
-          {/* Se tiver logo, mostra */}
           {category.logo && (
             <img
               src={category.logo}
