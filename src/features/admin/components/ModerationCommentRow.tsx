@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { ModerationComment } from '../../../shared/types/Comment';
-import './ModerationCommentRow.scss';
+import '../styles/ModerationCommentRow.scss';
 
 interface Props {
   comment: ModerationComment;
