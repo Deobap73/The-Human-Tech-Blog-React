@@ -8,6 +8,7 @@ import WritePage from '../features/post/pages/WritePage';
 import AdminRoutes from './adminRoutes';
 import UserPage from '../features/user/pages/UserPage';
 import AdminTagsPage from '../features/admin/pages/AdminTagsPage';
+import TagPage from '../features/tag/pages/TagPage';
 
 const PublicRoutes = () => {
   return (
@@ -19,6 +20,7 @@ const PublicRoutes = () => {
         <Route path='write' element={<WritePage />} />
         <Route path='user' element={<UserPage />} />
         <Route path='admin/*' element={<AdminRoutes />} />
+        <Route path='/tags/:slug' element={<TagPage />} />
         <Route path='tags' element={<AdminTagsPage />} />
       </Route>
     </Routes>

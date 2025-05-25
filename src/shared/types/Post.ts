@@ -31,3 +31,18 @@ export interface Draft {
   tags?: string[];
   createdAt: Date;
 }
+
+export interface IPost {
+  _id: string;
+  title: string;
+  description: string;
+  content: string;
+  image?: string;
+  tags: string[]; // <-- array de IDs
+  categories: string[];
+  status: 'draft' | 'published';
+  author: string;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+}
