@@ -1,0 +1,50 @@
+/* The-Human-Tech-Blog-React/src/features/admin/styles/ModerationCommentRow.scss */
+.moderation-comment-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border: 1px solid #eee;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background: #fafbfc;
+
+  .comment-info {
+    flex: 1;
+    .status {
+      font-weight: bold;
+      &-pending {
+        color: orange;
+      }
+      &-approved {
+        color: green;
+      }
+      &-rejected {
+        color: red;
+      }
+    }
+    .comment-text {
+      margin-top: 8px;
+      font-style: italic;
+    }
+  }
+  .comment-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    .approve-btn {
+      background: #14be46;
+      color: #fff;
+    }
+    .reject-btn {
+      background: #ce3131;
+      color: #fff;
+    }
+    button {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  }
+}

@@ -6,6 +6,7 @@ import DashboardHome from '../features/admin/pages/DashboardHome';
 import PostsList from '../features/admin/posts/PostsList';
 import AdminRoute from './adminRoute';
 import WritePage from '../features/post/pages/WritePage';
+import ModerationCommentsPage from '../features/admin/pages/ModerationCommentsPage';
 
 // Correção: importar o chat a partir do path novo!
 const AdminChatPage = lazy(() => import('../features/chat/pages/ChatPage'));
@@ -32,6 +33,7 @@ const AdminRoutes = () => (
           </Suspense>
         }
       />
+      <Route path='comments/moderate' element={<ModerationCommentsPage />} />
       <Route
         path='settings'
         element={
