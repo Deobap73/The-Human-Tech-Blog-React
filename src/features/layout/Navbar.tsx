@@ -9,6 +9,7 @@ import logo from '../../assets/Logo.webp';
 import ThemeToggle from './ThemeToggle';
 import { LoginModal } from '../auth/components/LoginModal';
 import { IoPersonSharp } from 'react-icons/io5';
+import SearchBar from '../../features/search/components/SearchBar';
 import './styles/Navbar.scss';
 
 const Navbar = () => {
@@ -77,6 +78,7 @@ const Navbar = () => {
                 <IoPersonSharp />
               </button>
             )}
+            <SearchBar />
             <ThemeToggle />
           </div>
         </div>

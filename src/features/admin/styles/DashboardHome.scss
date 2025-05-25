@@ -1,38 +1,64 @@
 /* The-Human-Tech-Blog-React/src/features/admin/styles/DashboardHome.scss */
 
-.dashboard-home__charts-row {
-  display: flex;
-  gap: 2rem;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
-}
-.dashboard-home__chart {
-  flex: 1 1 250px;
-  background: #fff;
-  border-radius: 12px;
-  padding: 1rem 1.2rem;
-  box-shadow: 0 1px 4px #f1f1f1;
-  margin-bottom: 1rem;
-  min-width: 220px;
-}
-.dashboard-home__chart-title {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: #457b9d;
-}
-.dashboard-home__top-users {
-  margin: 2rem 0;
-}
-.dashboard-home__user-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.6rem 1rem;
-  background: #f8f9fa;
-  border-radius: 8px;
-  margin-bottom: 0.4rem;
-  font-size: 1.07rem;
-}
+.dashboard-home {
+  &__charts-row {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+
+  &__chart {
+    flex: 1 1 250px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    box-shadow: 0 1px 4px #f1f1f1;
+    margin-bottom: 1rem;
+    min-width: 220px;
+  }
+
+  &__chart-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #457b9d;
+  }
+
+  &__top-users {
+    margin: 2rem 0;
+
+    h3 {
+      margin-bottom: 1.2rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #22223b;
+    }
+
+    ul {
+      padding: 0;
+      list-style: none;
+    }
+  }
+
+  &__user-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.6rem 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 0.4rem;
+    font-size: 1.07rem;
+  }
+
+  &__user-name {
+    font-weight: 500;
+    color: #22223b;
+  }
+
+  &__user-posts {
+    color: #999;
+  }
 
   &__top-categories {
     margin-top: 2.5rem;
@@ -43,6 +69,7 @@
       font-weight: 600;
       color: #22223b;
     }
+
     ul {
       padding: 0;
       list-style: none;
@@ -81,5 +108,12 @@
     color: #888;
     font-size: 1.2rem;
     margin-top: 2rem;
+    text-align: center;
+  }
+
+  &__title {
+    color: #22223b;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
   }
 }

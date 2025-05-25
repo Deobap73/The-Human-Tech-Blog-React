@@ -1,0 +1,29 @@
+/* The-Human-Tech-Blog-React/src/features/search/styles/SearchBar.scss */
+
+.search-bar {
+  display: flex;
+  align-items: center;
+
+  &__input {
+    flex: 1;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem 0 0 2rem;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+  }
+
+  &__button {
+    padding: 0.5rem 1rem;
+    border-radius: 0 2rem 2rem 0;
+    border: 1px solid #ccc;
+    border-left: none;
+    background: #007bff;
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+
+    &:hover {
+      background: #0056b3;
+    }
+  }
+}

@@ -1,0 +1,18 @@
+/* The-Human-Tech-Blog-React/src/features/search/styles/SearchResultsPage.scss */
+
+.search-results {
+  margin-top: 2rem;
+
+  &__title {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: #222;
+  }
+  &__empty,
+  &__loading,
+  &__no-results {
+    color: #888;
+    text-align: center;
+    margin-top: 2rem;
+  }
+}
