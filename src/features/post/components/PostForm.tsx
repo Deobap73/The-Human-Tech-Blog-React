@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../shared/utils/axios';
 import { fetchTags } from '../../../shared/services/tagService';
+import { fetchCategories } from '../../../shared/services/categoryService';
 import { Tag } from '../../../shared/types/Tag';
+import { Category } from '../../../shared/types/Category';
 import { IPost } from '../../../shared/types/Post';
 
 interface Props {
@@ -17,8 +19,9 @@ const PostForm = ({ initialPost, onSubmit }: Props) => {
   const [description, setDescription] = useState(initialPost?.description || '');
   const [content, setContent] = useState(initialPost?.content || '');
   const [tags, setTags] = useState<string[]>(initialPost?.tags || []);
-  const [availableTags, setAvailableTags] = useState<Tag[]>([]);
   const [categories, setCategories] = useState<string[]>(initialPost?.categories || []);
+  const [availableTags, setAvailableTags] = useState<Tag[]>([]);
+  const [availableCategories, setAvailableCategories] = useState<Category[]>([]);
   const [status, setStatus] = useState<'draft' | 'published'>(initialPost?.status || 'draft');
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -27,7 +30,9 @@ const PostForm = ({ initialPost, onSubmit }: Props) => {
     fetchTags()
       .then(setAvailableTags)
       .catch(() => setError('Failed to load tags'));
-    // Se quiseres podes também carregar as categorias
+    fetchCategories()
+      .then(setAvailableCategories)
+      .catch(() => setError('Failed to load categories'));
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -46,8 +51,13 @@ const PostForm = ({ initialPost, onSubmit }: Props) => {
   };
 
   const handleTagChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedOptions = Array.from(e.target.selectedOptions).map((opt) => opt.value);
-    setTags(selectedOptions);
+    const selected = Array.from(e.target.selectedOptions).map((opt) => opt.value);
+    setTags(selected);
+  };
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selected = Array.from(e.target.selectedOptions).map((opt) => opt.value);
+    setCategories(selected);
   };
 
   return (
@@ -82,7 +92,16 @@ const PostForm = ({ initialPost, onSubmit }: Props) => {
           ))}
         </select>
       </label>
-      {/* Aqui podes adicionar seleção de categorias também */}
+      <label>
+        Categories:
+        <select multiple value={categories} onChange={handleCategoryChange}>
+          {availableCategories.map((cat) => (
+            <option value={cat._id} key={cat._id}>
+              {cat.name}
+            </option>
+          ))}
+        </select>
+      </label>
       <label>
         Status:
         <select value={status} onChange={(e) => setStatus(e.target.value as 'draft' | 'published')}>

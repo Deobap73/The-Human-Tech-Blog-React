@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../../../shared/utils/axios';
 import { Post } from '../../../shared/types/Post';
+import { Category } from '../../../shared/types/Category';
 import { toast } from 'react-hot-toast';
 import CardList from '../components/CardList';
 import '../styles/CategoryPage.scss';
@@ -11,27 +12,54 @@ import '../styles/CategoryPage.scss';
 const CategoryPage = () => {
   const { slug } = useParams();
   const [posts, setPosts] = useState<Post[]>([]);
+  const [category, setCategory] = useState<Category | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    if (!slug) return;
+
+    const fetchCategoryAndPosts = async () => {
+      setLoading(true);
       try {
-        const res = await api.get(`/categories/${slug}/posts`);
+        // 1. Busca a categoria pelo slug (para mostrar nome, logo, etc.)
+        const catRes = await api.get<Category[]>('/categories');
+        const cat = catRes.data.find((c) => c.slug === slug) || null;
+        setCategory(cat);
+
+        // 2. Busca os posts associados à categoria
+        const res = await api.get<Post[]>(`/categories/${slug}/posts`);
         setPosts(res.data);
       } catch (err) {
-        toast.error('Failed to load posts');
+        toast.error('Failed to load category or posts');
+        setCategory(null);
+        setPosts([]);
       } finally {
         setLoading(false);
       }
     };
-    if (slug) fetchPosts();
+
+    fetchCategoryAndPosts();
   }, [slug]);
 
   if (loading) return <p className='category-loading'>Loading...</p>;
 
   return (
     <div className='category-page'>
-      <h2 className='category-title'>Category: {slug}</h2>
+      {category && (
+        <div className='category-header'>
+          {/* Se tiver logo, mostra */}
+          {category.logo && (
+            <img
+              src={category.logo}
+              alt={category.name}
+              className='category-logo'
+              style={{ height: 40, marginRight: 12 }}
+            />
+          )}
+          <h2 className='category-title'>Category: {category.name}</h2>
+        </div>
+      )}
+      {!category && <h2 className='category-title'>Category: {slug}</h2>}
       {posts.length > 0 ? (
         <CardList posts={posts} />
       ) : (

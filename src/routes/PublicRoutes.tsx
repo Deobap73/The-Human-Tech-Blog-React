@@ -9,6 +9,7 @@ import AdminRoutes from './adminRoutes';
 import UserPage from '../features/user/pages/UserPage';
 import AdminTagsPage from '../features/admin/pages/AdminTagsPage';
 import TagPage from '../features/tag/pages/TagPage';
+import CategoryPage from '../features/post/pages/CategoryPage';
 
 const PublicRoutes = () => {
   return (
@@ -22,6 +23,7 @@ const PublicRoutes = () => {
         <Route path='admin/*' element={<AdminRoutes />} />
         <Route path='/tags/:slug' element={<TagPage />} />
         <Route path='tags' element={<AdminTagsPage />} />
+        <Route path='/categories/:slug' element={<CategoryPage />} />
       </Route>
     </Routes>
   );
