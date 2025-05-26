@@ -1,0 +1,33 @@
+{
+  "navbar": {
+    "home": "Home",
+    "contact": "Contact",
+    "write": "Write",
+    "admin": "Admin",
+    "logout": "Logout",
+    "login": "Login",
+    "profile": "Profile",
+    "title": "The Human Tech Blog",
+    "description": "Explore the world of project management, frontend, UI/UX and Scrum through my eyes. Personal reflections and insights on life and technology",
+    "headerBackgroundAlt": "Header background image",
+    "logoAlt": "The Human Tech Blog logo",
+    "searchPlaceholder": "Search articles..."
+  },
+
+  "admin": {
+    "tags": "Tags",
+    "tag_name": "Name",
+    "tag_description": "Description",
+    "tag_color": "Color",
+    "create": "Create",
+    "update": "Update",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "no_tags": "No tags yet.",
+    "error_fetch_tags": "Failed to fetch tags.",
+    "error_save_tag": "Failed to save tag.",
+    "error_delete_tag": "Failed to delete tag.",
+    "confirm_delete_tag": "Are you sure? Tags used by posts cannot be deleted."
+  }
+}

@@ -1,0 +1,95 @@
+/* /src/features/admin/styles/AdminPostsPage.scss */
+
+.admin-posts-page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  &__error {
+    color: #c00;
+    margin-bottom: 8px;
+  }
+
+  &__create,
+  &__cancel {
+    margin: 6px 0 18px 0;
+    padding: 8px 20px;
+    border: none;
+    background: #4054b2;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    &:hover {
+      background: #223373;
+    }
+  }
+  &__form-wrapper {
+    margin-bottom: 20px;
+    background: #f6f8fa;
+    padding: 18px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+  }
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  &__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid #eee;
+  }
+  &__meta {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+  }
+  &__status[data-status='published'] {
+    color: #18a32f;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.93rem;
+  }
+  &__status[data-status='draft'] {
+    color: #888;
+    text-transform: uppercase;
+    font-size: 0.93rem;
+  }
+  &__date {
+    color: #777;
+    font-size: 0.89rem;
+  }
+  &__actions {
+    display: flex;
+    gap: 10px;
+  }
+  &__edit,
+  &__delete {
+    border: none;
+    background: #eaeaea;
+    color: #333;
+    padding: 5px 13px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    &:hover {
+      background: #ffd700;
+      color: #222;
+    }
+  }
+  &__delete {
+    background: #f6d3d3;
+    color: #ad2828;
+    &:hover {
+      background: #e45151;
+      color: #fff;
+    }
+  }
+}

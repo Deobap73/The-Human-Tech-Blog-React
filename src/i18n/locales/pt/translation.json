@@ -1,0 +1,33 @@
+{
+  "navbar": {
+    "home": "Início",
+    "contact": "Contato",
+    "write": "Escrever",
+    "admin": "Administração",
+    "logout": "Sair",
+    "login": "Entrar",
+    "profile": "Perfil",
+    "title": "The Human Tech Blog",
+    "description": "Explore o mundo de gestão de projetos, frontend, UI/UX e Scrum através da minha perspectiva. Reflexões pessoais e insights sobre vida e tecnologia",
+    "headerBackgroundAlt": "Imagem de fundo do cabeçalho",
+    "logoAlt": "Logo do The Human Tech Blog",
+    "searchPlaceholder": "Pesquisar artigos..."
+  },
+
+  "admin": {
+    "tags": "Tags",
+    "tag_name": "Nome",
+    "tag_description": "Descrição",
+    "tag_color": "Cor",
+    "create": "Criar",
+    "update": "Actualizar",
+    "edit": "Editar",
+    "delete": "Apagar",
+    "cancel": "Cancelar",
+    "no_tags": "Ainda não há tags.",
+    "error_fetch_tags": "Falha ao pesquisar as tags.",
+    "error_save_tag": "Falha ao guardar tag.",
+    "error_delete_tag": "Falha ao eliminar tag.",
+    "confirm_delete_tag": "Tem a certeza? As etiquetas utilizadas pelos posts não podem ser eliminadas."
+  }
+}

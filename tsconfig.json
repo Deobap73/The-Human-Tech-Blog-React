@@ -15,16 +15,16 @@
     "sourceMap": true,
     "strict": true,
     "noImplicitAny": true,
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "resolveJsonModule": true,
     "lib": ["ESNext", "DOM"],
     "baseUrl": "./src",
     "paths": {
       "@/*": ["*"]
     }
   },
-  "include": ["src", "scripts"],
+  "include": ["src", "scripts", "src/**/*.json"],
   "exclude": ["node_modules"]
 }

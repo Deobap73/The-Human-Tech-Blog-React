@@ -1,0 +1,19 @@
+/* src/features/shared/components/LanguageSelector.scss*/
+
+.language-selector {
+  display: flex;
+  gap: 0.5rem;
+  &__button {
+    padding: 0.4rem 1rem;
+    border: none;
+    background: #eee;
+    font-weight: bold;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    &--active {
+      background: #007bff;
+      color: #fff;
+    }
+  }
+}

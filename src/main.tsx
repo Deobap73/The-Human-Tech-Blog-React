@@ -1,8 +1,9 @@
 // The-Human-Tech-Blog-React/src/main.tsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './styles/global.scss';
+import './i18n';
 import App from './App';
+import './styles/global.scss';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from './shared/context/ThemeProvider';
 import { AuthProvider } from './shared/context/AuthProvider';

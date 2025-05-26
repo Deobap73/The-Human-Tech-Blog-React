@@ -1,4 +1,4 @@
-// src/hooks/usePosts.ts
+// src/features/post/services/usePosts.ts
 import { useEffect, useState } from 'react';
 import axios from '../../../shared/utils/axios';
 import { Post } from '../../../shared/types/Post';

@@ -1,0 +1,32 @@
+{
+  "navbar": {
+    "home": "Inicio",
+    "contact": "Contacto",
+    "write": "Escribir",
+    "admin": "Administración",
+    "logout": "Cerrar sesión",
+    "login": "Iniciar sesión",
+    "profile": "Perfil",
+    "title": "El Blog de Human Tech",
+    "description": "Explore el mundo de la gestión de proyectos, frontend, UI/UX y Scrum a través de mis ojos. Reflexiones personales e ideas sobre la vida y la tecnología",
+    "headerBackgroundAlt": "Imagen de fondo del encabezado",
+    "logoAlt": "Logotipo del Blog de Human Tech",
+    "searchPlaceholder": "Buscar artículos..."
+  },
+  "admin": {
+    "tags": "Etiquetas",
+    "tag_name": "Nombre",
+    "tag_description": "Descripción",
+    "tag_color": "Color",
+    "create": "Crear",
+    "update": "Actualizar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "cancel": "Cancelar",
+    "no_tags": "Aún no hay etiquetas.",
+    "error_fetch_tags": "Error al obtener las etiquetas.",
+    "error_save_tag": "Error al guardar la etiqueta.",
+    "error_delete_tag": "Error al eliminar la etiqueta.",
+    "confirm_delete_tag": "¿Está seguro? Las etiquetas utilizadas en publicaciones no se pueden eliminar."
+  }
+}

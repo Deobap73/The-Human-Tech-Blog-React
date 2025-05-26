@@ -11,6 +11,7 @@ import { LoginModal } from '../auth/components/LoginModal';
 import { IoPersonSharp } from 'react-icons/io5';
 import SearchBar from '../../features/search/components/SearchBar';
 import './styles/Navbar.scss';
+import LanguageSelector from '../../shared/components/LanguageSelector';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -80,6 +81,7 @@ const Navbar = () => {
             )}
             <SearchBar />
             <ThemeToggle />
+            <LanguageSelector />
           </div>
         </div>
       </nav>

@@ -1,48 +1,35 @@
-// The-Human-Tech-Blog-React/src/shared/types/Post.ts
+// src/shared/types/Post.ts
+
+export interface PostTranslation {
+  title: string;
+  description: string;
+  content: string;
+}
 
 export interface Post {
   _id: string;
-  title: string;
-  description: string;
-  image: string;
-  category: string;
-  createdAt: Date;
-  views: number;
-  content?: string;
-  tags?: string[];
-  status: 'draft' | 'published' | 'archived';
-  author?: {
-    name: string;
+  translations: {
+    en: PostTranslation;
+    pt?: PostTranslation;
+    de?: PostTranslation;
+    es?: PostTranslation;
+    [key: string]: PostTranslation | undefined;
   };
+  image?: string;
   slug: string;
   categories: {
+    _id: string;
     name: string;
     slug: string;
-    logo: string;
+    logo?: string;
   }[];
-}
-
-export interface Draft {
-  _id: string;
-  title: string;
-  description: string;
-  content: string;
-  image?: string;
   tags?: string[];
-  createdAt: Date;
-}
 
-export interface IPost {
-  _id: string;
-  title: string;
-  description: string;
-  content: string;
-  image?: string;
-  tags: string[]; // <-- array de IDs
-  categories: string[];
-  status: 'draft' | 'published';
-  author: string;
-  slug: string;
+  status: 'draft' | 'published' | 'archived';
+  author?: {
+    _id: string;
+    name: string;
+  };
   createdAt: string;
   updatedAt: string;
 }

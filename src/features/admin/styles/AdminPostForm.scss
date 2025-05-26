@@ -1,0 +1,48 @@
+/* src/features/admin/styles/AdminPostForm.scss */
+
+.admin-post-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto;
+
+  &__tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  &__tab {
+    padding: 6px 18px;
+    border: 1px solid #aaa;
+    border-bottom: 0;
+    background: #f8f8f8;
+    cursor: pointer;
+    border-radius: 6px 6px 0 0;
+    font-weight: 600;
+    &.active {
+      background: #fff;
+      border-bottom: 2px solid #fff;
+      color: #222;
+    }
+  }
+  &__fields input,
+  &__fields textarea {
+    display: block;
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  &__img {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  &__error {
+    color: #c00;
+    margin-bottom: 10px;
+  }
+}

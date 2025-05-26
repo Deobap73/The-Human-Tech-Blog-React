@@ -1,0 +1,32 @@
+{
+  "navbar": {
+    "home": "Startseite",
+    "contact": "Kontakt",
+    "write": "Schreiben",
+    "admin": "Verwaltung",
+    "logout": "Abmelden",
+    "login": "Anmelden",
+    "profile": "Profil",
+    "title": "Der Human Tech Blog",
+    "description": "Entdecken Sie die Welt des Projektmanagements, Frontend, UI/UX und Scrum durch meine Augen. Persönliche Reflexionen und Einblicke in Leben und Technologie",
+    "headerBackgroundAlt": "Hintergrundbild des Headers",
+    "logoAlt": "Logo des Human Tech Blogs",
+    "searchPlaceholder": "Artikel suchen..."
+  },
+  "admin": {
+    "tags": "Tags",
+    "tag_name": "Name",
+    "tag_description": "Beschreibung",
+    "tag_color": "Farbe",
+    "create": "Erstellen",
+    "update": "Aktualisieren",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "cancel": "Abbrechen",
+    "no_tags": "Noch keine Tags vorhanden.",
+    "error_fetch_tags": "Fehler beim Abrufen der Tags.",
+    "error_save_tag": "Fehler beim Speichern des Tags.",
+    "error_delete_tag": "Fehler beim Löschen des Tags.",
+    "confirm_delete_tag": "Sind Sie sicher? Von Beiträgen verwendete Tags können nicht gelöscht werden."
+  }
+}

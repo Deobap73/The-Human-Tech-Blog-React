@@ -1,0 +1,109 @@
+/* src/features/admin/styles/AdminNotificationsPage.scss */
+
+.admin-notifications-page {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 24px 0;
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: #fafbfd;
+    border: 1px solid #eee;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 32px;
+  }
+
+  &__langs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  &__lang-group {
+    flex: 1 1 45%;
+    min-width: 210px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    label {
+      font-weight: 600;
+    }
+  }
+
+  &__input,
+  &__textarea {
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 8px;
+    font-size: 1rem;
+    background: #fff;
+    resize: vertical;
+  }
+
+  &__btn {
+    margin-right: 12px;
+    border: none;
+    background: #006cff;
+    color: #fff;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &--cancel {
+      background: #bbb;
+    }
+
+    &:hover {
+      background: #024fd6;
+    }
+  }
+
+  &__error {
+    color: #c00;
+    font-weight: 500;
+  }
+
+  &__list {
+    list-style: none;
+    padding: 0;
+  }
+
+  &__item {
+    background: #fff;
+    border: 1px solid #e2e7ef;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+
+    b {
+      font-size: 1.1rem;
+    }
+    p {
+      margin: 6px 0;
+      color: #555;
+    }
+  }
+
+  &__edit,
+  &__delete {
+    background: none;
+    border: none;
+    color: #0077cc;
+    text-decoration: underline;
+    margin-right: 8px;
+    cursor: pointer;
+    padding: 0;
+    font-size: 1rem;
+
+    &:hover {
+      color: #0055aa;
+    }
+  }
+}

@@ -7,11 +7,11 @@ import { fetchTags } from '../../../shared/services/tagService';
 import { fetchCategories } from '../../../shared/services/categoryService';
 import { Tag } from '../../../shared/types/Tag';
 import { Category } from '../../../shared/types/Category';
-import { IPost } from '../../../shared/types/Post';
+import { Post } from '../../../shared/types/Post';
 
 interface Props {
-  initialPost?: Partial<IPost>;
-  onSubmit?: (data: Partial<IPost>) => void;
+  initialPost?: Partial<Post>;
+  onSubmit?: (data: Partial<Post>) => void;
 }
 
 const PostForm = ({ initialPost, onSubmit }: Props) => {
