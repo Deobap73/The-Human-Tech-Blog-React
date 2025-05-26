@@ -1,6 +1,6 @@
-// The-Human-Tech-Blog-React/src/components/navbar/Navbar.tsx
+// /src/components/navbar/Navbar.tsx
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth } from '../../shared/hooks/useAuth';
 import { useTheme } from '../../shared/hooks/useTheme';
@@ -12,40 +12,66 @@ import { IoPersonSharp } from 'react-icons/io5';
 import SearchBar from '../../features/search/components/SearchBar';
 import './styles/Navbar.scss';
 import LanguageSelector from '../../shared/components/LanguageSelector';
+import { useTranslation } from 'react-i18next';
+
+/**
+ * Helper to build multilanguage-aware URLs.
+ * Ensures all navigation uses current language prefix.
+ */
+const buildUrl = (path: string, lang: string) => {
+  // Remove any leading slash from path
+  const normalized = path.startsWith('/') ? path.slice(1) : path;
+  return `/${lang}/${normalized}`;
+};
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const { theme } = useTheme();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const { lang } = useParams<{ lang: string }>();
   const [showLogin, setShowLogin] = useState(false);
+
+  // Use the active lang from the route or i18n fallback
+  const activeLang = lang || i18n.language.split('-')[0] || 'en';
 
   const handleLogout = async () => {
     await logout();
-    navigate('/about');
+    // Redirect to about page with language prefix
+    navigate(buildUrl('about', activeLang));
   };
 
   const navbarClasses = `navbar ${theme === 'dark' ? 'navbar--dark' : 'navbar--light'}`;
 
   return (
     <header className={navbarClasses}>
-      <img src={frontPageImage} alt='Header background' className='navbar__background' />
+      <img
+        src={frontPageImage}
+        alt={t('navbar.headerBackgroundAlt')}
+        className='navbar__background'
+      />
       <nav className='navbar__nav'>
         <div className='navbar__container'>
           <div className='navbar__logo'>
-            <img src={logo} alt='The Human Tech Blog' className='navbar__logo-image' />
+            <img src={logo} alt={t('navbar.logoAlt')} className='navbar__logo-image' />
           </div>
           <div className='navbar__actions'>
-            <Link to='/' className='navbar__item'>
-              Home
+            {/* Home Link */}
+            <Link to={buildUrl('', activeLang)} className='navbar__item'>
+              {t('navbar.home')}
             </Link>
-            <Link to='/contact' className='navbar__item'>
-              Contact
+            {/* Contact Link */}
+            <Link to={buildUrl('contact', activeLang)} className='navbar__item'>
+              {t('navbar.contact')}
             </Link>
             {user ? (
               <div className='navbar__user'>
-                {/* Link to User Profile (UserPage) */}
-                <Link to='/user' className='navbar__user-profile' title='Profile'>
+                {/* User Profile Link */}
+                <Link
+                  to={buildUrl('user', activeLang)}
+                  className='navbar__user-profile'
+                  title={t('navbar.profile')}>
                   {user.avatar ? (
                     <img
                       src={user.avatar}
@@ -61,22 +87,23 @@ const Navbar = () => {
                   </span>
                 </Link>
                 {(user.role === 'admin' || user.role === 'editor') && (
-                  <Link to='/write' className='navbar__item'>
-                    Write
+                  <Link to={buildUrl('write', activeLang)} className='navbar__item'>
+                    {t('navbar.write')}
                   </Link>
                 )}
                 {user.role === 'admin' && (
-                  <Link to='/admin/' className='navbar__user-admin'>
-                    Admin
+                  <Link to={buildUrl('admin', activeLang)} className='navbar__user-admin'>
+                    {t('navbar.admin')}
                   </Link>
                 )}
                 <button onClick={handleLogout} className='navbar__user-logout'>
-                  Logout
+                  {t('navbar.logout')}
                 </button>
               </div>
             ) : (
               <button onClick={() => setShowLogin(true)} className='navbar__login'>
                 <IoPersonSharp />
+                <span style={{ marginLeft: 4 }}>{t('navbar.login')}</span>
               </button>
             )}
             <SearchBar />
@@ -86,11 +113,8 @@ const Navbar = () => {
         </div>
       </nav>
       <div className='navbar__tile'>
-        <h1 className='navbar__title'>The Human Tech Blog</h1>
-        <p className='navbar__description'>
-          Explore the world of project management, frontend, UI/UX and Scrum through my eyes.
-          Personal reflections and insights on life and technology
-        </p>
+        <h1 className='navbar__title'>{t('navbar.title')}</h1>
+        <p className='navbar__description'>{t('navbar.description')}</p>
       </div>
       {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
     </header>
