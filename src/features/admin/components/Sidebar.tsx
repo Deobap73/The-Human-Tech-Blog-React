@@ -1,14 +1,29 @@
-// The-Human-Tech-Blog-React/src/features/admin/components/Sidebar.tsx
+// /src/features/admin/components/Sidebar.tsx
 
 import { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import '../styles/Sidebar.scss';
 import { useAuth } from '../../../shared/hooks/useAuth';
 import api from '../../../shared/utils/axios';
+import { useTranslation } from 'react-i18next';
+
+/**
+ * Helper to build multilanguage-aware URLs for admin sidebar.
+ */
+const buildAdminUrl = (path: string, lang: string) => {
+  // Remove any leading slash from path
+  const normalized = path.startsWith('/') ? path.slice(1) : path;
+  return `/${lang}/admin${normalized ? '/' + normalized : ''}`;
+};
 
 const Sidebar = () => {
   const { user } = useAuth();
   const [pendingCount, setPendingCount] = useState<number>(0);
+  const { t, i18n } = useTranslation();
+  const { lang } = useParams<{ lang: string }>();
+
+  // Fallback to i18n language if lang param not present
+  const activeLang = lang || i18n.language.split('-')[0] || 'en';
 
   useEffect(() => {
     // Só busca se for admin ou editor
@@ -23,24 +38,26 @@ const Sidebar = () => {
   return (
     <aside className='admin-sidebar'>
       <nav className='admin-sidebar-Navbar'>
-        <NavLink to='/admin' className='admin-sidebar-Navbar-link'>
-          Dashboard
+        <NavLink to={buildAdminUrl('', activeLang)} className='admin-sidebar-Navbar-link'>
+          {t('admin.dashboard')}
         </NavLink>
-        <NavLink to='/admin/posts' className='admin-sidebar-Navbar-link'>
-          Posts
+        <NavLink to={buildAdminUrl('posts', activeLang)} className='admin-sidebar-Navbar-link'>
+          {t('admin.posts')}
         </NavLink>
-        <NavLink to='/admin/messages' className='admin-sidebar-Navbar-link'>
-          Messages
+        <NavLink to={buildAdminUrl('messages', activeLang)} className='admin-sidebar-Navbar-link'>
+          {t('admin.messages')}
         </NavLink>
         {user && (user.role === 'admin' || user.role === 'editor') && (
-          <NavLink to='/admin/comments/moderate' className='admin-sidebar-Navbar-link'>
-            Moderate Comments
+          <NavLink
+            to={buildAdminUrl('comments/moderate', activeLang)}
+            className='admin-sidebar-Navbar-link'>
+            {t('admin.moderateComments')}
             {pendingCount > 0 && <span className='sidebar-badge'>{pendingCount}</span>}
           </NavLink>
         )}
         {user && user.role === 'admin' && (
-          <NavLink to='/admin/settings' className='admin-sidebar-Navbar-link'>
-            Settings
+          <NavLink to={buildAdminUrl('settings', activeLang)} className='admin-sidebar-Navbar-link'>
+            {t('admin.settings')}
           </NavLink>
         )}
       </nav>

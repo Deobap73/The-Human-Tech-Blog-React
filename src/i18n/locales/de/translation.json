@@ -27,6 +27,11 @@
     "error_fetch_tags": "Fehler beim Abrufen der Tags.",
     "error_save_tag": "Fehler beim Speichern des Tags.",
     "error_delete_tag": "Fehler beim Löschen des Tags.",
-    "confirm_delete_tag": "Sind Sie sicher? Von Beiträgen verwendete Tags können nicht gelöscht werden."
+    "confirm_delete_tag": "Sind Sie sicher? Von Beiträgen verwendete Tags können nicht gelöscht werden.",
+    "dashboard": "Dashboard",
+    "posts": "Beiträge",
+    "messages": "Nachrichten",
+    "moderateComments": "Kommentare moderieren",
+    "settings": "Einstellungen"
   }
 }

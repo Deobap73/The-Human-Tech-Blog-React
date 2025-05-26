@@ -27,6 +27,11 @@
     "error_fetch_tags": "Error al obtener las etiquetas.",
     "error_save_tag": "Error al guardar la etiqueta.",
     "error_delete_tag": "Error al eliminar la etiqueta.",
-    "confirm_delete_tag": "¿Está seguro? Las etiquetas utilizadas en publicaciones no se pueden eliminar."
+    "confirm_delete_tag": "¿Está seguro? Las etiquetas utilizadas en publicaciones no se pueden eliminar.",
+    "dashboard": "Panel",
+    "posts": "Publicaciones",
+    "messages": "Mensajes",
+    "moderateComments": "Moderar Comentarios",
+    "settings": "Configuración"
   }
 }

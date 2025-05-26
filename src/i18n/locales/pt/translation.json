@@ -28,6 +28,11 @@
     "error_fetch_tags": "Falha ao pesquisar as tags.",
     "error_save_tag": "Falha ao guardar tag.",
     "error_delete_tag": "Falha ao eliminar tag.",
-    "confirm_delete_tag": "Tem a certeza? As etiquetas utilizadas pelos posts não podem ser eliminadas."
+    "confirm_delete_tag": "Tem a certeza? As etiquetas utilizadas pelos posts não podem ser eliminadas.",
+    "dashboard": "Painel",
+    "posts": "Posts",
+    "messages": "Mensagens",
+    "moderateComments": "Moderar Comentários",
+    "settings": "Configurações"
   }
 }

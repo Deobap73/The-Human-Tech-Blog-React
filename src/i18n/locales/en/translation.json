@@ -28,6 +28,11 @@
     "error_fetch_tags": "Failed to fetch tags.",
     "error_save_tag": "Failed to save tag.",
     "error_delete_tag": "Failed to delete tag.",
-    "confirm_delete_tag": "Are you sure? Tags used by posts cannot be deleted."
+    "confirm_delete_tag": "Are you sure? Tags used by posts cannot be deleted.",
+    "dashboard": "Dashboard",
+    "posts": "Posts",
+    "messages": "Messages",
+    "moderateComments": "Moderate Comments",
+    "settings": "Settings"
   }
 }
