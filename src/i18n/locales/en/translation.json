@@ -34,5 +34,22 @@
     "messages": "Messages",
     "moderateComments": "Moderate Comments",
     "settings": "Settings"
+  },
+  "adminCategoryForm": {
+    "title": "Manage Categories",
+    "name": "Name",
+    "namePlaceholder": "Category name",
+    "description": "Description",
+    "descriptionPlaceholder": "Description",
+    "logo": "Logo (URL)",
+    "logoPlaceholder": "Paste the logo image URL here",
+    "create": "Create",
+    "update": "Update",
+    "cancel": "Cancel",
+    "error": "Failed to save category",
+    "requiredName": "Name (EN) is required",
+    "requiredDescription": "Description (EN) is required",
+    "deleteConfirm": "Delete this category? Categories used by posts cannot be deleted.",
+    "noCategories": "No categories found."
   }
 }

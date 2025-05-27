@@ -1,4 +1,4 @@
-/* src/features/admin/styles/AdminCategoriesPage.scss */
+/* /src/features/admin/styles/AdminCategoriesPage.scss */
 
 .admin-categories-page {
   padding: 2rem;
@@ -14,32 +14,75 @@
     padding: 18px;
   }
 
-  &__langs {
+  &__tabs {
     display: flex;
-    flex-wrap: wrap;
-    gap: 18px;
-    margin-bottom: 12px;
+    gap: 8px;
+    margin-bottom: 10px;
   }
-
-  &__lang-group {
-    min-width: 180px;
-    flex: 1 1 180px;
+  &__tab {
+    padding: 6px 18px;
+    border: 1px solid #aaa;
+    border-bottom: 0;
+    background: #f8f8f8;
+    cursor: pointer;
+    border-radius: 6px 6px 0 0;
+    font-weight: 600;
+    &.active {
+      background: #fff;
+      border-bottom: 2px solid #fff;
+      color: #222;
+      box-shadow: 0 2px 8px 0 #eee;
+    }
+  }
+  &__tab-required {
+    color: #e60;
+    margin-left: 4px;
+    font-weight: bold;
+    font-size: 1.1em;
+    vertical-align: top;
+  }
+  &__fields {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
   }
-
-  &__input,
-  &__textarea {
-    width: 100%;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 6px 8px;
+  &__label {
+    font-weight: 500;
     margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
-
+  &__asterisk {
+    color: #c00;
+    margin-left: 2px;
+    font-weight: bold;
+    font-size: 1.2em;
+  }
+  &__input-error {
+    border-color: #c00;
+    background: #fff5f5;
+  }
+  &__field-error {
+    color: #c00;
+    font-size: 0.93em;
+    margin-left: 6px;
+    font-weight: 500;
+  }
+  &__logo-preview {
+    height: 32px;
+    width: auto;
+    border-radius: 4px;
+    background: #fff;
+    border: 1px solid #eee;
+  }
+  &__form-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+  }
   &__btn {
-    margin-right: 12px;
     background: #1e88e5;
     color: #fff;
     border: none;
@@ -48,23 +91,19 @@
     cursor: pointer;
     font-weight: 600;
     transition: background 0.2s;
-
     &--cancel {
       background: #bbb;
     }
   }
-
   &__error {
     color: #d32f2f;
     margin-top: 12px;
   }
-
   &__list {
     list-style: none;
     padding: 0;
     margin: 0;
   }
-
   &__item {
     background: #f6f6f6;
     margin-bottom: 10px;
@@ -75,7 +114,6 @@
     gap: 14px;
     box-shadow: 0 1px 3px #0001;
   }
-
   &__edit,
   &__delete {
     margin-left: auto;
@@ -91,11 +129,9 @@
       text-decoration: underline;
     }
   }
-
   &__delete {
     color: #d32f2f;
   }
-
   &__cat-logo {
     height: 26px;
     width: auto;
@@ -103,7 +139,6 @@
     background: #fff;
     border: 1px solid #ddd;
   }
-
   &__desc {
     color: #666;
     font-size: 0.92em;

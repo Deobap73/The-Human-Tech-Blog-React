@@ -28,10 +28,27 @@
     "error_save_tag": "Error al guardar la etiqueta.",
     "error_delete_tag": "Error al eliminar la etiqueta.",
     "confirm_delete_tag": "¿Está seguro? Las etiquetas utilizadas en publicaciones no se pueden eliminar.",
-    "dashboard": "Panel",
+    "dashboard": "Panel de control",
     "posts": "Publicaciones",
     "messages": "Mensajes",
-    "moderateComments": "Moderar Comentarios",
-    "settings": "Configuración"
+    "moderateComments": "Moderar comentarios",
+    "settings": "Ajustes"
+  },
+  "adminCategoryForm": {
+    "title": "Administrar categorías",
+    "name": "Nombre",
+    "namePlaceholder": "Nombre de la categoría",
+    "description": "Descripción",
+    "descriptionPlaceholder": "Descripción",
+    "logo": "Logotipo (URL)",
+    "logoPlaceholder": "Pegue aquí la URL de la imagen del logotipo",
+    "create": "Crear",
+    "update": "Actualizar",
+    "cancel": "Cancelar",
+    "error": "Error al guardar la categoría",
+    "requiredName": "El nombre (EN) es obligatorio",
+    "requiredDescription": "La descripción (EN) es obligatoria",
+    "deleteConfirm": "¿Eliminar esta categoría? Las categorías utilizadas por publicaciones no se pueden eliminar.",
+    "noCategories": "No se encontraron categorías."
   }
 }

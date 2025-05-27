@@ -33,5 +33,22 @@
     "messages": "Nachrichten",
     "moderateComments": "Kommentare moderieren",
     "settings": "Einstellungen"
+  },
+  "adminCategoryForm": {
+    "title": "Kategorien verwalten",
+    "name": "Name",
+    "namePlaceholder": "Kategoriename",
+    "description": "Beschreibung",
+    "descriptionPlaceholder": "Beschreibung",
+    "logo": "Logo (URL)",
+    "logoPlaceholder": "Logo-Bild-URL hier einfügen",
+    "create": "Erstellen",
+    "update": "Aktualisieren",
+    "cancel": "Abbrechen",
+    "error": "Fehler beim Speichern der Kategorie",
+    "requiredName": "Name (EN) ist erforderlich",
+    "requiredDescription": "Beschreibung (EN) ist erforderlich",
+    "deleteConfirm": "Diese Kategorie löschen? Von Beiträgen verwendete Kategorien können nicht gelöscht werden.",
+    "noCategories": "Keine Kategorien gefunden."
   }
 }

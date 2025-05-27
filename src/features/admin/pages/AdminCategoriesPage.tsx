@@ -1,4 +1,4 @@
-// src/features/admin/pages/AdminCategoriesPage.tsx
+// /src/features/admin/pages/AdminCategoriesPage.tsx
 
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,14 +11,9 @@ import {
 import { Category, CategoryTranslation } from '../../../shared/types/Category';
 import '../../admin/styles/AdminCategoriesPage.scss';
 
-const languages = ['en', 'pt', 'de', 'es'];
+const LANGUAGES = ['en', 'pt', 'de', 'es'];
 
-const emptyTranslations: {
-  en: CategoryTranslation;
-  pt: CategoryTranslation;
-  de: CategoryTranslation;
-  es: CategoryTranslation;
-} = {
+const emptyTranslations: Record<string, CategoryTranslation> = {
   en: { name: '', description: '' },
   pt: { name: '', description: '' },
   de: { name: '', description: '' },
@@ -26,18 +21,20 @@ const emptyTranslations: {
 };
 
 const AdminCategoriesPage = () => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [categories, setCategories] = useState<Category[]>([]);
   const [editing, setEditing] = useState<Category | null>(null);
   const [form, setForm] = useState<typeof emptyTranslations>(emptyTranslations);
   const [logo, setLogo] = useState('');
+  const [activeLang, setActiveLang] = useState('en');
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<{ name?: string; description?: string }>({});
 
   const loadCategories = async () => {
     try {
       setCategories(await fetchCategories());
     } catch {
-      setError('Failed to fetch categories');
+      setError(t('adminCategoryForm.error', 'Failed to fetch categories'));
     }
   };
 
@@ -45,15 +42,13 @@ const AdminCategoriesPage = () => {
     loadCategories();
   }, []);
 
-  const handleInput = (
-    lang: keyof typeof emptyTranslations,
-    field: keyof CategoryTranslation,
-    value: string
-  ) => {
+  const handleInput = (field: keyof CategoryTranslation, value: string) => {
     setForm((prev) => ({
       ...prev,
-      [lang]: { ...prev[lang], [field]: value },
+      [activeLang]: { ...prev[activeLang], [field]: value },
     }));
+    // Limpa erro ao editar campo
+    if (activeLang === 'en') setFieldErrors((prev) => ({ ...prev, [field]: '' }));
   };
 
   const startEdit = (cat: Category) => {
@@ -65,90 +60,171 @@ const AdminCategoriesPage = () => {
       es: cat.translations?.es || { name: '', description: '' },
     });
     setLogo(cat.logo || '');
+    setActiveLang('en');
+    setError('');
+    setFieldErrors({});
   };
 
   const clearForm = () => {
     setEditing(null);
     setForm({ ...emptyTranslations });
     setLogo('');
+    setActiveLang('en');
+    setError('');
+    setFieldErrors({});
+  };
+
+  const validateFields = (): boolean => {
+    const errors: { name?: string; description?: string } = {};
+    if (!(form.en?.name ?? '').trim()) {
+      errors.name = t('adminCategoryForm.requiredName', 'Name (EN) is required');
+    }
+    if (!(form.en?.description ?? '').trim()) {
+      errors.description = t(
+        'adminCategoryForm.requiredDescription',
+        'Description (EN) is required'
+      );
+    }
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    if (!validateFields()) return;
     try {
       if (editing) {
-        await updateCategory(editing._id, { translations: form, logo });
+        await updateCategory(editing._id, {
+          translations: form as {
+            [key: string]: CategoryTranslation | undefined;
+            en: CategoryTranslation;
+            pt?: CategoryTranslation;
+            de?: CategoryTranslation;
+            es?: CategoryTranslation;
+          },
+          logo,
+        });
       } else {
-        await createCategory({ translations: form, logo });
+        await createCategory({
+          translations: form as {
+            [key: string]: CategoryTranslation | undefined;
+            en: CategoryTranslation;
+            pt?: CategoryTranslation;
+            de?: CategoryTranslation;
+            es?: CategoryTranslation;
+          },
+          logo,
+        });
       }
       await loadCategories();
       clearForm();
     } catch (err: any) {
-      setError(err?.response?.data?.message || 'Failed to save category');
+      setError(err?.response?.data?.message || t('adminCategoryForm.error'));
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (
-      !window.confirm('Delete this category? Categorias usadas por posts não podem ser apagadas.')
-    )
-      return;
+    if (!window.confirm(t('adminCategoryForm.deleteConfirm'))) return;
     try {
       await deleteCategory(id);
       await loadCategories();
     } catch (err: any) {
-      setError(err?.response?.data?.message || 'Failed to delete category');
+      setError(err?.response?.data?.message || t('adminCategoryForm.error'));
     }
   };
 
   return (
     <div className='admin-categories-page'>
-      <h2>Manage Categories</h2>
-      <form className='admin-categories-page__form' onSubmit={handleSubmit}>
-        <div className='admin-categories-page__langs'>
-          {languages.map((lang) => (
-            <div key={lang} className='admin-categories-page__lang-group'>
-              <label>{lang.toUpperCase()}:</label>
-              <input
-                type='text'
-                placeholder='Name'
-                value={form[lang as keyof typeof emptyTranslations]?.name || ''}
-                onChange={(e) =>
-                  handleInput(lang as keyof typeof emptyTranslations, 'name', e.target.value)
-                }
-                className='admin-categories-page__input'
-                required={lang === 'en'}
-              />
-              <textarea
-                placeholder='Description'
-                value={form[lang as keyof typeof emptyTranslations]?.description || ''}
-                onChange={(e) =>
-                  handleInput(lang as keyof typeof emptyTranslations, 'description', e.target.value)
-                }
-                className='admin-categories-page__textarea'
-                rows={2}
-              />
-            </div>
+      <h2>{t('adminCategoryForm.title', 'Manage Categories')}</h2>
+      <form className='admin-categories-page__form' onSubmit={handleSubmit} autoComplete='off'>
+        {/* Tabs multilíngue */}
+        <div className='admin-categories-page__tabs'>
+          {LANGUAGES.map((lang) => (
+            <button
+              key={lang}
+              type='button'
+              className={`admin-categories-page__tab${activeLang === lang ? ' active' : ''}`}
+              onClick={() => setActiveLang(lang)}>
+              {lang.toUpperCase()}
+              {lang === 'en' && <span className='admin-categories-page__tab-required'>*</span>}
+            </button>
           ))}
         </div>
-        <label style={{ marginTop: 16 }}>Logo (URL):</label>
-        <input
-          type='text'
-          value={logo}
-          onChange={(e) => setLogo(e.target.value)}
-          placeholder='Logo URL'
-        />
-        <button type='submit' className='admin-categories-page__btn'>
-          {editing ? 'Update' : 'Create'}
-        </button>
-        {editing && (
-          <button
-            type='button'
-            onClick={clearForm}
-            className='admin-categories-page__btn admin-categories-page__btn--cancel'>
-            Cancel
+        <div className='admin-categories-page__fields'>
+          <label className='admin-categories-page__label'>
+            {t('adminCategoryForm.name')}
+            {activeLang === 'en' && <span className='admin-categories-page__asterisk'>*</span>}
+            <input
+              type='text'
+              placeholder={t('adminCategoryForm.namePlaceholder')}
+              value={form[activeLang].name}
+              required={activeLang === 'en'}
+              className={
+                activeLang === 'en' && fieldErrors.name ? 'admin-categories-page__input-error' : ''
+              }
+              onChange={(e) => handleInput('name', e.target.value)}
+            />
+            {activeLang === 'en' && fieldErrors.name && (
+              <span className='admin-categories-page__field-error'>{fieldErrors.name}</span>
+            )}
+          </label>
+          <label className='admin-categories-page__label'>
+            {t('adminCategoryForm.description')}
+            {activeLang === 'en' && <span className='admin-categories-page__asterisk'>*</span>}
+            <textarea
+              placeholder={t('adminCategoryForm.descriptionPlaceholder')}
+              value={form[activeLang].description}
+              required={activeLang === 'en'}
+              className={
+                activeLang === 'en' && fieldErrors.description
+                  ? 'admin-categories-page__input-error'
+                  : ''
+              }
+              onChange={(e) => handleInput('description', e.target.value)}
+              rows={2}
+            />
+            {activeLang === 'en' && fieldErrors.description && (
+              <span className='admin-categories-page__field-error'>{fieldErrors.description}</span>
+            )}
+          </label>
+        </div>
+        <label className='admin-categories-page__label' style={{ marginTop: 16 }}>
+          {t('adminCategoryForm.logo')}
+          <input
+            type='text'
+            value={logo}
+            onChange={(e) => setLogo(e.target.value)}
+            placeholder={t('adminCategoryForm.logoPlaceholder')}
+          />
+          {logo && (
+            <img
+              src={logo}
+              alt='logo preview'
+              className='admin-categories-page__logo-preview'
+              style={{
+                height: 32,
+                marginLeft: 14,
+                borderRadius: 4,
+                border: '1px solid #eee',
+                background: '#fff',
+              }}
+            />
+          )}
+        </label>
+        <div className='admin-categories-page__form-actions'>
+          <button type='submit' className='admin-categories-page__btn'>
+            {editing ? t('adminCategoryForm.update') : t('adminCategoryForm.create')}
           </button>
-        )}
+          {editing && (
+            <button
+              type='button'
+              onClick={clearForm}
+              className='admin-categories-page__btn admin-categories-page__btn--cancel'>
+              {t('adminCategoryForm.cancel')}
+            </button>
+          )}
+        </div>
         {error && <div className='admin-categories-page__error'>{error}</div>}
       </form>
       <ul className='admin-categories-page__list'>
@@ -170,17 +246,17 @@ const AdminCategoriesPage = () => {
               <b>{tr?.name || '[untitled]'}</b>
               <span className='admin-categories-page__desc'>{tr?.description || ''}</span>
               <button className='admin-categories-page__edit' onClick={() => startEdit(cat)}>
-                Edit
+                {t('admin.edit')}
               </button>
               <button
                 className='admin-categories-page__delete'
                 onClick={() => handleDelete(cat._id)}>
-                Delete
+                {t('admin.delete')}
               </button>
             </li>
           );
         })}
-        {categories.length === 0 && <li>No categories found.</li>}
+        {categories.length === 0 && <li>{t('adminCategoryForm.noCategories')}</li>}
       </ul>
     </div>
   );
