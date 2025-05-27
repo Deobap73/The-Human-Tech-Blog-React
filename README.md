@@ -40,7 +40,7 @@ It’s designed for tech writers and editorial teams, providing secure content m
 | International | i18next, multilanguage resources           |
 
 ---
-
+<br>
 ## 📁 Project Structure
 
 ```txt
@@ -66,7 +66,7 @@ src/
 ```
 
 ---
-
+<br>
 ## 🌍 Internationalization
 
 - Full multilanguage: All public and admin resources in EN, PT, DE, ES
@@ -76,7 +76,7 @@ src/
 - Language context: i18next with dynamic switching
 
 ---
-
+<br>
 ## 🖼️ Cloudinary Image Upload
 
 Images are uploaded directly to Cloudinary using unsigned upload presets.
@@ -93,7 +93,7 @@ VITE_CLOUDINARY_UPLOAD_PRESET=your_unsigned_preset
 ```
 
 ---
-
+<br>
 ## 🔒 Security & Best Practices
 
 - Strict TypeScript, ESLint, Prettier
@@ -109,7 +109,7 @@ VITE_CLOUDINARY_UPLOAD_PRESET=your_unsigned_preset
 - Error boundaries, toast notifications
 
 ---
-
+<br>
 ## 🛠️ Scripts
 
 ```txt
@@ -118,6 +118,7 @@ npm run build     # Build production
 npm run preview   # Preview build
 ```
 ---
+<br>
 ## 📦 API Endpoints (Expectations)
 
 - Auth: /auth/login (JWT, role)
@@ -134,8 +135,9 @@ npm run preview   # Preview build
 
 - International: Multilanguage fields in all POST/PATCH
 
-### See backend [README](https://github.com/Deobap73/The-Human-Tech-Blog-Server) for more routes.
 ---
+<br>
+### See backend [README](https://github.com/Deobap73/The-Human-Tech-Blog-Server) for more routes.
 ## ✅ Engineering Checklist
 
 - Type safety (strict TS everywhere)
@@ -155,6 +157,7 @@ npm run preview   # Preview build
 - Image upload integration
 
 ---
+<br>
 
 ## Security best practices
 
@@ -175,6 +178,7 @@ npm run preview   # Preview build
 - Login/logout, session persistence
 
 ---
+<br>
 
 ### 👤 Author
 
@@ -183,6 +187,7 @@ MIT License.
 For personal and learning use only.
 
 ---
+<br>
 
 ## 🤝 Contributions
 
@@ -193,6 +198,7 @@ For personal and learning use only.
 - Open a pull request
 
 ---
+<br>
 
 ## 📝 Final Notes
 
@@ -200,7 +206,5 @@ This project is audit-reviewed, extensible, and ready for real-world use in prof
 For backend details, see: The Human Tech Blog Server.
 
 Happy building & writing! 🚀
-
-```
 
 ```
