@@ -11,9 +11,10 @@ import {
 import { Category, CategoryTranslation } from '../../../shared/types/Category';
 import '../../admin/styles/AdminCategoriesPage.scss';
 
-const LANGUAGES = ['en', 'pt', 'de', 'es'];
+const LANGUAGES = ['en', 'pt', 'de', 'es'] as const;
+type Lang = (typeof LANGUAGES)[number];
 
-const emptyTranslations: Record<string, CategoryTranslation> = {
+const emptyTranslations: Record<Lang, CategoryTranslation> = {
   en: { name: '', description: '' },
   pt: { name: '', description: '' },
   de: { name: '', description: '' },
@@ -24,9 +25,9 @@ const AdminCategoriesPage = () => {
   const { t, i18n } = useTranslation();
   const [categories, setCategories] = useState<Category[]>([]);
   const [editing, setEditing] = useState<Category | null>(null);
-  const [form, setForm] = useState<typeof emptyTranslations>(emptyTranslations);
+  const [form, setForm] = useState<Record<Lang, CategoryTranslation>>(emptyTranslations);
   const [logo, setLogo] = useState('');
-  const [activeLang, setActiveLang] = useState('en');
+  const [activeLang, setActiveLang] = useState<Lang>('en');
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState<{ name?: string; description?: string }>({});
 
@@ -47,7 +48,6 @@ const AdminCategoriesPage = () => {
       ...prev,
       [activeLang]: { ...prev[activeLang], [field]: value },
     }));
-    // Limpa erro ao editar campo
     if (activeLang === 'en') setFieldErrors((prev) => ({ ...prev, [field]: '' }));
   };
 
@@ -96,24 +96,12 @@ const AdminCategoriesPage = () => {
     try {
       if (editing) {
         await updateCategory(editing._id, {
-          translations: form as {
-            [key: string]: CategoryTranslation | undefined;
-            en: CategoryTranslation;
-            pt?: CategoryTranslation;
-            de?: CategoryTranslation;
-            es?: CategoryTranslation;
-          },
+          translations: form,
           logo,
         });
       } else {
         await createCategory({
-          translations: form as {
-            [key: string]: CategoryTranslation | undefined;
-            en: CategoryTranslation;
-            pt?: CategoryTranslation;
-            de?: CategoryTranslation;
-            es?: CategoryTranslation;
-          },
+          translations: form,
           logo,
         });
       }
@@ -138,7 +126,7 @@ const AdminCategoriesPage = () => {
     <div className='admin-categories-page'>
       <h2>{t('adminCategoryForm.title', 'Manage Categories')}</h2>
       <form className='admin-categories-page__form' onSubmit={handleSubmit} autoComplete='off'>
-        {/* Tabs multilíngue */}
+        {/* Multilanguage Tabs */}
         <div className='admin-categories-page__tabs'>
           {LANGUAGES.map((lang) => (
             <button
@@ -164,6 +152,7 @@ const AdminCategoriesPage = () => {
                 activeLang === 'en' && fieldErrors.name ? 'admin-categories-page__input-error' : ''
               }
               onChange={(e) => handleInput('name', e.target.value)}
+              autoComplete='off'
             />
             {activeLang === 'en' && fieldErrors.name && (
               <span className='admin-categories-page__field-error'>{fieldErrors.name}</span>
@@ -183,6 +172,7 @@ const AdminCategoriesPage = () => {
               }
               onChange={(e) => handleInput('description', e.target.value)}
               rows={2}
+              autoComplete='off'
             />
             {activeLang === 'en' && fieldErrors.description && (
               <span className='admin-categories-page__field-error'>{fieldErrors.description}</span>
@@ -196,6 +186,7 @@ const AdminCategoriesPage = () => {
             value={logo}
             onChange={(e) => setLogo(e.target.value)}
             placeholder={t('adminCategoryForm.logoPlaceholder')}
+            autoComplete='off'
           />
           {logo && (
             <img
@@ -230,8 +221,8 @@ const AdminCategoriesPage = () => {
       <ul className='admin-categories-page__list'>
         {categories.map((cat) => {
           const tr =
-            cat.translations?.[i18n.language] ||
-            cat.translations?.[i18n.language.split('-')[0]] ||
+            cat.translations?.[i18n.language as Lang] ||
+            cat.translations?.[i18n.language.split('-')[0] as Lang] ||
             cat.translations?.en;
           return (
             <li key={cat._id} className='admin-categories-page__item'>
