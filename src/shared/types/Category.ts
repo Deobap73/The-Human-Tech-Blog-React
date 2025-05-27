@@ -1,4 +1,5 @@
-// The-Human-Tech-Blog-React/src/shared/types/Category.ts
+// /src/shared/types/Category.ts
+
 export interface CategoryTranslation {
   name: string;
   description?: string;
@@ -19,7 +20,6 @@ export interface Category {
   translations: CategoryTranslations;
 }
 
-// Payload para criar/atualizar Category
 export interface CategoryPayload {
   translations: CategoryTranslations;
   logo?: string;

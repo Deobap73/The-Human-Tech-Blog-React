@@ -1,3 +1,5 @@
+// src/features/admin/components/AdminPostForm.tsx
+
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchTags } from '../../../shared/services/tagService';

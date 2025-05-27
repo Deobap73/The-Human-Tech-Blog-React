@@ -19,7 +19,7 @@ export interface Post {
   translations: PostTranslations;
   image?: string;
   slug: string;
-  categories: string[]; // sempre IDs
+  categories: string[];
   tags?: string[];
   status: 'draft' | 'published' | 'archived';
   author?: {
@@ -30,7 +30,6 @@ export interface Post {
   updatedAt: string;
 }
 
-// Payload para criar/atualizar Post
 export interface PostPayload {
   translations: PostTranslations;
   image?: string;

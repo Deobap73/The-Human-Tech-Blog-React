@@ -1,4 +1,4 @@
-// src/shared/types/Tag.ts
+// /src/shared/types/Tag.ts
 
 export interface TagTranslation {
   name: string;
@@ -22,7 +22,6 @@ export interface Tag {
   updatedAt: string;
 }
 
-// Payload para criar/atualizar Tag
 export interface TagPayload {
   translations: TagTranslations;
   color?: string;

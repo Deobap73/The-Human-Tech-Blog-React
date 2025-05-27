@@ -1,4 +1,5 @@
-// src/shared/types/Notification.ts
+// /src/shared/types/Notification.ts
+
 export interface NotificationTranslation {
   title: string;
   message: string;
@@ -22,7 +23,6 @@ export interface Notification {
   updatedAt?: string;
 }
 
-// Payload para criar/atualizar Notification
 export interface NotificationPayload {
   translations: NotificationTranslations;
 }
