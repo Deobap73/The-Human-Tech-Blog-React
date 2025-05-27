@@ -8,7 +8,7 @@ import AdminRoute from './adminRoute';
 import WritePage from '../features/post/pages/WritePage';
 import ModerationCommentsPage from '../features/admin/pages/ModerationCommentsPage';
 
-// Correção: importar o chat a partir do path novo!
+// Dynamic imports for better performance
 const AdminChatPage = lazy(() => import('../features/chat/pages/ChatPage'));
 const AdminSettings = lazy(() => import('../features/admin/pages/AdminSettings'));
 
@@ -28,7 +28,7 @@ const AdminRoutes = () => (
       <Route
         path='messages'
         element={
-          <Suspense fallback={<div>Loading Messages...</div>}>
+          <Suspense fallback={<div className='route-loader'>Loading Messages...</div>}>
             <AdminChatPage />
           </Suspense>
         }
@@ -37,12 +37,13 @@ const AdminRoutes = () => (
       <Route
         path='settings'
         element={
-          <Suspense fallback={<div>Loading Settings...</div>}>
+          <Suspense fallback={<div className='route-loader'>Loading Settings...</div>}>
             <AdminSettings />
           </Suspense>
         }
       />
     </Route>
+    {/* Redirect everything else to /admin root */}
     <Route path='*' element={<Navigate to='/admin' />} />
   </Routes>
 );

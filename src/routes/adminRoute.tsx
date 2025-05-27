@@ -1,13 +1,20 @@
-// The-Human-Tech-Blog-React/src/routes/adminRoute.tsx
-
+// src/routes/adminRoute.tsx
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../shared/hooks/useAuth';
 
-const AdminRoute = ({ children }: { children: React.ReactNode }) => {
+interface Props {
+  children: React.ReactNode;
+}
+
+const AdminRoute = ({ children }: Props) => {
   const { user, loading } = useAuth();
 
-  if (loading) return <div>Loading...</div>;
-  if (!user || user.role !== 'admin') return <Navigate to='/' replace />;
+  // Show loader while authenticating
+  if (loading) return <div className='route-loader'>Loading...</div>;
+
+  // Redirect if not authenticated or not admin
+  if (!user) return <Navigate to='/login' replace />;
+  if (user.role !== 'admin') return <Navigate to='/not-authorized' replace />;
 
   return <>{children}</>;
 };

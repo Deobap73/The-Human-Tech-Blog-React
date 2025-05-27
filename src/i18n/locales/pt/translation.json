@@ -50,5 +50,61 @@
     "requiredDescription": "Descrição (EN) é obrigatória",
     "deleteConfirm": "Excluir esta categoria? Categorias usadas por posts não podem ser excluídas.",
     "noCategories": "Nenhuma categoria encontrada."
+  },
+  "adminTagForm": {
+    "title": "Gerenciar Tags",
+    "name": "Nome",
+    "namePlaceholder": "Nome da tag",
+    "description": "Descrição",
+    "descriptionPlaceholder": "Descrição",
+    "color": "Cor",
+    "create": "Criar",
+    "update": "Atualizar",
+    "cancel": "Cancelar",
+    "error": "Falha ao salvar tag",
+    "requiredName": "Nome (EN) é obrigatório",
+    "deleteConfirm": "Excluir esta tag? Tags usadas por posts não podem ser excluídas.",
+    "noTags": "Nenhuma tag encontrada."
+  },
+  "adminNotificationForm": {
+    "title": "Gerenciar Notificações",
+    "notificationTitle": "Título",
+    "notificationTitlePlaceholder": "Título da notificação",
+    "message": "Mensagem",
+    "messagePlaceholder": "Digite a mensagem da notificação...",
+    "create": "Criar",
+    "update": "Atualizar",
+    "cancel": "Cancelar",
+    "error": "Falha ao salvar notificação",
+    "requiredTitle": "Título (EN) é obrigatório",
+    "deleteConfirm": "Excluir esta notificação?",
+    "noNotifications": "Nenhuma notificação encontrada."
+  },
+  "adminPostForm": {
+    "title": "Título",
+    "titlePlaceholder": "Título do post",
+    "requiredTitle": "Título é obrigatório (EN)",
+    "description": "Descrição",
+    "descriptionPlaceholder": "Breve descrição",
+    "requiredDescription": "Descrição é obrigatória (EN)",
+    "content": "Conteúdo",
+    "contentPlaceholder": "Conteúdo completo",
+    "requiredContent": "Conteúdo é obrigatório (EN)",
+    "image": "Imagem do Post",
+    "tags": "Tags",
+    "categories": "Categorias",
+    "status": "Status",
+    "draft": "Rascunho",
+    "published": "Publicado",
+    "save": "Salvar",
+    "error": "Falha ao salvar post"
+  },
+  "notAuthorized": {
+    "title": "Acesso negado",
+    "message": "Não tem permissão para aceder a esta página.",
+    "goHome": "Ir para o início"
+  },
+  "route": {
+    "loading": "A carregar..."
   }
 }

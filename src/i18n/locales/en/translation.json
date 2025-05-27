@@ -99,5 +99,13 @@
     "published": "Published",
     "save": "Save",
     "error": "Failed to save post"
+  },
+  "notAuthorized": {
+    "title": "Access Denied",
+    "message": "You don't have permission to access this page.",
+    "goHome": "Go to Home"
+  },
+  "route": {
+    "loading": "Loading..."
   }
 }

@@ -50,5 +50,61 @@
     "requiredDescription": "Beschreibung (EN) ist erforderlich",
     "deleteConfirm": "Diese Kategorie löschen? Von Beiträgen verwendete Kategorien können nicht gelöscht werden.",
     "noCategories": "Keine Kategorien gefunden."
+  },
+  "adminTagForm": {
+    "title": "Tags verwalten",
+    "name": "Name",
+    "namePlaceholder": "Tag-Name",
+    "description": "Beschreibung",
+    "descriptionPlaceholder": "Beschreibung",
+    "color": "Farbe",
+    "create": "Erstellen",
+    "update": "Aktualisieren",
+    "cancel": "Abbrechen",
+    "error": "Fehler beim Speichern des Tags",
+    "requiredName": "Name (EN) ist erforderlich",
+    "deleteConfirm": "Diesen Tag löschen? Von Beiträgen verwendete Tags können nicht gelöscht werden.",
+    "noTags": "Keine Tags gefunden."
+  },
+  "adminNotificationForm": {
+    "title": "Benachrichtigungen verwalten",
+    "notificationTitle": "Titel",
+    "notificationTitlePlaceholder": "Benachrichtigungstitel",
+    "message": "Nachricht",
+    "messagePlaceholder": "Benachrichtigungsnachricht eingeben...",
+    "create": "Erstellen",
+    "update": "Aktualisieren",
+    "cancel": "Abbrechen",
+    "error": "Fehler beim Speichern der Benachrichtigung",
+    "requiredTitle": "Titel (EN) ist erforderlich",
+    "deleteConfirm": "Diese Benachrichtigung löschen?",
+    "noNotifications": "Keine Benachrichtigungen gefunden."
+  },
+  "adminPostForm": {
+    "title": "Titel",
+    "titlePlaceholder": "Beitragstitel",
+    "requiredTitle": "Titel ist erforderlich (EN)",
+    "description": "Beschreibung",
+    "descriptionPlaceholder": "Kurzbeschreibung",
+    "requiredDescription": "Beschreibung ist erforderlich (EN)",
+    "content": "Inhalt",
+    "contentPlaceholder": "Vollständiger Inhalt",
+    "requiredContent": "Inhalt ist erforderlich (EN)",
+    "image": "Beitragsbild",
+    "tags": "Tags",
+    "categories": "Kategorien",
+    "status": "Status",
+    "draft": "Entwurf",
+    "published": "Veröffentlicht",
+    "save": "Speichern",
+    "error": "Fehler beim Speichern des Beitrags"
+  },
+  "notAuthorized": {
+    "title": "Zugriff verweigert",
+    "message": "Sie haben keine Berechtigung, diese Seite zu betreten.",
+    "goHome": "Zur Startseite"
+  },
+  "route": {
+    "loading": "Laden..."
   }
 }

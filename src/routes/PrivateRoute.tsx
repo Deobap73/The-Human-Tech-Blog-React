@@ -1,5 +1,4 @@
-// The-Human-Tech-Blog-React/src/routes/PrivateRoute.tsx
-
+// src/routes/PrivateRoute.tsx
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../shared/hooks/useAuth';
 
@@ -10,9 +9,11 @@ interface Props {
 const PrivateRoute = ({ children }: Props) => {
   const { user, loading } = useAuth();
 
-  if (loading) return <div>Loading...</div>;
+  // Show loader while authenticating
+  if (loading) return <div className='route-loader'>Loading...</div>;
 
-  return user ? children : <Navigate to='/login' replace />;
+  // Redirect to login if not authenticated
+  return user ? <>{children}</> : <Navigate to='/login' replace />;
 };
 
 export default PrivateRoute;

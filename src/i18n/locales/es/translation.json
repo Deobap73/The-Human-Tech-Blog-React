@@ -50,5 +50,61 @@
     "requiredDescription": "La descripción (EN) es obligatoria",
     "deleteConfirm": "¿Eliminar esta categoría? Las categorías utilizadas por publicaciones no se pueden eliminar.",
     "noCategories": "No se encontraron categorías."
+  },
+  "adminTagForm": {
+    "title": "Administrar etiquetas",
+    "name": "Nombre",
+    "namePlaceholder": "Nombre de la etiqueta",
+    "description": "Descripción",
+    "descriptionPlaceholder": "Descripción",
+    "color": "Color",
+    "create": "Crear",
+    "update": "Actualizar",
+    "cancel": "Cancelar",
+    "error": "Error al guardar la etiqueta",
+    "requiredName": "El nombre (EN) es obligatorio",
+    "deleteConfirm": "¿Eliminar esta etiqueta? Las etiquetas utilizadas por publicaciones no se pueden eliminar.",
+    "noTags": "No se encontraron etiquetas."
+  },
+  "adminNotificationForm": {
+    "title": "Administrar notificaciones",
+    "notificationTitle": "Título",
+    "notificationTitlePlaceholder": "Título de la notificación",
+    "message": "Mensaje",
+    "messagePlaceholder": "Introduzca el mensaje de la notificación...",
+    "create": "Crear",
+    "update": "Actualizar",
+    "cancel": "Cancelar",
+    "error": "Error al guardar la notificación",
+    "requiredTitle": "El título (EN) es obligatorio",
+    "deleteConfirm": "¿Eliminar esta notificación?",
+    "noNotifications": "No se encontraron notificaciones."
+  },
+  "adminPostForm": {
+    "title": "Título",
+    "titlePlaceholder": "Título de la publicación",
+    "requiredTitle": "El título es obligatorio (EN)",
+    "description": "Descripción",
+    "descriptionPlaceholder": "Descripción breve",
+    "requiredDescription": "La descripción es obligatoria (EN)",
+    "content": "Contenido",
+    "contentPlaceholder": "Contenido completo",
+    "requiredContent": "El contenido es obligatorio (EN)",
+    "image": "Imagen de la publicación",
+    "tags": "Etiquetas",
+    "categories": "Categorías",
+    "status": "Estado",
+    "draft": "Borrador",
+    "published": "Publicado",
+    "save": "Guardar",
+    "error": "Error al guardar la publicación"
+  },
+  "notAuthorized": {
+    "title": "Acceso denegado",
+    "message": "No tiene permiso para acceder a esta página.",
+    "goHome": "Ir a inicio"
+  },
+  "route": {
+    "loading": "Cargando..."
   }
 }

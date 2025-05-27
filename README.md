@@ -1,241 +1,200 @@
-# <h1 align="center" >The Human Tech Blog — by Deolindo Baptista </h1>
+# The Human Tech Blog — by Deolindo Baptista
 
-**The Human Tech Blog** is a clean, scalable and professional blog platform developed using modern frontend technologies.  
-It empowers tech writers to share content with rich formatting, dynamic theming, and full control over posts and categories.
-Also a robust, secure, and scalable backend built with Node.js, Express, and TypeScript to power the **The Human Tech Blog**.
-[The backend ](https://github.com/Deobap73/The-Human-Tech-Blog-Server) manages post creation, authentication, comments, and category APIs, integrated with MongoDB and JWT-based access control.
+**The Human Tech Blog** is a professional, scalable and multilingual blog platform with a modern, modular architecture and a full-featured admin panel.  
+It’s designed for tech writers and editorial teams, providing secure content management, rich formatting, real-time notifications, and seamless integration with a robust backend.
 
-<br>
-
-<br>
+**Backend repo:** [The Human Tech Blog Server](https://github.com/Deobap73/The-Human-Tech-Blog-Server)
 
 ---
-
-<br>
 
 ## 🚀 Features
 
-- 🔐 **Authentication** (mock JWT-based with persistent session)
-- ✍️ **Write page** with [React Quill](https://github.com/zenoamaro/react-quill) WYSIWYG editor
-- 🌗 **Theme switcher** — light/dark with global context
-- 📸 **Image upload** to Cloudinary via API
-- 📄 **Category filtering**, pagination and dynamic blog routes
-- ⚡ **API integration** with Axios and JWT injection
-- 🧠 **Modular architecture** (Pages, Components, Context, Hooks, Utils)
-
-<br>
-
----
-
-<br>
-
-## 🏗️ Technologies Used
-
-| Category      | Tech Stack                            |
-| ------------- | ------------------------------------- |
-| Frontend      | React, TypeScript, Vite, React Router |
-| Styling       | CSS Modules                           |
-| Auth          | JWT (via `localStorage`)              |
-| State Mgmt    | React Context API                     |
-| Data Fetching | Axios + SWR                           |
-| Rich Editor   | React Quill (Bubble Theme)            |
-| Uploads       | Cloudinary                            |
-
-<br>
+- 🔒 **Authentication:** JWT, session, roles (Admin/Editor)
+- 🌐 **Multilingual:** Full CRUD for Posts, Categories, Tags, Notifications (EN, PT, DE, ES)
+- 📑 **Rich Editor:** Create/edit posts with Cloudinary image upload
+- ⚡ **Admin Dashboard:** Tabs per resource, multilanguage forms, inline editing
+- 🏷️ **Tags & Categories:** Fully translated, assign to posts
+- 📨 **Notifications:** Real-time, multilanguage, admin management
+- 💬 **Comments & Chat:** Moderation, threaded comments, and real-time chat (Socket.IO)
+- 🔔 **Bookmarks & Newsletter:** Subscribe to posts/categories, manage newsletters
+- 🔎 **Full-text Search:** Filters, autocomplete, relevance
+- 🌗 **Theme:** Light/Dark mode, context-driven
+- 🧠 **Type-Safe & Modular:** Strict TypeScript, SCSS BEM, clear structure
+- 🛡️ **Security:** CSRF, rate-limiting, RBAC, 2FA (admin)
+- 📦 **API-first:** Axios services, hooks, i18n, custom context
 
 ---
 
-<br>
+## 🏗️ Tech Stack
+
+| Category      | Tech Stack                                 |
+| ------------- | ------------------------------------------ |
+| Frontend      | React 18, TypeScript, Vite, React Router   |
+| Styling       | SCSS (BEM methodology), modular components |
+| Auth          | JWT, roles (admin/editor), context         |
+| State Mgmt    | React Context, custom hooks                |
+| Data Fetching | Axios, custom API services                 |
+| Rich Editor   | Tiptap/React Quill                         |
+| Uploads       | Cloudinary, Unsigned Preset                |
+| Real-time     | Socket.IO                                  |
+| International | i18next, multilanguage resources           |
+
+---
 
 ## 📁 Project Structure
 
 ```txt
 src/
-├── App.tsx                   # Routing + Provider Composition
-├── pages/                    # Page-level Components
-│   ├── HomePage.tsx
-│   ├── BlogPage.tsx
-│   ├── posts/slug/           # Dynamic Routing
-│   ├── WritePage.tsx
-│   └── LoginPage.tsx
-├── components/               # UI + Layout Components
-├── context/                  # Auth & Theme Contexts
-├── providers/                # Context Wrappers (Theme)
-├── hooks/                    # Custom Hooks (ex: usePosts)
-├── utils/                    # API, Types, Constants, Storage
+├── App.tsx                      # Routing + Provider Composition
+├── features/                    # Modular by domain (post, admin, auth, etc)
+│   ├── admin/                   # Admin pages, components, styles
+│   ├── post/                    # Public/post features
+│   ├── tag/                     # Tags management
+│   ├── notification/            # Notifications system
+│   ├── category/                # Categories system
+│   └── ...                      # (user, chat, newsletter, etc)
+├── shared/                      # Common utils, types, services
+│   ├── context/                 # Auth, Socket, Theme, i18n
+│   ├── hooks/                   # Custom hooks (usePosts, useAuth, etc)
+│   ├── services/                # API services per resource
+│   ├── types/                   # All TypeScript interfaces
+│   └── utils/                   # Helper functions (axios, validation)
+├── styles/                      # Global and feature SCSS (BEM)
+├── i18n/                        # i18next setup and translations
+├── main.tsx
+└── vite.config.ts
 ```
-
-<br>
 
 ---
 
-<br>
+## 🌍 Internationalization
 
-# Environment Setup
+- Full multilanguage: All public and admin resources in EN, PT, DE, ES
 
-1. Clone the repository
+- Admin: Tabbed translation forms for posts, categories, tags, notifications
+
+- Language context: i18next with dynamic switching
+
+---
+
+## 🖼️ Cloudinary Image Upload
+
+Images are uploaded directly to Cloudinary using unsigned upload presets.
+
+Setup:
+
+1.  Create an unsigned upload preset in Cloudinary dashboard
+
+Add to `.env`:
 
 ```txt
-git clone [git@github.com:Deobap73/The-Human-Tech-Blog.git](git@github.com:Deobap73/The-Human-Tech-Blog-React.git)
-cd The-Human-Tech-Blog
+VITE_CLOUDINARY_CLOUD_NAME=your_cloud_name
+VITE_CLOUDINARY_UPLOAD_PRESET=your_unsigned_preset
 ```
-
-3. Install dependencies
-
-```txt
-   npm install
-```
-
-4. Configure environment variables
-   - Create a .env file at the root and define:
-
-```env
-VITE_API_BASE_URL=http://localhost:5000/api
-```
-
-<br>
 
 ---
 
-<br>
+## 🔒 Security & Best Practices
 
-## 🖼️ Cloudinary Integration
+- Strict TypeScript, ESLint, Prettier
 
-Images added in the post creation page are uploaded to [Cloudinary](https://cloudinary.com/) using unsigned upload presets.
+- CSRF, rate limiting, JWT + refresh, 2FA for admins (backend)
 
-### Setup:
+- ole-based access (admin/editor/user)
 
-1. Go to your Cloudinary account dashboard.
-2. Create an **upload preset** (unsigned).
-3. Add this to your `.env`:
+- odular SCSS (BEM), code comments
 
-```env
-VITE_CLOUDINARY_CLOUD_NAME=[ Your CLOUD_NAME]
-VITE_CLOUDINARY_UPLOAD_PRESET=[Your UPLOAD_PRESET]
-```
+- Commit messages in English, phase-based workflow
 
-<br>
+- Error boundaries, toast notifications
 
 ---
-
-<br>
 
 ## 🛠️ Scripts
 
 ```txt
 npm run dev       # Start dev server
-npm run build     # Production build
-npm run preview   # Preview production build
+npm run build     # Build production
+npm run preview   # Preview build
 ```
 
-<br>
+## 📦 API Endpoints (Expectations)
 
----
+- Auth: /auth/login (JWT, role)
 
-<br>
+- Posts: /posts, /posts/:id, /posts/upload
 
-## 🛠️ Scripts
+- Categories: /categories, /categories/:id
 
-```txt
-npm run dev       # Start dev server
-npm run build     # Production build
-npm run preview   # Preview production build
-```
+- Tags: /tags, /tags/:id
 
-<br>
+- Notifications: /notifications
 
----
+- Media: /posts/upload
 
-<br>
+- International: Multilanguage fields in all POST/PATCH
 
-## API Expectations
+## See backend [README](https://github.com/Deobap73/The-Human-Tech-Blog-Server) for more routes.
 
-Ensure you have a backend running that supports:
+## ✅ Engineering Checklist
 
-- POST /auth/login for JWT token
+Type safety (strict TS everywhere)
 
-- GET /posts, GET /posts/:slug
+Modular SCSS (BEM)
 
-- POST /posts with JSON body
+Contexts: auth, socket, theme, i18n
 
-- GET /categories
+API services per domain
 
-- GET/POST /comments?postSlug=...
+Hooks for business logic
 
-<br>
+Toast notifications
 
----
+Admin CRUD with multilanguage tabs
 
-<br>
+Image upload integration
 
-## ✅ Best Practices Followed
+## Security best practices
 
-- ✅ Type safety with TypeScript interfaces
+## 🧪 Manual QA & Testing
 
-- ✅ Modular + scalable folder layout
+Create/edit/delete posts in all languages
 
-- ✅ Separation of logic (hooks/utils/components)
+Switch languages and see correct translations
 
-- ✅ LocalStorage helpers with error handling
+Assign/remove tags and categories (CRUD)
 
-- ✅ Debounced input support (via useDebounce)
+Upload and preview images in admin
 
-- ✅ Custom axios instance with JWT header
+Receive and read notifications
 
-<br>
+Search/filter posts
 
----
+## Login/logout, session persistence
 
-<br>
-
-## 🧪 Testing Checklist
-
-- ☑️ Write post with image
-
-- ☑️ Toggle theme
-
-- ☑️ Navigate by category
-
-- ☑️ Add comments to post
-
-- ☑️ Login/logout via context
-
-<br>
-
----
-
-<br>
 ## 👤 Author
 
 Built and maintained by Deolindo Baptista
 MIT License.
-Free for personal use.
-Not allowed for commercial resale.
-
-<br>
+For personal and learning use only.
 
 ---
 
-<br>
+## 🤝 Contributions
 
-## 🧪 Want to contribute?
+Fork & create a branch (feat/my-feature)
 
-1. Fork the repo
+Commit with clear messages in English
 
-2. Create a feature branch (feat/new-feature)
+## Open a pull request
 
-3. Open a pull request with a detailed description
+## 📝 Final Notes
 
-<br>
+This project is audit-reviewed, extensible, and ready for real-world use in professional blogging and editorial teams.
+For backend details, see: The Human Tech Blog Server.
 
----
+Happy building & writing! 🚀
 
-<br>
+```
 
-## 🎉 Final Notes
-
-This project is fully audit-verified, scalable, and ideal for personal blog platforms.
-
-Happy coding! ✨
-
----
+```
