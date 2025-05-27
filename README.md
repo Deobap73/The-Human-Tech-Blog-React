@@ -4,9 +4,9 @@
 It’s designed for tech writers and editorial teams, providing secure content management, rich formatting, real-time notifications, and seamless integration with a robust backend.
 
 **Backend repo:** [The Human Tech Blog Server](https://github.com/Deobap73/The-Human-Tech-Blog-Server)
-
+<br>
 ---
-
+<br>
 ## 🚀 Features
 
 - 🔒 **Authentication:** JWT, session, roles (Admin/Editor)
