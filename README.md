@@ -4,7 +4,7 @@
 It’s designed for tech writers and editorial teams, providing secure content management, rich formatting, real-time notifications, and seamless integration with a robust backend.
 
 **Backend repo:** [The Human Tech Blog Server](https://github.com/Deobap73/The-Human-Tech-Blog-Server)
-<br>
+
 ---
 <br>
 ## 🚀 Features
@@ -22,7 +22,7 @@ It’s designed for tech writers and editorial teams, providing secure content m
 - 🧠 **Type-Safe & Modular:** Strict TypeScript, SCSS BEM, clear structure
 - 🛡️ **Security:** CSRF, rate-limiting, RBAC, 2FA (admin)
 - 📦 **API-first:** Axios services, hooks, i18n, custom context
-<br>
+
 ---
 <br>
 ## 🏗️ Tech Stack
