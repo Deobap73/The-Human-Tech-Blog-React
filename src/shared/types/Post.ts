@@ -29,6 +29,21 @@ export interface Post {
   createdAt: string;
   updatedAt: string;
 }
+export interface Draft {
+  _id: string;
+  translations: PostTranslations;
+  image?: string;
+  slug: string;
+  categories: string[];
+  tags?: string[];
+  status: 'draft' | 'published' | 'archived';
+  author?: {
+    _id: string;
+    name: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+}
 
 export interface PostPayload {
   translations: PostTranslations;

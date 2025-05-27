@@ -1,0 +1,45 @@
+// /src/features/admin/styles/AdminTablePagination.scss
+
+.admin-table-pagination {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 16px;
+
+  &__btn {
+    padding: 5px 14px;
+    font-size: 1.04em;
+    border-radius: 5px;
+    border: 1.5px solid #d1d9e6;
+    background: #f5f7fa;
+    color: #444;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.14s;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__info {
+    font-weight: 500;
+    font-size: 1.08em;
+  }
+
+  &__select {
+    border-radius: 6px;
+    border: 1px solid #d2d6dc;
+    background: #fff;
+    padding: 5px 12px;
+    font-size: 0.98em;
+    outline: none;
+  }
+
+  &__total {
+    color: #777;
+    font-size: 0.99em;
+    margin-left: 8px;
+  }
+}

@@ -1,11 +1,13 @@
-//  src/features/admin/pages/AdminTagsPage.tsx
+// /src/features/admin/pages/AdminTagsPage.tsx
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { fetchTags, createTag, updateTag, deleteTag } from '../../../shared/services/tagService';
 import { Tag, TagTranslation } from '../../../shared/types/Tag';
 import { useToast } from '../../../shared/hooks/useToast';
 import Loader from '../../../shared/components/Loader';
+import AdminTableFilter from '../components/AdminTableFilter';
+import AdminTablePagination from '../components/AdminTablePagination';
 import '../../admin/styles/AdminTagsPage.scss';
 
 const LANGUAGES = ['en', 'pt', 'de', 'es'] as const;
@@ -17,6 +19,8 @@ const initialFormState: Record<Lang, TagTranslation> = {
   de: { name: '', description: '' },
   es: { name: '', description: '' },
 };
+
+const PAGE_SIZE = 10;
 
 const AdminTagsPage = () => {
   const { t, i18n } = useTranslation();
@@ -30,6 +34,41 @@ const AdminTagsPage = () => {
   const [fieldErrors, setFieldErrors] = useState<{ name?: string }>({});
   const [loading, setLoading] = useState(false);
 
+  // Filtro e paginação
+  const [filter, setFilter] = useState('');
+  const [page, setPage] = useState(1);
+
+  // Filtered tags
+  const filteredTags = useMemo(() => {
+    const query = filter.trim().toLowerCase();
+    if (!query) return tags;
+    return tags.filter((tag) => {
+      // Search in any language, but prefer active
+      for (const lang of LANGUAGES) {
+        const name = tag.translations?.[lang]?.name?.toLowerCase() || '';
+        const desc = tag.translations?.[lang]?.description?.toLowerCase() || '';
+        if (name.includes(query) || desc.includes(query)) return true;
+      }
+      return false;
+    });
+  }, [filter, tags]);
+
+  // Pagination
+  const totalPages = Math.max(1, Math.ceil(filteredTags.length / PAGE_SIZE));
+  const pagedTags = useMemo(
+    () => filteredTags.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
+    [filteredTags, page]
+  );
+
+  useEffect(() => {
+    loadTags();
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    setPage(1); // Volta à página 1 quando muda o filtro
+  }, [filter]);
+
   const loadTags = async () => {
     setLoading(true);
     try {
@@ -39,11 +78,6 @@ const AdminTagsPage = () => {
     }
     setLoading(false);
   };
-
-  useEffect(() => {
-    loadTags();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handleInput = (field: keyof TagTranslation, value: string) => {
     setForm((prev) => ({
@@ -128,6 +162,13 @@ const AdminTagsPage = () => {
   return (
     <div className='admin-tags-page'>
       <h2>{t('adminTagForm.title')}</h2>
+      {/* Filtro */}
+      <AdminTableFilter
+        value={filter}
+        onChange={setFilter}
+        placeholder={t('adminTagForm.filterPlaceholder', 'Filter tags...')}
+      />
+
       {loading ? (
         <Loader />
       ) : (
@@ -198,8 +239,10 @@ const AdminTagsPage = () => {
           {error && <div className='admin-tags-page__error'>{error}</div>}
         </form>
       )}
+
+      {/* Tabela/Paginação */}
       <ul className='admin-tags-page__list'>
-        {tags.map((tag) => {
+        {pagedTags.map((tag) => {
           const tr =
             tag.translations[i18n.language as Lang] ||
             tag.translations[i18n.language.split('-')[0] as Lang] ||
@@ -230,8 +273,11 @@ const AdminTagsPage = () => {
             </li>
           );
         })}
-        {tags.length === 0 && <li>{t('adminTagForm.noTags')}</li>}
+        {pagedTags.length === 0 && <li>{t('adminTagForm.noTags')}</li>}
       </ul>
+
+      {/* Paginação */}
+      <AdminTablePagination page={page} totalPages={totalPages} onPageChange={setPage} />
     </div>
   );
 };

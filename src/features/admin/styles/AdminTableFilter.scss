@@ -1,0 +1,41 @@
+// /src/features/admin/styles/AdminTableFilter.scss
+
+.admin-table-filter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 14px;
+  max-width: 340px;
+
+  &__input {
+    flex: 1;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    font-size: 1em;
+    padding: 6px 14px;
+    background: #fafbfc;
+    transition: border 0.17s;
+
+    &:focus {
+      outline: none;
+      border-color: #5a85e2;
+    }
+  }
+
+  &__clear {
+    border: none;
+    background: #eee;
+    color: #555;
+    font-size: 1.2em;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    margin-left: 3px;
+    transition: background 0.15s;
+
+    &:hover {
+      background: #dbe7fa;
+    }
+  }
+}

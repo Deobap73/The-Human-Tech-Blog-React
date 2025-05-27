@@ -1,70 +1,99 @@
 // src/features/admin/pages/AdminNotificationsPage.tsx
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  fetchNotifications,
-  createNotification,
-  updateNotification,
-  deleteNotification,
-} from '../../../shared/services/notificationService';
-import { Notification, NotificationTranslation } from '../../../shared/types/Notification';
+  fetchCategories,
+  createCategory,
+  updateCategory,
+  deleteCategory,
+} from '../../../shared/services/categoryService';
+import { Category, CategoryTranslation } from '../../../shared/types/Category';
 import { useToast } from '../../../shared/hooks/useToast';
 import Loader from '../../../shared/components/Loader';
-import '../../../features/admin/styles/AdminNotificationsPage.scss';
+import AdminTablePagination from '../components/AdminTablePagination';
+import AdminTableFilter from '../components/AdminTableFilter';
+import '../../admin/styles/AdminCategoriesPage.scss';
 
 const LANGUAGES = ['en', 'pt', 'de', 'es'] as const;
 type Lang = (typeof LANGUAGES)[number];
+const PAGE_SIZE = 10;
 
-const initialFormState: Record<Lang, NotificationTranslation> = {
-  en: { title: '', message: '' },
-  pt: { title: '', message: '' },
-  de: { title: '', message: '' },
-  es: { title: '', message: '' },
+const emptyTranslations: Record<Lang, CategoryTranslation> = {
+  en: { name: '', description: '' },
+  pt: { name: '', description: '' },
+  de: { name: '', description: '' },
+  es: { name: '', description: '' },
 };
 
-const AdminNotificationsPage = () => {
+const AdminCategoriesPage = () => {
   const { t, i18n } = useTranslation();
   const { success, error: errorToast } = useToast();
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [editing, setEditing] = useState<Notification | null>(null);
-  const [form, setForm] = useState<Record<Lang, NotificationTranslation>>(initialFormState);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [editing, setEditing] = useState<Category | null>(null);
+  const [form, setForm] = useState<Record<Lang, CategoryTranslation>>(emptyTranslations);
+  const [logo, setLogo] = useState('');
   const [activeLang, setActiveLang] = useState<Lang>('en');
   const [error, setError] = useState('');
-  const [fieldErrors, setFieldErrors] = useState<{ title?: string }>({});
   const [loading, setLoading] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<{ name?: string; description?: string }>({});
+  // Filtro e Paginação
+  const [filter, setFilter] = useState('');
+  const [page, setPage] = useState(1);
 
-  const loadNotifications = async () => {
+  const loadCategories = async () => {
     setLoading(true);
     try {
-      setNotifications(await fetchNotifications());
+      setCategories(await fetchCategories());
     } catch {
-      errorToast(t('adminNotificationForm.error', 'Failed to fetch notifications'));
+      errorToast(t('adminCategoryForm.error', 'Failed to fetch categories'));
     }
     setLoading(false);
   };
 
   useEffect(() => {
-    loadNotifications();
+    loadCategories();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleInput = (field: keyof NotificationTranslation, value: string) => {
+  useEffect(() => {
+    setPage(1);
+  }, [filter]);
+
+  const filteredCategories = useMemo(() => {
+    if (!filter.trim()) return categories;
+    const lang = i18n.language as Lang;
+    return categories.filter((cat) =>
+      (cat.translations?.[lang]?.name || cat.translations?.en?.name || '')
+        .toLowerCase()
+        .includes(filter.toLowerCase())
+    );
+  }, [categories, filter, i18n.language]);
+
+  const paginatedCategories = useMemo(() => {
+    const start = (page - 1) * PAGE_SIZE;
+    return filteredCategories.slice(start, start + PAGE_SIZE);
+  }, [filteredCategories, page]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredCategories.length / PAGE_SIZE));
+
+  const handleInput = (field: keyof CategoryTranslation, value: string) => {
     setForm((prev) => ({
       ...prev,
       [activeLang]: { ...prev[activeLang], [field]: value },
     }));
-    if (activeLang === 'en' && field === 'title') setFieldErrors({});
+    if (activeLang === 'en') setFieldErrors((prev) => ({ ...prev, [field]: '' }));
   };
 
-  const startEdit = (notif: Notification) => {
-    setEditing(notif);
+  const startEdit = (cat: Category) => {
+    setEditing(cat);
     setForm({
-      en: notif.translations.en || { title: '', message: '' },
-      pt: notif.translations.pt || { title: '', message: '' },
-      de: notif.translations.de || { title: '', message: '' },
-      es: notif.translations.es || { title: '', message: '' },
+      en: cat.translations?.en || { name: '', description: '' },
+      pt: cat.translations?.pt || { name: '', description: '' },
+      de: cat.translations?.de || { name: '', description: '' },
+      es: cat.translations?.es || { name: '', description: '' },
     });
+    setLogo(cat.logo || '');
     setActiveLang('en');
     setError('');
     setFieldErrors({});
@@ -72,16 +101,23 @@ const AdminNotificationsPage = () => {
 
   const clearForm = () => {
     setEditing(null);
-    setForm(initialFormState);
+    setForm({ ...emptyTranslations });
+    setLogo('');
     setActiveLang('en');
     setError('');
     setFieldErrors({});
   };
 
   const validateFields = (): boolean => {
-    const errors: { title?: string } = {};
-    if (!(form.en?.title ?? '').trim()) {
-      errors.title = t('adminNotificationForm.requiredTitle', 'Title (EN) is required');
+    const errors: { name?: string; description?: string } = {};
+    if (!(form.en?.name ?? '').trim()) {
+      errors.name = t('adminCategoryForm.requiredName', 'Name (EN) is required');
+    }
+    if (!(form.en?.description ?? '').trim()) {
+      errors.description = t(
+        'adminCategoryForm.requiredDescription',
+        'Description (EN) is required'
+      );
     }
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;
@@ -94,124 +130,182 @@ const AdminNotificationsPage = () => {
     setLoading(true);
     try {
       if (editing) {
-        await updateNotification(editing._id, { translations: form });
-        success(t('adminNotificationForm.updateSuccess', 'Notification updated successfully!'));
+        await updateCategory(editing._id, { translations: form, logo });
+        success(t('adminCategoryForm.updateSuccess', 'Category updated successfully!'));
       } else {
-        await createNotification({ translations: form });
-        success(t('adminNotificationForm.createSuccess', 'Notification created successfully!'));
+        await createCategory({ translations: form, logo });
+        success(t('adminCategoryForm.createSuccess', 'Category created successfully!'));
       }
-      await loadNotifications();
+      await loadCategories();
       clearForm();
     } catch (err: any) {
-      errorToast(t('adminNotificationForm.error', 'Failed to save notification'));
+      setError(err?.response?.data?.message || t('adminCategoryForm.error'));
+      errorToast(t('adminCategoryForm.error', 'Failed to save category'));
     }
     setLoading(false);
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm(t('adminNotificationForm.deleteConfirm'))) return;
+    if (!window.confirm(t('adminCategoryForm.deleteConfirm'))) return;
     setLoading(true);
     try {
-      await deleteNotification(id);
-      success(t('adminNotificationForm.deleteSuccess', 'Notification deleted successfully!'));
-      await loadNotifications();
+      await deleteCategory(id);
+      success(t('adminCategoryForm.deleteSuccess', 'Category deleted successfully!'));
+      await loadCategories();
     } catch (err: any) {
-      errorToast(t('adminNotificationForm.error', 'Failed to delete notification'));
+      setError(err?.response?.data?.message || t('adminCategoryForm.error'));
+      errorToast(t('adminCategoryForm.error', 'Failed to delete category'));
     }
     setLoading(false);
   };
 
   return (
-    <div className='admin-notifications-page'>
-      <h2>{t('adminNotificationForm.title')}</h2>
+    <div className='admin-categories-page'>
+      <h2>{t('adminCategoryForm.title', 'Manage Categories')}</h2>
       {loading ? (
         <Loader />
       ) : (
-        <form className='admin-notifications-page__form' onSubmit={handleSubmit}>
-          {/* Multilingual Tabs */}
-          <div className='admin-notifications-page__tabs'>
-            {LANGUAGES.map((lang) => (
-              <button
-                key={lang}
-                type='button'
-                className={`admin-notifications-page__tab${activeLang === lang ? ' active' : ''}`}
-                onClick={() => setActiveLang(lang)}>
-                {lang.toUpperCase()}
-                {lang === 'en' && <span className='admin-notifications-page__tab-required'>*</span>}
-              </button>
-            ))}
-          </div>
-          <div className='admin-notifications-page__fields'>
-            <label className='admin-notifications-page__label'>
-              {t('adminNotificationForm.notificationTitle')}
-              {activeLang === 'en' && <span className='admin-notifications-page__asterisk'>*</span>}
+        <>
+          <form className='admin-categories-page__form' onSubmit={handleSubmit} autoComplete='off'>
+            {/* Multilanguage Tabs */}
+            <div className='admin-categories-page__tabs'>
+              {LANGUAGES.map((lang) => (
+                <button
+                  key={lang}
+                  type='button'
+                  className={`admin-categories-page__tab${activeLang === lang ? ' active' : ''}`}
+                  onClick={() => setActiveLang(lang)}>
+                  {lang.toUpperCase()}
+                  {lang === 'en' && <span className='admin-categories-page__tab-required'>*</span>}
+                </button>
+              ))}
+            </div>
+            <div className='admin-categories-page__fields'>
+              <label className='admin-categories-page__label'>
+                {t('adminCategoryForm.name')}
+                {activeLang === 'en' && <span className='admin-categories-page__asterisk'>*</span>}
+                <input
+                  type='text'
+                  placeholder={t('adminCategoryForm.namePlaceholder')}
+                  value={form[activeLang].name}
+                  required={activeLang === 'en'}
+                  className={
+                    activeLang === 'en' && fieldErrors.name
+                      ? 'admin-categories-page__input-error'
+                      : ''
+                  }
+                  onChange={(e) => handleInput('name', e.target.value)}
+                  autoComplete='off'
+                />
+                {activeLang === 'en' && fieldErrors.name && (
+                  <span className='admin-categories-page__field-error'>{fieldErrors.name}</span>
+                )}
+              </label>
+              <label className='admin-categories-page__label'>
+                {t('adminCategoryForm.description')}
+                {activeLang === 'en' && <span className='admin-categories-page__asterisk'>*</span>}
+                <textarea
+                  placeholder={t('adminCategoryForm.descriptionPlaceholder')}
+                  value={form[activeLang].description}
+                  required={activeLang === 'en'}
+                  className={
+                    activeLang === 'en' && fieldErrors.description
+                      ? 'admin-categories-page__input-error'
+                      : ''
+                  }
+                  onChange={(e) => handleInput('description', e.target.value)}
+                  rows={2}
+                  autoComplete='off'
+                />
+                {activeLang === 'en' && fieldErrors.description && (
+                  <span className='admin-categories-page__field-error'>
+                    {fieldErrors.description}
+                  </span>
+                )}
+              </label>
+            </div>
+            <label className='admin-categories-page__label' style={{ marginTop: 16 }}>
+              {t('adminCategoryForm.logo')}
               <input
                 type='text'
-                placeholder={t('adminNotificationForm.notificationTitlePlaceholder')}
-                value={form[activeLang].title}
-                required={activeLang === 'en'}
-                className={
-                  activeLang === 'en' && fieldErrors.title
-                    ? 'admin-notifications-page__input-error'
-                    : ''
-                }
-                onChange={(e) => handleInput('title', e.target.value)}
+                value={logo}
+                onChange={(e) => setLogo(e.target.value)}
+                placeholder={t('adminCategoryForm.logoPlaceholder')}
+                autoComplete='off'
               />
-              {activeLang === 'en' && fieldErrors.title && (
-                <span className='admin-notifications-page__field-error'>{fieldErrors.title}</span>
+              {logo && (
+                <img
+                  src={logo}
+                  alt='logo preview'
+                  className='admin-categories-page__logo-preview'
+                  style={{
+                    height: 32,
+                    marginLeft: 14,
+                    borderRadius: 4,
+                    border: '1px solid #eee',
+                    background: '#fff',
+                  }}
+                />
               )}
             </label>
-            <label className='admin-notifications-page__label'>
-              {t('adminNotificationForm.message')}
-              <textarea
-                placeholder={t('adminNotificationForm.messagePlaceholder')}
-                value={form[activeLang].message}
-                onChange={(e) => handleInput('message', e.target.value)}
-                rows={2}
-              />
-            </label>
-          </div>
-          <div className='admin-notifications-page__form-actions'>
-            <button type='submit' className='admin-notifications-page__btn'>
-              {editing ? t('adminNotificationForm.update') : t('adminNotificationForm.create')}
-            </button>
-            {editing && (
-              <button
-                type='button'
-                onClick={clearForm}
-                className='admin-notifications-page__btn admin-notifications-page__btn--cancel'>
-                {t('adminNotificationForm.cancel')}
+            <div className='admin-categories-page__form-actions'>
+              <button type='submit' className='admin-categories-page__btn'>
+                {editing ? t('adminCategoryForm.update') : t('adminCategoryForm.create')}
               </button>
-            )}
+              {editing && (
+                <button
+                  type='button'
+                  onClick={clearForm}
+                  className='admin-categories-page__btn admin-categories-page__btn--cancel'>
+                  {t('adminCategoryForm.cancel')}
+                </button>
+              )}
+            </div>
+            {error && <div className='admin-categories-page__error'>{error}</div>}
+          </form>
+          <div className='admin-categories-page__toolbar'>
+            <AdminTableFilter
+              value={filter}
+              onChange={setFilter}
+              placeholder={t('adminCategoryForm.namePlaceholder')}
+            />
+            <AdminTablePagination page={page} totalPages={totalPages} onPageChange={setPage} />
           </div>
-          {error && <div className='admin-notifications-page__error'>{error}</div>}
-        </form>
+        </>
       )}
-      <ul className='admin-notifications-page__list'>
-        {notifications.map((notif) => {
+      <ul className='admin-categories-page__list'>
+        {paginatedCategories.map((cat) => {
           const tr =
-            notif.translations[i18n.language as Lang] ||
-            notif.translations[i18n.language.split('-')[0] as Lang] ||
-            notif.translations.en;
+            cat.translations?.[i18n.language as Lang] ||
+            cat.translations?.[i18n.language.split('-')[0] as Lang] ||
+            cat.translations?.en;
           return (
-            <li key={notif._id} className='admin-notifications-page__item'>
-              <b>{tr?.title || '[untitled]'}</b>
-              <p>{tr?.message || ''}</p>
-              <button className='admin-notifications-page__edit' onClick={() => startEdit(notif)}>
+            <li key={cat._id} className='admin-categories-page__item'>
+              {cat.logo && (
+                <img
+                  src={cat.logo}
+                  alt={tr?.name}
+                  className='admin-categories-page__cat-logo'
+                  style={{ height: 26, marginRight: 8 }}
+                />
+              )}
+              <b>{tr?.name || '[untitled]'}</b>
+              <span className='admin-categories-page__desc'>{tr?.description || ''}</span>
+              <button className='admin-categories-page__edit' onClick={() => startEdit(cat)}>
                 {t('admin.edit')}
               </button>
               <button
-                className='admin-notifications-page__delete'
-                onClick={() => handleDelete(notif._id)}>
+                className='admin-categories-page__delete'
+                onClick={() => handleDelete(cat._id)}>
                 {t('admin.delete')}
               </button>
             </li>
           );
         })}
-        {notifications.length === 0 && <li>{t('adminNotificationForm.noNotifications')}</li>}
+        {paginatedCategories.length === 0 && <li>{t('adminCategoryForm.noCategories')}</li>}
       </ul>
     </div>
   );
 };
 
-export default AdminNotificationsPage;
+export default AdminCategoriesPage;
