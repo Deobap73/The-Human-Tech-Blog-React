@@ -14,6 +14,56 @@
     border-radius: 16px;
     padding: 16px;
     margin-bottom: 32px;
+    &__tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    &__tab {
+      padding: 6px 18px;
+      border: 1px solid #aaa;
+      border-bottom: 0;
+      background: #f8f8f8;
+      cursor: pointer;
+      border-radius: 6px 6px 0 0;
+      font-weight: 600;
+      &.active {
+        background: #fff;
+        border-bottom: 2px solid #fff;
+        color: #222;
+        box-shadow: 0 2px 8px 0 #eee;
+      }
+    }
+    &__tab-required {
+      color: #e60;
+      margin-left: 4px;
+      font-weight: bold;
+      font-size: 1.1em;
+      vertical-align: top;
+    }
+    &__label {
+      font-weight: 500;
+      margin-bottom: 3px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    &__asterisk {
+      color: #c00;
+      margin-left: 2px;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+    &__input-error {
+      border-color: #c00;
+      background: #fff5f5;
+    }
+    &__field-error {
+      color: #c00;
+      font-size: 0.93em;
+      margin-left: 6px;
+      font-weight: 500;
+    }
   }
 
   &__langs {

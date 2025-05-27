@@ -66,5 +66,19 @@
     "requiredName": "Name (EN) is required",
     "deleteConfirm": "Delete this tag? Tags used by posts cannot be deleted.",
     "noTags": "No tags found."
+  },
+  "adminNotificationForm": {
+    "title": "Manage Notifications",
+    "notificationTitle": "Title",
+    "notificationTitlePlaceholder": "Notification title",
+    "message": "Message",
+    "messagePlaceholder": "Enter notification message...",
+    "create": "Create",
+    "update": "Update",
+    "cancel": "Cancel",
+    "error": "Failed to save notification",
+    "requiredTitle": "Title (EN) is required",
+    "deleteConfirm": "Delete this notification?",
+    "noNotifications": "No notifications found."
   }
 }
