@@ -6,14 +6,17 @@ import { fetchTags } from '../../../shared/services/tagService';
 import { fetchCategories } from '../../../shared/services/categoryService';
 import { Tag } from '../../../shared/types/Tag';
 import { Category } from '../../../shared/types/Category';
-import { Post, PostTranslation } from '../../../shared/types/Post';
-import api from '../../../shared/utils/axios';
+import { Post, PostTranslation, PostPayload } from '../../../shared/types/Post';
+import { createPost } from '../../../shared/services/postService';
 import { useTranslation } from 'react-i18next';
+import { useToast } from '../../../shared/hooks/useToast';
+import Loader from '../../../shared/components/Loader';
 import '../../../features/admin/styles/AdminPostForm.scss';
 
-const LANGUAGES = ['en', 'pt', 'de', 'es'];
+const LANGUAGES = ['en', 'pt', 'de', 'es'] as const;
+type Lang = (typeof LANGUAGES)[number];
 
-const emptyTranslations: { [lang: string]: PostTranslation } = {
+const emptyTranslations: Record<Lang, PostTranslation> = {
   en: { title: '', description: '', content: '' },
   pt: { title: '', description: '', content: '' },
   de: { title: '', description: '', content: '' },
@@ -22,23 +25,22 @@ const emptyTranslations: { [lang: string]: PostTranslation } = {
 
 interface Props {
   initialPost?: Partial<Post>;
-  onSubmit?: (data: Partial<Post>) => void;
+  onSubmit?: (data: PostPayload) => void;
 }
 
 const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
   const { t } = useTranslation();
-  const [activeLang, setActiveLang] = useState('en');
-
-  // Multilanguage initialization, never undefined
-  const initialTranslations: { [lang: string]: PostTranslation } = {
-    en: initialPost?.translations?.en ?? { title: '', description: '', content: '' },
-    pt: initialPost?.translations?.pt ?? { title: '', description: '', content: '' },
-    de: initialPost?.translations?.de ?? { title: '', description: '', content: '' },
-    es: initialPost?.translations?.es ?? { title: '', description: '', content: '' },
-  };
-
-  const [translations, setTranslations] = useState<{ [lang: string]: PostTranslation }>(
-    initialTranslations
+  const { success, error: errorToast } = useToast();
+  const [activeLang, setActiveLang] = useState<Lang>('en');
+  const [translations, setTranslations] = useState<Record<Lang, PostTranslation>>(
+    initialPost?.translations
+      ? {
+          en: initialPost.translations.en ?? { title: '', description: '', content: '' },
+          pt: initialPost.translations.pt ?? { title: '', description: '', content: '' },
+          de: initialPost.translations.de ?? { title: '', description: '', content: '' },
+          es: initialPost.translations.es ?? { title: '', description: '', content: '' },
+        }
+      : emptyTranslations
   );
   const [tags, setTags] = useState<string[]>(initialPost?.tags || []);
   const [categories, setCategories] = useState<string[]>(
@@ -53,31 +55,31 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
       ? initialPost.status
       : 'draft';
   const [status, setStatus] = useState<'draft' | 'published'>(initialStatus);
-
   const [image, setImage] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState(initialPost?.image || '');
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchTags()
-      .then(setAvailableTags)
-      .catch(() => setError(t('adminPostForm.error', 'Failed to load tags')));
-    fetchCategories()
-      .then(setAvailableCategories)
-      .catch(() => setError(t('adminPostForm.error', 'Failed to load categories')));
-  }, [t]);
+    setLoading(true);
+    Promise.all([fetchTags(), fetchCategories()])
+      .then(([tagsData, catData]) => {
+        setAvailableTags(tagsData);
+        setAvailableCategories(catData);
+      })
+      .catch(() => errorToast(t('adminPostForm.error', 'Failed to load tags or categories')))
+      .finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleTranslationChange = (field: keyof PostTranslation, value: string) => {
     setTranslations((prev) => ({
       ...prev,
       [activeLang]: { ...prev[activeLang], [field]: value },
     }));
-    // Clear field error on edit
-    if (activeLang === 'en') {
-      setFieldErrors((prev) => ({ ...prev, [field]: '' }));
-    }
+    if (activeLang === 'en') setFieldErrors((prev) => ({ ...prev, [field]: '' }));
   };
 
   const handleTagChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -120,20 +122,15 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
     e.preventDefault();
     setError('');
     if (!validateFields()) return;
-
+    setLoading(true);
     try {
       let imgUrl = imageUrl;
       if (image) {
         imgUrl = await uploadImage(image);
         setImageUrl(imgUrl);
       }
-      const data: Partial<Post> = {
-        translations: {
-          en: translations.en,
-          pt: translations.pt,
-          de: translations.de,
-          es: translations.es,
-        },
+      const data: PostPayload = {
+        translations,
         tags,
         categories,
         status,
@@ -142,19 +139,22 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
       if (onSubmit) {
         await onSubmit(data);
       } else {
-        await api.post('/posts', data);
+        await createPost(data);
+        success(t('adminPostForm.createSuccess', 'Post created successfully!'));
         navigate('/admin/posts');
       }
     } catch (err: any) {
-      setError(err?.response?.data?.message || t('adminPostForm.error', 'Failed to save post'));
+      errorToast(t('adminPostForm.error', 'Failed to save post'));
     }
+    setLoading(false);
   };
 
   return (
     <form onSubmit={handleSubmit} className='admin-post-form' autoComplete='off'>
+      {loading && <Loader />}
       {error && <div className='admin-post-form__error'>{error}</div>}
 
-      {/* Multilanguage tabs */}
+      {/* Multilingual tabs */}
       <div className='admin-post-form__tabs'>
         {LANGUAGES.map((lang) => (
           <button
@@ -168,7 +168,7 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
         ))}
       </div>
 
-      {/* Multilanguage fields */}
+      {/* Multilingual fields */}
       <div className={`admin-post-form__fields admin-post-form__fields--${activeLang}`}>
         <label className='admin-post-form__label'>
           {t('adminPostForm.title', 'Title')}
