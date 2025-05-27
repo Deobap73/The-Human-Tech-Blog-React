@@ -22,9 +22,9 @@ It’s designed for tech writers and editorial teams, providing secure content m
 - 🧠 **Type-Safe & Modular:** Strict TypeScript, SCSS BEM, clear structure
 - 🛡️ **Security:** CSRF, rate-limiting, RBAC, 2FA (admin)
 - 📦 **API-first:** Axios services, hooks, i18n, custom context
-
+br
 ---
-
+br
 ## 🏗️ Tech Stack
 
 | Category      | Tech Stack                                 |
@@ -117,7 +117,7 @@ npm run dev       # Start dev server
 npm run build     # Build production
 npm run preview   # Preview build
 ```
-
+---
 ## 📦 API Endpoints (Expectations)
 
 - Auth: /auth/login (JWT, role)
@@ -135,7 +135,7 @@ npm run preview   # Preview build
 - International: Multilanguage fields in all POST/PATCH
 
 ### See backend [README](https://github.com/Deobap73/The-Human-Tech-Blog-Server) for more routes.
-
+---
 ## ✅ Engineering Checklist
 
 - Type safety (strict TS everywhere)
