@@ -6,20 +6,21 @@ export interface PostTranslation {
   content: string;
 }
 
+export type PostTranslations = {
+  en: PostTranslation;
+  pt?: PostTranslation;
+  de?: PostTranslation;
+  es?: PostTranslation;
+  [key: string]: PostTranslation | undefined;
+};
+
 export interface Post {
   _id: string;
-  translations: {
-    en: PostTranslation;
-    pt?: PostTranslation;
-    de?: PostTranslation;
-    es?: PostTranslation;
-    [key: string]: PostTranslation | undefined;
-  };
+  translations: PostTranslations;
   image?: string;
   slug: string;
-  categories: string[];
+  categories: string[]; // sempre IDs
   tags?: string[];
-
   status: 'draft' | 'published' | 'archived';
   author?: {
     _id: string;
@@ -27,4 +28,14 @@ export interface Post {
   };
   createdAt: string;
   updatedAt: string;
+}
+
+// Payload para criar/atualizar Post
+export interface PostPayload {
+  translations: PostTranslations;
+  image?: string;
+  slug?: string;
+  categories: string[];
+  tags?: string[];
+  status: 'draft' | 'published' | 'archived';
 }

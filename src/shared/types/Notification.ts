@@ -1,25 +1,28 @@
 // src/shared/types/Notification.ts
-export type NotificationTranslation = {
+export interface NotificationTranslation {
   title: string;
   message: string;
+}
+
+export type NotificationTranslations = {
+  en: NotificationTranslation;
+  pt?: NotificationTranslation;
+  de?: NotificationTranslation;
+  es?: NotificationTranslation;
+  [key: string]: NotificationTranslation | undefined;
 };
 
-export type Notification = {
+export interface Notification {
   _id: string;
-  translations: {
-    en?: NotificationTranslation;
-    pt?: NotificationTranslation;
-    de?: NotificationTranslation;
-    es?: NotificationTranslation;
-    [key: string]: NotificationTranslation | undefined;
-  };
+  translations: NotificationTranslations;
   user?: string;
   type?: string;
   isRead?: boolean;
   createdAt?: string;
   updatedAt?: string;
-};
+}
 
-export type NotificationPayload = {
-  translations: Notification['translations'];
-};
+// Payload para criar/atualizar Notification
+export interface NotificationPayload {
+  translations: NotificationTranslations;
+}
