@@ -136,8 +136,6 @@ npm run preview   # Preview build
 
 ### See backend [README](https://github.com/Deobap73/The-Human-Tech-Blog-Server) for more routes.
 
----
-
 ## ✅ Engineering Checklist
 
 - Type safety (strict TS everywhere)
