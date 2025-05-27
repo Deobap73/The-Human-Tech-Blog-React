@@ -1,6 +1,6 @@
 // The-Human-Tech-Blog-React/src/shared/components/ConfirmDialog.tsx
 
-import './ConfirmDialog.scss';
+import './styles/ConfirmDialog.scss';
 import { ReactNode } from 'react';
 
 interface ConfirmDialogProps {

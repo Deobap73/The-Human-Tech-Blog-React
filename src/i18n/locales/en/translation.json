@@ -98,7 +98,9 @@
     "draft": "Draft",
     "published": "Published",
     "save": "Save",
-    "error": "Failed to save post"
+    "error": "Failed to save post",
+    "createSuccess": "Category created successfully!",
+    "updateSuccess": "Category updated successfully!"
   },
   "notAuthorized": {
     "title": "Access Denied",

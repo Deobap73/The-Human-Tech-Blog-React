@@ -97,14 +97,16 @@
     "draft": "Rascunho",
     "published": "Publicado",
     "save": "Salvar",
-    "error": "Falha ao salvar post"
+    "error": "Falha ao salvar post",
+    "createSuccess": "Categoria criada com sucesso!",
+    "updateSuccess": "Categoria atualizada com sucesso!"
   },
   "notAuthorized": {
-    "title": "Acesso negado",
-    "message": "Não tem permissão para aceder a esta página.",
-    "goHome": "Ir para o início"
+    "title": "Acesso Negado",
+    "message": "Você não tem permissão para acessar esta página.",
+    "goHome": "Ir para a Início"
   },
   "route": {
-    "loading": "A carregar..."
+    "loading": "Carregando..."
   }
 }

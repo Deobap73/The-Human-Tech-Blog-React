@@ -97,12 +97,14 @@
     "draft": "Borrador",
     "published": "Publicado",
     "save": "Guardar",
-    "error": "Error al guardar la publicación"
+    "error": "Error al guardar la publicación",
+    "createSuccess": "¡Categoría creada con éxito!",
+    "updateSuccess": "¡Categoría actualizada con éxito!"
   },
   "notAuthorized": {
     "title": "Acceso denegado",
     "message": "No tiene permiso para acceder a esta página.",
-    "goHome": "Ir a inicio"
+    "goHome": "Ir a Inicio"
   },
   "route": {
     "loading": "Cargando..."

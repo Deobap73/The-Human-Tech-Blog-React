@@ -1,4 +1,4 @@
-// The-Human-Tech-Blog-React/src/main.tsx
+// src/main.tsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './i18n';
@@ -9,8 +9,7 @@ import { ThemeProvider } from './shared/context/ThemeProvider';
 import { AuthProvider } from './shared/context/AuthProvider';
 import { SocketProvider } from './shared/context/SocketProvider';
 import { RecaptchaProvider } from './shared/context/RecaptchaProvider';
-
-// 🧠 PATCH: Garante token carregado em reloads
+import ToastProvider from './shared/components/ToastProvider';
 import api from './shared/utils/axios';
 import { getAccessToken } from './shared/utils/authTokenStorage';
 
@@ -26,7 +25,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <ThemeProvider>
           <SocketProvider>
             <RecaptchaProvider>
-              <App />
+              <ToastProvider>
+                <App />
+              </ToastProvider>
             </RecaptchaProvider>
           </SocketProvider>
         </ThemeProvider>

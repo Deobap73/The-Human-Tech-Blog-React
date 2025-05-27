@@ -1,0 +1,51 @@
+// src/shared/components/Loader.scss
+.global-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  width: 100%;
+  color: #3876f2;
+
+  &__spinner {
+    margin-bottom: 18px;
+    animation: loader-rotate 1.2s linear infinite;
+  }
+  &__svg {
+    width: 56px;
+    height: 56px;
+  }
+  &__circle {
+    stroke: #3876f2;
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: 0;
+    stroke-linecap: round;
+    animation: loader-dash 1.4s ease-in-out infinite;
+  }
+  &__msg {
+    font-size: 1.1rem;
+    font-weight: 600;
+    opacity: 0.85;
+  }
+}
+
+@keyframes loader-rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes loader-dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -40px;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -120px;
+  }
+}

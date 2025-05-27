@@ -97,14 +97,16 @@
     "draft": "Entwurf",
     "published": "Veröffentlicht",
     "save": "Speichern",
-    "error": "Fehler beim Speichern des Beitrags"
+    "error": "Fehler beim Speichern des Beitrags",
+    "createSuccess": "Kategorie erfolgreich erstellt!",
+    "updateSuccess": "Kategorie erfolgreich aktualisiert!"
   },
   "notAuthorized": {
     "title": "Zugriff verweigert",
-    "message": "Sie haben keine Berechtigung, diese Seite zu betreten.",
+    "message": "Sie haben keine Berechtigung, auf diese Seite zuzugreifen.",
     "goHome": "Zur Startseite"
   },
   "route": {
-    "loading": "Laden..."
+    "loading": "Wird geladen..."
   }
 }

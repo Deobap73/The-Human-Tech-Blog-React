@@ -2,7 +2,7 @@
 
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import './LanguageSelector.scss';
+import './styles/LanguageSelector.scss';
 
 const LANGUAGES = [
   { code: 'en', label: 'EN' },

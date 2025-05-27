@@ -9,9 +9,13 @@ import {
   deleteCategory,
 } from '../../../shared/services/categoryService';
 import { Category, CategoryTranslation } from '../../../shared/types/Category';
+import { useToast } from '../../../shared/hooks/useToast';
 import '../../admin/styles/AdminCategoriesPage.scss';
 
 const LANGUAGES = ['en', 'pt', 'de', 'es'] as const;
+
+const { success, error: errorToast } = useToast();
+
 type Lang = (typeof LANGUAGES)[number];
 
 const emptyTranslations: Record<Lang, CategoryTranslation> = {
@@ -95,20 +99,17 @@ const AdminCategoriesPage = () => {
     if (!validateFields()) return;
     try {
       if (editing) {
-        await updateCategory(editing._id, {
-          translations: form,
-          logo,
-        });
+        await updateCategory(editing._id, { translations: form, logo });
+        success(t('adminCategoryForm.updateSuccess', 'Category updated successfully!'));
       } else {
-        await createCategory({
-          translations: form,
-          logo,
-        });
+        await createCategory({ translations: form, logo });
+        success(t('adminCategoryForm.createSuccess', 'Category created successfully!'));
       }
       await loadCategories();
       clearForm();
     } catch (err: any) {
       setError(err?.response?.data?.message || t('adminCategoryForm.error'));
+      errorToast(t('adminCategoryForm.error', 'Failed to save category'));
     }
   };
 
