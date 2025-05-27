@@ -85,7 +85,7 @@ Setup:
 
 1.  Create an unsigned upload preset in Cloudinary dashboard
 
-2. Add to `.env`:
+2.  Add to `.env`:
 
 ```txt
 VITE_CLOUDINARY_CLOUD_NAME=your_cloud_name
@@ -173,9 +173,8 @@ npm run preview   # Preview build
 
 - Search/filter posts
 
+- Login/logout, session persistence
 ---
-
-## Login/logout, session persistence
 
 ### 👤 Author
 
