@@ -22,9 +22,9 @@ It’s designed for tech writers and editorial teams, providing secure content m
 - 🧠 **Type-Safe & Modular:** Strict TypeScript, SCSS BEM, clear structure
 - 🛡️ **Security:** CSRF, rate-limiting, RBAC, 2FA (admin)
 - 📦 **API-first:** Axios services, hooks, i18n, custom context
-br
+<br/>
 ---
-br
+<br/>
 ## 🏗️ Tech Stack
 
 | Category      | Tech Stack                                 |
