@@ -51,5 +51,20 @@
     "requiredDescription": "Description (EN) is required",
     "deleteConfirm": "Delete this category? Categories used by posts cannot be deleted.",
     "noCategories": "No categories found."
+  },
+  "adminTagForm": {
+    "title": "Manage Tags",
+    "name": "Name",
+    "namePlaceholder": "Tag name",
+    "description": "Description",
+    "descriptionPlaceholder": "Description",
+    "color": "Color",
+    "create": "Create",
+    "update": "Update",
+    "cancel": "Cancel",
+    "error": "Failed to save tag",
+    "requiredName": "Name (EN) is required",
+    "deleteConfirm": "Delete this tag? Tags used by posts cannot be deleted.",
+    "noTags": "No tags found."
   }
 }
