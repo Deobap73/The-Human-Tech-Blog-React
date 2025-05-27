@@ -80,5 +80,24 @@
     "requiredTitle": "Title (EN) is required",
     "deleteConfirm": "Delete this notification?",
     "noNotifications": "No notifications found."
+  },
+  "adminPostForm": {
+    "title": "Title",
+    "titlePlaceholder": "Post title",
+    "requiredTitle": "Title is required (EN)",
+    "description": "Description",
+    "descriptionPlaceholder": "Short description",
+    "requiredDescription": "Description is required (EN)",
+    "content": "Content",
+    "contentPlaceholder": "Full content",
+    "requiredContent": "Content is required (EN)",
+    "image": "Post Image",
+    "tags": "Tags",
+    "categories": "Categories",
+    "status": "Status",
+    "draft": "Draft",
+    "published": "Published",
+    "save": "Save",
+    "error": "Failed to save post"
   }
 }

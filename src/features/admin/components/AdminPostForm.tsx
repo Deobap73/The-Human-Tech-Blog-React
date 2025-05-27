@@ -1,5 +1,3 @@
-// /src/features/admin/components/AdminPostForm.tsx
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchTags } from '../../../shared/services/tagService';
@@ -29,7 +27,7 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
   const { t } = useTranslation();
   const [activeLang, setActiveLang] = useState('en');
 
-  // Corrigir inicialização multilíngue (NUNCA undefined)
+  // Multilanguage initialization, never undefined
   const initialTranslations: { [lang: string]: PostTranslation } = {
     en: initialPost?.translations?.en ?? { title: '', description: '', content: '' },
     pt: initialPost?.translations?.pt ?? { title: '', description: '', content: '' },
@@ -40,8 +38,6 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
   const [translations, setTranslations] = useState<{ [lang: string]: PostTranslation }>(
     initialTranslations
   );
-
-  // Tags e categorias salvos como IDs (string)
   const [tags, setTags] = useState<string[]>(initialPost?.tags || []);
   const [categories, setCategories] = useState<string[]>(
     initialPost?.categories
@@ -50,8 +46,6 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
   );
   const [availableTags, setAvailableTags] = useState<Tag[]>([]);
   const [availableCategories, setAvailableCategories] = useState<Category[]>([]);
-
-  // Status só pode ser draft ou published
   const initialStatus =
     initialPost?.status === 'published' || initialPost?.status === 'draft'
       ? initialPost.status
@@ -67,18 +61,18 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
   useEffect(() => {
     fetchTags()
       .then(setAvailableTags)
-      .catch(() => setError('Failed to load tags'));
+      .catch(() => setError(t('adminPostForm.error', 'Failed to load tags')));
     fetchCategories()
       .then(setAvailableCategories)
-      .catch(() => setError('Failed to load categories'));
-  }, []);
+      .catch(() => setError(t('adminPostForm.error', 'Failed to load categories')));
+  }, [t]);
 
   const handleTranslationChange = (field: keyof PostTranslation, value: string) => {
     setTranslations((prev) => ({
       ...prev,
       [activeLang]: { ...prev[activeLang], [field]: value },
     }));
-    // Limpa erro do campo ao editar
+    // Clear field error on edit
     if (activeLang === 'en') {
       setFieldErrors((prev) => ({ ...prev, [field]: '' }));
     }
@@ -94,11 +88,11 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
     setCategories(selected);
   };
 
-  // Imagem upload para Cloudinary (ajustar para seu projeto real)
+  // Image upload (Cloudinary)
   const uploadImage = async (file: File): Promise<string> => {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('upload_preset', 'your_preset'); // Troque pelo seu preset
+    formData.append('upload_preset', 'your_preset'); // Replace by your preset
     const res = await fetch('https://api.cloudinary.com/v1_1/your_cloud_name/image/upload', {
       method: 'POST',
       body: formData,
@@ -107,7 +101,7 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
     return data.secure_url;
   };
 
-  // Validação multilíngue antes de submeter
+  // Multilanguage validation (EN required)
   const validateFields = (): boolean => {
     const errors: { [key: string]: string } = {};
     if (!translations.en.title.trim())
@@ -131,8 +125,6 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
         imgUrl = await uploadImage(image);
         setImageUrl(imgUrl);
       }
-
-      // Corrigir envio: garantir formato correto esperado pelo backend!
       const data: Partial<Post> = {
         translations: {
           en: translations.en,
@@ -152,7 +144,7 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
         navigate('/admin/posts');
       }
     } catch (err: any) {
-      setError(err?.response?.data?.message || 'Failed to save post');
+      setError(err?.response?.data?.message || t('adminPostForm.error', 'Failed to save post'));
     }
   };
 
@@ -160,7 +152,7 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
     <form onSubmit={handleSubmit} className='admin-post-form' autoComplete='off'>
       {error && <div className='admin-post-form__error'>{error}</div>}
 
-      {/* Tabs multilíngue */}
+      {/* Multilanguage tabs */}
       <div className='admin-post-form__tabs'>
         {LANGUAGES.map((lang) => (
           <button
@@ -174,7 +166,7 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
         ))}
       </div>
 
-      {/* Campos multilíngue */}
+      {/* Multilanguage fields */}
       <div className={`admin-post-form__fields admin-post-form__fields--${activeLang}`}>
         <label className='admin-post-form__label'>
           {t('adminPostForm.title', 'Title')}
@@ -188,6 +180,7 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
               activeLang === 'en' && fieldErrors.title ? 'admin-post-form__input-error' : ''
             }
             onChange={(e) => handleTranslationChange('title', e.target.value)}
+            autoComplete='off'
           />
           {activeLang === 'en' && fieldErrors.title && (
             <span className='admin-post-form__field-error'>{fieldErrors.title}</span>
@@ -205,6 +198,7 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
             }
             onChange={(e) => handleTranslationChange('description', e.target.value)}
             rows={3}
+            autoComplete='off'
           />
           {activeLang === 'en' && fieldErrors.description && (
             <span className='admin-post-form__field-error'>{fieldErrors.description}</span>
@@ -222,6 +216,7 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
             }
             onChange={(e) => handleTranslationChange('content', e.target.value)}
             rows={6}
+            autoComplete='off'
           />
           {activeLang === 'en' && fieldErrors.content && (
             <span className='admin-post-form__field-error'>{fieldErrors.content}</span>
@@ -229,7 +224,7 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
         </label>
       </div>
 
-      {/* Upload de Imagem */}
+      {/* Image upload */}
       <div className='admin-post-form__img'>
         <label>{t('adminPostForm.image', 'Post Image:')}</label>
         <input
@@ -244,7 +239,7 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
         {imageUrl && <img src={imageUrl} alt='Post Cover' style={{ height: 100, margin: 8 }} />}
       </div>
 
-      {/* Tags e Categorias */}
+      {/* Tags and Categories */}
       <label>
         {t('adminPostForm.tags', 'Tags:')}
         <select multiple value={tags} onChange={handleTagChange}>
