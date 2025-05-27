@@ -1,4 +1,4 @@
-// src/shared/types/Post.ts
+// /src/shared/types/Post.ts
 
 export interface PostTranslation {
   title: string;
@@ -17,12 +17,7 @@ export interface Post {
   };
   image?: string;
   slug: string;
-  categories: {
-    _id: string;
-    name: string;
-    slug: string;
-    logo?: string;
-  }[];
+  categories: string[];
   tags?: string[];
 
   status: 'draft' | 'published' | 'archived';

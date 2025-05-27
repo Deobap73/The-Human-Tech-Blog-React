@@ -2,7 +2,113 @@
 
 .admin-post-form {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* /src/features/admin/styles/AdminPostForm.scss */
+
+  .admin-post-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+
+    &__tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    &__tab {
+      padding: 6px 18px;
+      border: 1px solid #aaa;
+      border-bottom: 0;
+      background: #f8f8f8;
+      cursor: pointer;
+      border-radius: 6px 6px 0 0;
+      font-weight: 600;
+      &.active {
+        background: #fff;
+        border-bottom: 2px solid #fff;
+        color: #222;
+        box-shadow: 0 2px 8px 0 #eee;
+      }
+    }
+    &__tab-required {
+      color: #e60;
+      margin-left: 4px;
+      font-weight: bold;
+      font-size: 1.1em;
+      vertical-align: top;
+    }
+    &__fields {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    &__label {
+      font-weight: 500;
+      margin-bottom: 3px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    &__asterisk {
+      color: #c00;
+      margin-left: 2px;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+    &__fields input,
+    &__fields textarea {
+      display: block;
+      width: 100%;
+      margin-bottom: 8px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+      background: #fafbfc;
+      transition: border-color 0.2s;
+    }
+    &__input-error {
+      border-color: #c00;
+      background: #fff5f5;
+    }
+    &__field-error {
+      color: #c00;
+      font-size: 0.93em;
+      margin-left: 6px;
+      font-weight: 500;
+    }
+    &__img {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    &__error {
+      color: #c00;
+      margin-bottom: 10px;
+      font-weight: 600;
+      background: #fff4f4;
+      padding: 7px 12px;
+      border-radius: 6px;
+      border: 1px solid #ffeaea;
+    }
+    &__submit {
+      padding: 9px 24px;
+      border: none;
+      background: #0077ff;
+      color: #fff;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 1.1em;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s;
+      &:hover {
+        background: #005ccc;
+      }
+    }
+  }
+
   gap: 1.2rem;
   max-width: 600px;
   margin: 0 auto;

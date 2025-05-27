@@ -1,4 +1,4 @@
-// src/features/admin/components/AdminPostForm.tsx
+// /src/features/admin/components/AdminPostForm.tsx
 
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { Tag } from '../../../shared/types/Tag';
 import { Category } from '../../../shared/types/Category';
 import { Post, PostTranslation } from '../../../shared/types/Post';
 import api from '../../../shared/utils/axios';
+import { useTranslation } from 'react-i18next';
 import '../../../features/admin/styles/AdminPostForm.scss';
 
 const LANGUAGES = ['en', 'pt', 'de', 'es'];
@@ -25,6 +26,7 @@ interface Props {
 }
 
 const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
+  const { t } = useTranslation();
   const [activeLang, setActiveLang] = useState('en');
 
   // Corrigir inicialização multilíngue (NUNCA undefined)
@@ -59,6 +61,7 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
   const [image, setImage] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState(initialPost?.image || '');
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -75,6 +78,10 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
       ...prev,
       [activeLang]: { ...prev[activeLang], [field]: value },
     }));
+    // Limpa erro do campo ao editar
+    if (activeLang === 'en') {
+      setFieldErrors((prev) => ({ ...prev, [field]: '' }));
+    }
   };
 
   const handleTagChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -100,8 +107,24 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
     return data.secure_url;
   };
 
+  // Validação multilíngue antes de submeter
+  const validateFields = (): boolean => {
+    const errors: { [key: string]: string } = {};
+    if (!translations.en.title.trim())
+      errors.title = t('adminPostForm.requiredTitle', 'Title is required (EN)');
+    if (!translations.en.description.trim())
+      errors.description = t('adminPostForm.requiredDescription', 'Description is required (EN)');
+    if (!translations.en.content.trim())
+      errors.content = t('adminPostForm.requiredContent', 'Content is required (EN)');
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    if (!validateFields()) return;
+
     try {
       let imgUrl = imageUrl;
       if (image) {
@@ -118,7 +141,7 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
           es: translations.es,
         },
         tags,
-        categories: categories.map((catId) => ({ _id: catId })), // <-- ajuste!
+        categories,
         status,
         image: imgUrl,
       };
@@ -134,10 +157,10 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className='admin-post-form'>
+    <form onSubmit={handleSubmit} className='admin-post-form' autoComplete='off'>
       {error && <div className='admin-post-form__error'>{error}</div>}
 
-      {/* Tabs por idioma */}
+      {/* Tabs multilíngue */}
       <div className='admin-post-form__tabs'>
         {LANGUAGES.map((lang) => (
           <button
@@ -146,36 +169,69 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
             className={`admin-post-form__tab${activeLang === lang ? ' active' : ''}`}
             onClick={() => setActiveLang(lang)}>
             {lang.toUpperCase()}
+            {lang === 'en' && <span className='admin-post-form__tab-required'>*</span>}
           </button>
         ))}
       </div>
 
       {/* Campos multilíngue */}
-      <div className='admin-post-form__fields'>
-        <input
-          type='text'
-          placeholder='Title'
-          value={translations[activeLang]?.title || ''}
-          required={activeLang === 'en'}
-          onChange={(e) => handleTranslationChange('title', e.target.value)}
-        />
-        <textarea
-          placeholder='Description'
-          value={translations[activeLang]?.description || ''}
-          required={activeLang === 'en'}
-          onChange={(e) => handleTranslationChange('description', e.target.value)}
-        />
-        <textarea
-          placeholder='Content'
-          value={translations[activeLang]?.content || ''}
-          required={activeLang === 'en'}
-          onChange={(e) => handleTranslationChange('content', e.target.value)}
-        />
+      <div className={`admin-post-form__fields admin-post-form__fields--${activeLang}`}>
+        <label className='admin-post-form__label'>
+          {t('adminPostForm.title', 'Title')}
+          {activeLang === 'en' && <span className='admin-post-form__asterisk'>*</span>}
+          <input
+            type='text'
+            placeholder={t('adminPostForm.titlePlaceholder', 'Post title')}
+            value={translations[activeLang]?.title || ''}
+            required={activeLang === 'en'}
+            className={
+              activeLang === 'en' && fieldErrors.title ? 'admin-post-form__input-error' : ''
+            }
+            onChange={(e) => handleTranslationChange('title', e.target.value)}
+          />
+          {activeLang === 'en' && fieldErrors.title && (
+            <span className='admin-post-form__field-error'>{fieldErrors.title}</span>
+          )}
+        </label>
+        <label className='admin-post-form__label'>
+          {t('adminPostForm.description', 'Description')}
+          {activeLang === 'en' && <span className='admin-post-form__asterisk'>*</span>}
+          <textarea
+            placeholder={t('adminPostForm.descriptionPlaceholder', 'Short description')}
+            value={translations[activeLang]?.description || ''}
+            required={activeLang === 'en'}
+            className={
+              activeLang === 'en' && fieldErrors.description ? 'admin-post-form__input-error' : ''
+            }
+            onChange={(e) => handleTranslationChange('description', e.target.value)}
+            rows={3}
+          />
+          {activeLang === 'en' && fieldErrors.description && (
+            <span className='admin-post-form__field-error'>{fieldErrors.description}</span>
+          )}
+        </label>
+        <label className='admin-post-form__label'>
+          {t('adminPostForm.content', 'Content')}
+          {activeLang === 'en' && <span className='admin-post-form__asterisk'>*</span>}
+          <textarea
+            placeholder={t('adminPostForm.contentPlaceholder', 'Full content')}
+            value={translations[activeLang]?.content || ''}
+            required={activeLang === 'en'}
+            className={
+              activeLang === 'en' && fieldErrors.content ? 'admin-post-form__input-error' : ''
+            }
+            onChange={(e) => handleTranslationChange('content', e.target.value)}
+            rows={6}
+          />
+          {activeLang === 'en' && fieldErrors.content && (
+            <span className='admin-post-form__field-error'>{fieldErrors.content}</span>
+          )}
+        </label>
       </div>
 
       {/* Upload de Imagem */}
       <div className='admin-post-form__img'>
-        <label>Post Image:</label>
+        <label>{t('adminPostForm.image', 'Post Image:')}</label>
         <input
           type='file'
           accept='image/*'
@@ -190,7 +246,7 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
 
       {/* Tags e Categorias */}
       <label>
-        Tags:
+        {t('adminPostForm.tags', 'Tags:')}
         <select multiple value={tags} onChange={handleTagChange}>
           {availableTags.map((tag) => (
             <option value={tag._id} key={tag._id}>
@@ -200,7 +256,7 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
         </select>
       </label>
       <label>
-        Categories:
+        {t('adminPostForm.categories', 'Categories:')}
         <select multiple value={categories} onChange={handleCategoryChange}>
           {availableCategories.map((cat) => (
             <option value={cat._id} key={cat._id}>
@@ -212,13 +268,15 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
 
       {/* Status */}
       <label>
-        Status:
+        {t('adminPostForm.status', 'Status:')}
         <select value={status} onChange={(e) => setStatus(e.target.value as 'draft' | 'published')}>
-          <option value='draft'>Draft</option>
-          <option value='published'>Published</option>
+          <option value='draft'>{t('adminPostForm.draft', 'Draft')}</option>
+          <option value='published'>{t('adminPostForm.published', 'Published')}</option>
         </select>
       </label>
-      <button type='submit'>Save</button>
+      <button type='submit' className='admin-post-form__submit'>
+        {t('adminPostForm.save', 'Save')}
+      </button>
     </form>
   );
 };
