@@ -85,7 +85,7 @@ Setup:
 
 1.  Create an unsigned upload preset in Cloudinary dashboard
 
-Add to `.env`:
+2. Add to `.env`:
 
 ```txt
 VITE_CLOUDINARY_CLOUD_NAME=your_cloud_name
@@ -134,45 +134,50 @@ npm run preview   # Preview build
 
 - International: Multilanguage fields in all POST/PATCH
 
-## See backend [README](https://github.com/Deobap73/The-Human-Tech-Blog-Server) for more routes.
+### See backend [README](https://github.com/Deobap73/The-Human-Tech-Blog-Server) for more routes.
+---
 
 ## ✅ Engineering Checklist
 
-Type safety (strict TS everywhere)
+- Type safety (strict TS everywhere)
 
-Modular SCSS (BEM)
+- Modular SCSS (BEM)
 
-Contexts: auth, socket, theme, i18n
+- Contexts: auth, socket, theme, i18n
 
-API services per domain
+- API services per domain
 
-Hooks for business logic
+- Hooks for business logic
 
-Toast notifications
+- Toast notifications
 
-Admin CRUD with multilanguage tabs
+- Admin CRUD with multilanguage tabs
 
-Image upload integration
+- Image upload integration
+---
+
 
 ## Security best practices
 
-## 🧪 Manual QA & Testing
+### 🧪 Manual QA & Testing
 
-Create/edit/delete posts in all languages
+- Create/edit/delete posts in all languages
 
-Switch languages and see correct translations
+- Switch languages and see correct translations
 
-Assign/remove tags and categories (CRUD)
+- Assign/remove tags and categories (CRUD)
 
-Upload and preview images in admin
+- Upload and preview images in admin
 
-Receive and read notifications
+- Receive and read notifications
 
-Search/filter posts
+- Search/filter posts
+
+---
 
 ## Login/logout, session persistence
 
-## 👤 Author
+### 👤 Author
 
 Built and maintained by Deolindo Baptista
 MIT License.
@@ -182,11 +187,12 @@ For personal and learning use only.
 
 ## 🤝 Contributions
 
-Fork & create a branch (feat/my-feature)
+- Fork & create a branch (feat/my-feature)
 
-Commit with clear messages in English
+- Commit with clear messages in English
 
-## Open a pull request
+- Open a pull request
+---
 
 ## 📝 Final Notes
 
@@ -197,4 +203,3 @@ Happy building & writing! 🚀
 
 ```
 
-```
