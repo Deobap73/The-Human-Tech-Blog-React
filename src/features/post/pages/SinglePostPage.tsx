@@ -1,5 +1,3 @@
-// The-Human-Tech-Blog-React/src/pages/posts/_slug/SinglePostPage.tsx
-
 import '../styles/SinglePostPage.scss';
 import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -13,6 +11,7 @@ import ReactionButton from '../../reaction/components/ReactionButton';
 import ReactionList from '../../reaction/components/ReactionList';
 import { fetchCategories } from '../../../shared/services/categoryService';
 import { Category } from '../../../shared/types/Category';
+import { getPostTranslation, getCategoryName } from '../../../shared/utils/i18nHelpers';
 
 export const SinglePostPage = () => {
   const { slug } = useParams();
@@ -21,7 +20,6 @@ export const SinglePostPage = () => {
   const [error, setError] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
 
-  // Carrega categorias para exibir nome multilíngue
   useEffect(() => {
     fetchCategories()
       .then(setCategories)
@@ -33,36 +31,24 @@ export const SinglePostPage = () => {
       try {
         const res = await axios.get(`/posts/slug/${slug}`);
         setPost(res.data);
-        setError(!isValidPost(res.data));
+        setError(!isValidPost(res.data, i18n.language));
       } catch {
         console.error('Failed to load post');
         setError(true);
       }
     };
     fetchPost();
-  }, [slug]);
+  }, [slug, i18n.language]);
 
-  // Busca tradução multilíngue do post com fallback
-  const getTranslation = (translations: Post['translations']): PostTranslation => {
-    const lang = i18n.language;
-    return (
-      translations[lang] ||
-      translations[lang.split('-')[0]] ||
-      translations['en'] || { title: '', description: '', content: '' }
-    );
-  };
+  // Tradução multilíngue segura
+  const translation: PostTranslation = post
+    ? getPostTranslation(post.translations, i18n.language)
+    : { title: '', description: '', content: '' };
 
-  // Busca o nome da primeira categoria, se houver
-  const getCategoryName = () => {
-    if (!post?.categories?.[0]) return '';
-    const cat = categories.find((c) => c._id === post.categories[0]);
-    if (!cat) return '';
-    const tr =
-      cat.translations[i18n.language] ||
-      cat.translations[i18n.language.split('-')[0]] ||
-      cat.translations['en'];
-    return tr?.name || '';
-  };
+  // Busca o nome multilíngue da primeira categoria
+  const firstCategoryName = post?.categories?.[0]
+    ? getCategoryName(categories.find((c) => c._id === post.categories[0])!, i18n.language)
+    : '';
 
   if (error) {
     return (
@@ -77,8 +63,6 @@ export const SinglePostPage = () => {
 
   if (!post) return <div>Loading...</div>;
 
-  const translation = getTranslation(post.translations);
-
   return (
     <div className='single-post'>
       <h1 className='single-post__title'>{translation.title}</h1>
@@ -87,7 +71,7 @@ export const SinglePostPage = () => {
         <img src={post.image} alt={translation.title} className='single-post__image' />
       )}
       <p className='single-post__excerpt'>{translation.description}</p>
-      {getCategoryName() && <span className='single-post__category'>{getCategoryName()}</span>}
+      {firstCategoryName && <span className='single-post__category'>{firstCategoryName}</span>}
       <ReactionList targetType='post' targetId={post._id} />
       <ReactionButton targetType='post' targetId={post._id} />
       <Comments postId={post._id} />

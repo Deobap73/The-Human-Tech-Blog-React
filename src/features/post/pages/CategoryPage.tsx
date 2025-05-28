@@ -1,5 +1,3 @@
-// src/features/post/pages/CategoryPage.tsx
-
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +7,7 @@ import { Category } from '../../../shared/types/Category';
 import { toast } from 'react-hot-toast';
 import CardList from '../components/CardList';
 import '../styles/CategoryPage.scss';
+import { getCategoryName } from '../../../shared/utils/i18nHelpers';
 
 const CategoryPage = () => {
   const { slug } = useParams();
@@ -19,13 +18,11 @@ const CategoryPage = () => {
 
   useEffect(() => {
     if (!slug) return;
-
     const fetchCategoryAndPosts = async () => {
       setLoading(true);
       try {
         const catRes = await api.get<Category>(`/categories/${slug}`);
         setCategory(catRes.data);
-
         const postsRes = await api.get<Post[]>(`/categories/${slug}/posts`);
         setPosts(postsRes.data);
       } catch (err) {
@@ -36,22 +33,17 @@ const CategoryPage = () => {
         setLoading(false);
       }
     };
-
     fetchCategoryAndPosts();
   }, [slug]);
 
-  // Select translation for current lang, fallback to EN, never access cat.name
-  const getTranslation = (cat: Category | null) => {
-    if (!cat || !cat.translations) return { name: slug, description: '' };
-    const lang = i18n.language.split('-')[0]; // sempre base, tipo 'en'
-    return (
-      cat.translations[lang] ||
-      cat.translations['en'] ||
-      Object.values(cat.translations)[0] || { name: slug, description: '' }
-    );
-  };
-
-  const translation = getTranslation(category);
+  // Tradução multilíngue segura
+  const name = category ? getCategoryName(category, i18n.language) : slug;
+  const description =
+    category?.translations?.[i18n.language]?.description ||
+    category?.translations?.[i18n.language.split('-')[0]]?.description ||
+    category?.translations?.en?.description ||
+    Object.values(category?.translations || {})[0]?.description ||
+    '';
 
   if (loading) return <p className='category-loading'>Loading...</p>;
 
@@ -62,15 +54,13 @@ const CategoryPage = () => {
           {category.logo && (
             <img
               src={category.logo}
-              alt={translation.name}
+              alt={name}
               className='category-logo'
               style={{ height: 40, marginRight: 12 }}
             />
           )}
-          <h2 className='category-title'>{translation.name}</h2>
-          {translation.description && (
-            <div className='category-description'>{translation.description}</div>
-          )}
+          <h2 className='category-title'>{name}</h2>
+          {description && <div className='category-description'>{description}</div>}
         </div>
       )}
       {!category && <h2 className='category-title'>{slug}</h2>}

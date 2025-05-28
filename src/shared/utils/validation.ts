@@ -1,16 +1,13 @@
-// src/utils/validation.ts
-
+// src/shared/utils/validation.ts
 import { Post } from '../types/Post';
+import { getPostTranslation } from './i18nHelpers';
 
 /**
- * Validates whether a post object has required fields for display.
+ * Validates whether a post object has required fields for display, in the current language.
  */
-export const isValidPost = (post: Post): boolean => {
+export const isValidPost = (post: Post, lang: string = 'en'): boolean => {
+  const t = getPostTranslation(post.translations, lang);
   return Boolean(
-    post &&
-      typeof post.title === 'string' &&
-      typeof post.image === 'string' &&
-      typeof post.description === 'string' &&
-      post.status === 'published'
+    post && typeof t.title === 'string' && t.title.trim().length > 0 && post.status === 'published'
   );
 };
