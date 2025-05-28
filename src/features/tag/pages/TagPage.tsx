@@ -3,11 +3,11 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getPostsByTag } from '../../../shared/services/tagService';
-import { IPost } from '../../../shared/types/Post';
+import { Post } from '../../../shared/types/Post';
 
 const TagPage = () => {
   const { slug } = useParams();
-  const [posts, setPosts] = useState<IPost[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

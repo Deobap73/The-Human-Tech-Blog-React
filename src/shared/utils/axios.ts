@@ -1,5 +1,3 @@
-// src/shared/utils/axios.ts
-
 import axios from 'axios';
 import { setAccessToken, getAccessToken } from './authTokenStorage';
 
@@ -10,17 +8,6 @@ const api = axios.create({
   xsrfHeaderName: 'X-CSRF-Token',
 });
 
-// Authorization Header
-api.interceptors.request.use((config) => {
-  const token = getAccessToken();
-  if (token) {
-    config.headers = config.headers || {};
-    config.headers['Authorization'] = `Bearer ${token}`;
-  }
-  return config;
-});
-
-// Only allow one refresh attempt per original request
 let isRefreshing = false;
 let failedQueue: any[] = [];
 
@@ -35,14 +22,23 @@ const processQueue = (error: any, token: string | null = null) => {
   failedQueue = [];
 };
 
+api.interceptors.request.use((config) => {
+  const token = getAccessToken();
+  if (token) {
+    config.headers = config.headers || {};
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+  return config;
+});
+
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    // Only attempt refresh if not already retrying
+    // Limit only one retry
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
-        // Queue further requests while refreshing
+        // Queue requests during refresh
         return new Promise(function (resolve, reject) {
           failedQueue.push({ resolve, reject });
         })
@@ -70,7 +66,8 @@ api.interceptors.response.use(
         isRefreshing = false;
         // Remove access token if refresh fails
         localStorage.removeItem('access_token');
-        // Optional: redirect to login page here
+        // Aqui podes emitir um evento global ou chamar uma função para forçar logout e mostrar login.
+        // Exemplo: window.location.href = '/login';
         return Promise.reject(refreshError);
       }
     }

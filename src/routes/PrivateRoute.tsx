@@ -1,5 +1,5 @@
 // src/routes/PrivateRoute.tsx
-import { Navigate } from 'react-router-dom';
+import { useParams, Navigate } from 'react-router-dom';
 import { useAuth } from '../shared/hooks/useAuth';
 
 interface Props {
@@ -8,12 +8,13 @@ interface Props {
 
 const PrivateRoute = ({ children }: Props) => {
   const { user, loading } = useAuth();
+  const { lang } = useParams();
 
   // Show loader while authenticating
   if (loading) return <div className='route-loader'>Loading...</div>;
 
-  // Redirect to login if not authenticated
-  return user ? <>{children}</> : <Navigate to='/login' replace />;
+  // Redirect to login in correct language
+  return user ? <>{children}</> : <Navigate to={`/${lang || 'en'}/login`} replace />;
 };
 
 export default PrivateRoute;

@@ -23,11 +23,9 @@ const CategoryPage = () => {
     const fetchCategoryAndPosts = async () => {
       setLoading(true);
       try {
-        // 1. Busca a categoria pelo slug (agora espera objeto com .translations)
         const catRes = await api.get<Category>(`/categories/${slug}`);
         setCategory(catRes.data);
 
-        // 2. Busca os posts associados à categoria
         const postsRes = await api.get<Post[]>(`/categories/${slug}/posts`);
         setPosts(postsRes.data);
       } catch (err) {
@@ -42,20 +40,20 @@ const CategoryPage = () => {
     fetchCategoryAndPosts();
   }, [slug]);
 
-  if (loading) return <p className='category-loading'>Loading...</p>;
-
-  // Seleciona a tradução do idioma atual (com fallback para inglês)
+  // Select translation for current lang, fallback to EN, never access cat.name
   const getTranslation = (cat: Category | null) => {
-    if (!cat || !cat.translations) return { name: cat?.name || slug, description: '' };
+    if (!cat || !cat.translations) return { name: slug, description: '' };
     const lang = i18n.language;
     return (
       cat.translations[lang] ||
-      cat.translations[lang.split('-')[0]] || // para "pt-BR" ou "en-US"
-      cat.translations['en'] || { name: cat.name || slug, description: '' }
+      cat.translations[lang.split('-')[0]] ||
+      cat.translations['en'] || { name: slug, description: '' }
     );
   };
 
   const translation = getTranslation(category);
+
+  if (loading) return <p className='category-loading'>Loading...</p>;
 
   return (
     <div className='category-page'>

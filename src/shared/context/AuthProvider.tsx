@@ -75,13 +75,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setLoading(true);
       try {
         if (getAccessToken()) {
+          // Se já existe um accessToken, tenta buscar o user
           await refetchUser();
         } else {
-          await refreshAccessToken();
-          await refetchUser();
+          try {
+            // Tenta refrescar apenas UMA vez (aceitável em frontend moderno)
+            await refreshAccessToken();
+            await refetchUser();
+          } catch {
+            // Se refresh falhar, assume que não existe sessão e desbloqueia UI!
+            setUser(null);
+          }
         }
-      } catch {
-        setUser(null);
       } finally {
         setLoading(false);
       }

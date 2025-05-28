@@ -1,5 +1,5 @@
 // src/routes/adminRoute.tsx
-import { Navigate } from 'react-router-dom';
+import { useParams, Navigate } from 'react-router-dom';
 import { useAuth } from '../shared/hooks/useAuth';
 
 interface Props {
@@ -8,13 +8,13 @@ interface Props {
 
 const AdminRoute = ({ children }: Props) => {
   const { user, loading } = useAuth();
+  const { lang } = useParams();
 
-  // Show loader while authenticating
   if (loading) return <div className='route-loader'>Loading...</div>;
 
   // Redirect if not authenticated or not admin
-  if (!user) return <Navigate to='/login' replace />;
-  if (user.role !== 'admin') return <Navigate to='/not-authorized' replace />;
+  if (!user) return <Navigate to={`/${lang || 'en'}/login`} replace />;
+  if (user.role !== 'admin') return <Navigate to={`/${lang || 'en'}/not-authorized`} replace />;
 
   return <>{children}</>;
 };

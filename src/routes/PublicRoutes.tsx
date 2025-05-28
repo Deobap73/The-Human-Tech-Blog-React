@@ -1,6 +1,6 @@
 // src/routes/PublicRoutes.tsx
 
-import { Routes, Route, useParams, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from '../features/layout/Layout';
 import { HomePage } from '../features/home/pages/HomePage';
 import AboutPage from '../features/about/pages/AboutPage';
@@ -13,6 +13,7 @@ import TagPage from '../features/tag/pages/TagPage';
 import CategoryPage from '../features/post/pages/CategoryPage';
 import SearchResultsPage from '../features/search/pages/SearchResultsPage';
 import { NavigateToDefaultLang, RedirectToBrowserLang } from './Redirects';
+import LoginPage from '../features/auth/pages/LoginPage';
 
 const PublicRoutes = () => {
   return (
@@ -28,9 +29,12 @@ const PublicRoutes = () => {
         <Route path='tags' element={<AdminTagsPage />} />
         <Route path='categories/:slug' element={<CategoryPage />} />
         <Route path='search' element={<SearchResultsPage />} />
+        <Route path='login' element={<LoginPage />} />
         {/* Redireciona rotas desconhecidas para home do idioma atual */}
         <Route path='*' element={<NavigateToDefaultLang />} />
       </Route>
+      {/* Login route absoluta, útil para debug/manual */}
+      <Route path='/login' element={<LoginPage />} />
       {/* Redireciona root para /en ou o idioma detectado */}
       <Route path='/' element={<RedirectToBrowserLang />} />
     </Routes>
