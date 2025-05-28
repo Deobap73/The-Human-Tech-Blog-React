@@ -43,11 +43,11 @@ const CategoryPage = () => {
   // Select translation for current lang, fallback to EN, never access cat.name
   const getTranslation = (cat: Category | null) => {
     if (!cat || !cat.translations) return { name: slug, description: '' };
-    const lang = i18n.language;
+    const lang = i18n.language.split('-')[0]; // sempre base, tipo 'en'
     return (
       cat.translations[lang] ||
-      cat.translations[lang.split('-')[0]] ||
-      cat.translations['en'] || { name: slug, description: '' }
+      cat.translations['en'] ||
+      Object.values(cat.translations)[0] || { name: slug, description: '' }
     );
   };
 
