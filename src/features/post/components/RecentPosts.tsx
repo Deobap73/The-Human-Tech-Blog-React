@@ -1,16 +1,26 @@
-// src/components/recentPosts/RecentPosts.tsx
+// The-Human-Tech-Blog-React/src/features/post/components/RecentPosts.tsx
 
 import '../styles/RecentPosts.scss';
 import { Card } from './Card';
 import { Post } from '../../../shared/types/Post';
 import { isValidPost } from '../../../shared/utils/validation';
 
-export const RecentPosts = ({ posts }: { posts: Post[] }) => {
-  const validPosts = posts.filter((post) => isValidPost(post));
+interface RecentPostsProps {
+  posts: Post[];
+  lang: string;
+}
+
+// RecentPosts component renders the latest four valid posts using Card components.
+export const RecentPosts = ({ posts, lang }: RecentPostsProps) => {
+  const validPosts = posts.filter((post) => isValidPost(post, lang));
+  const postsToDisplay = validPosts.slice(0, 4);
+
+  if (postsToDisplay.length === 0) return null;
+
   return (
     <div className='recentPosts'>
-      {validPosts.slice(0, 4).map((post) => (
-        <Card key={post._id} post={post} />
+      {postsToDisplay.map((post) => (
+        <Card key={post._id} post={post} lang={lang} />
       ))}
     </div>
   );

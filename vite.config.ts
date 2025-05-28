@@ -11,6 +11,11 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    proxy: {
+      '/api': 'http://localhost:5000', // Proxy para o backend
+    },
+  },
   build: {
     outDir: 'dist',
     emptyOutDir: true, // Isso limpa o diretório antes de cada build

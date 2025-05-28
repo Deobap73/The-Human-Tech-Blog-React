@@ -1,27 +1,31 @@
-// src/components/myFavoritePost/MyFavoritePost.tsx
+// The-Human-Tech-Blog-React/src/features/post/components/MyFavoritePost.tsx
 
 import '../styles/MyFavoritePost.scss';
 import { Link } from 'react-router-dom';
 import { Post } from '../../../shared/types/Post';
 import { isValidPost } from '../../../shared/utils/validation';
-import { useTranslation } from 'react-i18next';
 import { getPostTranslation } from '../../../shared/utils/i18nHelpers';
 
-export const MyFavoritePost = ({ post }: { post?: Post }) => {
-  const { i18n } = useTranslation();
-  const lang = i18n.language.split('-')[0] || 'en';
+interface MyFavoritePostProps {
+  post?: Post;
+  lang: string;
+}
 
-  if (!post || !isValidPost(post)) return null;
+export const MyFavoritePost = ({ post, lang }: MyFavoritePostProps) => {
+  if (!post || !isValidPost(post, lang)) return null;
 
   const translation = getPostTranslation(post.translations, lang);
+  const category = post.categories?.[0] || 'Uncategorized';
 
   return (
     <div className='myFavoritePost'>
-      <img className='myFavoritePost__image' src={post.image} alt={translation.title} />
+      <img
+        className='myFavoritePost__image'
+        src={post.image}
+        alt={translation.title || 'No Title Available'}
+      />
       <div className='myFavoritePost__text'>
-        <span className='myFavoritePost__text__category'>
-          {post.categories?.[0] || 'Uncategorized'}
-        </span>
+        <span className='myFavoritePost__text__category'>{category}</span>
         <h2 className='myFavoritePost__text__title'>{translation.title}</h2>
         <p className='myFavoritePost__text__excerpt'>{translation.description}</p>
         <Link to={`/posts/${post.slug}`}>

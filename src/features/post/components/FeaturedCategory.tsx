@@ -1,24 +1,20 @@
-// src/features/post/components/FeaturedCategory.tsx
+// The-Human-Tech-Blog-React/src/features/post/components/FeaturedCategory.tsx
 
 import '../../post/styles/Featured.scss';
 import { Post } from '../../../shared/types/Post';
 import { Link } from 'react-router-dom';
 import { isValidPost } from '../../../shared/utils/validation';
-import { useTranslation } from 'react-i18next';
 import { getPostTranslation } from '../../../shared/utils/i18nHelpers';
 
 interface FeaturedCategoryProps {
   post?: Post;
-  lang?: string;
+  lang: string;
 }
 
 export const FeaturedCategory = ({ post, lang }: FeaturedCategoryProps) => {
-  const { i18n } = useTranslation();
-  const currentLang = lang || i18n.language.split('-')[0] || 'en';
+  if (!post || !isValidPost(post, lang)) return null;
 
-  if (!post || !isValidPost(post)) return null;
-
-  const translation = getPostTranslation(post.translations, currentLang);
+  const translation = getPostTranslation(post.translations, lang);
   const firstCategory = post.categories?.[0] || 'Uncategorized';
 
   return (

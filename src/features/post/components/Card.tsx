@@ -1,36 +1,34 @@
-// src/components/card/Card.tsx
+// The-Human-Tech-Blog-React/src/features/post/components/Card.tsx
 
 import '../styles/Card.scss';
 import { Link } from 'react-router-dom';
 import { Post } from '../../../shared/types/Post';
 import { BookmarkButton } from './BookmarkButton';
 import { isValidPost } from '../../../shared/utils/validation';
-import { useTranslation } from 'react-i18next';
 import { getPostTranslation } from '../../../shared/utils/i18nHelpers';
 
 type CardProps = {
   post?: Post;
+  lang: string;
 };
 
-export const Card = ({ post }: CardProps) => {
-  const { i18n } = useTranslation();
-  const lang = i18n.language.split('-')[0] || 'en';
-
-  if (!post || !isValidPost(post)) return null;
+export const Card = ({ post, lang }: CardProps) => {
+  if (!post || !isValidPost(post, lang)) return null;
 
   const translation = getPostTranslation(post.translations, lang);
   const category = post.categories?.[0] || 'Uncategorized';
+  const fullDescription = translation.description || '';
+  const displayDescription =
+    fullDescription.length > 60 ? fullDescription.substring(0, 60) + '...' : fullDescription;
 
   return (
     <div className='cardPost'>
-      <img src={post.image} alt={translation.title} className='cardPost__image' />
+      <img src={post.image} alt={translation.title || 'No title'} className='cardPost__image' />
       <div className='cardPost__descriptionContainer'>
         <span className='cardPost__descriptionContainer__category'>{category}</span>
         <div className='cardPost__descriptionContainer__textContainer'>
           <p className='cardPost__descriptionContainer__textContainer__description'>
-            {translation.description.length > 60
-              ? translation.description.substring(0, 60) + '...'
-              : translation.description}
+            {displayDescription}
           </p>
           <div>
             <Link to={`/posts/${post.slug}`}>
