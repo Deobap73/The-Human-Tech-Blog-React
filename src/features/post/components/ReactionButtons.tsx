@@ -1,4 +1,4 @@
-// The-Human-Tech-Blog-React/src/components/reactions/ReactionButtons.tsx
+// src/components/reactions/ReactionButtons.tsx
 
 import '../styles/ReactionButtons.scss';
 import { useCallback, useEffect, useState } from 'react';
