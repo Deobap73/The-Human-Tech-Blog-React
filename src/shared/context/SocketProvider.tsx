@@ -3,6 +3,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { useAuth } from '../hooks/useAuth';
 import { io } from 'socket.io-client';
 import { getAccessToken } from '../utils/authTokenStorage';
 import { SocketContext } from './SocketContext';
@@ -21,6 +22,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
 
   const isConnected = useRef(false);
 
+  const { user } = useAuth();
   // Socket connection
   useEffect(() => {
     const token = getAccessToken();
@@ -54,7 +56,12 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   // Fetch notifications once on mount
+
   useEffect(() => {
+    if (!user) {
+      setNotifications([]);
+      return;
+    }
     (async () => {
       try {
         const res = await api.get('/notifications');
@@ -63,7 +70,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
         setNotifications([]);
       }
     })();
-  }, []);
+  }, [user]);
 
   // Chat message
   const sendMessage = useCallback(
