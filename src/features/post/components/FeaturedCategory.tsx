@@ -6,21 +6,24 @@ import { Link } from 'react-router-dom';
 import { isValidPost } from '../../../shared/utils/validation';
 import { useTranslation } from 'react-i18next';
 
+// FeaturedCategory component displays a highlighted post with multilanguage support.
 interface FeaturedCategoryProps {
   post?: Post;
-  lang?: string; // Opcional: para forçar idioma, mas geralmente vem do contexto i18n
+  lang?: string;
 }
 
 export const FeaturedCategory = ({ post, lang }: FeaturedCategoryProps) => {
   const { i18n } = useTranslation();
-  // Usa idioma do contexto se não for passado por prop
   const currentLang = lang || i18n.language.split('-')[0] || 'en';
 
   if (!post || !isValidPost(post)) return null;
 
-  // Fallback: usa o primeiro idioma disponível se não houver tradução no atual
+  // Extract safe translation (fallback to first available)
   const translation = post.translations[currentLang] ||
     Object.values(post.translations).find(Boolean) || { title: '', description: '', content: '' };
+
+  // Categories is string[] (slugs or names)
+  const firstCategory = post.categories?.[0] || 'Uncategorized';
 
   return (
     <div className='featured'>
@@ -32,11 +35,7 @@ export const FeaturedCategory = ({ post, lang }: FeaturedCategoryProps) => {
         />
       </div>
       <div className='featured__content'>
-        <span className='featured__category'>
-          {Array.isArray(post.categories) && post.categories.length > 0
-            ? post.categories[0]
-            : 'Uncategorized'}
-        </span>
+        <span className='featured__category'>{firstCategory}</span>
         <h2 className='featured__title'>{translation.title || 'No title'}</h2>
         <p className='featured__description'>{translation.description || ''}</p>
         <Link to={`/posts/${post.slug}`} className='featured__link'>

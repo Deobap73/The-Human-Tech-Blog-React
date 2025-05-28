@@ -1,31 +1,39 @@
-// ✅ The-Human-Tech-Blog-React/src/components/card/Card.tsx
+// src/components/card/Card.tsx
 
 import '../styles/Card.scss';
 import { Link } from 'react-router-dom';
 import { Post } from '../../../shared/types/Post';
 import { BookmarkButton } from './BookmarkButton';
 import { isValidPost } from '../../../shared/utils/validation';
+import { useTranslation } from 'react-i18next';
 
 type CardProps = {
   post?: Post;
 };
 
 export const Card = ({ post }: CardProps) => {
+  const { i18n } = useTranslation();
+  const lang = i18n.language.split('-')[0] || 'en';
+
   if (!post || !isValidPost(post)) return null;
-  console.log('[Card] Post foi recebido:', post);
+
+  // Multilingual translation fallback
+  const translation = post.translations[lang] ||
+    Object.values(post.translations)[0] || { title: '', description: '', content: '' };
+
+  // Categories é string[]: mostrar o slug diretamente ou mapear manualmente
+  const category = post.categories?.[0] || 'Uncategorized';
 
   return (
     <div className='cardPost'>
-      <img src={post.image} alt={post.title} className='cardPost__image' />
+      <img src={post.image} alt={translation.title} className='cardPost__image' />
       <div className='cardPost__descriptionContainer'>
-        <span className='cardPost__descriptionContainer__category'>
-          {post.categories?.[0]?.name}
-        </span>
+        <span className='cardPost__descriptionContainer__category'>{category}</span>
         <div className='cardPost__descriptionContainer__textContainer'>
           <p className='cardPost__descriptionContainer__textContainer__description'>
-            {post.description.length > 60
-              ? post.description.substring(0, 60) + '...'
-              : post.description}
+            {translation.description.length > 60
+              ? translation.description.substring(0, 60) + '...'
+              : translation.description}
           </p>
           <div>
             <Link to={`/posts/${post.slug}`}>
@@ -33,7 +41,6 @@ export const Card = ({ post }: CardProps) => {
                 Read More
               </button>
             </Link>
-
             <BookmarkButton postId={post._id} />
           </div>
         </div>

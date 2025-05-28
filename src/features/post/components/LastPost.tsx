@@ -1,4 +1,4 @@
-// The-Human-Tech-Blog-React/src/components/lastPost/LastPost.tsx
+// src/components/lastPost/LastPost.tsx
 
 import '../styles/LastPost.scss';
 import { Link } from 'react-router-dom';
@@ -17,14 +17,11 @@ export const LastPost = ({ post, lang }: LastPostProps) => {
 
   if (!post || !isValidPost(post)) return null;
 
-  // Extrai tradução segura
   const translation = post.translations[currentLang] ||
     Object.values(post.translations).find(Boolean) || { title: '', description: '', content: '' };
 
-  // Supondo que categories é string[] com slug ou nome, só mostramos o slug/nome.
-  // Se for array de objetos, ajusta aqui!
+  // Categories is string[]
   const firstCategory = post.categories?.[0] || 'Uncategorized';
-  // Exemplo: se tiveres um mapeamento de slugs para nomes/logos, podes buscar aqui!
 
   return (
     <div className='lastPost'>
@@ -37,9 +34,7 @@ export const LastPost = ({ post, lang }: LastPostProps) => {
         />
         <div className='details'>
           <div className='category'>
-            {/* Se tiveres um logo associado a cada categoria, faz o mapping aqui! */}
-            {/* Exemplo estático, ajusta conforme a tua lógica de categorias: */}
-            {/* <img src={`/images/${categoryLogoMapping[firstCategory]}`} alt={firstCategory} className='categoryLogo' /> */}
+            {/* If you have a mapping of slugs -> logos, use here */}
             <span className='categoryName'>{firstCategory}</span>
           </div>
           <h3 className='postTitle'>{translation.title}</h3>
