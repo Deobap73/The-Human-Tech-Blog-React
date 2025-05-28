@@ -7,6 +7,7 @@ import { Tag } from '../../../shared/types/Tag';
 import { Category } from '../../../shared/types/Category';
 import { Post } from '../../../shared/types/Post';
 import { useTranslation } from 'react-i18next';
+import { getPostTranslation, getTagName, getCategoryName } from '../../../shared/utils/i18nHelpers';
 
 const PostList = ({ posts }: { posts: Post[] }) => {
   const [tags, setTags] = useState<Tag[]>([]);
@@ -26,19 +27,7 @@ const PostList = ({ posts }: { posts: Post[] }) => {
   return (
     <ul>
       {posts.map((post) => {
-        // Extração multilíngue segura:
-        const translation = post.translations[lang] ||
-          Object.values(post.translations).find(Boolean) || {
-            title: '',
-            description: '',
-            content: '',
-          };
-
-        function getTagName(tag: Tag, lang: string = 'en'): string {
-          return (
-            tag.translations?.[lang]?.name || Object.values(tag.translations)[0]?.name || tag.slug
-          );
-        }
+        const translation = getPostTranslation(post.translations, lang);
 
         return (
           <li key={post._id}>
@@ -65,12 +54,6 @@ const PostList = ({ posts }: { posts: Post[] }) => {
               {/* Render categories */}
               {(post.categories ?? []).map((catId) => {
                 const cat = categoryMap[catId];
-                // Extrai nome multilíngue seguro!
-                const catTranslation = cat?.translations?.[lang] ||
-                  Object.values(cat?.translations || {}).find(Boolean) || {
-                    name: cat?.slug || '',
-                    description: '',
-                  };
                 return cat ? (
                   <span
                     key={cat._id}
@@ -80,7 +63,7 @@ const PostList = ({ posts }: { posts: Post[] }) => {
                       borderRadius: 4,
                       marginRight: 4,
                     }}>
-                    {catTranslation.name}
+                    {getCategoryName(cat, lang)}
                   </span>
                 ) : null;
               })}

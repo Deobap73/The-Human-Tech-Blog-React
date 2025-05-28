@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Post } from '../../../shared/types/Post';
 import { isValidPost } from '../../../shared/utils/validation';
 import { useTranslation } from 'react-i18next';
+import { getPostTranslation } from '../../../shared/utils/i18nHelpers';
 
 interface LastPostProps {
   post?: Post;
@@ -17,10 +18,7 @@ export const LastPost = ({ post, lang }: LastPostProps) => {
 
   if (!post || !isValidPost(post)) return null;
 
-  const translation = post.translations[currentLang] ||
-    Object.values(post.translations).find(Boolean) || { title: '', description: '', content: '' };
-
-  // Categories is string[]
+  const translation = getPostTranslation(post.translations, currentLang);
   const firstCategory = post.categories?.[0] || 'Uncategorized';
 
   return (
@@ -34,7 +32,6 @@ export const LastPost = ({ post, lang }: LastPostProps) => {
         />
         <div className='details'>
           <div className='category'>
-            {/* If you have a mapping of slugs -> logos, use here */}
             <span className='categoryName'>{firstCategory}</span>
           </div>
           <h3 className='postTitle'>{translation.title}</h3>

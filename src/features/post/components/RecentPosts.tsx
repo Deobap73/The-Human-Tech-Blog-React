@@ -5,7 +5,6 @@ import { Card } from './Card';
 import { Post } from '../../../shared/types/Post';
 import { isValidPost } from '../../../shared/utils/validation';
 
-// RecentPosts component renders the latest four valid posts using Card components.
 export const RecentPosts = ({ posts }: { posts: Post[] }) => {
   const validPosts = posts.filter((post) => isValidPost(post));
   return (

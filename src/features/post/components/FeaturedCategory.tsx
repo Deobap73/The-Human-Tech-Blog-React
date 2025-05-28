@@ -5,8 +5,8 @@ import { Post } from '../../../shared/types/Post';
 import { Link } from 'react-router-dom';
 import { isValidPost } from '../../../shared/utils/validation';
 import { useTranslation } from 'react-i18next';
+import { getPostTranslation } from '../../../shared/utils/i18nHelpers';
 
-// FeaturedCategory component displays a highlighted post with multilanguage support.
 interface FeaturedCategoryProps {
   post?: Post;
   lang?: string;
@@ -18,11 +18,7 @@ export const FeaturedCategory = ({ post, lang }: FeaturedCategoryProps) => {
 
   if (!post || !isValidPost(post)) return null;
 
-  // Extract safe translation (fallback to first available)
-  const translation = post.translations[currentLang] ||
-    Object.values(post.translations).find(Boolean) || { title: '', description: '', content: '' };
-
-  // Categories is string[] (slugs or names)
+  const translation = getPostTranslation(post.translations, currentLang);
   const firstCategory = post.categories?.[0] || 'Uncategorized';
 
   return (

@@ -6,6 +6,7 @@ import { Post } from '../../../shared/types/Post';
 import { BookmarkButton } from './BookmarkButton';
 import { isValidPost } from '../../../shared/utils/validation';
 import { useTranslation } from 'react-i18next';
+import { getPostTranslation } from '../../../shared/utils/i18nHelpers';
 
 type CardProps = {
   post?: Post;
@@ -17,11 +18,7 @@ export const Card = ({ post }: CardProps) => {
 
   if (!post || !isValidPost(post)) return null;
 
-  // Multilingual translation fallback
-  const translation = post.translations[lang] ||
-    Object.values(post.translations)[0] || { title: '', description: '', content: '' };
-
-  // Categories é string[]: mostrar o slug diretamente ou mapear manualmente
+  const translation = getPostTranslation(post.translations, lang);
   const category = post.categories?.[0] || 'Uncategorized';
 
   return (

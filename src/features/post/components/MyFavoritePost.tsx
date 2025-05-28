@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Post } from '../../../shared/types/Post';
 import { isValidPost } from '../../../shared/utils/validation';
 import { useTranslation } from 'react-i18next';
+import { getPostTranslation } from '../../../shared/utils/i18nHelpers';
 
 export const MyFavoritePost = ({ post }: { post?: Post }) => {
   const { i18n } = useTranslation();
@@ -12,8 +13,7 @@ export const MyFavoritePost = ({ post }: { post?: Post }) => {
 
   if (!post || !isValidPost(post)) return null;
 
-  const translation = post.translations[lang] ||
-    Object.values(post.translations).find(Boolean) || { title: '', description: '', content: '' };
+  const translation = getPostTranslation(post.translations, lang);
 
   return (
     <div className='myFavoritePost'>
