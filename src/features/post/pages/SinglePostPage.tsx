@@ -1,3 +1,5 @@
+// The-Human-Tech-Blog-React/src/features/post/pages/SinglePostPage.tsx
+
 import '../styles/SinglePostPage.scss';
 import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -9,8 +11,6 @@ import Comments from '../components/Comments';
 import { isValidPost } from '../../../shared/utils/validation';
 import ReactionButton from '../../reaction/components/ReactionButton';
 import ReactionList from '../../reaction/components/ReactionList';
-import { fetchCategories } from '../../../shared/services/categoryService';
-import { Category } from '../../../shared/types/Category';
 import { getPostTranslation, getCategoryName } from '../../../shared/utils/i18nHelpers';
 
 export const SinglePostPage = () => {
@@ -18,13 +18,6 @@ export const SinglePostPage = () => {
   const { i18n } = useTranslation();
   const [post, setPost] = useState<Post | null>(null);
   const [error, setError] = useState(false);
-  const [categories, setCategories] = useState<Category[]>([]);
-
-  useEffect(() => {
-    fetchCategories()
-      .then(setCategories)
-      .catch(() => setCategories([]));
-  }, []);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -41,14 +34,19 @@ export const SinglePostPage = () => {
   }, [slug, i18n.language]);
 
   // Tradução multilíngue segura
-  const translation: PostTranslation = post
-    ? getPostTranslation(post.translations, i18n.language)
-    : { title: '', description: '', content: '' };
+  const translation: PostTranslation =
+    post && post.translations
+      ? getPostTranslation(post.translations, i18n.language)
+      : { title: '', description: '', content: '' };
 
-  // Busca o nome multilíngue da primeira categoria
-  const firstCategoryName = post?.categories?.[0]
-    ? getCategoryName(categories.find((c) => c._id === post.categories[0])!, i18n.language)
-    : '';
+  // Categoria populada no próprio post, seguro para qualquer formato
+  const firstCategoryName =
+    post?.categories &&
+    post.categories.length > 0 &&
+    typeof post.categories[0] === 'object' &&
+    (post.categories[0] as any)?.translations
+      ? getCategoryName(post.categories[0] as any, i18n.language)
+      : '';
 
   if (error) {
     return (
@@ -75,6 +73,9 @@ export const SinglePostPage = () => {
       <ReactionList targetType='post' targetId={post._id} />
       <ReactionButton targetType='post' targetId={post._id} />
       <Comments postId={post._id} />
+      <Link to='/'>
+        <button className='single-post__back'>Voltar para o início</button>
+      </Link>
     </div>
   );
 };

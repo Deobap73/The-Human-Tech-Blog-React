@@ -82,7 +82,7 @@ export const FeaturedCategory = ({ post, lang }: FeaturedCategoryProps) => {
           );
           return null;
         })()}
-        <Link to={`/posts/${post.slug}`} className='featured__link'>
+        <Link to={`/${lang}/posts/${post.slug}`} className='featured__link'>
           Read Full Article
         </Link>
         {(() => {

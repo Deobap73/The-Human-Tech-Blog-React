@@ -83,11 +83,12 @@ export const LastPost = ({ post, lang }: LastPostProps) => {
             );
             return null;
           })()}
-          <Link to={`/posts/${post.slug}`}>
+          <Link to={`/${lang}/posts/${post.slug}`}>
             <button className='cardPost__descriptionContainer__textContainer__readMore'>
               Read More
             </button>
           </Link>
+
           {(() => {
             console.log(`[LastPost] "Read More" link points to: /posts/${post.slug}`);
             return null;
