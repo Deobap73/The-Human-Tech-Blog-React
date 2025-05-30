@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prepare": "if [ -f pnpm-lock.yaml ]; then echo '🚫 PNPM is not allowed in this project. Use NPM only.' && exit 1; fi"
+    "prepare": "cross-env sh -c \"if [ -f pnpm-lock.yaml ]; then echo '🚫 PNPM is not allowed in this project. Use NPM only.' && exit 1; fi\""
   },
   "engines": {
     "node": ">=20.18",
@@ -56,6 +56,7 @@
     "@types/socket.io-client": "^3.0.0",
     "@vitejs/plugin-react": "^4.3.4",
     "commitizen": "^4.3.1",
+    "cross-env": "7.0.3",
     "eslint": "^9.22.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",

@@ -1,4 +1,4 @@
-/* The-Human-Tech-Blog-React/src/components/navbar/Navbar.scss */
+/* The-Human-Tech-Blog-React\src\features\layout\styles\Navbar.scss*/
 
 .navbar {
   position: relative;
@@ -7,41 +7,61 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 81vh;
+  height: 94vh;
   overflow: hidden;
 
+  // Modifiers for theme
   &--dark {
-  }
-  &--light {
+    // Add dark theme specific styles here if any, e.g., background-color, color
   }
 
+  &--light {
+    // Add light theme specific styles here if any
+  }
+
+  // Elements
   &__background {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
+    height: 100%;
     object-fit: cover;
     z-index: 0;
   }
 
   &__nav {
     display: flex;
+    max-width: 1200px;
     width: 100%;
     padding: 1rem;
     z-index: 3;
-    justify-content: center;
-  }
-
-  &__container {
-    display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
-    max-width: 1440px;
-    width: 100%;
+
+    &-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 60%;
+    }
   }
 
-  &__logo-image {
-    width: 15vw;
+  .choices {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 40%;
+    gap: 1rem;
+  }
+
+  &__logo {
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(2px);
+    border-radius: 1.3rem;
+    &-image {
+      width: 8vw;
+    }
   }
 
   &__actions {
@@ -56,22 +76,53 @@
     transition: color 0.3s;
   }
 
-  &__login {
-    display: flex;
-    align-items: center;
-  }
-
   &__user {
     display: flex;
-    gap: 0.5rem;
+    align-items: center;
+    gap: 1rem;
 
-    &-admin,
-    &-logout {
+    &-profile {
+      display: flex;
+      align-items: center;
       text-decoration: none;
+      color: inherit;
+    }
+
+    &-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    &-name {
+      font-size: 1rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    &-admin {
+      text-decoration: none;
+    }
+
+    &-logout {
       background: none;
       border: none;
       cursor: pointer;
+      font-size: 1rem;
+      padding: 0;
     }
+  }
+
+  &__login {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0;
   }
 
   &__tile {
@@ -83,28 +134,42 @@
     margin-bottom: 5%;
     margin-left: 40%;
     text-align: center;
-
-    & .navbar__title {
+    &-title {
+      color: var(--colorText);
       font-size: 2rem;
       font-weight: bold;
     }
 
-    & .navbar__description {
+    &-description {
+      color: var(--colorText);
       font-size: 1rem;
     }
   }
 
+  // Media Queries
   @media (max-width: 1024px) {
     &__nav {
       flex-direction: column;
+      align-items: center;
+      padding: 0.5rem;
     }
 
-    &__container {
+    &__nav-container {
       flex-direction: column;
+      margin-bottom: 1rem;
+      width: 100%;
     }
 
     &__actions {
       flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .choices {
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
     }
 
     &__logo-image {
@@ -113,11 +178,16 @@
   }
 
   @media (max-width: 768px) {
-    &__title {
+    &__tile {
+      margin-left: 0;
+      width: 90%;
+    }
+
+    &__tile-title {
       font-size: 1.5rem;
     }
 
-    &__description {
+    &__tile-description {
       font-size: 0.9rem;
     }
   }

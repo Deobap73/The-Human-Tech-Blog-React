@@ -3,27 +3,134 @@
 .search-bar {
   display: flex;
   align-items: center;
+  position: relative; // Required for positioning icon and form
+  height: 40px; // Fixed height for the component
+  min-width: 40px; // Minimum width for the icon
+  overflow: hidden; // Crucial for hiding the input and enabling smooth transitions
 
-  &__input {
-    flex: 1;
-    padding: 0.5rem 1rem;
-    border-radius: 2rem 0 0 2rem;
-    border: 1px solid #ccc;
-    font-size: 1rem;
+  // Element: Search icon
+  &__icon {
+    cursor: pointer;
+    font-size: 1.5rem; // Icon size
+    color: var(--text-color); // Use theme text color variable
+    z-index: 2; // Ensures the icon is above the input
+    position: absolute; // Positions the icon to the right edge of the container
+    right: 0;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px; // Icon width
+    height: 40px; // Icon height
+    transition: color 0.3s ease; // Transition for icon hover state
+
+    &:hover {
+      color: var(--primary-color); // Hover color
+    }
   }
 
+  // Element: Form containing the input and button
+  &__form {
+    display: flex;
+    align-items: center;
+    width: 0; // Initial hidden width
+    opacity: 0; // Initial hidden opacity
+    transition: width 0.3s ease-out, opacity 0.3s ease-out; // Transition for opening and closing
+    position: absolute; // Positions the form to the right initially
+    right: 0;
+  }
+
+  // Modifier: When the search bar is open
+  &--open {
+    // Expands the main container to accommodate the input
+    width: 250px; // Desired full width for the open search bar
+    transition: width 0.3s ease-out; // Transition for container width
+
+    // Styles for the form when the search bar is open
+    & .search-bar__form {
+      width: 100%; // Form takes full width of the expanded container
+      opacity: 1; // Makes the form visible
+      right: 0; // Ensures it's aligned to the right within the expanded container
+    }
+  }
+
+  // Element: Input field
+  &__input {
+    flex: 1; // Takes up available space
+    padding: 0.5rem 1rem;
+    border-radius: 2rem 0 0 2rem;
+    border: 1px solid var(--border-color); // Use theme border color variable
+    font-size: 1rem;
+    background-color: var(--background-color-input); // Use theme background color variable
+    color: var(--colorText); // Use theme text color variable
+    min-width: 0; // Essential to allow the flex item to shrink
+    outline: none; // Removes default focus outline
+  }
+
+  // Element: Search button
   &__button {
     padding: 0.5rem 1rem;
     border-radius: 0 2rem 2rem 0;
-    border: 1px solid #ccc;
-    border-left: none;
-    background: #007bff;
-    color: #fff;
+    border: 1px solid var(--border-color); // Use theme border color variable
+    border-left: none; // Removes left border to align with input
+    background: var(--primary-color); // Use theme primary color variable
+    color: var(--colorText);
     font-size: 1.2rem;
     cursor: pointer;
+    transition: background 0.3s ease;
 
     &:hover {
-      background: #0056b3;
+      background: var(--primary-hover-color); // Use theme primary hover color variable
+    }
+  }
+}
+
+/* Theme Adaptations for SearchBar */
+
+// Dark theme specific overrides for SearchBar
+.navbar--dark {
+  // Assuming .navbar--dark is a class applied higher up in the DOM
+  .search-bar {
+    &__input {
+      border: 1px solid darken(#ccc, 20%); // Example: Darken a default light gray border
+      background-color: #333; // Dark background
+      color: #eee; // Light text color
+    }
+    &__button {
+      background: #0056b3; // Darker blue button
+      &:hover {
+        background: #003e80; // Even darker blue on hover
+      }
+    }
+    &__icon {
+      color: #eee; // Light icon color
+      &:hover {
+        color: #007bff; // Primary blue on hover
+      }
+    }
+  }
+}
+
+// Light theme specific overrides for SearchBar
+.navbar--light {
+  // Assuming .navbar--light is a class applied higher up in the DOM
+  .search-bar {
+    &__input {
+      border: 1px solid #ccc; // Light border
+      background-color: #fff; // Light background
+      color: #333; // Dark text color
+    }
+    &__button {
+      background: #007bff; // Default blue button
+      &:hover {
+        background: #0056b3; // Darker blue on hover
+      }
+    }
+    &__icon {
+      color: #333; // Dark icon color
+      &:hover {
+        color: #007bff; // Primary blue on hover
+      }
     }
   }
 }

@@ -2,6 +2,7 @@
   "navbar": {
     "home": "Home",
     "contact": "Contact",
+    "about": "About",
     "write": "Write",
     "admin": "Admin",
     "logout": "Logout",
@@ -12,6 +13,10 @@
     "headerBackgroundAlt": "Header background image",
     "logoAlt": "The Human Tech Blog logo",
     "searchPlaceholder": "Search articles..."
+  },
+
+  "searchBar": {
+    "placeholder": "Search posts..."
   },
 
   "admin": {

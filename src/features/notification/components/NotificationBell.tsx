@@ -3,6 +3,8 @@
 import { useSocketContext } from '../../../shared/context/SocketContext';
 import { useState } from 'react';
 import NotificationList from './NotificationList';
+import { FaBell } from 'react-icons/fa';
+import '../styles/NotificationBell.scss';
 
 export const NotificationBell = () => {
   const { notifications } = useSocketContext();
@@ -11,10 +13,9 @@ export const NotificationBell = () => {
 
   return (
     <div className='notification-bell'>
-      <button onClick={() => setOpen((o) => !o)}>
-        <span role='img' aria-label='bell'>
-          🔔
-        </span>
+      <button onClick={() => setOpen((o) => !o)} className='notification-bell__button'>
+        <FaBell className='notification-bell__badge' />
+
         {unread > 0 && <span className='notification-bell__badge'>{unread}</span>}
       </button>
       {open && <NotificationList />}

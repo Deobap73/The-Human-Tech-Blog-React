@@ -1,19 +1,70 @@
 /* src/features/shared/components/LanguageSelector.scss*/
 
 .language-selector {
-  display: flex;
-  gap: 0.5rem;
-  &__button {
+  position: relative;
+  display: inline-block;
+
+  &__current {
+    padding: 0.2rem 0.6rem;
+    border: none;
+    background: var(--tertiaryTextColor);
+    font-weight: bold;
+    font-size: 0.8rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 40px;
+
+    &:after {
+      content: '▼';
+      font-size: 0.6rem;
+      margin-left: 0.5rem;
+      transition: transform 0.2s;
+    }
+  }
+
+  &--open &__current:after {
+    transform: rotate(180deg);
+  }
+
+  &__dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--textColor);
+    border-radius: 0.4rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    margin-top: 0.3rem;
+    overflow: hidden;
+    animation: fadeIn 0.2s ease-out;
+  }
+
+  &__option {
     padding: 0.4rem 1rem;
     border: none;
-    background: #eee;
-    font-weight: bold;
-    border-radius: 0.4rem;
+    background: var(--textColorr);
+    width: 100%;
+    text-align: left;
     cursor: pointer;
     transition: background 0.2s;
-    &--active {
-      background: #007bff;
-      color: #fff;
+
+    &:hover {
+      background: var(--tertiaryTextColor);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 }

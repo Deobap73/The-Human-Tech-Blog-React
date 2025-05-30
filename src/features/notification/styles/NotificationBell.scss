@@ -1,0 +1,25 @@
+/* The-Human-Tech-Blog-React\src\features\notification\styles\NotificationBell.scss */
+
+.notification-bell {
+  position: relative;
+  display: inline-block;
+
+  &__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3rem 0.7rem;
+    border: none;
+    background: var(--tertiaryTextColor);
+    font-weight: bold;
+    font-size: 0.9rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 40px;
+  }
+
+  &__badge {
+    color: yellow;
+  }
+}

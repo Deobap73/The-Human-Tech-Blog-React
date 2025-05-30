@@ -1,7 +1,7 @@
 // The-Human-Tech-Blog-React/src/features/home/pages/HomePage.tsx
 
 import '../styles/HomePage.scss';
-import { AboutMe } from '../../about/components/AboutMe';
+/* import { AboutMe } from '../../about/components/AboutMe'; */
 import { RecentPosts } from '../../post/components/RecentPosts';
 import { LastPost } from '../../post/components/LastPost';
 import { Sponsors } from '../../sponsors/components/Sponsors';
@@ -64,7 +64,7 @@ export const HomePage = () => {
         console.log('[HomePage] Rendering AboutMe component.');
         return null;
       })()}
-      <AboutMe />
+      {/* <AboutMe /> */}
       {featuredPost && (
         <>
           {(() => {

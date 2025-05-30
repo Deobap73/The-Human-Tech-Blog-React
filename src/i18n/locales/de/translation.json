@@ -13,6 +13,11 @@
     "logoAlt": "Logo des Human Tech Blogs",
     "searchPlaceholder": "Artikel suchen..."
   },
+
+  "searchBar": {
+    "placeholder": "Beiträge suchen..."
+  },
+
   "admin": {
     "tags": "Tags",
     "tag_name": "Name",
@@ -34,6 +39,7 @@
     "moderateComments": "Kommentare moderieren",
     "settings": "Einstellungen"
   },
+
   "adminCategoryForm": {
     "title": "Kategorien verwalten",
     "name": "Name",
@@ -51,6 +57,7 @@
     "deleteConfirm": "Diese Kategorie löschen? Von Beiträgen verwendete Kategorien können nicht gelöscht werden.",
     "noCategories": "Keine Kategorien gefunden."
   },
+
   "adminTagForm": {
     "title": "Tags verwalten",
     "name": "Name",
@@ -66,6 +73,7 @@
     "deleteConfirm": "Diesen Tag löschen? Von Beiträgen verwendete Tags können nicht gelöscht werden.",
     "noTags": "Keine Tags gefunden."
   },
+
   "adminNotificationForm": {
     "title": "Benachrichtigungen verwalten",
     "notificationTitle": "Titel",
@@ -80,6 +88,7 @@
     "deleteConfirm": "Diese Benachrichtigung löschen?",
     "noNotifications": "Keine Benachrichtigungen gefunden."
   },
+
   "adminPostForm": {
     "title": "Titel",
     "titlePlaceholder": "Beitragstitel",
@@ -101,11 +110,13 @@
     "createSuccess": "Kategorie erfolgreich erstellt!",
     "updateSuccess": "Kategorie erfolgreich aktualisiert!"
   },
+
   "notAuthorized": {
     "title": "Zugriff verweigert",
     "message": "Sie haben keine Berechtigung, auf diese Seite zuzugreifen.",
     "goHome": "Zur Startseite"
   },
+
   "route": {
     "loading": "Wird geladen..."
   }

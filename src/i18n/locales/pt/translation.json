@@ -13,6 +13,11 @@
     "logoAlt": "Logotipo do Blog de Human Tech",
     "searchPlaceholder": "Pesquisar artigos..."
   },
+
+  "searchBar": {
+    "placeholder": "Pesquisar posts..."
+  },
+
   "admin": {
     "tags": "Tags",
     "tag_name": "Nome",
@@ -34,6 +39,7 @@
     "moderateComments": "Moderar Comentários",
     "settings": "Configurações"
   },
+
   "adminCategoryForm": {
     "title": "Gerenciar Categorias",
     "name": "Nome",
@@ -51,6 +57,7 @@
     "deleteConfirm": "Excluir esta categoria? Categorias usadas por posts não podem ser excluídas.",
     "noCategories": "Nenhuma categoria encontrada."
   },
+
   "adminTagForm": {
     "title": "Gerenciar Tags",
     "name": "Nome",
@@ -66,6 +73,7 @@
     "deleteConfirm": "Excluir esta tag? Tags usadas por posts não podem ser excluídas.",
     "noTags": "Nenhuma tag encontrada."
   },
+
   "adminNotificationForm": {
     "title": "Gerenciar Notificações",
     "notificationTitle": "Título",
@@ -80,6 +88,7 @@
     "deleteConfirm": "Excluir esta notificação?",
     "noNotifications": "Nenhuma notificação encontrada."
   },
+
   "adminPostForm": {
     "title": "Título",
     "titlePlaceholder": "Título do post",
@@ -101,11 +110,13 @@
     "createSuccess": "Categoria criada com sucesso!",
     "updateSuccess": "Categoria atualizada com sucesso!"
   },
+
   "notAuthorized": {
     "title": "Acesso Negado",
     "message": "Você não tem permissão para acessar esta página.",
     "goHome": "Ir para a Início"
   },
+
   "route": {
     "loading": "Carregando..."
   }
