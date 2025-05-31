@@ -1,5 +1,5 @@
 /* The-Human-Tech-Blog-React/src/features/search/styles/SearchBar.scss */
-
+@use 'sass:color';
 .search-bar {
   display: flex;
   align-items: center;
@@ -92,7 +92,7 @@
   // Assuming .navbar--dark is a class applied higher up in the DOM
   .search-bar {
     &__input {
-      border: 1px solid darken(#ccc, 20%); // Example: Darken a default light gray border
+      border: 1px solid color.adjust(#ccc, $lightness: -20%); // Example: Darken a default light gray border
       background-color: #333; // Dark background
       color: #eee; // Light text color
     }

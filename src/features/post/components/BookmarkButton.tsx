@@ -4,7 +4,7 @@ import '../styles/BookmarkButton.scss';
 import { useState, useEffect, useCallback } from 'react';
 import axios from '../../../shared/utils/axios';
 import { useAuth } from '../../../shared/hooks/useAuth';
-import { FaBookmark, FaRegBookmark } from 'react-icons/fa';
+import { IoHeartOutline, IoHeartSharp } from 'react-icons/io5';
 
 interface BookmarkResponse {
   postId: { _id: string };
@@ -53,7 +53,7 @@ export const BookmarkButton = ({ postId }: { postId: string }) => {
       onClick={toggleBookmark}
       disabled={!user || loading}
       title={bookmarked ? 'Remove Bookmark' : 'Save to Bookmarks'}>
-      {bookmarked ? <FaBookmark /> : <FaRegBookmark />}
+      {bookmarked ? <IoHeartOutline /> : <IoHeartSharp />}
     </button>
   );
 };

@@ -1,59 +1,55 @@
-// The-Human-Tech-Blog-React/src/features/post/components/RecentPosts.tsx
-
+import React, { useRef, useState, useEffect } from 'react';
 import '../styles/RecentPosts.scss';
-import React from 'react';
-
 import { Card } from './Card';
 import { Post } from '../../../shared/types/Post';
 import { isValidPost } from '../../../shared/utils/validation';
+import CarouselArrow from './CarouselArrow';
+import { useTranslation } from 'react-i18next';
 
 interface RecentPostsProps {
   posts: Post[];
   lang: string;
 }
 
+const VISIBLE_CARDS = 2;
+
 export const RecentPosts = ({ posts, lang }: RecentPostsProps) => {
-  console.log(
-    '[RecentPosts] Component rendered. Received posts count:',
-    posts.length,
-    'Lang:',
-    lang
-  ); // Initial log
+  const { t } = useTranslation();
+  const carouselRef = useRef<HTMLDivElement>(null);
 
-  const validPosts = posts.filter((post) => {
-    const isValid = isValidPost(post, lang);
-    console.log(
-      `[RecentPosts] Filtering post ID: ${post._id || 'N/A'} - Is valid (${lang}): ${isValid}`
-    ); // Log validation status
-    return isValid;
-  });
+  const validPosts = posts.filter((post) => isValidPost(post, lang));
+  const postsToDisplay = validPosts.slice(0, 12);
 
-  console.log('[RecentPosts] Number of valid posts after filtering:', validPosts.length); // Log valid posts count
+  const [startIdx, setStartIdx] = useState(0);
+  const maxStart = Math.max(0, postsToDisplay.length - VISIBLE_CARDS);
 
-  const postsToDisplay = validPosts.slice(0, 4);
-  console.log(
-    '[RecentPosts] Posts selected for display (first 4 valid posts IDs):',
-    postsToDisplay.map((p) => p._id)
-  ); // Log IDs to be displayed
+  const handlePrev = () => setStartIdx((prev) => Math.max(prev - 1, 0));
+  const handleNext = () => setStartIdx((prev) => Math.min(prev + 1, maxStart));
 
-  if (postsToDisplay.length === 0) {
-    console.log('[RecentPosts] No posts to display after filtering and slicing. Returning null.'); // Log why it's returning null
-    return null;
-  }
+  useEffect(() => {
+    if (carouselRef.current) {
+      const cardEl = carouselRef.current.children[startIdx] as HTMLElement;
+      if (cardEl) {
+        cardEl.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+      }
+    }
+  }, [startIdx]);
 
-  console.log(`[RecentPosts] Displaying ${postsToDisplay.length} recent posts.`); // Confirm display readiness
+  if (postsToDisplay.length === 0) return null;
 
   return (
     <div className='recentPosts'>
-      {postsToDisplay.map((post) => (
-        <React.Fragment key={post._id}>
-          {(() => {
-            console.log(`[RecentPosts] Rendering Card for post ID: ${post._id} with lang: ${lang}`);
-            return null;
-          })()}
-          <Card post={post} lang={lang} />
-        </React.Fragment>
-      ))}
+      <div className='recentPosts__carouselWrapper'>
+        <div className='recentPosts__carousel' ref={carouselRef}>
+          {postsToDisplay.map((post) => (
+            <Card key={post._id} post={post} lang={lang} />
+          ))}
+        </div>
+      </div>
+      <div className='arrow'>
+        <CarouselArrow direction='left' onClick={handlePrev} disabled={startIdx === 0} />
+        <CarouselArrow direction='right' onClick={handleNext} disabled={startIdx === maxStart} />
+      </div>
     </div>
   );
 };

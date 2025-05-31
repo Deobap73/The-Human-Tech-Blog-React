@@ -1,9 +1,12 @@
 // src/main.tsx
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+// Internationalization setup
 import './i18n';
-import App from './App';
+// Import global SCSS (must be first for variables and resets)
 import './styles/global.scss';
+import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from './shared/context/ThemeProvider';
 import { AuthProvider } from './shared/context/AuthProvider';
@@ -13,6 +16,7 @@ import ToastProvider from './shared/components/ToastProvider';
 import api from './shared/utils/axios';
 import { getAccessToken } from './shared/utils/authTokenStorage';
 
+// Set up axios with access token if available
 const token = getAccessToken();
 if (token) {
   api.defaults.headers.common['Authorization'] = `Bearer ${token}`;

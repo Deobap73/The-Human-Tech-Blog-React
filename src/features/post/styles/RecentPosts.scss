@@ -1,10 +1,77 @@
-/* The-Human-Tech-Blog-React\src\components\recentPosts\RecentPosts.scss*/
-
 .recentPosts {
+  width: 100vw;
+  margin: 2rem 0;
+  margin-left: var(--margin-5);
   display: flex;
-  justify-content: space-between;
-  max-height: 25rem;
-  gap: var(--gap-md);
-  margin: var(--margin-10) 0;
-  padding: var(--padding-md);
+  flex-direction: column;
+  align-items: center;
+  min-height: 30rem;
+  overflow-x: hidden;
+
+  &__carouselWrapper {
+    width: 100vw;
+    max-width: 100vw;
+    min-width: 340px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+  }
+
+  &__carousel {
+    display: flex;
+    gap: 2rem;
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    width: 100vw;
+    min-width: 0;
+    padding: 1rem 0;
+    overflow: visible;
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
+
+.arrow {
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.5rem;
+  gap: 2.5rem;
+  position: static; // NÃO absolute!
+
+  .carouselArrow {
+    position: static;
+    width: 2.7rem;
+    height: 2.7rem;
+    background: #fff;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 2px 12px rgba(50, 50, 50, 0.13);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin: 0;
+    transition: box-shadow 0.2s, background 0.2s;
+
+    &:hover:not(:disabled) {
+      background: var(--primary, #4b7bec);
+      svg path {
+        stroke: #fff;
+      }
+    }
+
+    &:disabled {
+      opacity: 0.33;
+      cursor: not-allowed;
+    }
+  }
 }
