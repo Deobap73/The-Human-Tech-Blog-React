@@ -1,11 +1,36 @@
-/* The-Human-Tech-Blog-React\src\components\layout\Layout.scss */
+/* The-Human-Tech-Blog-React/src/features/layout/styles/Layout.scss */
+
+/**
+ * Layout container for the application.
+ * Applies global background, text color, and handles flex column for header, content, and footer.
+ * Inherits color and background from theme variables (see global.scss).
+ */
 
 .layout {
   min-height: 100vh;
-  height: 200vh;
   display: flex;
   flex-direction: column;
-  background: var(--bg);
-  color: var(--textColor);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  background: var(--background);
+  color: var(--text-color);
+  transition: background 0.3s, color 0.3s;
+
+  // Main content area
+  &__main {
+    flex: 1 0 auto;
+    padding: 2rem 0;
+    width: 100%;
+    max-width: var(--layout-max-width);
+    margin: 0 auto;
+    padding-left: var(--layout-padding-x);
+    padding-right: var(--layout-padding-x);
+
+    @media (max-width: 1024px) {
+      padding-left: var(--layout-padding-x);
+      padding-right: var(--layout-padding-x);
+    }
+    @media (max-width: 640px) {
+      padding-left: var(--layout-padding-x);
+      padding-right: var(--layout-padding-x);
+    }
+  }
 }
