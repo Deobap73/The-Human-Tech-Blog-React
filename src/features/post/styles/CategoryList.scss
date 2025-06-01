@@ -1,28 +1,64 @@
-/* The-Human-Tech-Blog-React/src/components/categoryList/CategoryList.scss */
+/* The-Human-Tech-Blog-React\src\features\post\styles\CategoryList.scss*/
 
 .category-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--gap-base);
-  padding: 0;
-  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); // 170px mínimo por categoria
+  gap: var(--gap-base) var(--gap-m);
   list-style: none;
+  padding: 0;
 
   &__item {
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    color: white;
-    font-weight: bold;
-    font-size: var(--font-size-1s);
-    transition: transform 0.2s;
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    padding: 0.45rem 1.3rem 0.45rem 0.95rem;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    border: 2px solid #2995e2; // azul claro (ajusta se tua paleta for diferente)
+    border-left: none;
+    border-right: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
+    backdrop-filter: blur(2.5px); // Glass effect!
+    transition: border 0.2s, box-shadow 0.2s, background 0.25s;
+    outline: none;
+
     cursor: pointer;
 
-    &:hover {
-      transform: scale(1.05);
+    &:hover,
+    &:focus {
+      background: rgba(0, 48, 104, 0.388);
+    }
+    &:active {
+      background: none !important;
     }
   }
 
-  @media (max-width: 768px) {
-    justify-content: center;
+  &__logo {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    margin-right: 0.6rem;
+    border-radius: 8px;
+    background: #f7f7f7;
+  }
+
+  &__name {
+    font-size: var(--font-size-base);
+    font-weight: 500;
+    white-space: nowrap; // Não permite que o texto quebre de linha
+    overflow: hidden; // Esconde o que sair da caixa
+    text-overflow: ellipsis; // Mostra "..." se o texto for muito longo
+    max-width: 100%; // Garante que respeita o espaço do grid/flex
+    display: inline-block;
+  }
+
+  &__loading {
+    font-size: var(--font-size-base);
+    color: var(--text-color-secondary);
+    padding: 1rem 0;
+    width: 100%;
+    text-align: center;
+    grid-column: 1 / -1; // ocupa toda a linha em grid
   }
 }

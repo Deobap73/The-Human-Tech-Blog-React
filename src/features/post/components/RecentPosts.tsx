@@ -1,55 +1,40 @@
-import React, { useRef, useState, useEffect } from 'react';
+// The-Human-Tech-Blog-React/src/features/post/components/RecentPosts.tsx
+
 import '../styles/RecentPosts.scss';
+
 import { Card } from './Card';
 import { Post } from '../../../shared/types/Post';
 import { isValidPost } from '../../../shared/utils/validation';
-import CarouselArrow from './CarouselArrow';
-import { useTranslation } from 'react-i18next';
 
 interface RecentPostsProps {
   posts: Post[];
   lang: string;
 }
 
-const VISIBLE_CARDS = 2;
-
+/**
+ * RecentPosts component: renders the 4 most recent posts in a 2x2 responsive grid.
+ */
 export const RecentPosts = ({ posts, lang }: RecentPostsProps) => {
-  const { t } = useTranslation();
-  const carouselRef = useRef<HTMLDivElement>(null);
+  // Filter and slice to 4 posts
+  const validPosts = posts.filter((post) => isValidPost(post, lang)).slice(0, 4);
 
-  const validPosts = posts.filter((post) => isValidPost(post, lang));
-  const postsToDisplay = validPosts.slice(0, 12);
-
-  const [startIdx, setStartIdx] = useState(0);
-  const maxStart = Math.max(0, postsToDisplay.length - VISIBLE_CARDS);
-
-  const handlePrev = () => setStartIdx((prev) => Math.max(prev - 1, 0));
-  const handleNext = () => setStartIdx((prev) => Math.min(prev + 1, maxStart));
-
-  useEffect(() => {
-    if (carouselRef.current) {
-      const cardEl = carouselRef.current.children[startIdx] as HTMLElement;
-      if (cardEl) {
-        cardEl.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
-      }
-    }
-  }, [startIdx]);
-
-  if (postsToDisplay.length === 0) return null;
+  if (validPosts.length === 0) return null;
 
   return (
-    <div className='recentPosts'>
-      <div className='recentPosts__carouselWrapper'>
-        <div className='recentPosts__carousel' ref={carouselRef}>
-          {postsToDisplay.map((post) => (
-            <Card key={post._id} post={post} lang={lang} />
-          ))}
-        </div>
+    <section className='recentPosts__container'>
+      <div className='recentPosts__introduction'>
+        <h2 className='recentPosts__title'>Human Tech em Foco: As Últimas Reflexões e Insights!</h2>
+        <p className='recentPosts__description'>
+          Mergulhe nas intersecções entre o universo digital e a experiência humana. Aqui, você
+          encontra os quatro posts mais recentes, com insights sobre gestão de projetos, frontend,
+          UI/UX, Scrum, e como a tecnologia molda a nossa vida.
+        </p>
       </div>
-      <div className='arrow'>
-        <CarouselArrow direction='left' onClick={handlePrev} disabled={startIdx === 0} />
-        <CarouselArrow direction='right' onClick={handleNext} disabled={startIdx === maxStart} />
+      <div className='recentPosts__grid'>
+        {validPosts.map((post) => (
+          <Card key={post._id} post={post} lang={lang} />
+        ))}
       </div>
-    </div>
+    </section>
   );
 };

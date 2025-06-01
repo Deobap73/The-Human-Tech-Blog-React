@@ -5,11 +5,11 @@ import '../styles/HomePage.scss';
 import { RecentPosts } from '../../post/components/RecentPosts';
 import { LastPost } from '../../post/components/LastPost';
 import { Sponsors } from '../../sponsors/components/Sponsors';
-import { MyFavoritePost } from '../../post/components/MyFavoritePost';
 import { Post } from '../../../shared/types/Post';
 import axios from '../../../shared/utils/axios';
-import { FeaturedCategory } from '../../post/components/FeaturedCategory';
 import { useTranslation } from 'react-i18next';
+import CategoryList from '../../post/components/CategoryList';
+import { Featured } from '../../post/components/Featured';
 
 /**
  * HomePage: Main entry for blog readers. Displays hero post, recent, featured, and sponsored posts.
@@ -42,11 +42,11 @@ export const HomePage = () => {
   return (
     <div className='home'>
       {/* <AboutMe /> */}
-      {featuredPost && <FeaturedCategory post={featuredPost} lang={lang} />}
+      {featuredPost && <Featured post={featuredPost} lang={lang} />}
+      <CategoryList />
       <RecentPosts posts={publishedPosts.slice(0, 12)} lang={lang} />
-      {publishedPosts.length > 0 && <LastPost post={publishedPosts[0]} lang={lang} />}
       <Sponsors />
-      {publishedPosts.length > 3 && <MyFavoritePost post={publishedPosts[3]} lang={lang} />}
+      {publishedPosts.length > 0 && <LastPost post={publishedPosts[0]} lang={lang} />}
     </div>
   );
 };

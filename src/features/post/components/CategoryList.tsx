@@ -1,23 +1,51 @@
-// The-Human-Tech-Blog-React/src/components/categoryList/CategoryList.tsx
+// The-Human-Tech-Blog-React\src\features\post\components\CategoryList.tsx
 
-import "../styles/CategoryList.scss";
-
-const categories = [
-  { name: 'Agile Projects', color: 'var(--category-agileProjects)' },
-  { name: 'Frontend UX', color: 'var(--category-frontendUx)' },
-  { name: 'Tech Career', color: 'var(--category-teckCareer)' },
-  { name: 'Tech Tools', color: 'var(--category-teckTools)' },
-  { name: 'Reflections', color: 'var(--category-personalReflections)' },
-];
+import { useEffect, useState } from 'react';
+import axios from '../../../shared/utils/axios';
+import { Category } from '../../../shared/types/Category';
+import { useTranslation } from 'react-i18next';
+import { getCategoryName } from '../../../shared/utils/i18nHelpers';
+import '../styles/CategoryList.scss';
 
 export const CategoryList = () => {
+  const { i18n } = useTranslation();
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await axios.get<Category[]>('/categories');
+        setCategories(res.data);
+      } catch (err) {
+        // handle error, optionally show a toast
+        setCategories([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  if (loading) return <div className='category-list__loading'>Loading categories...</div>;
+
   return (
     <ul className='category-list'>
       {categories.map((cat) => (
-        <li key={cat.name} className='category-list__item' style={{ backgroundColor: cat.color }}>
-          {cat.name}
+        <li className='category-list__item' key={cat._id}>
+          {cat.logo && (
+            <img
+              className='category-list__logo'
+              src={`${cat.logo}`}
+              alt={getCategoryName(cat, i18n.language)}
+              loading='lazy'
+            />
+          )}
+          <span className='category-list__name'>{getCategoryName(cat, i18n.language)}</span>
         </li>
       ))}
     </ul>
   );
 };
+
+export default CategoryList;

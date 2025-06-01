@@ -1,13 +1,15 @@
+// The-Human-Tech-Blog-React\src\features\post\pages\CategoryPage.tsx
+
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { toast } from 'react-hot-toast';
 import api from '../../../shared/utils/axios';
+import { useTranslation } from 'react-i18next';
+import { getCategoryName } from '../../../shared/utils/i18nHelpers';
 import { Post } from '../../../shared/types/Post';
 import { Category } from '../../../shared/types/Category';
-import { toast } from 'react-hot-toast';
 import CardList from '../components/CardList';
 import '../styles/CategoryPage.scss';
-import { getCategoryName } from '../../../shared/utils/i18nHelpers';
 
 const CategoryPage = () => {
   const { slug } = useParams();
