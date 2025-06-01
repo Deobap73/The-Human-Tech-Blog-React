@@ -214,19 +214,31 @@ p {
 
 /* ========== Links ========== */
 a {
-  color: var(--primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-weight: 500;
+  color: var(--textColor);
   text-decoration: none;
-  transition: color 0.2s, background 0.2s;
-  outline: none;
-  &:hover {
-    color: #fff;
-    background: var(--primary);
-    text-decoration: underline;
-  }
+
+  &:hover,
   &:focus {
-    outline: 2px solid var(--primary-hover);
-    text-decoration: underline;
+    border: 2px solid #2995e2; // azul claro (ajusta se tua paleta for diferente)
+    border-left: none;
+    border-right: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
+    backdrop-filter: blur(2.5px); // Glass effect!
+    transition: border 0.2s, box-shadow 0.2s, background 0.25s;
+    outline: none;
+  }
+  &:active {
+    background: none !important;
+
+    box-shadow: none !important;
+    text-decoration: none !important;
+    outline: none !important;
+    filter: none !important;
   }
 }
 
@@ -252,10 +264,11 @@ button {
   font-weight: 500;
   font-family: inherit;
   background: var(--primary);
-  color: #fff;
+  color: var(--textColor);
   cursor: pointer;
   box-shadow: var(--shadow-card);
   transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+  text-decoration: none;
 
   &:hover,
   &:focus-visible {

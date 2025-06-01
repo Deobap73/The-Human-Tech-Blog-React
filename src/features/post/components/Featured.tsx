@@ -1,6 +1,6 @@
 // The-Human-Tech-Blog-React/src/components/featured/Featured.tsx
 
-import "../styles/Featured.scss";
+import '../styles/Featured.scss';
 
 export const Featured = () => {
   return (

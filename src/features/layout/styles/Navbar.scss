@@ -147,25 +147,9 @@
   }
 
   &__item {
-    color: var(--text-color);
-    font-size: 1rem;
-    text-decoration: none;
-    padding: 0.4rem 1rem;
-    border-radius: 6px;
-    transition: background 0.2s, color 0.2s, text-decoration 0.2s;
     position: relative;
-    &:hover,
-    &:focus {
-      color: #fff;
-      background: var(--primary);
-      text-decoration: underline;
-    }
-    &--active {
-      font-weight: 700;
-      background: var(--primary);
-      color: #fff;
-      text-decoration: underline;
-    }
+    font-size: 1rem;
+    padding: 0.4rem 1rem;
   }
 
   &__user {
@@ -198,7 +182,7 @@
     }
     &-admin {
       color: var(--primary);
-      text-decoration: underline;
+
       font-weight: 600;
       margin-right: 0.75rem;
     }

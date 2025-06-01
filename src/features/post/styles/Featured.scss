@@ -105,19 +105,23 @@
   }
 
   &__link {
-    align-self: flex-start;
-    background-color: var(--tertiaryTextColor);
-    color: #fff;
-    padding: var(--padding-xs) var(--padding-m);
-    border-radius: 20px;
-    font-size: var(--font-size-1s);
-    font-weight: 500;
-    transition: background 0.3s, transform 0.3s;
-    margin-top: var(--margin-xs);
-
+    justify-content: center;
+    min-width: 48px;
+    min-height: 48px;
+    padding: 0 1.5rem;
+    font-size: 1.15rem;
+    border: 2px solid #2995e2; // azul claro (ajusta se tua paleta for diferente)
+    border-left: none;
+    border-right: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
+    backdrop-filter: blur(2.5px); // Glass effect!
+    transition: border 0.2s, box-shadow 0.2s, background 0.25s;
     &:hover {
-      background-color: var(--primaryHover);
-      transform: translateY(-2px) scale(1.02);
+      background: rgba(0, 48, 104, 0.388);
+    }
+    &:active {
+      background: none !important;
     }
   }
 
