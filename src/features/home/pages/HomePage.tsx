@@ -42,9 +42,9 @@ export const HomePage = () => {
   return (
     <div className='home'>
       {/* <AboutMe /> */}
-      {featuredPost && <Featured post={featuredPost} lang={lang} />}
-      <CategoryList />
       <RecentPosts posts={publishedPosts.slice(0, 12)} lang={lang} />
+      <CategoryList />
+      {featuredPost && <Featured post={featuredPost} lang={lang} />}
       <Sponsors />
       {publishedPosts.length > 0 && <LastPost post={publishedPosts[0]} lang={lang} />}
     </div>
