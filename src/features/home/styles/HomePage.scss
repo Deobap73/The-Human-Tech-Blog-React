@@ -1,24 +1,35 @@
-/* The-Human-Tech-Blog-React/src/features/home/styles/HomePage.scss */
-
 .home {
   display: flex;
   flex-direction: column;
-  gap: 10%;
-  padding: var(--padding-l) 0;
   width: 100%;
   max-width: var(--layout-max-width);
   margin: 0 auto;
   box-sizing: border-box;
 
+  // Margem vertical de 10% entre todos os itens (diretos)
+  > * {
+    margin-block: 10%;
+  }
+
+  // Opcional: remover margem extra do primeiro e último, caso prefira
+  > *:first-child {
+    margin-top: 0;
+  }
+  > *:last-child {
+    margin-bottom: 0;
+  }
+
   @media (max-width: 1024px) {
-    gap: var(--gap-m);
-    padding: var(--padding-m) 0;
     max-width: 96vw;
+    > * {
+      margin-block: 6%;
+    }
   }
 
   @media (max-width: 768px) {
-    gap: var(--gap-base);
-    padding: var(--padding-base) 0;
     max-width: 99vw;
+    > * {
+      margin-block: 3%;
+    }
   }
 }
