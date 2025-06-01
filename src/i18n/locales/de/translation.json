@@ -2,6 +2,7 @@
   "navbar": {
     "home": "Startseite",
     "contact": "Kontakt",
+    "about": "Um",
     "write": "Schreiben",
     "admin": "Verwaltung",
     "logout": "Abmelden",

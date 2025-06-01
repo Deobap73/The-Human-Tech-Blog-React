@@ -1,201 +1,381 @@
-/* The-Human-Tech-Blog-React\src\features\layout\styles\Navbar.scss*/
+/* The-Human-Tech-Blog-React/src/features/layout/styles/Navbar.scss */
 
 .navbar {
   position: relative;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   justify-content: space-between;
-  align-items: center;
   width: 100%;
   height: 90vh;
-  overflow: hidden;
+  min-height: 400px;
 
-  // Modifiers for theme
-  &--dark {
-    // Add dark theme specific styles here if any, e.g., background-color, color
+  @media (max-width: 1024px) {
+    height: 50vh;
+    min-height: 220px;
+  }
+  @media (max-width: 768px) {
+    height: 35vh;
+    min-height: 120px;
   }
 
-  &--light {
-    // Add light theme specific styles here if any
-  }
-
-  // Elements
   &__background {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100%;
     height: 100%;
+    min-height: 100%;
     object-fit: cover;
+    object-position: center;
     z-index: 0;
+    pointer-events: none;
+    aspect-ratio: 16 / 6;
+
+    @media (max-width: 1024px) {
+      aspect-ratio: 16 / 8;
+    }
+    @media (max-width: 768px) {
+      aspect-ratio: 16 / 12;
+    }
+  }
+
+  &__row {
+    display: flex;
+    width: 100%;
+    max-width: var(--layout-max-width);
+    margin: 0 auto;
+    padding: 0 var(--layout-padding-x);
+    z-index: 5;
+  }
+
+  &__topbar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 30%;
+    padding: 1.2rem 0 0 0; // Padding superior, lateral gerenciado por __row
+    z-index: 10;
+    background: transparent;
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    z-index: 20;
+    &-image {
+      width: 110px;
+      min-width: 60px;
+      max-width: 180px;
+      height: auto;
+      user-select: none;
+      pointer-events: auto;
+    }
+  }
+
+  &__burger {
+    display: none;
+    position: relative;
+    z-index: 21; // Garante que o ícone do burger esteja sempre no topo
+    width: 38px;
+    height: 38px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    gap: 5px;
+    margin-left: 1.2rem;
+
+    span {
+      display: block;
+      width: 28px;
+      height: 3.5px;
+      margin: 4px 0;
+      border-radius: 2px;
+      background: var(--primary);
+      transition: all 0.3s;
+    }
+    &--open span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+    &--open span:nth-child(2) {
+      opacity: 0;
+    }
+    &--open span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+  }
+
+  // O overlay não é exibido por padrão
+  &__overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(24, 28, 38, 0.45);
+    z-index: 12; // Abaixo do menu, mas acima do restante do conteúdo
+    animation: fadeIn 0.3s;
   }
 
   &__nav {
     display: flex;
-    max-width: 1200px;
-    width: 100%;
-    padding: 1rem;
-    z-index: 3;
-    justify-content: space-around;
+    flex-direction: row;
     align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0;
+    z-index: 15; // Z-index padrão do menu para desktop
+    background: transparent;
 
     &-container {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      gap: 2rem;
       width: 60%;
-    }
-  }
-
-  .choices {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    width: 40%;
-    gap: 1rem;
-  }
-
-  &__logo {
-    /*  background-color: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(2px);
-    border-radius: 1.3rem; */
-    &-image {
-      width: 8vw;
     }
   }
 
   &__actions {
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
     align-items: center;
   }
 
   &__item {
-    color: var(--textColor);
+    color: var(--text-color);
     font-size: 1rem;
     text-decoration: none;
-    transition: color 0.3s;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s, text-decoration 0.2s;
+    position: relative;
+    &:hover,
+    &:focus {
+      color: #fff;
+      background: var(--primary);
+      text-decoration: underline;
+    }
+    &--active {
+      font-weight: 700;
+      background: var(--primary);
+      color: #fff;
+      text-decoration: underline;
+    }
   }
 
   &__user {
     display: flex;
     align-items: center;
     gap: 1rem;
-
     &-profile {
-      color: var(--textColor);
+      color: var(--text-color);
       display: flex;
       align-items: center;
       text-decoration: none;
-      color: inherit;
+      border-radius: 50%;
+      overflow: hidden;
     }
-
     &-avatar {
-      color: var(--textColor);
       width: 32px;
       height: 32px;
       border-radius: 50%;
       object-fit: cover;
+      background: var(--background-secondary);
+      border: 2px solid var(--primary);
     }
-
     &-name {
-      color: var(--textColor);
+      color: var(--text-color);
       font-size: 1rem;
       font-weight: 500;
       text-decoration: none;
       transition: color 0.3s;
+      margin-left: 0.5rem;
     }
-
     &-admin {
-      color: var(--textColor);
-      text-decoration: none;
+      color: var(--primary);
+      text-decoration: underline;
+      font-weight: 600;
+      margin-right: 0.75rem;
     }
-
     &-logout {
-      color: var(--textColor);
+      color: var(--text-color);
       background: none;
       border: none;
       cursor: pointer;
       font-size: 1rem;
-      padding: 0;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      transition: background 0.2s, color 0.2s;
+      &:hover,
+      &:focus {
+        background: var(--primary-hover);
+        color: #fff;
+      }
     }
   }
 
   &__login {
-    color: var(--textColor);
+    color: var(--primary);
     display: flex;
     align-items: center;
     background: none;
-    border: none;
+    border: 1px solid var(--primary);
+    border-radius: 6px;
     cursor: pointer;
     font-size: 1rem;
-    padding: 0;
+    padding: 0.4rem 1rem;
+    transition: background 0.2s, color 0.2s, border 0.2s;
+    gap: 0.4rem;
+    &:hover,
+    &:focus {
+      background: var(--primary);
+      color: #fff;
+      border: 1px solid var(--primary-hover);
+    }
+  }
+
+  &__choices {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 40%;
+    gap: 1.2rem;
+    z-index: 3;
   }
 
   &__tile {
     z-index: 4;
-    padding: var(--padding-3b);
-    min-width: 18.75rem;
+    padding: 2rem 2rem 1rem 2rem;
+    min-width: 220px;
+    max-width: 550px;
     width: 35rem;
-    margin-top: 10%;
-    margin-bottom: 5%;
-    margin-right: 40%;
+    margin-top: 4rem;
+    margin-left: 10%;
+    margin-bottom: 1.5rem;
     text-align: center;
+    background: rgba(255, 255, 255, 0.11);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-card);
     &-title {
-      color: var(--textColor);
-      font-size: 2rem;
+      color: var(--primary);
+      font-size: 2.2rem;
       font-weight: bold;
+      margin-bottom: 0.5rem;
+      line-height: 1.1;
     }
-
     &-description {
-      color: var(--textColor);
-      font-size: 1rem;
+      color: var(--text-color-secondary);
+      font-size: 1.05rem;
+      line-height: 1.4;
     }
   }
 
-  // Media Queries
+  // Burger & Sidebar
   @media (max-width: 1024px) {
+    &__burger {
+      display: flex;
+    }
+
+    // O overlay é ativado quando o menu está aberto, graças à nova estrutura JSX e seletor
+    &__nav--open + &__overlay {
+      display: block; // Mostra o overlay
+    }
+
     &__nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 75vw;
+      max-width: 340px;
+      background: var(--bg);
+      z-index: 16; // Garante que o menu esteja acima do overlay (z-index: 12)
+      box-shadow: 2px 0 16px 0 rgba(20, 22, 34, 0.09);
       flex-direction: column;
-      align-items: center;
-      padding: 0.5rem;
-    }
+      align-items: flex-start;
+      justify-content: flex-start;
+      transform: translateX(-100%);
+      transition: transform 0.35s cubic-bezier(0.87, 0, 0.13, 1);
+      // Garante que o menu receba eventos de clique
+      pointer-events: none; // Por padrão, não permite cliques quando fechado
 
-    &__nav-container {
-      flex-direction: column;
-      margin-bottom: 1rem;
-      width: 100%;
-    }
+      &--open {
+        width: min-content;
+        transform: translateX(0);
+        pointer-events: auto;
+        background: rgba(5, 5, 5, 0.5);
+        border-radius: 1rem;
+        box-shadow: var(--shadow-card);
+      }
 
-    &__actions {
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
+      .navbar__nav-container,
+      .navbar__actions,
+      .navbar__choices {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        width: 100% !important;
+        gap: 1.2rem;
+        margin: 0;
+        padding: 2.3rem 1.2rem 1.2rem 1.2rem;
+      }
+      .navbar__actions {
+        gap: 0.8rem;
+        width: 100%;
+      }
+      .navbar__item {
+        width: 100%;
+        text-align: left;
+        padding: 0.8rem 0;
+        border-radius: 0.6rem;
+        font-size: 1.18rem;
+      }
     }
-
-    .choices {
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
+    &__topbar {
+      width: 100%; // Ocupa a largura total dentro de __row
+      padding: 0.7rem 1rem 0.4rem 1rem;
     }
-
     &__logo-image {
-      width: 30vw;
+      width: 80px;
+    }
+    &__tile {
+      width: 45vw;
+      max-width: 45vw;
     }
   }
 
   @media (max-width: 768px) {
     &__tile {
-      margin-left: 0;
-      width: 90%;
+      width: 45vw;
+      padding: 1.2rem 0.5rem;
+      font-size: 1rem;
+      margin-top: 0.7rem;
+      margin-bottom: 1.2rem;
     }
-
     &__tile-title {
-      font-size: 1.5rem;
+      font-size: 1.3rem;
     }
-
     &__tile-description {
-      font-size: 0.9rem;
+      font-size: 0.97rem;
+    }
+    &__logo-image {
+      width: 56px;
+    }
+    &__topbar {
+      padding: 0.7rem 0.4rem 0.4rem 0.4rem;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
     }
   }
 }

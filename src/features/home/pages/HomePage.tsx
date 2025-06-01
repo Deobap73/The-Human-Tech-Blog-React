@@ -11,6 +11,10 @@ import axios from '../../../shared/utils/axios';
 import { FeaturedCategory } from '../../post/components/FeaturedCategory';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * HomePage: Main entry for blog readers. Displays hero post, recent, featured, and sponsored posts.
+ * Uses BEM className (.home) for consistency.
+ */
 export const HomePage = () => {
   const { i18n } = useTranslation();
   const lang = i18n.language.split('-')[0] || 'en';
@@ -26,7 +30,9 @@ export const HomePage = () => {
         if (res.data.length > 0) {
           setFeaturedPost(res.data[0]);
         }
-      } catch {}
+      } catch {
+        // Optionally, handle error state here for UX
+      }
     };
     fetchPosts();
   }, []);
@@ -34,13 +40,13 @@ export const HomePage = () => {
   const publishedPosts = posts.filter((post) => post.status === 'published');
 
   return (
-    <div className='homeContainer'>
+    <div className='home'>
       {/* <AboutMe /> */}
-      {/*  {featuredPost && <FeaturedCategory post={featuredPost} lang={lang} />}
+      {featuredPost && <FeaturedCategory post={featuredPost} lang={lang} />}
       <RecentPosts posts={publishedPosts.slice(0, 12)} lang={lang} />
       {publishedPosts.length > 0 && <LastPost post={publishedPosts[0]} lang={lang} />}
       <Sponsors />
-      {publishedPosts.length > 3 && <MyFavoritePost post={publishedPosts[3]} lang={lang} />} */}
+      {publishedPosts.length > 3 && <MyFavoritePost post={publishedPosts[3]} lang={lang} />}
     </div>
   );
 };

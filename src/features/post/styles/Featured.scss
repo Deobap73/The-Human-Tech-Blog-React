@@ -1,81 +1,130 @@
-/* The-Human-Tech-Blog-React/src/components/featured/Featured.scss */
+/* The-Human-Tech-Blog-React/src/features/post/styles/Featured.scss */
 
 .featured {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  gap: var(--gap-l);
   padding: var(--padding-xl) 0;
   background-color: var(--bg);
   color: var(--textColor);
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin: var(--padding-xl) auto;
+  box-sizing: border-box;
+  overflow-x: hidden;
 
-  &__header {
-    text-align: center;
-    margin-bottom: var(--margin-2b);
-  }
-
-  &__title {
-    font-size: var(--font-size-3b);
-    font-weight: bold;
-  }
-
-  &__subtitle {
-    font-size: var(--font-size-1s);
-    color: var(--secondaryTextColor);
-  }
-
-  &__card {
+  &__image-container {
+    width: 36vw;
+    min-width: 200px;
+    max-width: 400px;
+    aspect-ratio: 4/3; // Padrão: mais paisagem, hero de blog
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
     display: flex;
-    gap: var(--gap-2b);
     align-items: center;
     justify-content: center;
-    background-color: var(--softBg);
-    border-radius: 8px;
-    overflow: hidden;
-    padding: var(--padding-base);
+    background: #eee;
+    transition: width 0.3s, aspect-ratio 0.3s;
+
+    @media (max-width: 1024px) {
+      width: 40vw;
+      min-width: 150px;
+      max-width: 260px;
+      aspect-ratio: 5/4; // um pouco mais quadrado em tablets
+    }
+    @media (max-width: 768px) {
+      width: 100%;
+      min-width: unset;
+      max-width: 99vw;
+      aspect-ratio: 16/9; // mais wide em mobile, para visual hero
+      margin-bottom: var(--margin-base);
+    }
   }
 
   &__image {
-    width: 50%;
-    height: auto;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
+    display: block;
+    border-radius: 12px;
+    background: #eee;
+    transition: object-fit 0.2s;
   }
 
   &__content {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    flex: 1 1 0;
+    max-width: 420px;
+    min-width: 200px;
+    padding: var(--padding-l);
     gap: var(--gap-base);
-    padding: var(--padding-base);
+    box-sizing: border-box;
+    transition: max-width 0.3s, padding 0.3s;
 
-    &-title {
-      font-size: var(--font-size-2b);
-      font-weight: 600;
+    @media (max-width: 1024px) {
+      max-width: 330px;
+      padding: var(--padding-m);
     }
+    @media (max-width: 768px) {
+      max-width: 100%;
+      min-width: unset;
+      padding: var(--padding-base);
+    }
+  }
 
-    &-description {
-      font-size: var(--font-size-1s);
-      line-height: 1.5;
-      color: var(--secondaryTextColor);
-    }
+  &__category {
+    font-size: var(--font-size-s);
+    color: var(--tertiaryTextColor);
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: var(--margin-2xs);
+    display: inline-block;
+  }
+
+  &__title {
+    font-size: var(--font-size-3b);
+    font-weight: bold;
+    margin-bottom: var(--margin-xs);
+    line-height: 1.15;
+    color: var(--textColor);
+    word-break: break-word;
+  }
+
+  &__description {
+    font-size: var(--font-size-1s);
+    line-height: 1.6;
+    color: var(--secondaryTextColor);
+    margin-bottom: var(--margin-xs);
+    word-break: break-word;
   }
 
   &__link {
     align-self: flex-start;
     background-color: var(--tertiaryTextColor);
-    color: white;
-    padding: var(--padding-xs) var(--padding-md);
+    color: #fff;
+    padding: var(--padding-xs) var(--padding-m);
     border-radius: 20px;
     font-size: var(--font-size-1s);
-    transition: all 0.3s ease;
+    font-weight: 500;
+    transition: background 0.3s, transform 0.3s;
+    margin-top: var(--margin-xs);
 
     &:hover {
       background-color: var(--primaryHover);
-      transform: translateY(-2px);
+      transform: translateY(-2px) scale(1.02);
     }
   }
 
+  // Responsividade: layout vertical em mobile
   @media (max-width: 768px) {
-    &__card {
-      flex-direction: column;
-    }
-    &__image {
-      width: 100%;
-    }
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--gap-base);
   }
 }
