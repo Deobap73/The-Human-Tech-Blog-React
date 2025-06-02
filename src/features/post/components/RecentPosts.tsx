@@ -73,18 +73,22 @@ export const RecentPosts = ({ posts, lang }: RecentPostsProps) => {
 
             return (
               <div className={gridAreaClass} key={post._id}>
-                <div className='recent-posts__card-logo'>
-                  <img
-                    src={logoSrc}
-                    alt={categoryName}
-                    className='recent-posts__card-logo-img'
-                    loading='lazy'
-                  />
+                <div>
+                  <div className='recent-posts__card-logo'>
+                    <img
+                      src={logoSrc}
+                      alt={categoryName}
+                      className='recent-posts__card-logo-img'
+                      loading='lazy'
+                    />
+                  </div>
+                  <div className='recent-posts__card-content'>
+                    <span className='recent-posts__card-category'>{categoryName}</span>
+                    <h3 className='recent-posts__card-title'>{title}</h3>
+                    <p className='recent-posts__card-desc'>{displayDesc}</p>
+                  </div>
                 </div>
-                <div className='recent-posts__card-content'>
-                  <span className='recent-posts__card-category'>{categoryName}</span>
-                  <h3 className='recent-posts__card-title'>{title}</h3>
-                  <p className='recent-posts__card-desc'>{displayDesc}</p>
+                <div>
                   <Link
                     to={`/${lang}/posts/${post.slug}`}
                     className='recent-posts__card-link'

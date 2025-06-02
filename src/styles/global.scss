@@ -93,6 +93,8 @@
   --error: #d32f2f;
   --warning: #ff9800;
   --info: #17a2b8;
+  --neon-border-shadow: 0 0 5px var(--primary), 0 0 12px var(--primary), 0 0 16px var(--primary),
+    0 0 35px var(--primary);
 
   /* Shadows */
   --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -108,7 +110,7 @@
 
 /* Theme: Light */
 [data-theme='light'] {
-  --background: linear-gradient(149deg, #eaeceb 0%, #b8c3d7 50%, #505c74 100%);
+  --background: linear-gradient(149deg, #fbfffd 0%, #edeff3 50%, #4c4d50 100%);
   --background-secondary: #f8fafd;
   --text-color: #23262f;
   --text-color-secondary: #393c43;
@@ -126,6 +128,8 @@
   --text-color-tertiary: #1da1f2;
   --primary: #1da1f2;
   --primary-hover: #2995e2;
+  --neon-border-shadow: 0 0 5px var(--primary), 0 0 12px var(--primary), 0 0 16px var(--primary),
+    0 0 35px var(--primary);
   color-scheme: dark;
 }
 

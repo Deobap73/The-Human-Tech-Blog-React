@@ -7,42 +7,36 @@
   box-sizing: border-box;
   padding: var(--padding-l) 0;
 
-  // 1. Grid principal
   &__container {
+    // 1. Definição original para telas maiores (desktop)
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr; // Duas colunas para intro e posts
     grid-template-rows: 1fr;
-    grid-auto-flow: row;
-    grid-template-areas: 'recentPosts';
-  }
-
-  // 2. Área principal recentPosts (grid 2 col)
-  &__container > * {
-    grid-area: recentPosts;
-  }
-
-  &__container {
-    // Dentro, nova grid:
-    > .recent-posts__intro--area,
-    > .recent-posts__posts--area {
-      // Áreas nomeadas
-    }
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr;
-    gap: 0;
+    gap: 0; // Removido o gap explícito, pode adicionar se quiser um espaçamento específico aqui
     grid-template-areas: 'recentPostsIntro recentPostsPosts';
+
+    // Medias Query para recent-posts__container: passa a uma única coluna a partir de 1024px
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr; // Uma única coluna
+      grid-template-rows: auto auto; // Altura automática para as linhas
+      grid-template-areas: 'recentPostsIntro' // Intro acima
+        'recentPostsPosts'; // Posts abaixo
+      gap: var(--gap-xl); // Adiciona um espaçamento entre a intro e os posts
+      padding: 0 var(--padding-base); // Adiciona um padding lateral para mobile
+    }
   }
 
   &__intro--area {
     grid-area: recentPostsIntro;
+
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
-    align-items: flex-start;
     padding-right: var(--padding-l);
 
-    @media (max-width: 1024px) {
+    // Ajustes para telas menores dentro da intro, se necessário
+    @media (max-width: 1280px) {
       padding-right: 0;
       align-items: center;
       text-align: center;
@@ -52,25 +46,28 @@
   &__posts--area {
     grid-area: recentPostsPosts;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr; // Duas colunas para os cards em telas maiores
     grid-template-rows: 1fr 1fr;
-    gap: 0;
+    gap: var(--gap-base); // Adicionei um gap entre os cards
     grid-template-areas:
       'recentPosts1 recentPosts2'
       'recentPosts3 recentPosts4';
 
-    @media (max-width: 1024px) {
-      grid-template-columns: 1fr;
-      grid-template-rows: repeat(4, 1fr);
+    // Medias Query para recent-posts__posts e recent-posts__posts--area:
+    // passam a uma única coluna abaixo de 1280px
+    @media (max-width: 1280px) {
+      grid-template-columns: 1fr; // Uma única coluna para os cards
+      grid-template-rows: repeat(4, auto); // Altura automática para cada card
       grid-template-areas:
         'recentPosts1'
         'recentPosts2'
         'recentPosts3'
         'recentPosts4';
+      gap: var(--gap-l); // Ajusta o espaçamento entre os cards quando em coluna única
     }
   }
 
-  // Áreas explícitas
+  // As áreas explícitas e os estilos dos cards permanecem os mesmos
   &__card--area1 {
     grid-area: recentPosts1;
   }
@@ -87,8 +84,9 @@
   &__title {
     font-size: var(--font-size-xl);
     color: var(--primary);
-    margin-bottom: var(--margin-xs);
-    font-weight: 700;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: 500;
   }
 
   &__desc {
@@ -104,18 +102,13 @@
     align-items: flex-start;
     justify-content: space-between;
     background: var(--background-secondary);
+    border: 1px solid #1da1f2;
     border-radius: 18px;
-    box-shadow: 0 2px 12px rgba(30, 42, 120, 0.09);
+    box-shadow: var(--neon-border-shadow);
     padding: var(--padding-base);
     gap: var(--gap-base);
     min-height: 220px;
-    margin: var(--margin-sm);
-
-    &:hover,
-    &:focus-within {
-      box-shadow: 0 4px 20px rgba(30, 42, 120, 0.16);
-      transform: translateY(-2px) scale(1.02);
-    }
+    margin: var(--margin-sm); // Ajuste ou remova se o gap da grid já for suficiente
 
     &-logo {
       margin-bottom: var(--margin-xs);
@@ -139,6 +132,7 @@
       width: 100%;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
       gap: var(--gap-xs);
     }
 
@@ -170,20 +164,18 @@
       align-self: flex-start;
       padding: var(--padding-xs) var(--padding-base);
       background: transparent;
-      color: var(--primary);
-      border: 2px solid var(--primary);
-      border-radius: 20px;
-      font-size: var(--font-size-sm);
-      font-weight: 600;
-      transition: background 0.2s, color 0.2s;
-      text-decoration: none;
-      margin-top: var(--margin-xs);
-
-      &:hover,
-      &:focus {
-        background: var(--primary);
-        color: #fff;
-        text-decoration: underline;
+      border: 2px solid #2995e2; // azul claro (ajusta se tua paleta for diferente)
+      border-left: none;
+      border-right: none;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
+      backdrop-filter: blur(2.5px); // Glass effect!
+      transition: border 0.2s, box-shadow 0.2s, background 0.25s;
+      &:hover {
+        background: rgba(0, 48, 104, 0.388);
+      }
+      &:active {
+        background: none !important;
       }
     }
   }
