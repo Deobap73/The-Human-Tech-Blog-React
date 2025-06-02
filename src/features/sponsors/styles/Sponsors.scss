@@ -1,40 +1,105 @@
-/* https://github.com/Deobap73/The-Human-Tech-Blog-React/blob/main/src/components/sponsors/Sponsors.scss */
+// The-Human-Tech-Blog-React/src/components/sponsors/Sponsors.scss
 
 .sponsors {
   background: var(--bg);
   padding: var(--padding-md);
-  border-radius: 8px;
+  border-radius: 12px;
   box-shadow: var(--card-shadow);
   margin-bottom: var(--spacing-md);
 
-  .title {
-    font-size: var(--font-size-2b);
-    margin-bottom: var(--margin-md);
-    color: var(--tertiaryTextColor);
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(140px, 1fr));
+    gap: var(--gap-lg) var(--gap-base);
+    align-items: stretch;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+
+    @media (max-width: 1024px) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--gap-md) var(--gap-base);
+    }
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+      gap: var(--gap-sm);
+    }
   }
 
-  .sponsorsList {
+  .sponsors__item {
+    // Estes estilos são sempre aplicados, seja <div> ou <a>
     display: flex;
-    flex-direction: column;
-    gap: var(--gap-md);
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 0.6rem 0.8rem 0.6rem;
+    min-height: 75px;
+    border: 2px solid #2995e2;
+    border-left: none;
+    border-right: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
+    backdrop-filter: blur(2.5px);
+    background: transparent;
+    transition: border 0.2s, box-shadow 0.2s, background 0.25s;
+    outline: none;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
 
-    .sponsorItem {
-      display: flex;
-      align-items: center;
-      gap: var(--gap-md);
-      padding: var(--padding-xs) 0;
+    // Importante para sobrescrever o reset global dos <a>
+    &,
+    &:link,
+    &:visited,
+    &:active {
+      text-decoration: none !important;
+      color: inherit !important;
 
-      .sponsorLogo {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        object-fit: cover;
-      }
-
-      .sponsorName {
-        font-size: var(--font-size-1s);
-        color: var(--secondaryTextColor);
-      }
+      background: none !important;
+      outline: none !important;
     }
+
+    &:hover,
+    &:focus {
+      background: rgba(0, 48, 104, 0.388) !important;
+      text-decoration: none !important;
+      outline: none !important;
+    }
+  }
+
+  &__logo {
+    width: 3.5rem;
+    object-fit: contain;
+    margin-right: 1rem;
+    filter: brightness(0) invert(1);
+  }
+
+  &__name {
+    font-size: var(--font-size-md);
+    font-weight: 500;
+    color: #fff;
+    margin-top: 0.15rem;
+    text-align: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 100%;
+  }
+
+  &__empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: var(--font-size-base);
+    color: var(--text-color-secondary);
+    opacity: 0.8;
+    padding: 1.2rem 0;
+  }
+
+  &--loading {
+    font-size: var(--font-size-base);
+    color: var(--text-color-secondary);
+    padding: 1.2rem 0;
+    width: 100%;
+    text-align: center;
   }
 }
