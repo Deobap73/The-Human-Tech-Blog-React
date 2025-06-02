@@ -1,3 +1,5 @@
+// The-Human-Tech-Blog-React/src/features/post/styles/Featured.scss
+
 .featured {
   display: grid;
   align-items: center;
@@ -8,27 +10,24 @@
   gap: var(--gap-xl);
   background-color: var(--bg);
   color: var(--textColor);
-  width: 100%;
   max-width: var(--layout-max-width);
-  box-sizing: border-box;
-  overflow-x: hidden;
+  width: 100%;
   min-height: 370px;
+  padding: 1rem;
+  box-sizing: border-box;
 
   .featuredImage,
   &__image-container {
     grid-area: featuredImage;
     width: 100%;
-    min-width: 200px;
-    max-width: 400px;
-    aspect-ratio: 4/3;
-    overflow: hidden;
-    border-radius: 12px;
-    box-shadow: var(--card-shadow);
+    max-width: 600px;
+    aspect-ratio: 5/3;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #eee;
-    transition: width 0.3s, aspect-ratio 0.3s;
+    border: 1px solid #1da1f2;
+    border-radius: 18px;
+    box-shadow: var(--neon-border-shadow);
   }
 
   &__image {
@@ -36,8 +35,7 @@
     height: 100%;
     object-fit: cover;
     display: block;
-    border-radius: 12px;
-    background: #eee;
+    border-radius: 18px;
     transition: object-fit 0.2s;
   }
 
@@ -48,6 +46,7 @@
     flex-direction: column;
     justify-content: center;
     flex: 1 1 0;
+    // O max-width da coluna de conteúdo pode precisar ser ajustado se a imagem for muito grande e a tela pequena
     max-width: 420px;
     min-width: 200px;
     padding: var(--padding-l);
@@ -58,9 +57,9 @@
 
   &__category {
     font-size: var(--font-size-xs);
-    color: var(--text-color-tertiary);
+    color: var(--primary);
+    font-weight: 600;
     text-transform: uppercase;
-    font-weight: 200;
     letter-spacing: 0.06em;
     margin-bottom: var(--margin-2xs);
     display: inline-block;
@@ -88,12 +87,12 @@
     min-height: 48px;
     padding: 0 1.5rem;
     font-size: 1.15rem;
-    border: 2px solid #2995e2; // azul claro (ajusta se tua paleta for diferente)
+    border: 2px solid #2995e2;
     border-left: none;
     border-right: none;
     border-radius: 12px;
     box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
-    backdrop-filter: blur(2.5px); // Glass effect!
+    backdrop-filter: blur(2.5px);
     transition: border 0.2s, box-shadow 0.2s, background 0.25s;
     &:hover {
       background: rgba(0, 48, 104, 0.388);
@@ -114,8 +113,8 @@
 
     .featuredImage,
     &__image-container {
-      max-width: 360px;
-      aspect-ratio: 5/4;
+      max-width: 100%; /* Permite que a imagem ocupe a largura total disponível */
+      aspect-ratio: 16/9; /* ajustar para um aspect-ratio mais adequado para mobile se quiser */
       margin: 0 auto;
     }
     .featuredArticle,
@@ -131,7 +130,7 @@
     &__image-container {
       width: 100%;
       min-width: unset;
-      max-width: 99vw;
+      max-width: 99vw; /* Permite que a imagem ocupe quase toda a largura da viewport */
       aspect-ratio: 16/9;
       margin-bottom: var(--margin-base);
     }
