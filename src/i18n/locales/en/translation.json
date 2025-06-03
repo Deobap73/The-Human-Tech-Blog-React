@@ -8,8 +8,19 @@
     "logout": "Logout",
     "login": "Login",
     "profile": "Profile",
+
     "title": "The Human Tech Blog",
     "description": "Explore the world of project management, frontend, UI/UX and Scrum through my eyes. Personal reflections and insights on life and technology",
+
+    "title.home": "The Human Tech Blog",
+    "description.home": "Explore the world of project management, frontend, UI/UX and Scrum through my eyes. Personal reflections and insights on life and technology.",
+
+    "title.about": "About Me",
+    "description.about": "Learn more about my journey, experience, and the mission behind The Human Tech Blog.",
+
+    "title.contact": "Contact",
+    "description.contact": "Want to reach out? Get in touch for feedback, suggestions, or professional opportunities.",
+
     "headerBackgroundAlt": "Header background image",
     "logoAlt": "The Human Tech Blog logo",
     "searchPlaceholder": "Search articles..."

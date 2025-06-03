@@ -2,23 +2,27 @@
   "navbar": {
     "home": "Inicio",
     "contact": "Contacto",
-    "about": "Sobre",
+    "about": "Acerca de",
     "write": "Escribir",
-    "admin": "Administración",
+    "admin": "Admin",
     "logout": "Cerrar sesión",
     "login": "Iniciar sesión",
     "profile": "Perfil",
-    "title": "El Blog de Human Tech",
+    "title": "El Blog de Tecnología Humana",
     "description": "Explore el mundo de la gestión de proyectos, frontend, UI/UX y Scrum a través de mis ojos. Reflexiones personales e ideas sobre la vida y la tecnología",
+    "title.home": "El Blog de Tecnología Humana",
+    "description.home": "Explore el mundo de la gestión de proyectos, frontend, UI/UX y Scrum a través de mis ojos. Reflexiones personales e ideas sobre la vida y la tecnología.",
+    "title.about": "Sobre Mí",
+    "description.about": "Obtenga más información sobre mi trayectoria, experiencia y la misión detrás de The Human Tech Blog.",
+    "title.contact": "Contacto",
+    "description.contact": "¿Quiere ponerse en contacto? Para comentarios, sugerencias u oportunidades profesionales.",
     "headerBackgroundAlt": "Imagen de fondo del encabezado",
-    "logoAlt": "Logotipo del Blog de Human Tech",
+    "logoAlt": "Logotipo de The Human Tech Blog",
     "searchPlaceholder": "Buscar artículos..."
   },
-
   "searchBar": {
     "placeholder": "Buscar publicaciones..."
   },
-
   "admin": {
     "tags": "Etiquetas",
     "tag_name": "Nombre",
@@ -30,19 +34,18 @@
     "delete": "Eliminar",
     "cancel": "Cancelar",
     "no_tags": "Aún no hay etiquetas.",
-    "error_fetch_tags": "Error al obtener las etiquetas.",
+    "error_fetch_tags": "Error al obtener etiquetas.",
     "error_save_tag": "Error al guardar la etiqueta.",
     "error_delete_tag": "Error al eliminar la etiqueta.",
-    "confirm_delete_tag": "¿Está seguro? Las etiquetas utilizadas en publicaciones no se pueden eliminar.",
+    "confirm_delete_tag": "¿Está seguro? Las etiquetas utilizadas por las publicaciones no se pueden eliminar.",
     "dashboard": "Panel de control",
     "posts": "Publicaciones",
     "messages": "Mensajes",
-    "moderateComments": "Moderar comentarios",
-    "settings": "Ajustes"
+    "moderateComments": "Moderar Comentarios",
+    "settings": "Configuración"
   },
-
   "adminCategoryForm": {
-    "title": "Administrar categorías",
+    "title": "Administrar Categorías",
     "name": "Nombre",
     "namePlaceholder": "Nombre de la categoría",
     "description": "Descripción",
@@ -53,14 +56,13 @@
     "update": "Actualizar",
     "cancel": "Cancelar",
     "error": "Error al guardar la categoría",
-    "requiredName": "El nombre (EN) es obligatorio",
-    "requiredDescription": "La descripción (EN) es obligatoria",
-    "deleteConfirm": "¿Eliminar esta categoría? Las categorías utilizadas por publicaciones no se pueden eliminar.",
+    "requiredName": "El nombre (ES) es obligatorio",
+    "requiredDescription": "La descripción (ES) es obligatoria",
+    "deleteConfirm": "¿Eliminar esta categoría? Las categorías utilizadas por las publicaciones no se pueden eliminar.",
     "noCategories": "No se encontraron categorías."
   },
-
   "adminTagForm": {
-    "title": "Administrar etiquetas",
+    "title": "Administrar Etiquetas",
     "name": "Nombre",
     "namePlaceholder": "Nombre de la etiqueta",
     "description": "Descripción",
@@ -70,37 +72,35 @@
     "update": "Actualizar",
     "cancel": "Cancelar",
     "error": "Error al guardar la etiqueta",
-    "requiredName": "El nombre (EN) es obligatorio",
-    "deleteConfirm": "¿Eliminar esta etiqueta? Las etiquetas utilizadas por publicaciones no se pueden eliminar.",
+    "requiredName": "El nombre (ES) es obligatorio",
+    "deleteConfirm": "¿Eliminar esta etiqueta? Las etiquetas utilizadas por las publicaciones no se pueden eliminar.",
     "noTags": "No se encontraron etiquetas."
   },
-
   "adminNotificationForm": {
-    "title": "Administrar notificaciones",
+    "title": "Administrar Notificaciones",
     "notificationTitle": "Título",
     "notificationTitlePlaceholder": "Título de la notificación",
     "message": "Mensaje",
-    "messagePlaceholder": "Introduzca el mensaje de la notificación...",
+    "messagePlaceholder": "Introduzca el mensaje de notificación...",
     "create": "Crear",
     "update": "Actualizar",
     "cancel": "Cancelar",
     "error": "Error al guardar la notificación",
-    "requiredTitle": "El título (EN) es obligatorio",
+    "requiredTitle": "El título (ES) es obligatorio",
     "deleteConfirm": "¿Eliminar esta notificación?",
     "noNotifications": "No se encontraron notificaciones."
   },
-
   "adminPostForm": {
     "title": "Título",
     "titlePlaceholder": "Título de la publicación",
-    "requiredTitle": "El título es obligatorio (EN)",
+    "requiredTitle": "El título es obligatorio (ES)",
     "description": "Descripción",
-    "descriptionPlaceholder": "Descripción breve",
-    "requiredDescription": "La descripción es obligatoria (EN)",
+    "descriptionPlaceholder": "Descripción corta",
+    "requiredDescription": "La descripción es obligatoria (ES)",
     "content": "Contenido",
     "contentPlaceholder": "Contenido completo",
-    "requiredContent": "El contenido es obligatorio (EN)",
-    "image": "Imagen de la publicación",
+    "requiredContent": "El contenido es obligatorio (ES)",
+    "image": "Imagen de la Publicación",
     "tags": "Etiquetas",
     "categories": "Categorías",
     "status": "Estado",
@@ -108,16 +108,14 @@
     "published": "Publicado",
     "save": "Guardar",
     "error": "Error al guardar la publicación",
-    "createSuccess": "¡Categoría creada con éxito!",
-    "updateSuccess": "¡Categoría actualizada con éxito!"
+    "createSuccess": "Categoría creada exitosamente!",
+    "updateSuccess": "Categoría actualizada exitosamente!"
   },
-
   "notAuthorized": {
-    "title": "Acceso denegado",
+    "title": "Acceso Denegado",
     "message": "No tiene permiso para acceder a esta página.",
     "goHome": "Ir a Inicio"
   },
-
   "route": {
     "loading": "Cargando..."
   }

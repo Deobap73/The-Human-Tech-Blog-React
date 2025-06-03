@@ -2,23 +2,27 @@
   "navbar": {
     "home": "Startseite",
     "contact": "Kontakt",
-    "about": "Um",
+    "about": "Über",
     "write": "Schreiben",
-    "admin": "Verwaltung",
+    "admin": "Admin",
     "logout": "Abmelden",
     "login": "Anmelden",
     "profile": "Profil",
     "title": "Der Human Tech Blog",
-    "description": "Entdecken Sie die Welt des Projektmanagements, Frontend, UI/UX und Scrum durch meine Augen. Persönliche Reflexionen und Einblicke in Leben und Technologie",
+    "description": "Erkunden Sie die Welt des Projektmanagements, Frontend, UI/UX und Scrum durch meine Augen. Persönliche Reflexionen und Einblicke in Leben und Technologie",
+    "title.home": "Der Human Tech Blog",
+    "description.home": "Erkunden Sie die Welt des Projektmanagements, Frontend, UI/UX und Scrum durch meine Augen. Persönliche Reflexionen und Einblicke in Leben und Technologie.",
+    "title.about": "Über Mich",
+    "description.about": "Erfahren Sie mehr über meine Reise, Erfahrung und die Mission hinter The Human Tech Blog.",
+    "title.contact": "Kontakt",
+    "description.contact": "Möchten Sie Kontakt aufnehmen? Für Feedback, Vorschläge oder berufliche Möglichkeiten.",
     "headerBackgroundAlt": "Hintergrundbild des Headers",
     "logoAlt": "Logo des Human Tech Blogs",
     "searchPlaceholder": "Artikel suchen..."
   },
-
   "searchBar": {
     "placeholder": "Beiträge suchen..."
   },
-
   "admin": {
     "tags": "Tags",
     "tag_name": "Name",
@@ -40,7 +44,6 @@
     "moderateComments": "Kommentare moderieren",
     "settings": "Einstellungen"
   },
-
   "adminCategoryForm": {
     "title": "Kategorien verwalten",
     "name": "Name",
@@ -48,17 +51,16 @@
     "description": "Beschreibung",
     "descriptionPlaceholder": "Beschreibung",
     "logo": "Logo (URL)",
-    "logoPlaceholder": "Logo-Bild-URL hier einfügen",
+    "logoPlaceholder": "Fügen Sie die URL des Logo-Bildes hier ein",
     "create": "Erstellen",
     "update": "Aktualisieren",
     "cancel": "Abbrechen",
     "error": "Fehler beim Speichern der Kategorie",
-    "requiredName": "Name (EN) ist erforderlich",
-    "requiredDescription": "Beschreibung (EN) ist erforderlich",
+    "requiredName": "Name (DE) ist erforderlich",
+    "requiredDescription": "Beschreibung (DE) ist erforderlich",
     "deleteConfirm": "Diese Kategorie löschen? Von Beiträgen verwendete Kategorien können nicht gelöscht werden.",
     "noCategories": "Keine Kategorien gefunden."
   },
-
   "adminTagForm": {
     "title": "Tags verwalten",
     "name": "Name",
@@ -70,11 +72,10 @@
     "update": "Aktualisieren",
     "cancel": "Abbrechen",
     "error": "Fehler beim Speichern des Tags",
-    "requiredName": "Name (EN) ist erforderlich",
+    "requiredName": "Name (DE) ist erforderlich",
     "deleteConfirm": "Diesen Tag löschen? Von Beiträgen verwendete Tags können nicht gelöscht werden.",
     "noTags": "Keine Tags gefunden."
   },
-
   "adminNotificationForm": {
     "title": "Benachrichtigungen verwalten",
     "notificationTitle": "Titel",
@@ -85,21 +86,20 @@
     "update": "Aktualisieren",
     "cancel": "Abbrechen",
     "error": "Fehler beim Speichern der Benachrichtigung",
-    "requiredTitle": "Titel (EN) ist erforderlich",
+    "requiredTitle": "Titel (DE) ist erforderlich",
     "deleteConfirm": "Diese Benachrichtigung löschen?",
     "noNotifications": "Keine Benachrichtigungen gefunden."
   },
-
   "adminPostForm": {
     "title": "Titel",
     "titlePlaceholder": "Beitragstitel",
-    "requiredTitle": "Titel ist erforderlich (EN)",
+    "requiredTitle": "Titel ist erforderlich (DE)",
     "description": "Beschreibung",
     "descriptionPlaceholder": "Kurzbeschreibung",
-    "requiredDescription": "Beschreibung ist erforderlich (EN)",
+    "requiredDescription": "Beschreibung ist erforderlich (DE)",
     "content": "Inhalt",
     "contentPlaceholder": "Vollständiger Inhalt",
-    "requiredContent": "Inhalt ist erforderlich (EN)",
+    "requiredContent": "Inhalt ist erforderlich (DE)",
     "image": "Beitragsbild",
     "tags": "Tags",
     "categories": "Kategorien",
@@ -111,14 +111,12 @@
     "createSuccess": "Kategorie erfolgreich erstellt!",
     "updateSuccess": "Kategorie erfolgreich aktualisiert!"
   },
-
   "notAuthorized": {
     "title": "Zugriff verweigert",
     "message": "Sie haben keine Berechtigung, auf diese Seite zuzugreifen.",
     "goHome": "Zur Startseite"
   },
-
   "route": {
-    "loading": "Wird geladen..."
+    "loading": "Lädt..."
   }
 }

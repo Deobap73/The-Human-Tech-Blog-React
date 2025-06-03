@@ -1,8 +1,9 @@
+// /src/features/layout/Navbar.tsx
+
 import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth } from '../../shared/hooks/useAuth';
 import { useTheme } from '../../shared/hooks/useTheme';
-import frontPageImage from '../../assets/frontPage.webp';
 import logo from '../../assets/Logo.webp';
 import ThemeToggle from './ThemeToggle';
 import { LoginModal } from '../auth/components/LoginModal';
@@ -11,8 +12,10 @@ import SearchBar from '../../features/search/components/SearchBar';
 import LanguageSelector from '../../shared/components/LanguageSelector';
 import { useTranslation } from 'react-i18next';
 import { NotificationBell } from '../notification/components/NotificationBell';
+import { getNavbarConfig } from './navbarConfig';
 import './styles/Navbar.scss';
 
+// Helper to build language-aware URLs
 const buildUrl = (path: string, lang: string) => {
   const normalized = path.startsWith('/') ? path.slice(1) : path;
   return `/${lang}/${normalized}`;
@@ -29,6 +32,7 @@ const Navbar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const activeLang = lang || i18n.language.split('-')[0] || 'en';
+  const config = getNavbarConfig(location.pathname);
 
   const handleLogout = async () => {
     await logout();
@@ -41,19 +45,21 @@ const Navbar = () => {
     return location.pathname === route;
   };
 
-  // Fecha sidebar ao navegar (usado em links)
+  // Close sidebar on navigation
   const handleNavClick = () => setSidebarOpen(false);
 
   const navbarClasses = `navbar ${theme === 'dark' ? 'navbar--dark' : 'navbar--light'}`;
 
   return (
     <header className={navbarClasses}>
-      <img
-        src={frontPageImage}
-        alt={t('navbar.headerBackgroundAlt')}
-        className='navbar__background'
-        aria-hidden='true'
-      />
+      {config.background && (
+        <img
+          src={config.background}
+          alt='Navbar background'
+          className='navbar__background'
+          aria-hidden='true'
+        />
+      )}
       <div className='navbar__row'>
         <div className='navbar__topbar'>
           <div className='navbar__logo'>
@@ -173,10 +179,14 @@ const Navbar = () => {
           </div>
         </nav>
       </div>
-      <div className='navbar__tile'>
-        <h1 className='navbar__tile-title'>{t('navbar.title')}</h1>
-        <p className='navbar__tile-description'>{t('navbar.description')}</p>
-      </div>
+      {config.showTile && (
+        <div className='navbar__tile'>
+          <h1 className='navbar__tile-title'>{config.tileTitle ? config.tileTitle(t) : ''}</h1>
+          <p className='navbar__tile-description'>
+            {config.tileDescription ? config.tileDescription(t) : ''}
+          </p>
+        </div>
+      )}
       {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
       {sidebarOpen && (
         <div className='navbar__overlay' onClick={() => setSidebarOpen(false)} aria-hidden />

@@ -8,17 +8,21 @@
     "logout": "Sair",
     "login": "Entrar",
     "profile": "Perfil",
-    "title": "O Blog de Human Tech",
-    "description": "Explore o mundo da gestão de projetos, frontend, UI/UX e Scrum através dos meus olhos. Reflexões e insights pessoais sobre vida e tecnologia",
+    "title": "O Blog de Tecnologia Humana",
+    "description": "Explore o mundo da gestão de projetos, frontend, UI/UX e Scrum através dos meus olhos. Reflexões pessoais e insights sobre vida e tecnologia",
+    "title.home": "O Blog de Tecnologia Humana",
+    "description.home": "Explore o mundo da gestão de projetos, frontend, UI/UX e Scrum através dos meus olhos. Reflexões pessoais e insights sobre vida e tecnologia.",
+    "title.about": "Sobre Mim",
+    "description.about": "Saiba mais sobre minha jornada, experiência e a missão por trás do The Human Tech Blog.",
+    "title.contact": "Contato",
+    "description.contact": "Quer entrar em contato? Para feedback, sugestões ou oportunidades profissionais.",
     "headerBackgroundAlt": "Imagem de fundo do cabeçalho",
-    "logoAlt": "Logotipo do Blog de Human Tech",
+    "logoAlt": "Logotipo The Human Tech Blog",
     "searchPlaceholder": "Pesquisar artigos..."
   },
-
   "searchBar": {
     "placeholder": "Pesquisar posts..."
   },
-
   "admin": {
     "tags": "Tags",
     "tag_name": "Nome",
@@ -40,25 +44,23 @@
     "moderateComments": "Moderar Comentários",
     "settings": "Configurações"
   },
-
   "adminCategoryForm": {
     "title": "Gerenciar Categorias",
     "name": "Nome",
     "namePlaceholder": "Nome da categoria",
     "description": "Descrição",
     "descriptionPlaceholder": "Descrição",
-    "logo": "Logotipo (URL)",
-    "logoPlaceholder": "Cole a URL da imagem do logotipo aqui",
+    "logo": "Logo (URL)",
+    "logoPlaceholder": "Cole a URL da imagem do logo aqui",
     "create": "Criar",
     "update": "Atualizar",
     "cancel": "Cancelar",
     "error": "Falha ao salvar categoria",
-    "requiredName": "Nome (EN) é obrigatório",
-    "requiredDescription": "Descrição (EN) é obrigatória",
+    "requiredName": "O nome (PT) é obrigatório",
+    "requiredDescription": "A descrição (PT) é obrigatória",
     "deleteConfirm": "Excluir esta categoria? Categorias usadas por posts não podem ser excluídas.",
     "noCategories": "Nenhuma categoria encontrada."
   },
-
   "adminTagForm": {
     "title": "Gerenciar Tags",
     "name": "Nome",
@@ -70,11 +72,10 @@
     "update": "Atualizar",
     "cancel": "Cancelar",
     "error": "Falha ao salvar tag",
-    "requiredName": "Nome (EN) é obrigatório",
+    "requiredName": "O nome (PT) é obrigatório",
     "deleteConfirm": "Excluir esta tag? Tags usadas por posts não podem ser excluídas.",
     "noTags": "Nenhuma tag encontrada."
   },
-
   "adminNotificationForm": {
     "title": "Gerenciar Notificações",
     "notificationTitle": "Título",
@@ -85,21 +86,20 @@
     "update": "Atualizar",
     "cancel": "Cancelar",
     "error": "Falha ao salvar notificação",
-    "requiredTitle": "Título (EN) é obrigatório",
+    "requiredTitle": "O título (PT) é obrigatório",
     "deleteConfirm": "Excluir esta notificação?",
     "noNotifications": "Nenhuma notificação encontrada."
   },
-
   "adminPostForm": {
     "title": "Título",
     "titlePlaceholder": "Título do post",
-    "requiredTitle": "Título é obrigatório (EN)",
+    "requiredTitle": "O título é obrigatório (PT)",
     "description": "Descrição",
     "descriptionPlaceholder": "Breve descrição",
-    "requiredDescription": "Descrição é obrigatória (EN)",
+    "requiredDescription": "A descrição é obrigatória (PT)",
     "content": "Conteúdo",
     "contentPlaceholder": "Conteúdo completo",
-    "requiredContent": "Conteúdo é obrigatório (EN)",
+    "requiredContent": "O conteúdo é obrigatório (PT)",
     "image": "Imagem do Post",
     "tags": "Tags",
     "categories": "Categorias",
@@ -111,13 +111,11 @@
     "createSuccess": "Categoria criada com sucesso!",
     "updateSuccess": "Categoria atualizada com sucesso!"
   },
-
   "notAuthorized": {
     "title": "Acesso Negado",
     "message": "Você não tem permissão para acessar esta página.",
-    "goHome": "Ir para a Início"
+    "goHome": "Ir para o Início"
   },
-
   "route": {
     "loading": "Carregando..."
   }
