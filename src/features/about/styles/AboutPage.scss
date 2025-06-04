@@ -1,0 +1,16 @@
+/* src/features/about/styles/AboutPage.scss */
+
+.aboutPage {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+
+  &__section {
+    margin-bottom: 10%; // espaçamento vertical entre secções
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

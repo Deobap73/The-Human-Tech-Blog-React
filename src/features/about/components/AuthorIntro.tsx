@@ -1,4 +1,4 @@
-// The-Human-Tech-Blog-React\src\components\AuthorIntro\AuthorIntro.tsx
+// src\features\about\components\AuthorIntro.tsx
 import { useNavigate } from 'react-router-dom';
 import '../styles/AuthorIntro.scss';
 

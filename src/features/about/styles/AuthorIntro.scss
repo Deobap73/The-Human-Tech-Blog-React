@@ -1,4 +1,4 @@
-/* The-Human-Tech-Blog-React\src\components\AuthorIntro\AuthorIntro.scss */
+/* src\features\about\styles\AuthorIntro.scss */
 .AuthorIntroHome {
   display: grid;
   grid-template-columns: 1fr;
@@ -20,6 +20,7 @@
     padding: 1.5rem;
 
     &__years {
+      padding: var(--padding-base);
       border: $border-style;
       border-left: none;
       border-right: none;
@@ -33,6 +34,7 @@
         font-size: 3.5rem;
         color: var(--primaryHover);
         margin-bottom: 0.5rem;
+        text-align: center;
         line-height: 1;
       }
 
