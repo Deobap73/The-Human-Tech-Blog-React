@@ -1,11 +1,11 @@
 // src/pages/about/AboutPage.tsx
 
-import { AboutMe } from '../components/AboutMe';
+import { AuthorIntro } from '../components/AuthorIntro';
 
 const AboutPage = () => {
   return (
     <>
-      <AboutMe />
+      <AuthorIntro />
     </>
   );
 };

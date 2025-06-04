@@ -1,0 +1,144 @@
+/* The-Human-Tech-Blog-React\src\components\AuthorIntro\AuthorIntro.scss */
+.AuthorIntroHome {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  padding: 1.5rem;
+  margin: 0 auto;
+  max-width: 1200px;
+
+  // Common border styles
+  $border-style: 2px solid #2995e2;
+  $border-radius: 12px;
+  $box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
+
+  &__yearsExperience {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+
+    &__years {
+      border: $border-style;
+      border-left: none;
+      border-right: none;
+      border-radius: $border-radius;
+      box-shadow: $box-shadow;
+      backdrop-filter: blur(2.5px);
+      background: transparent;
+      transition: all 0.3s ease;
+
+      &__number {
+        font-size: 3.5rem;
+        color: var(--primaryHover);
+        margin-bottom: 0.5rem;
+        line-height: 1;
+      }
+
+      &__text {
+        font-size: 1rem;
+        text-align: center;
+      }
+    }
+  }
+
+  &__slogan {
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+
+    &__text {
+      font-size: 1.5rem;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+  }
+
+  &__myStory {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    &__description {
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      border: $border-style;
+      border-left: none;
+      border-right: none;
+      border-radius: $border-radius;
+      box-shadow: $box-shadow;
+      backdrop-filter: blur(2.5px);
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    &__button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.5rem;
+      background-color: var(--primaryHover);
+      color: white;
+      border: none;
+      border-radius: 2rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      max-width: 200px;
+
+      &:hover {
+        background-color: darken(#2995e2, 10%);
+        transform: translateY(-2px);
+      }
+
+      .arrow {
+        margin-left: 0.5rem;
+        transition: transform 0.3s ease;
+      }
+
+      &:hover .arrow {
+        transform: translateX(3px);
+      }
+    }
+  }
+
+  // Tablet view
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+
+    &__yearsExperience {
+      grid-row: span 2;
+      height: 100%;
+      justify-content: center;
+    }
+
+    &__slogan {
+      grid-column: 2;
+    }
+
+    &__myStory {
+      grid-column: 2;
+    }
+  }
+
+  // Desktop view
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+
+    &__yearsExperience {
+      grid-row: auto;
+      grid-column: 1;
+    }
+
+    &__slogan {
+      grid-column: 2;
+    }
+
+    &__myStory {
+      grid-column: 3;
+    }
+  }
+}
