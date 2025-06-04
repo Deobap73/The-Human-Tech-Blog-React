@@ -1,14 +1,17 @@
 import '../../about/styles/AboutMe.scss';
 import IdImage from '../../../assets/IdImage.webp';
 import { FaLinkedinIn, FaGithub } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 
 export const AboutMe = () => {
+  const { t } = useTranslation();
+
   return (
     <section className='aboutMe'>
       <div className='aboutMe__container'>
         {/* Profile Image with decorative frame */}
         <div className='aboutMe__image-wrapper'>
-          <img src={IdImage} alt='Profile' className='aboutMe__image' />
+          <img src={IdImage} alt={t('about.me.profileAlt')} className='aboutMe__image' />
           <span className='aboutMe__frame aboutMe__frame--top' />
           <span className='aboutMe__frame aboutMe__frame--bottom' />
         </div>
@@ -17,39 +20,42 @@ export const AboutMe = () => {
         <div className='aboutMe__content'>
           <div className='aboutMe__header'>
             <h2 className='aboutMe__title'>
-              About <span className='aboutMe__title--accent'>Me</span>
+              {t('about.me.title')}{' '}
+              <span className='aboutMe__title--accent'>{t('about.me.titleAccent')}</span>
             </h2>
           </div>
           <div className='aboutMe__intro'>
             <h3 className='aboutMe__name'>
-              Hi, my name is <span>Berto</span>
+              {t('about.me.greeting')} <span>{t('about.me.nameHighlight')}</span>
             </h3>
             <p className='aboutMe__description'>
-              Aspiring Project Manager with a dev mindset. Passionate about building smart
-              solutions, <span className='aboutMe__description--highlight'>leading teams,</span> and
-              turning ideas into real products. Always learning, always creating.
+              {t('about.me.description.1')}
+              <span className='aboutMe__description--highlight'>
+                {t('about.me.description.highlight')}
+              </span>
+              {t('about.me.description.2')}
             </p>
           </div>
           <div className='aboutMe__info-card'>
             <ul className='aboutMe__info-list'>
               <li>
-                <span className='aboutMe__info-label'>Name:</span>
+                <span className='aboutMe__info-label'>{t('about.me.info.name')}:</span>
                 <span className='aboutMe__info-value'>Deolindo Baptista</span>
               </li>
               <li>
-                <span className='aboutMe__info-label'>Phone:</span>
+                <span className='aboutMe__info-label'>{t('about.me.info.phone')}:</span>
                 <span className='aboutMe__info-value'>(+49) 176 34644129</span>
               </li>
               <li>
-                <span className='aboutMe__info-label'>Email:</span>
+                <span className='aboutMe__info-label'>{t('about.me.info.email')}:</span>
                 <span className='aboutMe__info-value'>contact@thehumantechblog.com</span>
               </li>
               <li>
-                <span className='aboutMe__info-label'>Address:</span>
+                <span className='aboutMe__info-label'>{t('about.me.info.address')}:</span>
                 <span className='aboutMe__info-value'>Passau, Germany</span>
               </li>
               <li className='aboutMe__info-social'>
-                <span className='aboutMe__info-label'>Social Media:</span>
+                <span className='aboutMe__info-label'>{t('about.me.info.socialMedia')}:</span>
                 <span className='aboutMe__social-icons'>
                   <a
                     href='https://www.linkedin.com/in/deolindobaptista/'
@@ -76,7 +82,7 @@ export const AboutMe = () => {
             className='aboutMe__button'
             target='_blank'
             rel='noopener noreferrer'>
-            VIEW MORE PROJECT
+            {t('about.me.viewProjects')}
           </a>
         </div>
       </div>

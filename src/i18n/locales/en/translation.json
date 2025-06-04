@@ -125,5 +125,34 @@
   },
   "route": {
     "loading": "Loading..."
+  },
+
+  "about": {
+    "intro": {
+      "years": "36",
+      "yearsText": "Years experience Working",
+      "slogan": "Bringing code and leadership together to drive growth.",
+      "myStory": "I'm a tech enthusiast and blogger sharing my journey through the human side of technology. Join me as I explore the intersection of tech and humanity."
+    },
+    "me": {
+      "profileAlt": "Profile photo",
+      "title": "About",
+      "titleAccent": "Me",
+      "greeting": "Hi, my name is",
+      "nameHighlight": "Berto",
+      "description": {
+        "1": "Aspiring Project Manager with a dev mindset. Passionate about building smart solutions, ",
+        "highlight": "leading teams,",
+        "2": " and turning ideas into real products. Always learning, always creating."
+      },
+      "info": {
+        "name": "Name",
+        "phone": "Phone",
+        "email": "Email",
+        "address": "Address",
+        "socialMedia": "Social Media"
+      },
+      "viewProjects": "VIEW MORE PROJECT"
+    }
   }
 }

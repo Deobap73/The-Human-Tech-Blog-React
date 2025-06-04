@@ -12,8 +12,8 @@
     "description": "Erkunden Sie die Welt des Projektmanagements, Frontend, UI/UX und Scrum durch meine Augen. Persönliche Reflexionen und Einblicke in Leben und Technologie",
     "title.home": "Der Human Tech Blog",
     "description.home": "Erkunden Sie die Welt des Projektmanagements, Frontend, UI/UX und Scrum durch meine Augen. Persönliche Reflexionen und Einblicke in Leben und Technologie.",
-    "title.about": "Über Mich",
-    "description.about": "Erfahren Sie mehr über meine Reise, Erfahrung und die Mission hinter The Human Tech Blog.",
+    "title.about": "Deolindo Baptista",
+    "description.about": "Ich kenne nicht immer den richtigen Weg, aber ich weiß, dass ich ihn mit Empathie, Design und guten Fragen gestalten möchte. Dieser Raum handelt davon.",
     "title.contact": "Kontakt",
     "description.contact": "Möchten Sie Kontakt aufnehmen? Für Feedback, Vorschläge oder berufliche Möglichkeiten.",
     "headerBackgroundAlt": "Hintergrundbild des Headers",
@@ -118,5 +118,33 @@
   },
   "route": {
     "loading": "Lädt..."
+  },
+  "about": {
+    "intro": {
+      "years": "36",
+      "yearsText": "Jahre Berufserfahrung",
+      "slogan": "Code und Führung zusammenführen, um Wachstum voranzutreiben.",
+      "myStory": "Ich bin ein Tech-Enthusiast und Blogger und teile meine Reise durch die menschliche Seite der Technologie. Begleiten Sie mich, während ich die Schnittstelle von Technologie und Menschheit erkunde."
+    },
+    "me": {
+      "profileAlt": "Profilfoto",
+      "title": "Über",
+      "titleAccent": "Mich",
+      "greeting": "Hallo, mein Name ist",
+      "nameHighlight": "Berto",
+      "description": {
+        "1": "Projektmanager mit Erfahrung in der Webentwicklung. Leidenschaft für die Entwicklung intelligenter Lösungen. ",
+        "highlight": "Führen von Teams,",
+        "2": " und der Umwandlung von Ideen in echte Produkte. Immer am Lernen, immer am Kreieren."
+      },
+      "info": {
+        "name": "Name",
+        "phone": "Telefon",
+        "email": "E-Mail",
+        "address": "Adresse",
+        "socialMedia": "Soziale Medien"
+      },
+      "viewProjects": "MEHR PROJEKTE ANZEIGEN"
+    }
   }
 }

@@ -12,8 +12,8 @@
     "description": "Explore o mundo da gestão de projetos, frontend, UI/UX e Scrum através dos meus olhos. Reflexões pessoais e insights sobre vida e tecnologia",
     "title.home": "O Blog de Tecnologia Humana",
     "description.home": "Explore o mundo da gestão de projetos, frontend, UI/UX e Scrum através dos meus olhos. Reflexões pessoais e insights sobre vida e tecnologia.",
-    "title.about": "Sobre Mim",
-    "description.about": "Saiba mais sobre minha jornada, experiência e a missão por trás do The Human Tech Blog.",
+    "title.about": "Deolindo Baptista",
+    "description.about": "Nem sempre sei o caminho certo, mas sei que quero construí-lo com empatia, design e boas perguntas. Este espaço é sobre isso.",
     "title.contact": "Contato",
     "description.contact": "Quer entrar em contato? Para feedback, sugestões ou oportunidades profissionais.",
     "headerBackgroundAlt": "Imagem de fundo do cabeçalho",
@@ -118,5 +118,33 @@
   },
   "route": {
     "loading": "Carregando..."
+  },
+  "about": {
+    "intro": {
+      "years": "36",
+      "yearsText": "Anos de experiência profissional",
+      "slogan": "Unindo código e liderança para impulsionar o crescimento.",
+      "myStory": "Sou um entusiasta da tecnologia e blogueiro, compartilhando minha jornada pelo lado humano da tecnologia. Junte-se a mim enquanto exploro a interseção da tecnologia e da humanidade."
+    },
+    "me": {
+      "profileAlt": "Foto de perfil",
+      "title": "Sobre",
+      "titleAccent": "Mim",
+      "greeting": "Olá, meu nome é",
+      "nameHighlight": "Berto",
+      "description": {
+        "1": "Gerente de Projetos com formação em desenvolvimento web. Apaixonado por construir soluções inteligentes, ",
+        "highlight": "liderar equipes,",
+        "2": " e transformar ideias em produtos reais. Sempre aprendendo, sempre criando."
+      },
+      "info": {
+        "name": "Nome",
+        "phone": "Telefone",
+        "email": "E-mail",
+        "address": "Endereço",
+        "socialMedia": "Mídias Sociais"
+      },
+      "viewProjects": "VER MAIS PROJETOS"
+    }
   }
 }

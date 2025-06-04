@@ -1,11 +1,13 @@
 // src\features\about\components\AuthorIntro.tsx
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import '../styles/AuthorIntro.scss';
 
 export const AuthorIntro = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const goToAboutPage = async () => {
+  const goToAboutPage = () => {
     navigate('/about');
   };
 
@@ -13,22 +15,21 @@ export const AuthorIntro = () => {
     <div className='AuthorIntroHome'>
       <div className='AuthorIntroHome__yearsExperience'>
         <div className='AuthorIntroHome__yearsExperience__years'>
-          <h2 className='AuthorIntroHome__yearsExperience__years__number'>36</h2>
-          <p className='AuthorIntroHome__yearsExperience__years__text'>Years experience Working</p>
+          <h2 className='AuthorIntroHome__yearsExperience__years__number'>
+            {t('about.intro.years')}
+          </h2>
+          <p className='AuthorIntroHome__yearsExperience__years__text'>
+            {t('about.intro.yearsText')}
+          </p>
         </div>
       </div>
 
       <div className='AuthorIntroHome__slogan'>
-        <p className='AuthorIntroHome__slogan__text'>
-          Bringing code and leadership together to drive growth.
-        </p>
+        <p className='AuthorIntroHome__slogan__text'>{t('about.intro.slogan')}</p>
       </div>
 
       <div className='AuthorIntroHome__myStory'>
-        <p className='AuthorIntroHome__myStory__description'>
-          I'm a tech enthusiast and blogger sharing my journey through the human side of technology.
-          Join me as I explore the intersection of tech and humanity.
-        </p>
+        <p className='AuthorIntroHome__myStory__description'>{t('about.intro.myStory')}</p>
       </div>
     </div>
   );

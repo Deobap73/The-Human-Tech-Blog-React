@@ -12,8 +12,8 @@
     "description": "Explore el mundo de la gestión de proyectos, frontend, UI/UX y Scrum a través de mis ojos. Reflexiones personales e ideas sobre la vida y la tecnología",
     "title.home": "El Blog de Tecnología Humana",
     "description.home": "Explore el mundo de la gestión de proyectos, frontend, UI/UX y Scrum a través de mis ojos. Reflexiones personales e ideas sobre la vida y la tecnología.",
-    "title.about": "Sobre Mí",
-    "description.about": "Obtenga más información sobre mi trayectoria, experiencia y la misión detrás de The Human Tech Blog.",
+    "title.about": "Deolindo Baptista",
+    "description.about": "No siempre conozco el camino correcto, pero sé que quiero construirlo con empatía, diseño y buenas preguntas. Este espacio trata de eso.",
     "title.contact": "Contacto",
     "description.contact": "¿Quiere ponerse en contacto? Para comentarios, sugerencias u oportunidades profesionales.",
     "headerBackgroundAlt": "Imagen de fondo del encabezado",
@@ -118,5 +118,33 @@
   },
   "route": {
     "loading": "Cargando..."
+  },
+  "about": {
+    "intro": {
+      "years": "36",
+      "yearsText": "Años de experiencia profesional",
+      "slogan": "Uniendo código y liderazgo para impulsar el crecimiento.",
+      "myStory": "Soy un entusiasta de la tecnología y bloguero que comparte mi viaje por el lado humano de la tecnología. Únase a mí mientras exploro la intersección de la tecnología y la humanidad."
+    },
+    "me": {
+      "profileAlt": "Foto de perfil",
+      "title": "Sobre",
+      "titleAccent": "Mí",
+      "greeting": "Hola, mi nombre es",
+      "nameHighlight": "Berto",
+      "description": {
+        "1": "Gerente de proyectos con experiencia en desarrollo web. Apasionado por crear soluciones inteligentes. ",
+        "highlight": "liderar equipos,",
+        "2": " y convertir ideas en productos reales. Siempre aprendiendo, siempre creando."
+      },
+      "info": {
+        "name": "Nombre",
+        "phone": "Teléfono",
+        "email": "Correo electrónico",
+        "address": "Dirección",
+        "socialMedia": "Redes Sociales"
+      },
+      "viewProjects": "VER MÁS PROYECTOS"
+    }
   }
 }
