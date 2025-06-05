@@ -3,16 +3,14 @@
 import '../styles/AboutPage.scss';
 import AboutMe from '../components/AboutMe';
 import { AuthorIntro } from '../components/AuthorIntro';
+import ExperienceTimeline from '../components/ExperienceTimeline';
 
 const AboutPage = () => {
   return (
     <div className='aboutPage'>
-      <section className='aboutPage__section'>
-        <AuthorIntro />
-      </section>
-      <section className='aboutPage__section'>
-        <AboutMe />
-      </section>
+      <AuthorIntro />
+      <AboutMe />
+      <ExperienceTimeline />
     </div>
   );
 };

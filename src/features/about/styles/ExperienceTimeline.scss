@@ -1,0 +1,227 @@
+.experience {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  /*   padding: var(--padding-xl) 0; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: transparent;
+
+  &__title {
+    position: relative;
+    font-size: var(--heading-h2);
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: var(--margin-lg);
+    color: var(--text-color);
+
+    &--base {
+      color: var(--text-color);
+    }
+    &--highlight {
+      color: var(--primary);
+    }
+    &-underline {
+      display: block;
+      width: 5.8rem;
+      height: 3px;
+      background: var(--primary);
+      margin: 0.25em auto 0 0;
+      border-radius: 1.5px;
+    }
+  }
+
+  &__timeline {
+    position: relative;
+    width: 90%;
+    max-width: 1000px;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .experience__svg {
+    position: absolute;
+    top: 0;
+    left: 5rem;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    transition: left 0.3s, width 0.3s, height 0.3s;
+
+    @media (max-width: 1280px) {
+      left: 4rem;
+      margin-top: -0.1rem;
+    }
+    @media (max-width: 1100px) {
+      left: 4rem;
+      margin-top: -1rem;
+    }
+    @media (max-width: 1024px) {
+      left: 3.5rem;
+      margin-top: -5rem;
+    }
+    @media (max-width: 900px) {
+      display: none !important;
+    }
+  }
+
+  &__row {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gap-xl);
+    width: 100%;
+    justify-content: center;
+    align-items: flex-start;
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    padding-top: 50px;
+    padding-bottom: 50px;
+
+    @media (max-width: 900px) {
+      flex-direction: column;
+      align-items: center;
+      gap: var(--gap-lg);
+      padding-top: 0;
+      padding-bottom: 0;
+      height: auto;
+    }
+  }
+
+  &__col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-xl);
+    width: 48%;
+    position: relative;
+
+    &--right {
+      align-items: flex-end;
+      position: relative;
+      z-index: 2;
+    }
+    @media (max-width: 1280px) {
+      margin-top: 2%;
+    }
+    @media (max-width: 900px) {
+      width: 100%;
+      align-items: center;
+      &--right {
+        align-items: center;
+      }
+    }
+  }
+
+  &__card {
+    background: #181a1b;
+    box-shadow: 0 6px 28px 0 rgba(0, 0, 0, 0.25);
+    border-radius: 18px;
+    padding: var(--padding-l) var(--padding-xl);
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    color: var(--text-color);
+    position: relative;
+    z-index: 3;
+    border: none;
+    max-width: 95%;
+
+    &--left,
+    &--right {
+      align-items: flex-start;
+      margin-left: 0;
+      margin-top: 0;
+    }
+    @media (max-width: 900px) {
+      max-width: 98%;
+      margin: 0 auto;
+      margin-top: 0 !important;
+    }
+  }
+
+  /* ==== CONTROLO INDIVIDUAL DE CARDS ==== */
+  .card-1 {
+    margin-top: 0;
+    margin-left: 0;
+  }
+  .card-2 {
+    margin-top: 180px; // Ajusta este valor conforme teu layout desktop
+    margin-left: 0;
+    @media (max-width: 1280px) {
+      margin-top: 7.5rem !important;
+    }
+    @media (max-width: 1100px) {
+      margin-top: 29% !important;
+    }
+    @media (max-width: 1024px) {
+      margin-top: -3% !important;
+    }
+  }
+  .card-3 {
+    margin-top: 49px; // Ajusta este valor conforme teu layout desktop
+    @media (max-width: 1280px) {
+      margin-top: 4rem !important;
+    }
+    @media (max-width: 1100px) {
+      margin-top: 2.5rem !important;
+    }
+    @media (max-width: 1024px) {
+      margin-top: 2rem !important;
+    }
+  }
+  .card-4 {
+    margin-top: 240px; // Ajusta este valor conforme teu layout desktop
+    @media (max-width: 1280px) {
+      margin-top: 25% !important;
+    }
+    @media (max-width: 1100px) {
+      margin-top: 29% !important;
+    }
+    @media (max-width: 1024px) {
+      margin-top: 1% !important;
+    }
+  }
+
+  /* Responsividade: todos os cards alinham verticalmente no mobile */
+  @media (max-width: 900px) {
+    .card-1,
+    .card-2,
+    .card-3,
+    .card-4 {
+      margin-top: 0 !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+    }
+  }
+
+  &__card-title {
+    font-size: var(--font-size-md);
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: var(--margin-2xs);
+  }
+
+  &__card-date {
+    color: var(--primary);
+    font-weight: 600;
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--margin-xs);
+    border-bottom: 2.5px solid var(--primary);
+    display: inline-block;
+    padding-bottom: 2px;
+    letter-spacing: 0.06em;
+  }
+
+  &__card-description {
+    color: var(--text-color-secondary);
+    font-size: var(--font-size-base);
+    line-height: 1.55;
+    margin-bottom: 0;
+    margin-top: 0.15rem;
+  }
+}

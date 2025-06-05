@@ -122,7 +122,7 @@
   "about": {
     "intro": {
       "years": "36",
-      "yearsText": "Anos de experiência profissional",
+      "yearsText": "Anos de experiência trabalhando",
       "slogan": "Unindo código e liderança para impulsionar o crescimento.",
       "myStory": "Sou um entusiasta da tecnologia e blogueiro, compartilhando minha jornada pelo lado humano da tecnologia. Junte-se a mim enquanto exploro a interseção da tecnologia e da humanidade."
     },
@@ -133,7 +133,7 @@
       "greeting": "Olá, meu nome é",
       "nameHighlight": "Berto",
       "description": {
-        "1": "Gerente de Projetos com formação em desenvolvimento web. Apaixonado por construir soluções inteligentes, ",
+        "1": "Futuro Gerente de Projetos com mentalidade de desenvolvedor. Apaixonado por construir soluções inteligentes, ",
         "highlight": "liderar equipes,",
         "2": " e transformar ideias em produtos reais. Sempre aprendendo, sempre criando."
       },
@@ -145,6 +145,30 @@
         "socialMedia": "Mídias Sociais"
       },
       "viewProjects": "VER MAIS PROJETOS"
+    },
+    "experience": {
+      "titleBase": "Minha",
+      "titleHighlight": "Experiência",
+      "1": {
+        "title": "Consultor de Gestão",
+        "date": "1989–2019",
+        "description": "Desenvolvi e executei estratégias comerciais, resultando em um crescimento de 32% na receita e novas parcerias."
+      },
+      "2": {
+        "title": "Otimizador de Operações e Processos",
+        "date": "2012–2014",
+        "description": "Analisei rotas de transporte usando Google Maps e GPS internos, reduzindo atrasos nas entregas em 20%."
+      },
+      "3": {
+        "title": "Desenvolvedor Web Full Stack",
+        "date": "2023–2024",
+        "description": "Desenvolvedor Web Full Stack: Construção de aplicações web completas. Experiência em Front-end e estilo."
+      },
+      "4": {
+        "title": "Certificação em Gestão Ágil de Projetos",
+        "date": "2024–2025",
+        "description": "Certificação em Gestão Ágil de Projetos: Dominio Scrum, Kanban e muito mais. Impulsionar projetos para o sucesso!"
+      }
     }
   }
 }

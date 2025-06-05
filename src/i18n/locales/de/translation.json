@@ -133,7 +133,7 @@
       "greeting": "Hallo, mein Name ist",
       "nameHighlight": "Berto",
       "description": {
-        "1": "Projektmanager mit Erfahrung in der Webentwicklung. Leidenschaft für die Entwicklung intelligenter Lösungen. ",
+        "1": "Angehender Projektmanager mit Entwickler-Denkweise. Leidenschaftlich beim Aufbau intelligenter Lösungen, ",
         "highlight": "Führen von Teams,",
         "2": " und der Umwandlung von Ideen in echte Produkte. Immer am Lernen, immer am Kreieren."
       },
@@ -145,6 +145,30 @@
         "socialMedia": "Soziale Medien"
       },
       "viewProjects": "MEHR PROJEKTE ANZEIGEN"
+    },
+    "experience": {
+      "titleBase": "Meine",
+      "titleHighlight": "Erfahrung",
+      "1": {
+        "title": "Managementberater",
+        "date": "1989–2019",
+        "description": "Entwicklung und Umsetzung kommerzieller Strategien, was zu einem Umsatzwachstum von 32% und neuen Partnerschaften führte."
+      },
+      "2": {
+        "title": "Operations- und Prozessoptimierer",
+        "date": "2012–2014",
+        "description": "Analyse von Transportrouten mithilfe von Google Maps und internen GPS-Geräten, wodurch Lieferverzögerungen um 20% reduziert wurden."
+      },
+      "3": {
+        "title": "Full Stack Webentwickler",
+        "date": "2023–2024",
+        "description": "Full Stack Webentwickler: Erstellen Sie komplette Webanwendungen. Expertise in Frontend und Styling."
+      },
+      "4": {
+        "title": "Zertifizierung für agiles Projektmanagement",
+        "date": "2024–2025",
+        "description": "Zertifizierung für agiles Projektmanagement: Beherrschen Sie Scrum, Kanban und mehr. Bringen Sie Projekte zum Erfolg!"
+      }
     }
   }
 }

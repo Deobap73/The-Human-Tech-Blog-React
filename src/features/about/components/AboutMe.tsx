@@ -1,3 +1,5 @@
+// src\features\about\components\AboutMe.tsx
+
 import '../../about/styles/AboutMe.scss';
 import IdImage from '../../../assets/IdImage.webp';
 import { FaLinkedinIn, FaGithub } from 'react-icons/fa';

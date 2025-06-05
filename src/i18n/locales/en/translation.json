@@ -153,6 +153,30 @@
         "socialMedia": "Social Media"
       },
       "viewProjects": "VIEW MORE PROJECT"
+    },
+    "experience": {
+      "titleBase": "My",
+      "titleHighlight": "Experience",
+      "1": {
+        "title": "Management Advisor",
+        "date": "1989–2019",
+        "description": "Developed and executed commercial strategies, resulting in a 32% growth in revenue and new partnerships."
+      },
+      "2": {
+        "title": "Operations & Process Optimizer",
+        "date": "2012–2014",
+        "description": "Analyzed transport routes using Google maps and internal GPS's, reducing delivery delays by 20%."
+      },
+      "3": {
+        "title": "Full Stack Web Developer",
+        "date": "2023–2024",
+        "description": "Full Stack Web Developer: Build complete web applications. Expertise in Front-end and style."
+      },
+      "4": {
+        "title": "Agile Project Management Certification",
+        "date": "2024–2025",
+        "description": "Agile Project Management Certification: Master Scrum, Kanban, and more. Boost project to success!"
+      }
     }
   }
 }

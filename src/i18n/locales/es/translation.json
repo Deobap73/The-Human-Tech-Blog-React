@@ -122,7 +122,7 @@
   "about": {
     "intro": {
       "years": "36",
-      "yearsText": "Años de experiencia profesional",
+      "yearsText": "Años de experiencia laboral",
       "slogan": "Uniendo código y liderazgo para impulsar el crecimiento.",
       "myStory": "Soy un entusiasta de la tecnología y bloguero que comparte mi viaje por el lado humano de la tecnología. Únase a mí mientras exploro la intersección de la tecnología y la humanidad."
     },
@@ -133,7 +133,7 @@
       "greeting": "Hola, mi nombre es",
       "nameHighlight": "Berto",
       "description": {
-        "1": "Gerente de proyectos con experiencia en desarrollo web. Apasionado por crear soluciones inteligentes. ",
+        "1": "Futuro Gerente de Proyectos con mentalidad de desarrollador. Apasionado por construir soluciones inteligentes, ",
         "highlight": "liderar equipos,",
         "2": " y convertir ideas en productos reales. Siempre aprendiendo, siempre creando."
       },
@@ -145,6 +145,30 @@
         "socialMedia": "Redes Sociales"
       },
       "viewProjects": "VER MÁS PROYECTOS"
+    },
+    "experience": {
+      "titleBase": "Mi",
+      "titleHighlight": "Experiencia",
+      "1": {
+        "title": "Asesor de Gestión",
+        "date": "1989–2019",
+        "description": "Desarrollé y ejecuté estrategias comerciales, lo que resultó en un crecimiento del 32% en los ingresos y nuevas asociaciones."
+      },
+      "2": {
+        "title": "Optimizador de Operaciones y Procesos",
+        "date": "2012–2014",
+        "description": "Analicé rutas de transporte utilizando Google Maps y GPS internos, reduciendo los retrasos en las entregas en un 20%."
+      },
+      "3": {
+        "title": "Desarrollador Web Full Stack",
+        "date": "2023–2024",
+        "description": "Desarrollador Web Full Stack: Construye aplicaciones web completas. Experiencia en Front-end y estilo."
+      },
+      "4": {
+        "title": "Certificación en Gestión de Proyectos Ágil",
+        "date": "2024–2025",
+        "description": "Certificación en Gestión de Proyectos Ágil: ¡Domine Scrum, Kanban y más. Impulse el proyecto al éxito!"
+      }
     }
   }
 }

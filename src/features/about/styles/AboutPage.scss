@@ -6,11 +6,7 @@
   width: 100%;
   min-height: 100vh;
 
-  &__section {
-    margin-bottom: 10%; // espaçamento vertical entre secções
-
-    &:last-child {
-      margin-bottom: 0;
-    }
+  & > *:not(:last-child) {
+    margin-bottom: 10%; // 👈 Espaçamento fixo entre componentes
   }
 }
