@@ -126,7 +126,12 @@
   "route": {
     "loading": "Loading..."
   },
-
+  "recentPosts": {
+    "title": "Human Tech in Focus: The Latest Reflections and Insights!",
+    "desc": "Dive into the intersections between the digital universe and the human experience. Here, you will find the four most recent posts, with insights on project management, frontend, UI/UX, Scrum, and how technology shapes our lives.",
+    "readMore": "Read More",
+    "noTitle": "No title"
+  },
   "about": {
     "intro": {
       "years": "36",

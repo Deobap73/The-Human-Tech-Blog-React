@@ -1,16 +1,20 @@
-// The-Human-Tech-Blog-React/src/features/post/components/RecentPosts.tsx
+// /src/features/post/components/RecentPosts.tsx
 
 import '../styles/RecentPosts.scss';
 import { Post } from '../../../shared/types/Post';
 import { Category } from '../../../shared/types/Category';
 import { isValidPost } from '../../../shared/utils/validation';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface RecentPostsProps {
   posts: Post[];
   lang: string;
 }
 
+/**
+ * Returns the logo URL of a category object or a default logo.
+ */
 function getCategoryLogo(category: string | Category | undefined): string {
   if (
     typeof category === 'object' &&
@@ -24,6 +28,9 @@ function getCategoryLogo(category: string | Category | undefined): string {
   return '/default-logo.png';
 }
 
+/**
+ * Returns the translated name of a category, falling back to English if needed.
+ */
 function getCategoryName(category: string | Category | undefined, lang: string): string {
   if (
     typeof category === 'object' &&
@@ -42,6 +49,7 @@ function getCategoryName(category: string | Category | undefined, lang: string):
 }
 
 export const RecentPosts = ({ posts, lang }: RecentPostsProps) => {
+  const { t } = useTranslation();
   const validPosts = posts.filter((post) => isValidPost(post, lang)).slice(0, 4);
   if (validPosts.length === 0) return null;
 
@@ -49,14 +57,8 @@ export const RecentPosts = ({ posts, lang }: RecentPostsProps) => {
     <section className='recent-posts'>
       <div className='recent-posts__container'>
         <div className='recent-posts__intro recent-posts__intro--area'>
-          <h2 className='recent-posts__title'>
-            Human Tech em Foco: As Últimas Reflexões e Insights!
-          </h2>
-          <p className='recent-posts__desc'>
-            Mergulhe nas intersecções entre o universo digital e a experiência humana. Aqui, você
-            encontra os quatro posts mais recentes, com insights sobre gestão de projetos, frontend,
-            UI/UX, Scrum, e como a tecnologia molda a nossa vida.
-          </p>
+          <h2 className='recent-posts__title'>{t('recentPosts.title')}</h2>
+          <p className='recent-posts__desc'>{t('recentPosts.desc')}</p>
         </div>
         <div className='recent-posts__posts recent-posts__posts--area'>
           {validPosts.map((post, idx) => {
@@ -64,11 +66,11 @@ export const RecentPosts = ({ posts, lang }: RecentPostsProps) => {
             const logoSrc = getCategoryLogo(cat);
             const categoryName = getCategoryName(cat, lang);
             const translation = post.translations[lang] || post.translations.en || {};
-            const title = translation.title || 'No title';
+            const title = translation.title || t('recentPosts.noTitle');
             const desc = translation.description || '';
             const displayDesc = desc.length > 120 ? desc.slice(0, 120) + '...' : desc;
 
-            // Grid area para cada card
+            // Assign a specific grid area for each card, for custom layouts
             const gridAreaClass = `recent-posts__card recent-posts__card--area${idx + 1}`;
 
             return (
@@ -92,8 +94,8 @@ export const RecentPosts = ({ posts, lang }: RecentPostsProps) => {
                   <Link
                     to={`/${lang}/posts/${post.slug}`}
                     className='recent-posts__card-link'
-                    aria-label={`Read more: ${title}`}>
-                    Read More
+                    aria-label={`${t('recentPosts.readMore')}: ${title}`}>
+                    {t('recentPosts.readMore')}
                   </Link>
                 </div>
               </div>
@@ -104,3 +106,5 @@ export const RecentPosts = ({ posts, lang }: RecentPostsProps) => {
     </section>
   );
 };
+
+export default RecentPosts;

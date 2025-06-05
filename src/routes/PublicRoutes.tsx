@@ -14,6 +14,7 @@ import CategoryPage from '../features/post/pages/CategoryPage';
 import SearchResultsPage from '../features/search/pages/SearchResultsPage';
 import { NavigateToDefaultLang, RedirectToBrowserLang } from './Redirects';
 import LoginPage from '../features/auth/pages/LoginPage';
+import ContactPage from '../features/contact/pages/ContactPage';
 
 const PublicRoutes = () => {
   return (
@@ -21,6 +22,7 @@ const PublicRoutes = () => {
       <Route path='/:lang' element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path='about' element={<AboutPage />} />
+        <Route path='contact' element={<ContactPage />} />
         <Route path='posts/:slug' element={<SinglePostPage />} />
         <Route path='write' element={<WritePage />} />
         <Route path='user' element={<UserPage />} />

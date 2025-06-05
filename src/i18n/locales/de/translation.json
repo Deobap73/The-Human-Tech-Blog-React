@@ -119,6 +119,13 @@
   "route": {
     "loading": "Lädt..."
   },
+
+  "recentPosts": {
+    "title": "Menschliche Technologie im Fokus: Die neuesten Reflexionen und Einblicke!",
+    "desc": "Tauchen Sie ein in die Schnittstellen zwischen dem digitalen Universum und der menschlichen Erfahrung. Hier finden Sie die vier neuesten Beiträge mit Einblicken in Projektmanagement, Frontend, UI/UX, Scrum und wie Technologie unser Leben prägt.",
+    "readMore": "Mehr lesen",
+    "noTitle": "Kein Titel"
+  },
   "about": {
     "intro": {
       "years": "36",

@@ -119,6 +119,12 @@
   "route": {
     "loading": "Cargando..."
   },
+  "recentPosts": {
+    "title": "Tecnología Humana en Foco: ¡Las Últimas Reflexiones y Perspectivas!",
+    "desc": "Sumérjase en las intersecciones entre el universo digital y la experiencia humana. Aquí encontrará las cuatro publicaciones más recientes, con ideas sobre gestión de proyectos, frontend, UI/UX, Scrum y cómo la tecnología moldea nuestras vidas.",
+    "readMore": "Leer Más",
+    "noTitle": "Sin título"
+  },
   "about": {
     "intro": {
       "years": "36",
