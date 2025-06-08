@@ -1,15 +1,16 @@
 /* The-Human-Tech-Blog-React/src/components/admin/Sidebar.scss */
 .admin-sidebar {
-  width: 500px;
+  max-width: 43.75rem;
   background: var(--bg);
   padding: var(--padding-base);
-  border-right: 1px solid #eee;
+  margin-bottom: var(--margin-lg);
 
   &-Navbar {
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-    gap: var(--gap-small);
+    gap: var(--gap-base);
 
     &-link {
       color: var(--textColor);

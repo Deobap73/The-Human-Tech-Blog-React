@@ -112,8 +112,8 @@
   }
 
   &__title {
-    color: #22223b;
-    margin-bottom: 1.5rem;
+    color: var(--text-color);
+    margin: var(--margin-md) 0;
     font-size: 1.8rem;
   }
 }

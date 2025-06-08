@@ -32,7 +32,13 @@ const Navbar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const activeLang = lang || i18n.language.split('-')[0] || 'en';
+
+  // Set compact mode for admin/user pages (height 80px)
   const config = getNavbarConfig(location.pathname);
+  const isCompact = !config.background && !config.showTile; // <-- melhor lógica
+  const navbarClasses = `navbar ${theme === 'dark' ? 'navbar--dark' : 'navbar--light'}${
+    isCompact ? ' navbar--compact' : ''
+  }`;
 
   const handleLogout = async () => {
     await logout();
@@ -48,11 +54,10 @@ const Navbar = () => {
   // Close sidebar on navigation
   const handleNavClick = () => setSidebarOpen(false);
 
-  const navbarClasses = `navbar ${theme === 'dark' ? 'navbar--dark' : 'navbar--light'}`;
-
   return (
     <header className={navbarClasses}>
-      {config.background && (
+      {/* Only render background image if available and not in compact mode */}
+      {config.background && !isCompact && (
         <img
           src={config.background}
           alt='Navbar background'
@@ -179,7 +184,8 @@ const Navbar = () => {
           </div>
         </nav>
       </div>
-      {config.showTile && (
+      {/* Only render tile if present and not in compact mode */}
+      {config.showTile && !isCompact && (
         <div className='navbar__tile'>
           <h1 className='navbar__tile-title'>{config.tileTitle ? config.tileTitle(t) : ''}</h1>
           <p className='navbar__tile-description'>

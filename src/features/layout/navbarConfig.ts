@@ -35,6 +35,9 @@ export const navbarConfigs: Record<string, NavbarConfig> = {
   '/admin': {
     showTile: false,
   },
+  '/write': {
+    showTile: false,
+  },
   '/user': {
     showTile: false,
   },

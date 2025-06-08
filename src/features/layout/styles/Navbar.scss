@@ -1,5 +1,25 @@
 /* The-Human-Tech-Blog-React/src/features/layout/styles/Navbar.scss */
 
+/* --------- COMPACT MODE --------- */
+.navbar--compact {
+  height: 80px !important;
+  min-height: 80px !important;
+  max-height: 80px !important;
+  overflow: hidden !important;
+  align-items: stretch !important;
+
+  .navbar__background,
+  .navbar__tile {
+    display: none !important;
+  }
+  .navbar__row {
+    height: 100% !important;
+    align-items: center !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
+
 .navbar {
   position: relative;
   display: flex;
@@ -17,6 +37,25 @@
   @media (max-width: 768px) {
     height: 35vh;
     min-height: 120px;
+  }
+
+  .navbar--compact {
+    height: 80px !important;
+    min-height: 80px !important;
+    max-height: 80px !important;
+    overflow: hidden !important;
+    align-items: stretch !important;
+
+    .navbar__background,
+    .navbar__tile {
+      display: none !important;
+    }
+    .navbar__row {
+      height: 100% !important;
+      align-items: center !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
   }
 
   &__background {
