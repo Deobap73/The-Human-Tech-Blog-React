@@ -229,15 +229,18 @@
       "createAccount": "Create one"
     },
     "register": {
-      "title": "Welcome to the blog",
-      "sentence": "A place to share ideas",
-      "placeholderName": "Full Name",
+      "title": "Register",
+      "sentence": "Create your free account to join the Human Tech Blog community.",
+      "placeholderName": "Name",
       "placeholderEmail": "Email",
       "placeholderPassword": "Password",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
       "button": "Create Account",
-      "error": "Registration failed",
       "haveAccount": "Already have an account?",
-      "loginHere": "Login here"
+      "loginHere": "Login here",
+      "error": "Registration failed. Please try again.",
+      "unexpectedError": "Unexpected error occurred"
     }
   }
 }

@@ -1,3 +1,5 @@
+// src/components/auth/LoginModal.tsx
+
 import '../styles/LoginModal.scss';
 import { useState } from 'react';
 import { useAuth } from '../../../shared/hooks/useAuth';
@@ -5,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { RegisterModal } from './RegisterModal';
 import logo from '../../../assets/Logo.webp';
 import { IoMdCloseCircle } from 'react-icons/io';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 
 export const LoginModal = ({ onClose }: { onClose: () => void }) => {
@@ -14,6 +17,7 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [showRegister, setShowRegister] = useState(false);
 
@@ -61,18 +65,35 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <input
-              className='modal__input'
-              type='password'
-              placeholder={t('auth.login.placeholderPassword')}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            {error && <span className='modal__error'>{error}</span>}
+            <div className='modal__password-wrapper'>
+              <input
+                className='modal__input modal__input--password'
+                type={showPassword ? 'text' : 'password'}
+                placeholder={t('auth.login.placeholderPassword')}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                autoComplete='current-password'
+              />
+              <button
+                type='button'
+                className='modal__password-toggle'
+                aria-label={
+                  showPassword ? t('auth.login.hidePassword') : t('auth.login.showPassword')
+                }
+                onClick={() => setShowPassword((v) => !v)}
+                tabIndex={0}>
+                {showPassword ? <FiEyeOff /> : <FiEye />}
+              </button>
+            </div>
             <button className='modal__submit' type='submit'>
               {t('auth.login.button')}
             </button>
+            {error && (
+              <span className='modal__error' role='alert' aria-live='assertive'>
+                {error}
+              </span>
+            )}
           </form>
 
           <div className='modal__oauth'>

@@ -224,14 +224,17 @@
     },
     "register": {
       "title": "Willkommen im Blog",
-      "sentence": "Ein Ort zum Ideenaustausch",
-      "placeholderName": "Vollständiger Name",
+      "sentence": "Erstellen Sie Ihr kostenloses Konto, um der Human Tech Blog Community beizutreten.",
+      "placeholderName": "Name",
       "placeholderEmail": "E-Mail",
       "placeholderPassword": "Passwort",
+      "showPassword": "Passwort anzeigen",
+      "hidePassword": "Passwort ausblenden",
       "button": "Konto erstellen",
-      "error": "Registrierung fehlgeschlagen",
-      "haveAccount": "Sie haben bereits ein Konto?",
-      "loginHere": "Hier anmelden"
+      "haveAccount": "Haben Sie bereits ein Konto?",
+      "loginHere": "Hier anmelden",
+      "error": "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+      "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten"
     }
   }
 }

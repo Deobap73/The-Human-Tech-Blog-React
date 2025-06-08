@@ -223,15 +223,18 @@
       "createAccount": "Crie uma"
     },
     "register": {
-      "title": "Bem-vindo(a) ao blog",
-      "sentence": "Um local de partilha de ideias",
-      "placeholderName": "Nome Completo",
+      "title": "Bem-vindo ao blog",
+      "sentence": "Crie a sua conta gratuita para se juntar à comunidade Human Tech Blog.",
+      "placeholderName": "Nome",
       "placeholderEmail": "E-mail",
       "placeholderPassword": "Senha",
+      "showPassword": "Mostrar senha",
+      "hidePassword": "Ocultar senha",
       "button": "Criar Conta",
-      "error": "Falha no registro",
       "haveAccount": "Já tem uma conta?",
-      "loginHere": "Entre aqui"
+      "loginHere": "Faça login aqui",
+      "error": "Falha no registro. Por favor, tente novamente.",
+      "unexpectedError": "Ocorreu um erro inesperado"
     }
   }
 }
