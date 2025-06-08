@@ -195,12 +195,16 @@
     },
     "form": {
       "title": "Tem uma Pergunta?",
-      "desc": "Vamos conversar, compartilhar as suas ideias ou me encontrar.",
+      "desc": "Vamos conversar, compartilhar ideias ou me encontrar.",
       "placeholderName": "Seu Nome",
       "placeholderEmail": "Seu E-mail",
       "placeholderSubject": "Seu Assunto",
-      "placeholderMessage": "Suas Mensagens",
-      "button": "ENVIAR MENSAGEM"
+      "placeholderMessage": "Sua Mensagem",
+      "button": "ENVIAR MENSAGEM",
+      "sending": "Enviando...",
+      "required": "Nome, e-mail e mensagem são obrigatórios.",
+      "success": "Mensagem enviada com sucesso! Entrarei em contato em breve.",
+      "error": "Falha ao enviar sua mensagem. Por favor, tente novamente mais tarde."
     }
   }
 }

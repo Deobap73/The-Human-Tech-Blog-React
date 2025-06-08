@@ -198,8 +198,12 @@
       "placeholderName": "Su Nombre",
       "placeholderEmail": "Su Correo Electrónico",
       "placeholderSubject": "Su Asunto",
-      "placeholderMessage": "Sus Mensajes",
-      "button": "ENVIAR MENSAJE"
+      "placeholderMessage": "Su Mensaje",
+      "button": "ENVIAR MENSAJE",
+      "sending": "Enviando...",
+      "required": "Nombre, correo electrónico y mensaje son obligatorios.",
+      "success": "¡Mensaje enviado con éxito! Me pondré en contacto con usted pronto.",
+      "error": "No se pudo enviar su mensaje. Por favor, inténtelo de nuevo más tarde."
     }
   }
 }

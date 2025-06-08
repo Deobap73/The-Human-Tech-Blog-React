@@ -199,8 +199,12 @@
       "placeholderName": "Ihr Name",
       "placeholderEmail": "Ihre E-Mail",
       "placeholderSubject": "Ihr Betreff",
-      "placeholderMessage": "Ihre Nachrichten",
-      "button": "NACHRICHT SENDEN"
+      "placeholderMessage": "Ihre Nachricht",
+      "button": "NACHRICHT SENDEN",
+      "sending": "Senden...",
+      "required": "Name, E-Mail und Nachricht sind erforderlich.",
+      "success": "Nachricht erfolgreich gesendet! Ich werde mich bald bei Ihnen melden.",
+      "error": "Fehler beim Senden Ihrer Nachricht. Bitte versuchen Sie es später erneut."
     }
   }
 }

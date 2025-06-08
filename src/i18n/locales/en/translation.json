@@ -201,12 +201,16 @@
     },
     "form": {
       "title": "You Have Question?",
-      "desc": "Let's talk, share your ideas or meet me.",
+      "desc": "Let’s talk, share your ideas or meet me.",
       "placeholderName": "Your Name",
       "placeholderEmail": "Your Email",
       "placeholderSubject": "Your Subject",
-      "placeholderMessage": "Your Messages",
-      "button": "SEND MESSAGE"
+      "placeholderMessage": "Your Message",
+      "button": "SEND MESSAGE",
+      "sending": "Sending...",
+      "required": "Name, email and message are required.",
+      "success": "Message sent successfully! I will get back to you soon.",
+      "error": "Failed to send your message. Please try again later."
     }
   }
 }
