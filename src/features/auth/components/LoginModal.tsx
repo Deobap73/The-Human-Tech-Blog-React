@@ -1,12 +1,14 @@
-// The-Human-Tech-Blog-React/src/components/auth/LoginModal.tsx
-
 import '../styles/LoginModal.scss';
 import { useState } from 'react';
 import { useAuth } from '../../../shared/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { RegisterModal } from './RegisterModal';
+import logo from '../../../assets/Logo.webp';
+import { IoMdCloseCircle } from 'react-icons/io';
+import { useTranslation } from 'react-i18next';
 
 export const LoginModal = ({ onClose }: { onClose: () => void }) => {
+  const { t } = useTranslation();
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -22,7 +24,7 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
       navigate('/');
       onClose();
     } catch {
-      setError('Invalid credentials');
+      setError(t('auth.login.error'));
     }
   };
 
@@ -36,17 +38,25 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
 
   return (
     <>
-      <div className='modal-overlay'>
+      <div className='login-overlay'>
         <div className='modal'>
-          <button className='modal__close' onClick={onClose}>
-            ×
-          </button>
-          <h2 className='modal__title'>Login</h2>
+          <div className='modal__onOff'>
+            <IoMdCloseCircle className='modal__close' onClick={onClose} />
+          </div>
+          <div className='modal__logo'>
+            <img
+              src={logo}
+              alt={t('auth.logoAlt')}
+              className='modal__logo-image'
+              draggable={false}
+            />
+          </div>
+          <h2 className='modal__title'>{t('auth.login.title')}</h2>
           <form className='modal__form' onSubmit={handleSubmit}>
             <input
               className='modal__input'
               type='email'
-              placeholder='Email'
+              placeholder={t('auth.login.placeholderEmail')}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -54,37 +64,37 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
             <input
               className='modal__input'
               type='password'
-              placeholder='Password'
+              placeholder={t('auth.login.placeholderPassword')}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
             {error && <span className='modal__error'>{error}</span>}
             <button className='modal__submit' type='submit'>
-              Login
+              {t('auth.login.button')}
             </button>
           </form>
 
           <div className='modal__oauth'>
-            <p className='modal__oauth-label'>Or login with</p>
+            <p className='modal__oauth-label'>{t('auth.login.orWith')}</p>
             <div className='modal__oauth-buttons'>
               <button
                 className='modal__oauth-btn modal__oauth-btn--google'
                 onClick={() => handleOAuthLogin('google')}>
-                Google
+                {t('auth.login.google')}
               </button>
               <button
                 className='modal__oauth-btn modal__oauth-btn--github'
                 onClick={() => handleOAuthLogin('github')}>
-                GitHub
+                {t('auth.login.github')}
               </button>
             </div>
           </div>
 
           <div className='modal__register-link'>
             <p>
-              Don't have an account?{' '}
-              <button onClick={() => setShowRegister(true)}>Create one</button>
+              {t('auth.login.noAccount')}{' '}
+              <button onClick={() => setShowRegister(true)}>{t('auth.login.createAccount')}</button>
             </p>
           </div>
         </div>

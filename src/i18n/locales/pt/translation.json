@@ -206,5 +206,32 @@
       "success": "Mensagem enviada com sucesso! Entrarei em contato em breve.",
       "error": "Falha ao enviar sua mensagem. Por favor, tente novamente mais tarde."
     }
+  },
+
+  "auth": {
+    "logoAlt": "Logotipo The Human Tech Blog",
+    "login": {
+      "title": "Bem-vindo(a) de volta",
+      "placeholderEmail": "E-mail",
+      "placeholderPassword": "Senha",
+      "button": "Entrar",
+      "error": "Credenciais inválidas",
+      "orWith": "Ou entre com",
+      "google": "Google",
+      "github": "GitHub",
+      "noAccount": "Não tem uma conta?",
+      "createAccount": "Crie uma"
+    },
+    "register": {
+      "title": "Bem-vindo(a) ao blog",
+      "sentence": "Um local de partilha de ideias",
+      "placeholderName": "Nome Completo",
+      "placeholderEmail": "E-mail",
+      "placeholderPassword": "Senha",
+      "button": "Criar Conta",
+      "error": "Falha no registro",
+      "haveAccount": "Já tem uma conta?",
+      "loginHere": "Entre aqui"
+    }
   }
 }

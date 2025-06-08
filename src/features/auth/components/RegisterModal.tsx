@@ -1,12 +1,14 @@
-// The-Human-Tech-Blog-React/src/components/auth/RegisterModal.tsx
-
 import '../styles/RegisterModal.scss';
 import { useState } from 'react';
 import { useAuth } from '../../../shared/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { LoginModal } from './LoginModal';
+import logo from '../../../assets/Logo.webp';
+import { IoMdCloseCircle } from 'react-icons/io';
+import { useTranslation } from 'react-i18next';
 
 export const RegisterModal = ({ onClose }: { onClose: () => void }) => {
+  const { t } = useTranslation();
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -32,7 +34,7 @@ export const RegisterModal = ({ onClose }: { onClose: () => void }) => {
       navigate('/');
       onClose();
     } catch {
-      setError('Registration failed');
+      setError(t('auth.register.error'));
     }
   };
 
@@ -41,51 +43,55 @@ export const RegisterModal = ({ onClose }: { onClose: () => void }) => {
   }
 
   return (
-    <div className='modal-overlay'>
-      <div className='modal'>
-        <button className='modal__close' onClick={onClose}>
-          ×
-        </button>
-        <h2 className='modal__title'>Register</h2>
-        <form className='modal__form' onSubmit={handleSubmit}>
+    <div className='register-overlay'>
+      <div className='register'>
+        <div className='register__onOff'>
+          <IoMdCloseCircle className='register__close' onClick={onClose} />
+        </div>
+        <div className='register__logo'>
+          <img
+            src={logo}
+            alt={t('auth.logoAlt')}
+            className='register__logo-image'
+            draggable={false}
+          />
+        </div>
+        <h2 className='register__title'>{t('auth.register.title')}</h2>
+        <p className='register__sentence'>{t('auth.register.sentence')}</p>
+        <form className='register__form' onSubmit={handleSubmit}>
           <input
-            className='modal__input'
+            className='register__input'
             type='text'
-            placeholder='Full Name'
+            placeholder={t('auth.register.placeholderName')}
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
           />
           <input
-            className='modal__input'
+            className='register__input'
             type='email'
-            placeholder='Email'
+            placeholder={t('auth.register.placeholderEmail')}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
           <input
-            className='modal__input'
+            className='register__input'
             type='password'
-            placeholder='Password'
+            placeholder={t('auth.register.placeholderPassword')}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          {error && <span className='modal__error'>{error}</span>}
-          <button className='modal__submit' type='submit'>
-            Create Account
+          {error && <span className='register__error'>{error}</span>}
+          <button className='register__submit' type='submit'>
+            {t('auth.register.button')}
           </button>
         </form>
-        <p className='modal__footer'>
-          Already have an account?{' '}
-          <button
-            type='button'
-            onClick={() => {
-              setShowLogin(true);
-            }}
-            className='modal__link'>
-            Login here
+        <p className='register__footer'>
+          {t('auth.register.haveAccount')}{' '}
+          <button type='button' onClick={() => setShowLogin(true)} className='register__link'>
+            {t('auth.register.loginHere')}
           </button>
         </p>
       </div>

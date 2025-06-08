@@ -212,5 +212,32 @@
       "success": "Message sent successfully! I will get back to you soon.",
       "error": "Failed to send your message. Please try again later."
     }
+  },
+
+  "auth": {
+    "logoAlt": "The Human Tech Blog logo",
+    "login": {
+      "title": "Welcome back",
+      "placeholderEmail": "Email",
+      "placeholderPassword": "Password",
+      "button": "Login",
+      "error": "Invalid credentials",
+      "orWith": "Or login with",
+      "google": "Google",
+      "github": "GitHub",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create one"
+    },
+    "register": {
+      "title": "Welcome to the blog",
+      "sentence": "A place to share ideas",
+      "placeholderName": "Full Name",
+      "placeholderEmail": "Email",
+      "placeholderPassword": "Password",
+      "button": "Create Account",
+      "error": "Registration failed",
+      "haveAccount": "Already have an account?",
+      "loginHere": "Login here"
+    }
   }
 }

@@ -97,7 +97,7 @@
     0 0 35px var(--primary);
 
   /* Shadows */
-  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-card: 0 4px 12px rgb(0, 0, 0);
 
   /* Skeleton Loader */
   --skeleton-bg: #e0e0e0;
@@ -113,7 +113,7 @@
   --background: linear-gradient(149deg, #fbfffd 0%, #edeff3 50%, #4c4d50 100%);
   --background-secondary: #f8fafd;
   --text-color: #23262f;
-  --text-color-secondary: #393c43;
+  --text-color-secondary: #a1a1a3;
   --text-color-tertiary: #003a5f;
   --primary: #1da1f2;
   --primary-hover: #2995e2;
@@ -258,6 +258,11 @@ li {
 
 /* ========== Buttons ========== */
 button {
+  text-decoration: none;
+  background: none;
+}
+
+button:not([class]) {
   display: inline-flex;
   align-items: center;
   gap: 0.5em;
