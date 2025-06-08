@@ -176,5 +176,30 @@
         "description": "Certificación en Gestión de Proyectos Ágil: ¡Domine Scrum, Kanban y más. Impulse el proyecto al éxito!"
       }
     }
+  },
+
+  "contact": {
+    "info": {
+      "subtitle": "Contáctenos",
+      "title": "Póngase en Contacto",
+      "desc": "¿Tiene curiosidad sobre la gestión de proyectos, frontend o UI/UX? <br /> ¿O quizás le gustaría explorar reflexiones sobre la vida a través de la lente de la tecnología? <br /> Sea cual sea el tema, me encantaría conocer su perspectiva. ¡Póngase en contacto!",
+      "phoneLabel": "Número de Teléfono",
+      "phoneValue": "(+49) 176 34644129",
+      "emailLabel": "Dirección de Correo Electrónico",
+      "emailValue": "contact@thehumantechblog.com",
+      "websiteLabel": "Sitios Web",
+      "websiteValue": "www.deolindobaptista.com",
+      "addressLabel": "Dirección",
+      "addressValue": "Passau, Alemania"
+    },
+    "form": {
+      "title": "¿Tiene Preguntas?",
+      "desc": "Hablemos, comparta sus ideas o encuéntreme.",
+      "placeholderName": "Su Nombre",
+      "placeholderEmail": "Su Correo Electrónico",
+      "placeholderSubject": "Su Asunto",
+      "placeholderMessage": "Sus Mensajes",
+      "button": "ENVIAR MENSAJE"
+    }
   }
 }

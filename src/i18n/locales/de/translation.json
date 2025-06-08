@@ -177,5 +177,30 @@
         "description": "Zertifizierung für agiles Projektmanagement: Beherrschen Sie Scrum, Kanban und mehr. Bringen Sie Projekte zum Erfolg!"
       }
     }
+  },
+
+  "contact": {
+    "info": {
+      "subtitle": "Kontaktieren Sie uns",
+      "title": "Nehmen Sie Kontakt auf",
+      "desc": "Neugierig auf Projektmanagement, Frontend oder UI/UX? <br /> Oder möchten Sie vielleicht Reflexionen über das Leben durch die Brille der Technologie erkunden? <br /> Was auch immer das Thema ist, ich würde gerne Ihre Perspektive hören. Nehmen Sie Kontakt auf!",
+      "phoneLabel": "Telefonnummer",
+      "phoneValue": "(+49) 176 34644129",
+      "emailLabel": "E-Mail-Adresse",
+      "emailValue": "contact@thehumantechblog.com",
+      "websiteLabel": "Websites",
+      "websiteValue": "www.deolindobaptista.com",
+      "addressLabel": "Adresse",
+      "addressValue": "Passau, Deutschland"
+    },
+    "form": {
+      "title": "Haben Sie Fragen?",
+      "desc": "Lassen Sie uns reden, teilen Sie Ihre Ideen oder treffen Sie mich.",
+      "placeholderName": "Ihr Name",
+      "placeholderEmail": "Ihre E-Mail",
+      "placeholderSubject": "Ihr Betreff",
+      "placeholderMessage": "Ihre Nachrichten",
+      "button": "NACHRICHT SENDEN"
+    }
   }
 }

@@ -183,5 +183,30 @@
         "description": "Agile Project Management Certification: Master Scrum, Kanban, and more. Boost project to success!"
       }
     }
+  },
+
+  "contact": {
+    "info": {
+      "subtitle": "Contact Us",
+      "title": "Get In Touch",
+      "desc": "Curious about project management, frontend, or UI/UX? <br /> Or perhaps you’d like to explore reflections on life through the lens of technology? <br /> Whatever the topic, I’d love to hear your perspective. Get in touch!",
+      "phoneLabel": "Phone Number",
+      "phoneValue": "(+49) 176 34644129",
+      "emailLabel": "Email Address",
+      "emailValue": "contact@thehumantechblog.com",
+      "websiteLabel": "Websites",
+      "websiteValue": "www.deolindobaptista.com",
+      "addressLabel": "Address",
+      "addressValue": "Passau, Germany"
+    },
+    "form": {
+      "title": "You Have Question?",
+      "desc": "Let's talk, share your ideas or meet me.",
+      "placeholderName": "Your Name",
+      "placeholderEmail": "Your Email",
+      "placeholderSubject": "Your Subject",
+      "placeholderMessage": "Your Messages",
+      "button": "SEND MESSAGE"
+    }
   }
 }
