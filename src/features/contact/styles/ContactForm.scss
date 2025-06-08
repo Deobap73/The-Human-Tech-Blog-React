@@ -1,0 +1,76 @@
+/* /src/features/contact/styles/ContactForm.scss */
+
+.contact-form {
+  background: #0b1922;
+  border-radius: 20px;
+  box-shadow: 0 0 0 2px var(--primary), 0 6px 36px rgba(29, 161, 242, 0.06);
+  padding: var(--padding-xl) var(--padding-xl);
+  width: 500px;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-base);
+
+  &__title {
+    color: var(--primary);
+    font-size: var(--heading-h3);
+    font-weight: 700;
+    margin-bottom: var(--margin-xs);
+    letter-spacing: 0.7px;
+  }
+
+  &__desc {
+    color: var(--text-color-secondary);
+    font-size: var(--font-size-base);
+    margin-bottom: var(--margin-base);
+  }
+
+  &__input {
+    border: 1px solid #26313d;
+    border-radius: 7px;
+    padding: var(--padding-base);
+    background: transparent;
+    color: var(--text-color);
+    margin-bottom: var(--margin-sm);
+    font-size: var(--font-size-base);
+    outline: none;
+    width: 100%;
+    transition: border 0.2s;
+
+    &:focus {
+      border: 1.5px solid var(--primary);
+      box-shadow: 0 0 0 2px var(--primary-hover);
+      background: #121c25;
+    }
+  }
+
+  &__textarea {
+    min-height: 92px;
+    resize: vertical;
+  }
+
+  &__button {
+    justify-content: center;
+    width: 20rem;
+    min-width: 48px;
+    min-height: 48px;
+    padding: 0 1.5rem;
+    font-size: 1.15rem;
+    background: none;
+    border: 2px solid #2995e2;
+    border-left: none;
+    border-right: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
+    backdrop-filter: blur(2.5px);
+    transition: border 0.2s, box-shadow 0.2s, background 0.25s;
+    &:hover {
+      border-left: none;
+      border-right: none;
+      background: rgba(0, 48, 104, 0.388);
+    }
+    &:active {
+      background: none !important;
+    }
+  }
+}
