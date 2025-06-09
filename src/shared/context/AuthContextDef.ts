@@ -1,4 +1,4 @@
-// ✅ The-Human-Tech-Blog-React/src/context/AuthContextDef.ts
+//  The-Human-Tech-Blog-React/src/context/AuthContextDef.ts
 
 export interface User {
   _id: string;

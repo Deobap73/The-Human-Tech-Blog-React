@@ -1,4 +1,4 @@
-// src/shared/context/AuthProvider.tsx
+// The-Human-Tech-Blog-React\src\shared\context\AuthProvider.tsx
 
 import { useState, useEffect, useRef } from 'react';
 import { AuthContext } from './AuthContext';

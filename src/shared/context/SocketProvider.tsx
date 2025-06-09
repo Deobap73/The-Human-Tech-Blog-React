@@ -26,6 +26,10 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
   // Socket connection
   useEffect(() => {
     const token = getAccessToken();
+    if (!token) {
+      setSocket(null);
+      return; // Só conecta se houver token válido
+    }
     const newSocket = io(import.meta.env.VITE_API_URL || 'http://localhost:5000', {
       auth: { token },
     });

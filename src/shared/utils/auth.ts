@@ -1,4 +1,4 @@
-// src/shared/utils/auth.ts
+// The-Human-Tech-Blog-React\src\shared\utils\auth.ts
 
 export const getAccessToken = (): string | null => {
   return localStorage.getItem('accessToken');
