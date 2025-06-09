@@ -233,12 +233,14 @@ const WritePage = () => {
             <EditorContent editor={editors[activeLang]!} />
           </>
         )}
-        <label className='write-page__label' style={{ marginTop: 16 }}>
-          Cover Image:
+        <label htmlFor='cover-upload' className='write-page__upload-btn'>
+          Upload cover
         </label>
         <input
+          id='cover-upload'
           type='file'
           accept='image/*'
+          style={{ display: 'none' }}
           onChange={async (e) => {
             const file = e.target.files?.[0];
             if (file) {
