@@ -23,8 +23,9 @@ const PublicRoutes = () => {
         <Route index element={<HomePage />} />
         <Route path='about' element={<AboutPage />} />
         <Route path='contact' element={<ContactPage />} />
-        <Route path='posts/:slug' element={<SinglePostPage />} />
         <Route path='write' element={<WritePage />} />
+        <Route path='posts/create' element={<WritePage />} />
+        <Route path='posts/:slug' element={<SinglePostPage />} />
         <Route path='user' element={<UserPage />} />
         <Route path='admin/*' element={<AdminRoutes />} />
         <Route path='tags/:slug' element={<TagPage />} />

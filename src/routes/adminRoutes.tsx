@@ -22,9 +22,11 @@ const AdminRoutes = () => (
         </AdminRoute>
       }>
       <Route index element={<DashboardHome />} />
+      {/* Ordem importante! */}
       <Route path='posts' element={<PostsList />} />
       <Route path='posts/create' element={<WritePage />} />
       <Route path='posts/edit/:id' element={<WritePage />} />
+      {/* Não incluir posts/:slug aqui! */}
       <Route
         path='messages'
         element={
