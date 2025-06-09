@@ -1,4 +1,4 @@
-// /src/features/admin/pages/AdminTagsPage.tsx
+// The-Human-Tech-Blog-React\src\features\admin\pages\AdminTagsPage.tsx
 
 import { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';

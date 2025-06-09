@@ -1,4 +1,4 @@
-// /src/features/admin/components/Sidebar.tsx
+// src/features/admin/components/Sidebar.tsx
 
 import { useEffect, useState } from 'react';
 import { NavLink, useParams } from 'react-router-dom';
@@ -7,11 +7,7 @@ import { useAuth } from '../../../shared/hooks/useAuth';
 import api from '../../../shared/utils/axios';
 import { useTranslation } from 'react-i18next';
 
-/**
- * Helper to build multilanguage-aware URLs for admin sidebar.
- */
 const buildAdminUrl = (path: string, lang: string) => {
-  // Remove any leading slash from path
   const normalized = path.startsWith('/') ? path.slice(1) : path;
   return `/${lang}/admin${normalized ? '/' + normalized : ''}`;
 };
@@ -21,12 +17,9 @@ const Sidebar = () => {
   const [pendingCount, setPendingCount] = useState<number>(0);
   const { t, i18n } = useTranslation();
   const { lang } = useParams<{ lang: string }>();
-
-  // Fallback to i18n language if lang param not present
   const activeLang = lang || i18n.language.split('-')[0] || 'en';
 
   useEffect(() => {
-    // Só busca se for admin ou editor
     if (user && (user.role === 'admin' || user.role === 'editor')) {
       api
         .get('/comments/moderation/count')
@@ -43,6 +36,12 @@ const Sidebar = () => {
         </NavLink>
         <NavLink to={buildAdminUrl('posts', activeLang)} className='admin-sidebar-Navbar-link'>
           {t('admin.posts')}
+        </NavLink>
+        <NavLink to={buildAdminUrl('tags', activeLang)} className='admin-sidebar-Navbar-link'>
+          {t('admin.tags', 'Manage Tags')}
+        </NavLink>
+        <NavLink to={buildAdminUrl('categories', activeLang)} className='admin-sidebar-Navbar-link'>
+          {t('admin.categories', 'Manage Categories')}
         </NavLink>
         <NavLink to={buildAdminUrl('messages', activeLang)} className='admin-sidebar-Navbar-link'>
           {t('admin.messages')}

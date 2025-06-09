@@ -7,6 +7,8 @@ import PostsList from '../features/admin/posts/PostsList';
 import AdminRoute from './adminRoute';
 import WritePage from '../features/post/pages/WritePage';
 import ModerationCommentsPage from '../features/admin/pages/ModerationCommentsPage';
+import AdminTagsPage from '../features/admin/pages/AdminTagsPage';
+import AdminCategoriesPage from '../features/admin/pages/AdminCategoriesPage';
 
 // Dynamic imports for better performance
 const AdminChatPage = lazy(() => import('../features/chat/pages/ChatPage'));
@@ -22,11 +24,11 @@ const AdminRoutes = () => (
         </AdminRoute>
       }>
       <Route index element={<DashboardHome />} />
-      {/* Ordem importante! */}
       <Route path='posts' element={<PostsList />} />
       <Route path='posts/create' element={<WritePage />} />
       <Route path='posts/edit/:id' element={<WritePage />} />
-      {/* Não incluir posts/:slug aqui! */}
+      <Route path='tags' element={<AdminTagsPage />} />
+      <Route path='categories' element={<AdminCategoriesPage />} />
       <Route
         path='messages'
         element={

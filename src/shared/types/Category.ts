@@ -13,14 +13,11 @@ export type CategoryTranslations = {
   [key: string]: CategoryTranslation | undefined;
 };
 
+// Modelo tradicional (usado em admin, edit, etc.)
 export interface Category {
   _id: string;
   slug: string;
   logo?: string;
-  translations: CategoryTranslations;
-}
-
-export interface CategoryPayload {
-  translations: CategoryTranslations;
-  logo?: string;
+  translations?: CategoryTranslations; // Pode ou não existir
+  translation?: CategoryTranslation; // Pode ou não existir
 }

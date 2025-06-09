@@ -153,6 +153,7 @@ const PostForm = ({ initialPost, onSubmit }: Props) => {
         Categories:
         <select multiple value={categories} onChange={handleCategoryChange}>
           {availableCategories.map((cat) => {
+            console.log('CAT:', cat);
             const lang = 'en';
             const catTranslation = cat.translations?.[lang] ||
               Object.values(cat.translations || {}).find(Boolean) || {

@@ -273,7 +273,7 @@ const WritePage = () => {
             className='write-page__select'>
             {availableCategories.map((cat) => (
               <option key={cat._id} value={cat._id}>
-                {cat.translations?.en?.name || '[no name]'}
+                {cat.translation?.name || '[no name]'}
               </option>
             ))}
           </select>

@@ -1,6 +1,4 @@
-// /src/features/admin/pages/AdminCategoriesPage.tsx
-
-// src/features/admin/pages/AdminCategoriesPage.tsx
+// The-Human-Tech-Blog-React\src\features\admin\pages\AdminCategoriesPage.tsx
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
