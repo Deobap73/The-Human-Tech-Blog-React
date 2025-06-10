@@ -1,4 +1,4 @@
-// The-Human-Tech-Blog-React/src/features/post/pages/WritePage.tsx
+// src/features/post/pages/WritePage.tsx
 
 import { useEffect, useState } from 'react';
 import { EditorContent, useEditor } from '@tiptap/react';
@@ -33,6 +33,8 @@ const schema = z.object({
   content: z.string().min(10, 'Content too short'),
 });
 
+type PostStatus = 'draft' | 'published' | 'archived';
+
 const WritePage = () => {
   const { user } = useAuth();
   const { id } = useParams(); // Se editar, tem id
@@ -41,7 +43,7 @@ const WritePage = () => {
   // Estado multilíngue
   const [activeLang, setActiveLang] = useState<Language>('en');
   const [translations, setTranslations] = useState({ ...emptyTranslations });
-  const [status, setStatus] = useState<'draft' | 'published'>('draft');
+  const [status, setStatus] = useState<PostStatus>('draft');
   const [tags, setTags] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [availableTags, setAvailableTags] = useState<Tag[]>([]);
@@ -77,7 +79,12 @@ const WritePage = () => {
       .get(`/posts/${id}`)
       .then((res) => {
         const post = res.data;
-        setStatus(post.status || 'draft');
+        // Aceita status vindo do backend, mesmo que seja archived
+        setStatus(
+          ['draft', 'published', 'archived'].includes(post.status)
+            ? (post.status as PostStatus)
+            : 'draft'
+        );
         setTranslations({
           en: post.translations.en || { title: '', description: '', content: '' },
           pt: post.translations.pt || { title: '', description: '', content: '' },
@@ -177,7 +184,7 @@ const WritePage = () => {
       const payload = {
         translations: { ...translations },
         image: coverUrl,
-        status,
+        status: status === 'archived' ? 'draft' : status, // Não permite salvar como archived (a menos que queira permitir, aí retira este fallback)
         tags,
         categories,
       };
@@ -282,10 +289,12 @@ const WritePage = () => {
           Status:
           <select
             value={status}
-            onChange={(e) => setStatus(e.target.value as 'draft' | 'published')}
+            onChange={(e) => setStatus(e.target.value as PostStatus)}
             className='write-page__select'>
             <option value='draft'>Draft</option>
             <option value='published'>Published</option>
+            {/* Se quiser permitir archived no select, descomenta abaixo: */}
+            {/* <option value='archived'>Archived</option> */}
           </select>
         </label>
         <button type='submit' className='write-page__btn' disabled={saving}>

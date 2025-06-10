@@ -1,6 +1,7 @@
 // The-Human-Tech-Blog-React/src/shared/context/AuthProvider.tsx
 
 import { useState, useEffect, useRef } from 'react';
+import * as authService from '../services/authService';
 import { AuthContext } from './AuthContext';
 import api from '../utils/axios';
 import { setAccessToken, getAccessToken } from '../utils/authTokenStorage';
@@ -44,6 +45,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       delete api.defaults.headers.common['Authorization'];
       setUser(null);
     }
+  };
+
+  const register = async (payload: authService.RegisterPayload) => {
+    return await authService.register(payload);
   };
 
   const refreshAccessToken = async (): Promise<void> => {
@@ -146,6 +151,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         loading,
         setUser,
         login,
+        register,
         logout,
         refetchUser,
         getAccessTokenSecurely: refreshAccessToken,

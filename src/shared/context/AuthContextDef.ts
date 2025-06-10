@@ -1,5 +1,7 @@
 //  The-Human-Tech-Blog-React/src/context/AuthContextDef.ts
 
+import { RegisterPayload } from '../services/authService';
+
 export interface User {
   _id: string;
   name: string;
@@ -14,6 +16,7 @@ export interface AuthContextType {
   setUser: (user: User | null) => void;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  register: (payload: RegisterPayload) => Promise<any>;
   refetchUser: () => Promise<void>;
   getAccessTokenSecurely: () => Promise<void>;
 }

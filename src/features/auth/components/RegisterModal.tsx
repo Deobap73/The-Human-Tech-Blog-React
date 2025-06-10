@@ -1,4 +1,4 @@
-// features\auth\components\RegisterModal.tsx
+// src/components/auth/RegisterModal.tsx
 
 import '../styles/RegisterModal.scss';
 import { useState } from 'react';
@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 
 export const RegisterModal = ({ onClose }: { onClose: () => void }) => {
   const { t } = useTranslation();
-  const { login } = useAuth();
+  const { register, login } = useAuth(); // <-- usa o serviço
   const navigate = useNavigate();
 
   const [name, setName] = useState('');
@@ -25,16 +25,8 @@ export const RegisterModal = ({ onClose }: { onClose: () => void }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ name, email, password }),
-      });
-
-      if (!res.ok) throw new Error('Registration failed');
-
-      await login(email, password);
+      await register({ name, email, password }); // <-- usa helper
+      await login(email, password); // auto-login após registo
       navigate('/');
       onClose();
     } catch {

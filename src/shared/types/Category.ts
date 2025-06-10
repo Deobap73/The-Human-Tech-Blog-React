@@ -21,3 +21,13 @@ export interface Category {
   translations?: CategoryTranslations; // Pode ou não existir
   translation?: CategoryTranslation; // Pode ou não existir
 }
+
+/**
+ * Payload for creating or updating a category.
+ * Can be customized to match backend expectations.
+ */
+export interface CategoryPayload {
+  translations: CategoryTranslations;
+  logo?: string;
+  slug?: string;
+}

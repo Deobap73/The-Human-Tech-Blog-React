@@ -1,7 +1,7 @@
-// /src/shared/services/authService.ts
+// src/shared/services/authService.ts
 
 import api from '../utils/axios';
-import { ensureCsrfToken } from '../utils/csrf';
+import { safeApiPost } from '../utils/apiHelpers';
 
 export interface RegisterPayload {
   email: string;
@@ -10,31 +10,8 @@ export interface RegisterPayload {
   [key: string]: any;
 }
 
-/**
- * Calls the logout endpoint.
- */
-export const logout = async (): Promise<void> => {
-  await ensureCsrfToken(); // Always ensure CSRF for mutating requests!
-  await api.post('/auth/logout');
-};
+export const logout = (): Promise<void> => safeApiPost('/auth/logout');
+export const login = (email: string, password: string) =>
+  safeApiPost('/auth/login', { email, password });
 
-/**
- * Calls the login endpoint, ensuring a valid CSRF token is set before the request.
- * @param email - The user's email.
- * @param password - The user's password.
- * @returns API response data with accessToken and message.
- */
-export const login = async (email: string, password: string) => {
-  await ensureCsrfToken(); // Ensure CSRF token is available and valid before login
-  return api.post('/auth/login', { email, password }).then((res) => res.data);
-};
-
-/**
- * Calls the register endpoint, ensuring a valid CSRF token is set before the request.
- * @param payload - Registration data.
- * @returns API response data.
- */
-export const register = async (payload: RegisterPayload) => {
-  await ensureCsrfToken(); // Always ensure CSRF for mutating requests!
-  return api.post('/auth/register', payload).then((res) => res.data);
-};
+export const register = (payload: RegisterPayload) => safeApiPost('/auth/register', payload);
