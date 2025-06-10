@@ -1,4 +1,4 @@
-// The-Human-Tech-Blog-React\src\shared\context\AuthProvider.tsx
+// The-Human-Tech-Blog-React/src/shared/context/AuthProvider.tsx
 
 import { useState, useEffect, useRef } from 'react';
 import { AuthContext } from './AuthContext';
@@ -13,126 +13,131 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Atualiza user
   const refetchUser = async (): Promise<void> => {
-    console.log('[AuthProvider] refetchUser() called');
     try {
       const res = await api.get('/auth/me');
       setUser(res.data.user);
-      console.log('[AuthProvider] refetchUser() success:', res.data.user);
     } catch (err) {
-      setUser(null);
-      console.warn('[AuthProvider] refetchUser() failed:', err);
-    }
-  };
-
-  const getCsrfToken = async (): Promise<string> => {
-    console.log('[AuthProvider] getCsrfToken() called');
-    const { data } = await api.get('/auth/csrf');
-    console.log('[AuthProvider] getCsrfToken() success:', data.csrfToken);
-    return data.csrfToken;
-  };
-
-  const refreshAccessToken = async (): Promise<void> => {
-    console.log('[AuthProvider] refreshAccessToken() called');
-    try {
-      const csrfToken = await getCsrfToken();
-      const res = await api.post('/auth/refresh', {}, { headers: { 'X-CSRF-Token': csrfToken } });
-      const { accessToken } = res.data;
-      setAccessToken(accessToken);
-      api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-      console.log('[AuthProvider] refreshAccessToken() success: accessToken set');
-    } catch (err) {
-      console.warn('[AuthProvider] refreshAccessToken() failed:', err);
+      console.error('[AuthProvider] Error refetching user:', err);
+      setUser(null); // Garante que o usuário é limpo se o token 'me' falhar
+      localStorage.removeItem('access_token'); // Limpa access token inválido
+      // O refresh token é httpOnly e será limpo pelo servidor no 401 da rota /refresh
     }
   };
 
   const login = async (email: string, password: string): Promise<void> => {
-    console.log('[AuthProvider] login() called');
-    const csrfToken = await getCsrfToken();
-    const res = await api.post(
-      '/auth/login',
-      { email, password },
-      { headers: { 'X-CSRF-Token': csrfToken } }
-    );
+    const res = await api.post('/auth/login', { email, password });
     const { accessToken } = res.data;
     setAccessToken(accessToken);
     api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
     await refetchUser();
-    console.log('[AuthProvider] login() finished');
   };
 
   const logout = async (): Promise<void> => {
-    console.log('[AuthProvider] logout() called');
-    const csrfToken = await getCsrfToken();
-    await api.post('/auth/logout', {}, { headers: { 'X-CSRF-Token': csrfToken } });
-    localStorage.removeItem('access_token');
-    delete api.defaults.headers.common['Authorization'];
-    setUser(null);
-    console.log('[AuthProvider] logout() finished');
+    try {
+      await api.post('/auth/logout');
+    } catch (error) {
+      console.error('[AuthProvider] Logout failed:', error);
+      // Mesmo se o logout no servidor falhar (ex: token já inválido),
+      // devemos limpar o estado do cliente.
+    } finally {
+      localStorage.removeItem('access_token');
+      delete api.defaults.headers.common['Authorization'];
+      setUser(null);
+    }
+  };
+
+  const refreshAccessToken = async (): Promise<void> => {
+    try {
+      const res = await api.post('/auth/refresh');
+      const { accessToken } = res.data;
+      setAccessToken(accessToken);
+      api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+      console.log('[AuthProvider] Access token successfully refreshed.');
+    } catch (err) {
+      console.warn(
+        '[AuthProvider] Failed to refresh access token, likely no valid refresh token or session expired.'
+      );
+      // IMPORTANTE: Se o refresh falhar, significa que o usuário não está logado.
+      // Limpe qualquer token de acesso local e defina o usuário como null.
+      localStorage.removeItem('access_token');
+      delete api.defaults.headers.common['Authorization'];
+      setUser(null);
+      // NENHUM throw, pois a falha de refresh inicial é um comportamento esperado para usuários não logados.
+    }
   };
 
   useEffect(() => {
     let cancelled = false;
-    console.log('[AuthProvider] useEffect init called');
 
     const releaseLoading = () => {
-      if (!loadingReleased.current) {
+      if (!loadingReleased.current && !cancelled) {
         setLoading(false);
         loadingReleased.current = true;
-        console.log('[AuthProvider] LOADING RELEASED (via releaseLoading)');
+        console.log('[AuthProvider] Loading state released.');
       }
     };
 
     const init = async () => {
       setLoading(true);
       loadingReleased.current = false;
-      console.log('[AuthProvider] init: loading set to true');
       try {
-        if (getAccessToken()) {
-          console.log('[AuthProvider] init: accessToken found in storage');
+        const currentAccessToken = getAccessToken();
+        if (currentAccessToken) {
+          // Tentar refetch do usuário com o token existente
           await refetchUser();
+          if (user) {
+            // Se refetchUser for bem-sucedido, estamos logados
+            console.log('[AuthProvider] User fetched with existing access token.');
+          } else {
+            // Se o token existente for inválido, tentar refresh
+            console.log('[AuthProvider] Existing access token invalid, attempting to refresh...');
+            await refreshAccessToken();
+            if (getAccessToken()) {
+              // Se o refresh for bem-sucedido, tente refetch user novamente
+              await refetchUser();
+            }
+          }
         } else {
-          console.log('[AuthProvider] init: NO accessToken, trying refresh...');
+          // Não há access token, tentar refresh (para pegar de um refresh token em cookie)
+          console.log('[AuthProvider] No access token found, attempting initial refresh...');
           await refreshAccessToken();
-          await refetchUser();
+          if (getAccessToken()) {
+            // Se o refresh for bem-sucedido, tente refetch user
+            await refetchUser();
+          }
         }
       } catch (err) {
+        console.error('[AuthProvider] Initialization error:', err);
+        // Qualquer erro durante a inicialização deve resultar em usuário não autenticado
         setUser(null);
-        console.warn('[AuthProvider] init: error during auth flow:', err);
+        localStorage.removeItem('access_token');
+        delete api.defaults.headers.common['Authorization'];
       } finally {
-        if (!cancelled) releaseLoading();
-        else console.log('[AuthProvider] Effect cancelled before loading release');
-      }
-      // Fallback absoluto: se loading não for libertado, faz após 2s
-      setTimeout(() => {
-        if (!loadingReleased.current) {
-          console.log('[AuthProvider] setTimeout fallback: LOADING RELEASED after 2s!');
+        if (!cancelled) {
           releaseLoading();
         }
-      }, 2000);
+      }
     };
 
     init();
 
     return () => {
       cancelled = true;
-      console.log('[AuthProvider] useEffect cleanup (cancelled = true)');
     };
-  }, []);
+  }, []); // Dependências vazias para rodar apenas na montagem
 
-  // Fallback global (garantia absoluta em casos extremos)
+  // Fallback para garantir que o loading é liberado
   useEffect(() => {
     if (!loading) return;
     const t = setTimeout(() => {
       if (loading) {
         setLoading(false);
-        console.log('[AuthProvider] GLOBAL FALLBACK: Loading forced to false!');
+        loadingReleased.current = true;
+        console.warn('[AuthProvider] Forced loading state release after timeout.');
       }
-    }, 3000); // Garantia adicional, 3 segundos de timeout global
+    }, 3000); // Libera o loading após 3 segundos no máximo
     return () => clearTimeout(t);
-  }, [loading]);
-
-  // LOG GLOBAL PARA VER ESTADO EM CADA RENDER
-  console.log('[AuthProvider] render:', { loading, user });
+  }, [loading]); // Observa o estado de loading
 
   return (
     <AuthContext.Provider

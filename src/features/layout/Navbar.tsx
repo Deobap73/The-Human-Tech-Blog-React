@@ -42,7 +42,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     await logout();
-    navigate(buildUrl('about', activeLang));
+    navigate(buildUrl('home', activeLang));
     setSidebarOpen(false);
   };
 

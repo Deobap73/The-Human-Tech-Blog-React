@@ -1,20 +1,32 @@
-// The-Human-Tech-Blog-React\src\shared\utils\axios.ts
+// /src/shared/utils/axios.ts
 
 import axios from 'axios';
 import { setAccessToken, getAccessToken } from './authTokenStorage';
 
+/**
+ * Axios instance with CSRF and JWT integration for secure API communication.
+ * Ensures CSRF token is sent in the header for mutating requests (POST, PUT, PATCH, DELETE).
+ */
+
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
   withCredentials: true,
-  xsrfCookieName: 'XSRF-TOKEN',
+  xsrfCookieName: 'XSRF-TOKEN', // For compatibility, not strictly necessary
   xsrfHeaderName: 'X-CSRF-Token',
 });
 
-console.log(`[axios] API Base URL: ${api.defaults.baseURL}`); // Debug: Confirm base URL
+// Utility function to read a cookie by name
+const getCookie = (name: string): string | undefined => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(';').shift();
+  return undefined;
+};
 
 let isRefreshing = false;
 let failedQueue: any[] = [];
 
+// Handles queue of failed requests while refreshing access token
 const processQueue = (error: any, token: string | null = null) => {
   failedQueue.forEach((prom) => {
     if (error) {
@@ -26,106 +38,72 @@ const processQueue = (error: any, token: string | null = null) => {
   failedQueue = [];
 };
 
+// REQUEST INTERCEPTOR
 api.interceptors.request.use(
   (config) => {
+    // Attach JWT token if available
     const token = getAccessToken();
     if (token) {
       config.headers = config.headers || {};
       config.headers['Authorization'] = `Bearer ${token}`;
-      console.log(
-        `[axios] Request Interceptor: Token added to headers for ${config.method?.toUpperCase()} ${
-          config.url
-        }`
-      ); // Debug: Token added
-    } else {
-      console.log(
-        `[axios] Request Interceptor: No token found for ${config.method?.toUpperCase()} ${
-          config.url
-        }`
-      ); // Debug: No token
+    }
+
+    // Inject CSRF token for mutating requests
+    const method = config.method?.toLowerCase();
+    if (['post', 'put', 'patch', 'delete'].includes(method || '')) {
+      const xsrfToken = getCookie('XSRF-TOKEN');
+      if (xsrfToken) {
+        config.headers = config.headers || {};
+        config.headers['x-csrf-token'] = xsrfToken;
+      }
     }
     return config;
   },
   (requestError) => {
-    console.error('[axios] Request Interceptor Error:', requestError); // Debug: Request error
+    console.error('[axios] Request Interceptor Error:', requestError);
     return Promise.reject(requestError);
   }
 );
 
+// RESPONSE INTERCEPTOR
 api.interceptors.response.use(
-  (response) => {
-    console.log(
-      `[axios] Response Interceptor: Successful response from ${response.config.method?.toUpperCase()} ${
-        response.config.url
-      }`
-    ); // Debug: Successful response
-    if (response.data) {
-      console.log('[axios] Response Data Table:');
-      console.table(response.data); // Debug: Table view of response data
-    }
-    return response;
-  },
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    console.warn(
-      `[axios] Response Interceptor: Error received from ${originalRequest.method?.toUpperCase()} ${
-        originalRequest.url
-      } - Status: ${error.response?.status}`
-    ); // Debug: Error received
 
-    // Limit only one retry
+    // Handle expired token flow (401) with refresh logic
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
-      console.log('[axios] 401 Unauthorized, attempting token refresh...'); // Debug: Starting refresh
       if (isRefreshing) {
-        // Queue requests during refresh
-        console.log('[axios] Refresh already in progress, queuing request...'); // Debug: Queuing
         return new Promise(function (resolve, reject) {
           failedQueue.push({ resolve, reject });
         })
           .then((token) => {
-            originalRequest.headers['Authorization'] = 'Bearer ' + token;
-            console.log('[axios] Retrying original request with new token from queue.'); // Debug: Retrying from queue
+            originalRequest.headers['Authorization'] = `Bearer ${token}`;
             return api(originalRequest);
           })
-          .catch((err) => {
-            console.error('[axios] Failed to retry original request from queue:', err); // Debug: Retry failed from queue
-            return Promise.reject(err);
-          });
+          .catch((err) => Promise.reject(err));
       }
 
       originalRequest._retry = true;
       isRefreshing = true;
-      console.log('[axios] Initiating new token refresh request...'); // Debug: New refresh request
-
       try {
         const res = await api.post('/auth/refresh');
         const { accessToken } = res.data;
         setAccessToken(accessToken);
         api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-        console.log('[axios] Token refreshed successfully. New Access Token set.'); // Debug: Refresh successful
-        console.log('[axios] New Access Token Data Table:');
-        console.table(res.data); // Debug: Table view of refresh token response
         processQueue(null, accessToken);
         isRefreshing = false;
         originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
-        console.log('[axios] Retrying original request with newly refreshed token.'); // Debug: Retrying original
         return api(originalRequest);
       } catch (refreshError) {
-        console.error('[axios] Token refresh failed:', refreshError); // Debug: Refresh failed
         processQueue(refreshError, null);
         isRefreshing = false;
-        // Remove access token if refresh fails
         localStorage.removeItem('access_token');
-        console.warn('[axios] Access token removed from localStorage due to failed refresh.'); // Debug: Token removed
-        // Here you can emit a global event or call a function to force logout and show login.
-        // Example: window.location.href = '/login';
+        // Optionally trigger global logout event here
         return Promise.reject(refreshError);
       }
     }
-    console.error(
-      '[axios] Response Interceptor: Request error not handled by 401 retry logic or already retried.',
-      error
-    ); // Debug: Unhandled error
+    // Final fallback: propagate error
     return Promise.reject(error);
   }
 );

@@ -1,5 +1,7 @@
 // src/App.tsx
 
+import { ensureCsrfToken } from './shared/utils/csrf';
+import { useEffect } from 'react';
 import { useAuth } from './shared/hooks/useAuth';
 import { Routes, Route } from 'react-router-dom';
 import LoginPage from './features/auth/pages/LoginPage';
@@ -13,6 +15,11 @@ import NotAuthorizedPage from './pages/NotAuthorizedPage';
  */
 function App() {
   const { user, loading } = useAuth();
+
+  // Garantir CSRF token uma vez ao arrancar app
+  useEffect(() => {
+    ensureCsrfToken();
+  }, []);
 
   if (loading) return <div className='route-loader'>Loading...</div>;
 
