@@ -1,4 +1,4 @@
-// The-Human-Tech-Blog-React/src/shared/context/AuthProvider.tsx
+// src/shared/context/AuthProvider.tsx
 
 import { useState, useEffect, useRef } from 'react';
 import * as authService from '../services/authService';
@@ -33,9 +33,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     await refetchUser();
   };
 
+  /**
+   * Secure logout function using authService.logout.
+   * Always refreshes CSRF token before POST logout.
+   */
   const logout = async (): Promise<void> => {
     try {
-      await api.post('/auth/logout');
+      await authService.logout(); // Usa SEMPRE o método seguro
     } catch (error) {
       console.error('[AuthProvider] Logout failed:', error);
       // Mesmo se o logout no servidor falhar (ex: token já inválido),
