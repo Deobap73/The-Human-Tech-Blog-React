@@ -13,11 +13,13 @@ import { z } from 'zod';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchTags } from '../../../shared/services/tagService';
 import { fetchCategories } from '../../../shared/services/categoryService';
+import { refreshCsrfToken } from '../../../shared/services/csrfService';
 import { Tag } from '../../../shared/types/Tag';
 import { Category } from '../../../shared/types/Category';
 import '../../../features/post/styles/WritePage.scss';
 import { toast } from 'react-hot-toast';
 
+// Supported languages for multilanguage content
 const LANGUAGES = ['en', 'pt', 'de', 'es'] as const;
 type Language = (typeof LANGUAGES)[number];
 
@@ -149,22 +151,26 @@ const WritePage = () => {
     setCategories(selected);
   };
 
-  // Image upload
+  // Image upload with robust CSRF refresh
   const handleImageUpload = async (file: File) => {
-    const formData = new FormData();
-    formData.append('image', file);
+    try {
+      await refreshCsrfToken(); // Ensures the CSRF cookie is fresh
+      const formData = new FormData();
+      formData.append('image', file);
 
-    const csrfToken = Cookies.get('XSRF-TOKEN'); // <-- busca do cookie
-
-    const res = await api.post('/posts/upload', formData, {
-      headers: {
-        // NÃO definas Content-Type, axios define correto com boundary para FormData
-        'x-csrf-token': csrfToken || '',
-      },
-      withCredentials: true, // <-- garante envio dos cookies no request
-    });
-    setCoverUrl(res.data.imageUrl);
-    toast.success('Image uploaded!');
+      const csrfToken = Cookies.get('XSRF-TOKEN');
+      const res = await api.post('/posts/upload', formData, {
+        headers: {
+          'x-csrf-token': csrfToken || '',
+          // Do NOT set Content-Type manually, axios sets boundary automatically
+        },
+        withCredentials: true,
+      });
+      setCoverUrl(res.data.imageUrl);
+      toast.success('Image uploaded!');
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || 'Failed to upload image');
+    }
   };
 
   // Submit post
@@ -283,7 +289,9 @@ const WritePage = () => {
                 </option>
               ))
             ) : (
-              <option disabled>No tags available</option>
+              <option key='no-tags' disabled>
+                No tags available
+              </option>
             )}
           </select>
         </label>
@@ -294,13 +302,17 @@ const WritePage = () => {
             value={categories}
             onChange={handleCategories}
             className='write-page__select'>
-            {availableCategories
-              .filter((cat) => !!cat._id)
-              .map((cat) => (
+            {availableCategories && availableCategories.length > 0 ? (
+              availableCategories.map((cat) => (
                 <option key={cat._id} value={cat._id}>
                   {cat.translation?.name || '[no name]'}
                 </option>
-              ))}
+              ))
+            ) : (
+              <option key='no-categories' disabled>
+                No categories available
+              </option>
+            )}
           </select>
         </label>
         <label className='write-page__label'>
