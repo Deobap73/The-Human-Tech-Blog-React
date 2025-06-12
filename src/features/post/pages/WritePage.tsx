@@ -1,4 +1,4 @@
-// src/features/post/pages/WritePage.tsx
+// /src/features/post/pages/WritePage.tsx
 
 import { useEffect, useState } from 'react';
 import { EditorContent, useEditor } from '@tiptap/react';
@@ -17,7 +17,6 @@ import { Category } from '../../../shared/types/Category';
 import '../../../features/post/styles/WritePage.scss';
 import { toast } from 'react-hot-toast';
 
-// Multilíngue — definição dos idiomas suportados
 const LANGUAGES = ['en', 'pt', 'de', 'es'] as const;
 type Language = (typeof LANGUAGES)[number];
 
@@ -37,10 +36,10 @@ type PostStatus = 'draft' | 'published' | 'archived';
 
 const WritePage = () => {
   const { user } = useAuth();
-  const { id } = useParams(); // Se editar, tem id
+  const { id } = useParams(); // Edit mode if id present
   const navigate = useNavigate();
 
-  // Estado multilíngue
+  // Multilingual state
   const [activeLang, setActiveLang] = useState<Language>('en');
   const [translations, setTranslations] = useState({ ...emptyTranslations });
   const [status, setStatus] = useState<PostStatus>('draft');
@@ -53,7 +52,7 @@ const WritePage = () => {
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
 
-  // Editor — um por idioma (usando tiptap)
+  // Editor per language
   const editors = LANGUAGES.reduce((acc, lang) => {
     acc[lang] = useEditor({
       extensions: [StarterKit, Underline, Image],
@@ -62,7 +61,7 @@ const WritePage = () => {
     return acc;
   }, {} as Record<Language, ReturnType<typeof useEditor>>);
 
-  // Fetch tags/categorias ao montar
+  // Fetch tags/categories on mount
   useEffect(() => {
     fetchTags()
       .then(setAvailableTags)
@@ -72,14 +71,13 @@ const WritePage = () => {
       .catch(() => toast.error('Failed to load categories'));
   }, []);
 
-  // Carrega post existente (modo editar)
+  // Load post if editing
   useEffect(() => {
     if (!id) return;
     api
       .get(`/posts/${id}`)
       .then((res) => {
         const post = res.data;
-        // Aceita status vindo do backend, mesmo que seja archived
         setStatus(
           ['draft', 'published', 'archived'].includes(post.status)
             ? (post.status as PostStatus)
@@ -94,7 +92,6 @@ const WritePage = () => {
         setTags(post.tags || []);
         setCategories(post.categories.map((cat: any) => cat._id) || []);
         setCoverUrl(post.image || '');
-        // Set editor content por idioma
         LANGUAGES.forEach((lang) => {
           editors[lang]?.commands.setContent(post.translations[lang]?.content || '');
         });
@@ -103,7 +100,6 @@ const WritePage = () => {
     // eslint-disable-next-line
   }, [id]);
 
-  // Atualiza state do editor ao mudar de idioma
   useEffect(() => {
     LANGUAGES.forEach((lang) => {
       editors[lang]?.commands.setContent(translations[lang].content || '');
@@ -111,9 +107,9 @@ const WritePage = () => {
     // eslint-disable-next-line
   }, [translations]);
 
-  // Handler das tabs
+  // Tab handler (switch language)
   const handleTabChange = (lang: Language) => {
-    // Salva conteúdo do editor corrente antes de trocar
+    // Save current editor content before switching
     const editor = editors[activeLang];
     if (editor) {
       setTranslations((prev) => ({
@@ -127,7 +123,7 @@ const WritePage = () => {
     setActiveLang(lang);
   };
 
-  // Handler campos de input multilíngue
+  // Input handler for multilingual fields
   const handleInput = (field: 'title' | 'description', value: string) => {
     setTranslations((prev) => ({
       ...prev,
@@ -138,15 +134,21 @@ const WritePage = () => {
     }));
   };
 
-  // Handler tags/categorias
+  // Tag/category selection: filter to only valid tag/category IDs
   const handleTags = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setTags(Array.from(e.target.selectedOptions).map((o) => o.value));
+    const selected = Array.from(e.target.selectedOptions)
+      .map((o) => o.value)
+      .filter((id) => availableTags.some((t) => t._id === id));
+    setTags(selected);
   };
   const handleCategories = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCategories(Array.from(e.target.selectedOptions).map((o) => o.value));
+    const selected = Array.from(e.target.selectedOptions)
+      .map((o) => o.value)
+      .filter((id) => availableCategories.some((c) => c._id === id));
+    setCategories(selected);
   };
 
-  // Upload de imagem (único)
+  // Image upload
   const handleImageUpload = async (file: File) => {
     const formData = new FormData();
     formData.append('image', file);
@@ -155,12 +157,12 @@ const WritePage = () => {
     toast.success('Image uploaded!');
   };
 
-  // Submeter
+  // Submit post
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
     try {
-      // Salva o conteúdo do editor atual antes de submeter
+      // Save content from current editor before submit
       if (editors[activeLang]) {
         setTranslations((prev) => ({
           ...prev,
@@ -171,7 +173,7 @@ const WritePage = () => {
         }));
       }
 
-      // EN obrigatório
+      // Validate EN fields
       const en = translations.en;
       const result = schema.safeParse({ title: en.title, content: en.content });
       if (!result.success) {
@@ -184,7 +186,7 @@ const WritePage = () => {
       const payload = {
         translations: { ...translations },
         image: coverUrl,
-        status: status === 'archived' ? 'draft' : status, // Não permite salvar como archived (a menos que queira permitir, aí retira este fallback)
+        status: status === 'archived' ? 'draft' : status,
         tags,
         categories,
       };
@@ -264,11 +266,13 @@ const WritePage = () => {
         <label className='write-page__label' style={{ marginTop: 16 }}>
           Tags:
           <select multiple value={tags} onChange={handleTags} className='write-page__select'>
-            {availableTags.map((tag) => (
-              <option key={tag._id} value={tag._id}>
-                {tag.translations?.en?.name || '[no name]'}
-              </option>
-            ))}
+            {availableTags
+              .filter((tag) => !!tag._id) // Ensure tag has valid ID
+              .map((tag) => (
+                <option key={tag._id} value={tag._id}>
+                  {tag.translations?.en?.name || '[no name]'}
+                </option>
+              ))}
           </select>
         </label>
         <label className='write-page__label'>
@@ -278,11 +282,13 @@ const WritePage = () => {
             value={categories}
             onChange={handleCategories}
             className='write-page__select'>
-            {availableCategories.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.translation?.name || '[no name]'}
-              </option>
-            ))}
+            {availableCategories
+              .filter((cat) => !!cat._id)
+              .map((cat) => (
+                <option key={cat._id} value={cat._id}>
+                  {cat.translation?.name || '[no name]'}
+                </option>
+              ))}
           </select>
         </label>
         <label className='write-page__label'>
@@ -293,8 +299,6 @@ const WritePage = () => {
             className='write-page__select'>
             <option value='draft'>Draft</option>
             <option value='published'>Published</option>
-            {/* Se quiser permitir archived no select, descomenta abaixo: */}
-            {/* <option value='archived'>Archived</option> */}
           </select>
         </label>
         <button type='submit' className='write-page__btn' disabled={saving}>
