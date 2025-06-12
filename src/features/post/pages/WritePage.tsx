@@ -1,5 +1,6 @@
 // /src/features/post/pages/WritePage.tsx
 
+import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -152,7 +153,16 @@ const WritePage = () => {
   const handleImageUpload = async (file: File) => {
     const formData = new FormData();
     formData.append('image', file);
-    const res = await api.post('/posts/upload', formData);
+
+    const csrfToken = Cookies.get('XSRF-TOKEN'); // <-- busca do cookie
+
+    const res = await api.post('/posts/upload', formData, {
+      headers: {
+        // NÃO definas Content-Type, axios define correto com boundary para FormData
+        'x-csrf-token': csrfToken || '',
+      },
+      withCredentials: true, // <-- garante envio dos cookies no request
+    });
     setCoverUrl(res.data.imageUrl);
     toast.success('Image uploaded!');
   };
@@ -266,13 +276,15 @@ const WritePage = () => {
         <label className='write-page__label' style={{ marginTop: 16 }}>
           Tags:
           <select multiple value={tags} onChange={handleTags} className='write-page__select'>
-            {availableTags
-              .filter((tag) => !!tag._id) // Ensure tag has valid ID
-              .map((tag) => (
+            {availableTags && availableTags.length > 0 ? (
+              availableTags.map((tag) => (
                 <option key={tag._id} value={tag._id}>
                   {tag.translations?.en?.name || '[no name]'}
                 </option>
-              ))}
+              ))
+            ) : (
+              <option disabled>No tags available</option>
+            )}
           </select>
         </label>
         <label className='write-page__label'>
