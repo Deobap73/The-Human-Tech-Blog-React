@@ -9,17 +9,14 @@ import Underline from '@tiptap/extension-underline';
 import Toolbar from '../components/EditorToolbar';
 import api from '../../../shared/utils/axios';
 import { useAuth } from '../../../shared/hooks/useAuth';
-import { z } from 'zod';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchTags } from '../../../shared/services/tagService';
 import { fetchCategories } from '../../../shared/services/categoryService';
-import { refreshCsrfToken } from '../../../shared/services/csrfService';
 import { Tag } from '../../../shared/types/Tag';
 import { Category } from '../../../shared/types/Category';
 import '../../../features/post/styles/WritePage.scss';
 import { toast } from 'react-hot-toast';
 
-// Supported languages for multilanguage content
 const LANGUAGES = ['en', 'pt', 'de', 'es'] as const;
 type Language = (typeof LANGUAGES)[number];
 
@@ -29,11 +26,6 @@ const emptyTranslations = {
   de: { title: '', description: '', content: '' },
   es: { title: '', description: '', content: '' },
 };
-
-const schema = z.object({
-  title: z.string().min(5, 'Title is too short'),
-  content: z.string().min(10, 'Content too short'),
-});
 
 type PostStatus = 'draft' | 'published' | 'archived';
 
@@ -55,7 +47,7 @@ const WritePage = () => {
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
 
-  // Editor per language
+  // Editor instance for each language (using useEditor)
   const editors = LANGUAGES.reduce((acc, lang) => {
     acc[lang] = useEditor({
       extensions: [StarterKit, Underline, Image],
@@ -103,6 +95,7 @@ const WritePage = () => {
     // eslint-disable-next-line
   }, [id]);
 
+  // Keep editors content in sync with translations state
   useEffect(() => {
     LANGUAGES.forEach((lang) => {
       editors[lang]?.commands.setContent(translations[lang].content || '');
@@ -151,56 +144,73 @@ const WritePage = () => {
     setCategories(selected);
   };
 
-  // Image upload with robust CSRF refresh
+  // Image upload - Always refresh CSRF before mutating requests
   const handleImageUpload = async (file: File) => {
-    try {
-      await refreshCsrfToken(); // Ensures the CSRF cookie is fresh
-      const formData = new FormData();
-      formData.append('image', file);
+    // (1) Always fetch CSRF before uploading (preflight)
+    await api.get('/auth/csrf', { withCredentials: true });
+    const csrfToken = Cookies.get('XSRF-TOKEN');
+    const formData = new FormData();
+    formData.append('image', file);
 
-      const csrfToken = Cookies.get('XSRF-TOKEN');
-      const res = await api.post('/posts/upload', formData, {
-        headers: {
-          'x-csrf-token': csrfToken || '',
-          // Do NOT set Content-Type manually, axios sets boundary automatically
-        },
-        withCredentials: true,
-      });
-      setCoverUrl(res.data.imageUrl);
-      toast.success('Image uploaded!');
-    } catch (err: any) {
-      toast.error(err?.response?.data?.message || 'Failed to upload image');
+    const res = await api.post('/posts/upload', formData, {
+      headers: {
+        'x-csrf-token': csrfToken || '',
+      },
+      withCredentials: true,
+    });
+    setCoverUrl(res.data.imageUrl);
+    toast.success('Image uploaded!');
+  };
+
+  /**
+   * Validate only EN fields, tags, categories
+   * @returns true if valid, false otherwise
+   */
+  const validateEnglishFields = (): boolean => {
+    const missing = [];
+    if (!translations.en.title.trim()) missing.push('Title (EN)');
+    if (!translations.en.content.trim()) missing.push('Content (EN)');
+    if (!translations.en.description.trim()) missing.push('Description (EN)');
+    if (tags.length === 0) missing.push('At least one Tag (EN)');
+    if (categories.length === 0) missing.push('At least one Category (EN)');
+    if (missing.length) {
+      const msg = `Required: ${missing.join(', ')}`;
+      setError(msg);
+      toast.error(msg);
+      return false;
     }
+    setError('');
+    return true;
   };
 
   // Submit post
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
-    try {
-      // Save content from current editor before submit
-      if (editors[activeLang]) {
-        setTranslations((prev) => ({
-          ...prev,
-          [activeLang]: {
-            ...prev[activeLang],
-            content: editors[activeLang]?.getHTML() || '',
-          },
-        }));
-      }
 
-      // Validate EN fields
-      const en = translations.en;
-      const result = schema.safeParse({ title: en.title, content: en.content });
-      if (!result.success) {
-        setError(result.error.issues[0].message);
-        toast.error(result.error.issues[0].message);
-        setSaving(false);
-        return;
+    // (1) Sync ALL editors' content to translations before validation
+    const updatedTranslations = { ...translations };
+    LANGUAGES.forEach((lang) => {
+      const editor = editors[lang];
+      if (editor) {
+        updatedTranslations[lang].content = editor.getHTML();
       }
+    });
+    setTranslations(updatedTranslations);
+
+    // (2) Validate only EN fields (other languages are optional)
+    if (!validateEnglishFields()) {
+      setSaving(false);
+      return;
+    }
+
+    try {
+      // (3) Always refresh CSRF before mutation (prevent 403)
+      await api.get('/auth/csrf', { withCredentials: true });
+      const csrfToken = Cookies.get('XSRF-TOKEN');
 
       const payload = {
-        translations: { ...translations },
+        translations: updatedTranslations,
         image: coverUrl,
         status: status === 'archived' ? 'draft' : status,
         tags,
@@ -208,10 +218,16 @@ const WritePage = () => {
       };
 
       if (id) {
-        await api.patch(`/posts/${id}`, payload);
+        await api.patch(`/posts/${id}`, payload, {
+          headers: { 'x-csrf-token': csrfToken || '' },
+          withCredentials: true,
+        });
         toast.success('Post updated!');
       } else {
-        await api.post('/posts', payload);
+        await api.post('/posts', payload, {
+          headers: { 'x-csrf-token': csrfToken || '' },
+          withCredentials: true,
+        });
         toast.success('Post created!');
       }
       navigate('/admin/posts');
@@ -303,11 +319,13 @@ const WritePage = () => {
             onChange={handleCategories}
             className='write-page__select'>
             {availableCategories && availableCategories.length > 0 ? (
-              availableCategories.map((cat) => (
-                <option key={cat._id} value={cat._id}>
-                  {cat.translation?.name || '[no name]'}
-                </option>
-              ))
+              availableCategories
+                .filter((cat) => !!cat._id)
+                .map((cat) => (
+                  <option key={cat._id} value={cat._id}>
+                    {cat.translation?.name || '[no name]'}
+                  </option>
+                ))
             ) : (
               <option key='no-categories' disabled>
                 No categories available
