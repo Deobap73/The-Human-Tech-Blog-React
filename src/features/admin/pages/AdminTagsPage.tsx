@@ -1,4 +1,4 @@
-// The-Human-Tech-Blog-React\src\features\admin\pages\AdminTagsPage.tsx
+// src/features/admin/pages/AdminTagsPage.tsx
 
 import { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -43,6 +43,8 @@ const AdminTagsPage = () => {
     const query = filter.trim().toLowerCase();
     if (!query) return tags;
     return tags.filter((tag) => {
+      // Defensive: translations must be object
+      if (!tag.translations) return false;
       // Search in any language, but prefer active
       for (const lang of LANGUAGES) {
         const name = tag.translations?.[lang]?.name?.toLowerCase() || '';
@@ -90,10 +92,10 @@ const AdminTagsPage = () => {
   const startEdit = (tag: Tag) => {
     setEditing(tag);
     setForm({
-      en: tag.translations.en || { name: '', description: '' },
-      pt: tag.translations.pt || { name: '', description: '' },
-      de: tag.translations.de || { name: '', description: '' },
-      es: tag.translations.es || { name: '', description: '' },
+      en: tag.translations?.en || { name: '', description: '' },
+      pt: tag.translations?.pt || { name: '', description: '' },
+      de: tag.translations?.de || { name: '', description: '' },
+      es: tag.translations?.es || { name: '', description: '' },
     });
     setColor(tag.color || '#cccccc');
     setActiveLang('en');
@@ -243,10 +245,11 @@ const AdminTagsPage = () => {
       {/* Tabela/Paginação */}
       <ul className='admin-tags-page__list'>
         {pagedTags.map((tag) => {
-          const tr =
-            tag.translations[i18n.language as Lang] ||
-            tag.translations[i18n.language.split('-')[0] as Lang] ||
-            tag.translations.en;
+          // Defensive: tag.translations pode ser undefined
+          const translations = tag.translations || {};
+          const tr = translations[i18n.language as Lang] ||
+            translations[i18n.language?.split('-')[0] as Lang] ||
+            translations.en || { name: '', description: '' };
           return (
             <li key={tag._id} className='admin-tags-page__item'>
               <span
@@ -260,10 +263,10 @@ const AdminTagsPage = () => {
                   borderRadius: 4,
                   border: '1px solid #ccc',
                 }}
-                title={tr?.name}
+                title={tr.name}
               />
-              <b>{tr?.name || '[untitled]'}</b>
-              <span className='admin-tags-page__desc'>{tr?.description || ''}</span>
+              <b>{tr.name || '[untitled]'}</b>
+              <span className='admin-tags-page__desc'>{tr.description || ''}</span>
               <button className='admin-tags-page__edit' onClick={() => startEdit(tag)}>
                 {t('admin.edit')}
               </button>

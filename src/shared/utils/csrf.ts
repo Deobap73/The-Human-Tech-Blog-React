@@ -2,26 +2,21 @@
 
 import api from './axios';
 
-let csrfToken: string | null = null;
-
+// Remove o cache local
 export async function ensureCsrfToken(): Promise<string> {
-  if (csrfToken) {
-    return csrfToken;
-  }
-
   const res = await api.get('/auth/csrf', { withCredentials: true });
+  const csrfToken = res.data.csrfToken;
 
-  csrfToken = res.data.csrfToken;
-
-  if (csrfToken === null) {
+  if (!csrfToken) {
     throw new Error('CSRF token not received from API');
   }
 
+  // O header será lido do cookie pelo interceptor do Axios, mas podemos também definir explicitamente:
   api.defaults.headers.common['X-CSRF-Token'] = csrfToken;
 
   return csrfToken;
 }
 
 export function invalidateCsrfToken() {
-  csrfToken = null;
+  // Não há mais cache, função opcionalmente removida.
 }

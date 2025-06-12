@@ -1,7 +1,8 @@
-// src/shared/services/authService.ts
+// The-Human-Tech-Blog-React\src\shared\services\authService.ts
 
 import api from '../utils/axios';
 import { safeApiPost } from '../utils/apiHelpers';
+import { ensureCsrfToken } from '../utils/csrf';
 
 /**
  * Interface for register payload.
@@ -18,8 +19,13 @@ export interface RegisterPayload {
  * Ensures CSRF token is fresh before POST to /auth/logout.
  */
 export const logout = async (): Promise<void> => {
-  await api.get('/csrf'); // Atualiza CSRF token no cookie antes de logout
+  console.log('[authService.logout] Iniciando logout...');
+  await api.get('/auth/csrf'); // Corrigido: sem '/api'
+  console.log('[authService.logout] CSRF atualizado, aguardando...');
+  await new Promise((res) => setTimeout(res, 100));
+  console.log('[authService.logout] POST /auth/logout prestes a ser enviado');
   await safeApiPost('/auth/logout');
+  console.log('[authService.logout] Logout completo');
 };
 
 /**

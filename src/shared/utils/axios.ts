@@ -1,4 +1,4 @@
-// /src/shared/utils/axios.ts
+// src/shared/utils/axios.ts
 
 import axios from 'axios';
 import { setAccessToken, getAccessToken } from './authTokenStorage';
@@ -12,7 +12,7 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
   withCredentials: true,
   xsrfCookieName: 'XSRF-TOKEN', // For compatibility, not strictly necessary
-  xsrfHeaderName: 'X-CSRF-Token',
+  xsrfHeaderName: 'X-CSRF-Token', // Axios will automatically send this header
 });
 
 // Utility function to read a cookie by name
@@ -48,15 +48,20 @@ api.interceptors.request.use(
       config.headers['Authorization'] = `Bearer ${token}`;
     }
 
-    // Inject CSRF token for mutating requests
+    // LOG CRÍTICO: Axios automatically injects CSRF, no need to do it manually
     const method = config.method?.toLowerCase();
     if (['post', 'put', 'patch', 'delete'].includes(method || '')) {
       const xsrfToken = getCookie('XSRF-TOKEN');
-      if (xsrfToken) {
-        config.headers = config.headers || {};
-        config.headers['x-csrf-token'] = xsrfToken;
-      }
+      console.log('[Axios] Preparing mutating request:', {
+        method,
+        url: config.url,
+        xsrfToken,
+        headers: config.headers,
+        cookies: document.cookie,
+      });
     }
+
+    // *** DO NOT set 'x-csrf-token' manually. Axios will handle 'X-CSRF-Token' ***
     return config;
   },
   (requestError) => {

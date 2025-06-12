@@ -39,15 +39,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
    */
   const logout = async (): Promise<void> => {
     try {
-      await authService.logout(); // Usa SEMPRE o método seguro
+      console.log('[AuthProvider] Logout chamado');
+      await authService.logout();
+      console.log('[AuthProvider] Logout sucesso (servidor)');
     } catch (error) {
       console.error('[AuthProvider] Logout failed:', error);
-      // Mesmo se o logout no servidor falhar (ex: token já inválido),
-      // devemos limpar o estado do cliente.
     } finally {
       localStorage.removeItem('access_token');
       delete api.defaults.headers.common['Authorization'];
       setUser(null);
+      console.log('[AuthProvider] Logout local limpo');
     }
   };
 
