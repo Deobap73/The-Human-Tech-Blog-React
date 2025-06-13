@@ -1,159 +1,87 @@
-// The-Human-Tech-Blog-React/src/features/post/styles/RecentPosts.scss
+// The-Human-Tech-Blog-React/src/features/post/styles/Card.scss
 
-.recentPosts__container {
-  width: 100%;
-  max-width: var(--layout-max-width);
-  margin: 0 auto var(--margin-xl) auto;
-  box-sizing: border-box;
-  padding: var(--padding-l) 0;
-}
-
-.recentPosts__introduction {
-  text-align: center;
-  margin-bottom: var(--margin-lg);
-}
-
-.recentPosts__title {
-  color: var(--primary);
-  font-size: var(--font-size-xl);
-  color: var(--primary);
-  margin-bottom: var(--margin-xs);
-  font-weight: 700;
-}
-
-.recentPosts__description {
-  color: var(--text-color-secondary);
-  font-size: var(--font-size-base);
-  margin-bottom: var(--margin-base);
-  max-width: 54ch;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-// GRID 2x2 (áreas explícitas)
-.recentPosts__grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: var(--gap-lg);
-  grid-template-areas:
-    'recentPosts1 recentPosts2'
-    'recentPosts3 recentPosts4';
-  width: 100%;
-  margin: 0 auto;
-
-  @media (max-width: 1024px) {
-    grid-template-columns: 1fr;
-    grid-template-rows: repeat(4, 1fr);
-    grid-template-areas:
-      'recentPosts1'
-      'recentPosts2'
-      'recentPosts3'
-      'recentPosts4';
-    gap: var(--gap-base);
-  }
-}
-
-// Atribuição de grid-area às cards
-.recentPosts__card--1 {
-  grid-area: recentPosts1;
-}
-.recentPosts__card--2 {
-  grid-area: recentPosts2;
-}
-.recentPosts__card--3 {
-  grid-area: recentPosts3;
-}
-.recentPosts__card--4 {
-  grid-area: recentPosts4;
-}
-
-.recentPosts__card {
+.card-post {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
   background: var(--background-secondary);
   border-radius: 18px;
   box-shadow: 0 2px 12px rgba(30, 42, 120, 0.09);
-  padding: var(--padding-base);
-  gap: var(--gap-base);
   min-height: 260px;
   transition: box-shadow 0.18s, transform 0.18s;
+  overflow: hidden; // Ensures image corners are rounded by parent
 
   &:hover,
   &:focus-within {
     box-shadow: 0 4px 20px rgba(30, 42, 120, 0.16);
     transform: translateY(-2px) scale(1.02);
   }
-}
 
-.recentPosts__card-logo {
-  margin-bottom: var(--margin-xs);
-  width: 38px;
-  height: 38px;
-  border-radius: 8px;
-  background: #f7f7f7;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  .recentPosts__card-categoryLogo {
-    width: 32px;
-    height: 32px;
-    object-fit: contain;
-    border-radius: 6px;
+  &__image {
+    width: 100%;
+    height: 180px; // Or a suitable fixed height or aspect ratio
+    object-fit: cover;
+    border-radius: 18px 18px 0 0; // Top corners rounded
   }
-}
 
-.recentPosts__card-content {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-xs);
-}
+  &__description-container {
+    padding: var(--padding-base);
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; // Allows it to take up remaining space
+    justify-content: space-between;
+  }
 
-.recentPosts__card-category {
-  font-size: var(--font-size-xs);
-  color: var(--primary);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-bottom: var(--margin-2xs);
-}
+  &__category {
+    font-size: var(--font-size-xs);
+    color: var(--primary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: var(--margin-2xs);
+    display: block; // Ensures it takes up its own line
+  }
 
-.recentPosts__card-title {
-  font-size: var(--font-size-lg);
-  font-weight: 700;
-  margin-bottom: var(--margin-xs);
-  color: var(--text-color);
-  line-height: 1.2;
-}
+  &__text-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--gap-xs);
+  }
 
-.recentPosts__card-description {
-  font-size: var(--font-size-base);
-  color: var(--text-color-secondary);
-  margin-bottom: var(--margin-xs);
-  line-height: 1.5;
-}
+  &__description {
+    font-size: var(--font-size-base);
+    color: var(--text-color-secondary);
+    line-height: 1.5;
+    margin-bottom: var(--margin-xs); // Provides space before actions
+  }
 
-.recentPosts__card-link {
-  align-self: flex-start;
-  padding: var(--padding-xs) var(--padding-base);
-  background: transparent;
-  color: var(--primary);
-  border: 2px solid var(--primary);
-  border-radius: 20px;
-  font-size: var(--font-size-sm);
-  font-weight: 600;
-  transition: background 0.2s, color 0.2s;
-  text-decoration: none;
-  margin-top: var(--margin-xs);
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: var(--margin-xs); // Space from description
+  }
 
-  &:hover,
-  &:focus {
-    background: var(--primary);
-    color: #fff;
-    text-decoration: underline;
+  &__read-more-link {
+    text-decoration: none; // Remove default link underline
+  }
+
+  &__read-more-button {
+    padding: var(--padding-xs) var(--padding-base);
+    background: transparent;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+    border-radius: 20px;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+
+    &:hover,
+    &:focus {
+      background: var(--primary);
+      color: #fff;
+    }
   }
 }

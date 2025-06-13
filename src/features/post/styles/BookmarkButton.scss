@@ -1,24 +1,29 @@
-/* The-Human-Tech-Blog-React/src/components/bookmarks/BookmarkButton.scss */
+// The-Human-Tech-Blog-React/src/components/bookmarks/BookmarkButton.scss
 
 .bookmark-button {
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--textColor);
+  color: var(--textColor); // Default color for the icon
   font-size: 1.5rem;
-  transition: transform 0.2s;
+  transition: transform 0.2s ease, color 0.2s ease; // Added color transition
 
   &:hover {
     transform: scale(1.1);
   }
 
-  &.active {
-    color: var(--tertiaryTextColor);
+  // Modifier for active (bookmarked) state
+  &--active {
+    color: var(--tertiaryTextColor); // Color when bookmarked
   }
-}
 
-@media (max-width: 768px) {
-  .bookmark-button {
+  // Optional: Disabled state styling
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  @media (max-width: 768px) {
     font-size: 1.2rem;
   }
 }

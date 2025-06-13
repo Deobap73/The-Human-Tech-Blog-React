@@ -33,13 +33,11 @@ export const SinglePostPage = () => {
     fetchPost();
   }, [slug, i18n.language]);
 
-  // Tradução multilíngue segura
   const translation: PostTranslation =
     post && post.translations
       ? getPostTranslation(post.translations, i18n.language)
       : { title: '', description: '', content: '' };
 
-  // Categoria populada no próprio post, seguro para qualquer formato
   const firstCategoryName =
     post?.categories &&
     post.categories.length > 0 &&
@@ -50,31 +48,35 @@ export const SinglePostPage = () => {
 
   if (error) {
     return (
-      <div className='single-post__error'>
-        <h2>Post not found or unpublished</h2>
-        <Link to='/'>
-          <button className='single-post__back'>Voltar para o início</button>
+      <div className='single-post-page single-post-page--error'>
+        <h2 className='single-post-page__error-title'>Post not found or unpublished</h2>
+        <Link to='/' className='single-post-page__back-link'>
+          <button className='single-post-page__back-button'>Voltar para o início</button>
         </Link>
       </div>
     );
   }
 
-  if (!post) return <div>Loading...</div>;
+  if (!post) return <div className='single-post-page__loading'>Loading...</div>;
 
   return (
-    <div className='single-post'>
-      <h1 className='single-post__title'>{translation.title}</h1>
-      <BookmarkButton postId={post._id} />
+    <div className='single-post-page'>
+      <div className='single-post-page__header'>
+        <h1 className='single-post-page__title'>{translation.title}</h1>
+        <BookmarkButton postId={post._id} className='single-post-page__bookmark-button' />
+      </div>
       {post.image && (
-        <img src={post.image} alt={translation.title} className='single-post__image' />
+        <img src={post.image} alt={translation.title} className='single-post-page__image' />
       )}
-      <p className='single-post__excerpt'>{translation.description}</p>
-      {firstCategoryName && <span className='single-post__category'>{firstCategoryName}</span>}
-      <ReactionList targetType='post' targetId={post._id} />
-      <ReactionButton targetType='post' targetId={post._id} />
-      <Comments postId={post._id} />
-      <Link to='/'>
-        <button className='single-post__back'>Voltar para o início</button>
+      <p className='single-post-page__excerpt'>{translation.description}</p>
+      {firstCategoryName && <span className='single-post-page__category'>{firstCategoryName}</span>}
+      <div className='single-post-page__reactions'>
+        <ReactionList targetType='post' targetId={post._id} />
+        <ReactionButton targetType='post' targetId={post._id} />
+      </div>
+      <Comments postId={post._id} className='single-post-page__comments' />
+      <Link to='/' className='single-post-page__back-link'>
+        <button className='single-post-page__back-button'>Voltar para o início</button>
       </Link>
     </div>
   );

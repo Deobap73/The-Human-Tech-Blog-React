@@ -10,50 +10,56 @@ interface BookmarkResponse {
   postId: { _id: string };
 }
 
-export const BookmarkButton = ({ postId }: { postId: string }) => {
+interface BookmarkButtonProps {
+  postId: string;
+  className?: string; // Added to allow external styling/positioning via className prop
+}
+
+export const BookmarkButton = ({ postId, className }: BookmarkButtonProps) => {
   const { user } = useAuth();
   const [bookmarked, setBookmarked] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Obtém os favoritos do utilizador e atualiza estado
   const fetchBookmarks = useCallback(async () => {
     if (!user) return;
     try {
       const res = await axios.get<BookmarkResponse[]>('/bookmarks');
       const found = res.data.find((item) => item.postId._id === postId);
       setBookmarked(!!found);
-    } catch {
+    } catch (err) {
+      console.error('Failed to fetch bookmarks:', err);
       setBookmarked(false);
     }
   }, [user, postId]);
 
-  // Alterna favorito e atualiza estado real depois
   const toggleBookmark = async () => {
-    if (!user) return;
+    if (!user || loading) return; // Prevent multiple clicks while loading
     setLoading(true);
     try {
       await axios.post('/bookmarks', { postId });
-      // Refaz o fetch para garantir estado correto
+      // Refetch to ensure state is accurate after toggle
       await fetchBookmarks();
     } catch (err) {
-      console.error('Bookmark failed', err);
+      console.error('Bookmark toggle failed:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  // Atualiza favoritos ao logar ou mudar postId
   useEffect(() => {
     fetchBookmarks();
   }, [fetchBookmarks]);
 
   return (
     <button
-      className={`bookmark-button ${bookmarked ? 'active' : ''}`}
+      className={`bookmark-button ${bookmarked ? 'bookmark-button--active' : ''} ${
+        className || ''
+      }`}
       onClick={toggleBookmark}
       disabled={!user || loading}
-      title={bookmarked ? 'Remove Bookmark' : 'Save to Bookmarks'}>
-      {bookmarked ? <IoHeartOutline /> : <IoHeartSharp />}
+      title={bookmarked ? 'Remove Bookmark' : 'Save to Bookmarks'}
+      aria-label={bookmarked ? 'Remove Bookmark' : 'Save to Bookmarks'}>
+      {bookmarked ? <IoHeartSharp /> : <IoHeartOutline />}
     </button>
   );
 };

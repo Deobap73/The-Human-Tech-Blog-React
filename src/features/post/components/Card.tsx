@@ -40,22 +40,18 @@ export const Card = ({ post, lang }: CardProps) => {
     fullDescription.length > 60 ? fullDescription.substring(0, 60) + '...' : fullDescription;
 
   return (
-    <div className='cardPost'>
-      <img src={post.image} alt={translation.title || 'No title'} className='cardPost__image' />
+    <div className='card-post'>
+      <img src={post.image} alt={translation.title || 'No title'} className='card-post__image' />
 
-      <div className='cardPost__descriptionContainer'>
-        <span className='cardPost__descriptionContainer__category'>{category}</span>
+      <div className='card-post__description-container'>
+        <span className='card-post__category'>{category}</span>
 
-        <div className='cardPost__descriptionContainer__textContainer'>
-          <p className='cardPost__descriptionContainer__textContainer__description'>
-            {displayDescription}
-          </p>
+        <div className='card-post__text-content'>
+          <p className='card-post__description'>{displayDescription}</p>
 
-          <div>
-            <Link to={`/${lang}/posts/${post.slug}`}>
-              <button className='cardPost__descriptionContainer__textContainer__readMore'>
-                Read More
-              </button>
+          <div className='card-post__actions'>
+            <Link to={`/${lang}/posts/${post.slug}`} className='card-post__read-more-link'>
+              <button className='card-post__read-more-button'>Read More</button>
             </Link>
 
             <BookmarkButton postId={post._id} />

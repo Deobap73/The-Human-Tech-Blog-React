@@ -1,16 +1,25 @@
-/* The-Human-Tech-Blog-React/src/components/comments/Comments.scss */
+// src/components/comments/Comments.scss
 
 .comments {
   margin-top: var(--margin-xl);
-  padding: var(--padding-base);
+  padding: var(--padding-base); // Added a default padding for the block itself
   background-color: var(--softBg);
   border-radius: 8px;
+
+  // This class is applied by the parent component (e.g., SinglePostPage)
+  // The styles for `single-post-page__comments` should primarily live
+  // in `SinglePostPage.scss` if they relate to layout within that page.
+  // Example (if it were defined here, but better in SinglePostPage.scss):
+  // &.single-post-page__comments {
+  //   margin-top: var(--another-margin);
+  // }
 
   &__title {
     font-size: var(--font-size-2b);
     margin-bottom: var(--margin-base);
   }
 
+  // The form is considered an element of the comments block
   &__form {
     display: flex;
     flex-direction: column;
@@ -25,20 +34,31 @@
     border-radius: 6px;
     border: 1px solid var(--secondaryTextColor);
     resize: vertical;
+    // Add focus styles for accessibility
+    &:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
   }
 
   &__submit {
     align-self: flex-end;
     padding: 0.5rem 1.5rem;
-    background-color: var(--primaryHover);
+    background-color: var(--primary); // Changed to primary for consistency
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: background-color 0.3s ease; // Smooth transition
 
-    &:hover {
-      background-color: var(--successColor);
+    &:hover:not(:disabled) {
+      background-color: var(--primaryHover); // Use primaryHover for hover
+    }
+
+    &:disabled {
+      background-color: var(--gray-light); // Example disabled background
+      cursor: not-allowed;
+      opacity: 0.7;
     }
   }
 
@@ -52,27 +72,33 @@
   }
 
   &__item {
-    background-color: var(--bg);
+    background-color: var(--bg); // Using 'bg' as the general background variable
     padding: var(--padding-base);
     border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); // Subtle shadow for individual comments
   }
 
   &__author {
     font-weight: bold;
+    color: var(--text-color); // Ensure good contrast
+    margin-bottom: var(--margin-2xs);
+    display: block; // Ensures it takes its own line
   }
 
   &__text {
     margin: 0.5rem 0;
+    line-height: 1.5;
+    color: var(--text-color-secondary); // Use a secondary text color
   }
 
   &__date {
     font-size: var(--font-size-s);
     color: var(--secondaryTextColor);
+    text-align: right; // Align date to the right
+    display: block; // Ensures it takes its own line
   }
-}
 
-@media (max-width: 768px) {
-  .comments {
+  @media (max-width: 768px) {
     padding: var(--padding-base);
   }
 }

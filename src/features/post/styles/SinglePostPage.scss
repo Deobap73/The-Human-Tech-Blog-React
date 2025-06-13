@@ -1,16 +1,43 @@
 /* The-Human-Tech-Blog-React/src/pages/posts/_slug/SinglePostPage.scss */
 
-.single-post {
+.single-post-page {
   max-width: var(--layout-max-width);
   margin: var(--margin-3m) auto;
   padding: 0 var(--padding-xl);
   color: var(--textColor);
 
+  // Modifier for error state
+  &--error {
+    text-align: center;
+    padding: var(--padding-xl);
+  }
+
+  &__error-title {
+    font-size: var(--font-size-xl);
+    color: var(--color-error); // Assuming you have an error color variable
+    margin-bottom: var(--margin-base);
+  }
+
+  &__loading {
+    text-align: center;
+    padding: var(--padding-xl);
+    font-size: var(--font-size-lg);
+    color: var(--text-color-secondary);
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--margin-base);
+    position: relative; // For positioning bookmark button
+  }
+
   &__title {
     font-size: var(--post-title-size);
     font-weight: bold;
-    margin-bottom: var(--margin-base);
     text-align: center;
+    flex-grow: 1; // Allows title to take up available space
   }
 
   &__image {
@@ -26,28 +53,82 @@
     margin-bottom: var(--margin-2b);
   }
 
-  button.bookmark-button {
-    float: right;
-    margin-top: -3rem;
-    margin-right: var(--margin-base);
-    position: relative;
-    z-index: 2;
+  &__category {
+    display: inline-block; // Or block, depending on desired layout
+    font-size: var(--font-size-sm);
+    color: var(--primary);
+    background-color: var(--background-light); // Example background
+    padding: var(--padding-xs) var(--padding-base);
+    border-radius: 20px;
+    margin-bottom: var(--margin-base);
+    font-weight: 600;
   }
-}
 
-/* Media Queries */
-@media (max-width: 768px) {
-  .single-post {
+  &__bookmark-button {
+    // These styles are specific to how the bookmark button behaves within this page
+    // The core button styles should be in BookmarkButton.scss
+    position: absolute;
+    top: 0; // Adjust as needed
+    right: 0; // Adjust as needed
+    z-index: 2; // Ensure it's above other content
+  }
+
+  &__reactions {
+    display: flex;
+    gap: var(--gap-base); // Space between ReactionList and ReactionButton
+    align-items: center;
+    margin-top: var(--margin-base);
+    margin-bottom: var(--margin-lg);
+  }
+
+  &__comments {
+    margin-top: var(--margin-xl); // Space above comments section
+  }
+
+  &__back-link {
+    display: block; // Ensures the link takes full width for button styling
+    text-align: center;
+    margin-top: var(--margin-xl);
+    text-decoration: none; // Remove default link underline
+  }
+
+  &__back-button {
+    padding: var(--padding-base) var(--padding-lg);
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: var(--font-size-base);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: darken(var(--primary), 10%);
+    }
+  }
+
+  /* Media Queries */
+  @media (max-width: 768px) {
     padding: 0 var(--padding-base);
 
     &__title {
       font-size: var(--font-size-2b);
     }
 
-    button.bookmark-button {
-      float: none;
-      display: block;
-      margin: var(--margin-base) auto var(--margin-base) 0;
+    &__header {
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: var(--margin-lg); // More space below header on small screens
+    }
+
+    &__bookmark-button {
+      position: static; // Remove absolute positioning on small screens
+      margin: var(--margin-base) auto; // Center it
+    }
+
+    &__reactions {
+      flex-direction: column; // Stack reactions vertically
+      align-items: flex-start; // Align to the left
     }
   }
 }
