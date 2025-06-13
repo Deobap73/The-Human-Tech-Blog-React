@@ -31,10 +31,9 @@ type PostStatus = 'draft' | 'published' | 'archived';
 
 const WritePage = () => {
   const { user } = useAuth();
-  const { id } = useParams(); // Edit mode if id present
+  const { id } = useParams();
   const navigate = useNavigate();
 
-  // Multilingual state
   const [activeLang, setActiveLang] = useState<Language>('en');
   const [translations, setTranslations] = useState({ ...emptyTranslations });
   const [status, setStatus] = useState<PostStatus>('draft');
@@ -47,7 +46,7 @@ const WritePage = () => {
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
 
-  // Editor instance for each language (using useEditor)
+  // Editor instance for each language
   const editors = LANGUAGES.reduce((acc, lang) => {
     acc[lang] = useEditor({
       extensions: [StarterKit, Underline, Image],
@@ -56,7 +55,7 @@ const WritePage = () => {
     return acc;
   }, {} as Record<Language, ReturnType<typeof useEditor>>);
 
-  // Fetch tags/categories on mount
+  // Fetch tags and categories on mount
   useEffect(() => {
     fetchTags()
       .then(setAvailableTags)
@@ -66,7 +65,7 @@ const WritePage = () => {
       .catch(() => toast.error('Failed to load categories'));
   }, []);
 
-  // Load post if editing
+  // Load post for editing if id is present
   useEffect(() => {
     if (!id) return;
     api
@@ -95,7 +94,7 @@ const WritePage = () => {
     // eslint-disable-next-line
   }, [id]);
 
-  // Keep editors content in sync with translations state
+  // Sync editors' content with translations state
   useEffect(() => {
     LANGUAGES.forEach((lang) => {
       editors[lang]?.commands.setContent(translations[lang].content || '');
@@ -103,9 +102,8 @@ const WritePage = () => {
     // eslint-disable-next-line
   }, [translations]);
 
-  // Tab handler (switch language)
+  // Handle language tab switch (persist editor content)
   const handleTabChange = (lang: Language) => {
-    // Save current editor content before switching
     const editor = editors[activeLang];
     if (editor) {
       setTranslations((prev) => ({
@@ -130,7 +128,7 @@ const WritePage = () => {
     }));
   };
 
-  // Tag/category selection: filter to only valid tag/category IDs
+  // Tag/category selection (only valid IDs)
   const handleTags = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = Array.from(e.target.selectedOptions)
       .map((o) => o.value)
@@ -144,17 +142,16 @@ const WritePage = () => {
     setCategories(selected);
   };
 
-  // Image upload - Always refresh CSRF before mutating requests
+  // Image upload handler (always refresh CSRF before uploading)
   const handleImageUpload = async (file: File) => {
-    // (1) Always fetch CSRF before uploading (preflight)
-    await api.get('/auth/csrf', { withCredentials: true });
-    const csrfToken = Cookies.get('XSRF-TOKEN');
+    const resToken = await api.get('/auth/csrf', { withCredentials: true });
+    const csrfToken = resToken.data.csrfToken;
     const formData = new FormData();
     formData.append('image', file);
 
     const res = await api.post('/posts/upload', formData, {
       headers: {
-        'x-csrf-token': csrfToken || '',
+        'x-csrf-token': csrfToken,
       },
       withCredentials: true,
     });
@@ -163,8 +160,8 @@ const WritePage = () => {
   };
 
   /**
-   * Validate only EN fields, tags, categories
-   * @returns true if valid, false otherwise
+   * Validate only English fields, tags, categories.
+   * Other languages are optional.
    */
   const validateEnglishFields = (): boolean => {
     const missing = [];
@@ -183,12 +180,31 @@ const WritePage = () => {
     return true;
   };
 
-  // Submit post
+  // Utility to clean up empty translations before submission
+  const cleanTranslations = (allTranslations: typeof translations) => {
+    const copy = { ...allTranslations };
+    (['pt', 'de', 'es'] as Language[]).forEach((lang) => {
+      const tr = copy[lang];
+      // Remove empty fields
+      Object.keys(tr).forEach((key) => {
+        if (!(tr as any)[key]) {
+          delete (tr as any)[key];
+        }
+      });
+      // If all fields are empty, remove translation entirely
+      if (!tr.title && !tr.description && !tr.content) {
+        delete copy[lang];
+      }
+    });
+    return copy;
+  };
+
+  // Submit post handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
 
-    // (1) Sync ALL editors' content to translations before validation
+    // Sync all editors' content to translations before validation
     const updatedTranslations = { ...translations };
     LANGUAGES.forEach((lang) => {
       const editor = editors[lang];
@@ -198,19 +214,21 @@ const WritePage = () => {
     });
     setTranslations(updatedTranslations);
 
-    // (2) Validate only EN fields (other languages are optional)
+    // Validate required EN fields
     if (!validateEnglishFields()) {
       setSaving(false);
       return;
     }
 
+    // Clean up translations (remove empty)
+    const cleaned = cleanTranslations(updatedTranslations);
+
     try {
-      // (3) Always refresh CSRF before mutation (prevent 403)
-      await api.get('/auth/csrf', { withCredentials: true });
-      const csrfToken = Cookies.get('XSRF-TOKEN');
+      const resToken = await api.get('/auth/csrf', { withCredentials: true });
+      const csrfToken = resToken.data.csrfToken;
 
       const payload = {
-        translations: updatedTranslations,
+        translations: cleaned,
         image: coverUrl,
         status: status === 'archived' ? 'draft' : status,
         tags,
@@ -219,13 +237,13 @@ const WritePage = () => {
 
       if (id) {
         await api.patch(`/posts/${id}`, payload, {
-          headers: { 'x-csrf-token': csrfToken || '' },
+          headers: { 'x-csrf-token': csrfToken },
           withCredentials: true,
         });
         toast.success('Post updated!');
       } else {
         await api.post('/posts', payload, {
-          headers: { 'x-csrf-token': csrfToken || '' },
+          headers: { 'x-csrf-token': csrfToken },
           withCredentials: true,
         });
         toast.success('Post created!');
@@ -295,13 +313,16 @@ const WritePage = () => {
             <img src={coverUrl} alt='Cover Preview' className='write-page__cover-img' />
           </div>
         )}
+
         <label className='write-page__label' style={{ marginTop: 16 }}>
           Tags:
           <select multiple value={tags} onChange={handleTags} className='write-page__select'>
             {availableTags && availableTags.length > 0 ? (
               availableTags.map((tag) => (
                 <option key={tag._id} value={tag._id}>
-                  {tag.translations?.en?.name || '[no name]'}
+                  {tag.translations && tag.translations.en && tag.translations.en.name
+                    ? tag.translations.en.name
+                    : '[no name]'}
                 </option>
               ))
             ) : (
@@ -311,6 +332,7 @@ const WritePage = () => {
             )}
           </select>
         </label>
+
         <label className='write-page__label'>
           Categories:
           <select
