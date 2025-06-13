@@ -12,6 +12,8 @@ interface LastPostProps {
 }
 
 export const LastPost = ({ post, lang }: LastPostProps) => {
+  console.log('[LastPost] post prop:', JSON.stringify(post, null, 2));
+
   if (!post) return null;
 
   const postIsValid = isValidPost(post, lang);

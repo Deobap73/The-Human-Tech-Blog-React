@@ -1,3 +1,5 @@
+// The-Human-Tech-Blog-React\src\features\post\components\Featured.tsx
+
 import '../../post/styles/Featured.scss';
 import { Post } from '../../../shared/types/Post';
 import { Link } from 'react-router-dom';
@@ -10,6 +12,7 @@ interface FeaturedProps {
 }
 
 export const Featured = ({ post, lang }: FeaturedProps) => {
+  console.log('[Featured] post prop:', JSON.stringify(post, null, 2));
   if (!post) {
     return null;
   }
