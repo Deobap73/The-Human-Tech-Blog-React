@@ -1,11 +1,12 @@
 // src/routes/Redirects.tsx
-import { Navigate, useLocation } from 'react-router-dom';
 
-export const RedirectToBrowserLang = () => {
+import { Navigate } from 'react-router-dom';
+
+export const RedirectToBrowserLang = ({ path = '' }: { path?: string }) => {
   const browserLang = (navigator.language || 'en').split('-')[0];
   const supported = ['en', 'pt', 'de', 'es'];
   const lang = supported.includes(browserLang) ? browserLang : 'en';
-  return <Navigate to={`/${lang}`} replace />;
+  return <Navigate to={`/${lang}${path ? '/' + path : ''}`} replace />;
 };
 
 export const NavigateToDefaultLang = () => {

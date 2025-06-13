@@ -16,9 +16,15 @@ import { NavigateToDefaultLang, RedirectToBrowserLang } from './Redirects';
 import LoginPage from '../features/auth/pages/LoginPage';
 import ContactPage from '../features/contact/pages/ContactPage';
 
+// PATCH AQUI — Redireciona /admin para idioma
+const SupportedLangs = ['en', 'pt', 'de', 'es'];
+
 const PublicRoutes = () => {
   return (
     <Routes>
+      {/* REDIRECT: /admin -> /[lang]/admin */}
+      <Route path='/admin/*' element={<RedirectToBrowserLang path='admin' />} />
+
       <Route path='/:lang' element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path='about' element={<AboutPage />} />
