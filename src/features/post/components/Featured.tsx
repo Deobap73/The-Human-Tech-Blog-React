@@ -12,7 +12,6 @@ interface FeaturedProps {
 }
 
 export const Featured = ({ post, lang }: FeaturedProps) => {
-  console.log('[Featured] post prop:', JSON.stringify(post, null, 2));
   if (!post) {
     return null;
   }

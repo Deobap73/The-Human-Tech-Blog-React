@@ -11,12 +11,25 @@ export const ContactForm = () => {
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Obter CSRF token ao montar
+  // Helper para endpoint CSRF correto conforme ambiente
+  const getCsrfEndpoint = () => {
+    if (import.meta.env.PROD) {
+      return 'https://api.thehumantechblog.com/api/auth/csrf';
+    }
+    // Em dev, vai pelo proxy do Vite (localhost)
+    return '/api/auth/csrf';
+  };
+
+  // Obter CSRF token ao montar componente
   useEffect(() => {
-    fetch('/api/csrf-token', { credentials: 'include' })
-      .then((res) => res.json())
+    fetch(getCsrfEndpoint(), { credentials: 'include' })
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to get CSRF token');
+        return res.json();
+      })
       .then((data) => setCsrfToken(data.csrfToken))
       .catch(() => setError('Failed to get CSRF token.'));
+    // eslint-disable-next-line
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -29,18 +42,21 @@ export const ContactForm = () => {
     setSuccess(null);
 
     try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-csrf-token': csrfToken,
-        },
-        credentials: 'include',
-        body: JSON.stringify(form),
-      });
+      const res = await fetch(
+        import.meta.env.PROD ? 'https://api.thehumantechblog.com/api/contact' : '/api/contact',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-csrf-token': csrfToken,
+          },
+          credentials: 'include',
+          body: JSON.stringify(form),
+        }
+      );
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || 'Failed to send');
+        throw new Error(data.error || data.message || 'Failed to send');
       }
       setSuccess(t('contact.form.success'));
       setForm({ name: '', email: '', subject: '', message: '' });
@@ -87,7 +103,7 @@ export const ContactForm = () => {
         onChange={handleChange}
         required
       />
-      <button className='contact-form__button' type='submit'>
+      <button className='contact-form__button' type='submit' disabled={!csrfToken}>
         {t('contact.form.button')}
       </button>
       {success && <div className='success-text'>{success}</div>}
