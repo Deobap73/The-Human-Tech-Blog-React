@@ -86,14 +86,9 @@
   }
 
   &__back-link {
-    display: block; // Ensures the link takes full width for button styling
-    text-align: center;
-    margin-top: var(--margin-xl);
-    text-decoration: none; // Remove default link underline
-  }
-
-  &__back-button {
-    justify-content: center;
+    display: flex; // Changed to flex for centering content easily
+    justify-content: center; // Centers text horizontally
+    align-items: center; // Centers text vertically
     width: 20rem;
     min-width: 48px;
     min-height: 48px;
@@ -106,6 +101,10 @@
     box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
     backdrop-filter: blur(2.5px);
     transition: border 0.2s, box-shadow 0.2s, background 0.25s;
+    margin: var(--margin-xl) auto 0; // Center the link and add top margin
+    text-decoration: none; // Remove default link underline
+    color: inherit; // Ensure text color is inherited or set explicitly
+
     &:hover {
       background: rgba(0, 48, 104, 0.388);
     }

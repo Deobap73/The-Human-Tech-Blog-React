@@ -20,16 +20,12 @@ export const HomePage = () => {
   const lang = i18n.language.split('-')[0] || 'en';
 
   const [posts, setPosts] = useState<Post[]>([]);
-  const [featuredPost, setFeaturedPost] = useState<Post | null>(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const res = await axios.get('/posts');
         setPosts(res.data);
-        if (res.data.length > 0) {
-          setFeaturedPost(res.data[0]);
-        }
       } catch {
         // Optionally, handle error state here for UX
       }
@@ -37,10 +33,11 @@ export const HomePage = () => {
     fetchPosts();
   }, []);
 
-  const publishedPosts = posts.filter((post) => post.status === 'published');
+  // Type guard para garantir que só posts válidos são processados
+  const isPost = (post: Post | null): post is Post => post !== null;
 
-  // Fallback multilíngua: se a tradução do idioma estiver vazia, clona a tradução "en" para o idioma pedido
-  const getPostWithLangFallback = (post: Post): Post => {
+  // Função utilitária multilíngua: só retorna posts que têm conteúdo para a língua ativa ou fallback EN
+  const getPostWithLangFallback = (post: Post): Post | null => {
     if (
       post.translations[lang] &&
       post.translations[lang].title &&
@@ -49,8 +46,7 @@ export const HomePage = () => {
     ) {
       return post;
     }
-    // Força a existência da tradução no idioma ativo com base na tradução "en"
-    if (post.translations['en']) {
+    if (post.translations['en'] && post.translations['en'].content.trim() !== '') {
       return {
         ...post,
         translations: {
@@ -59,23 +55,22 @@ export const HomePage = () => {
         },
       };
     }
-    // Último recurso: devolve o post como está
-    return post;
+    return null; // Post não tem conteúdo útil em nenhuma língua
   };
 
-  // Cálculo dos posts para Featured e LastPost com fallback
-  const featuredPostToShow =
-    featuredPost && getPostWithLangFallback(featuredPost)
-      ? getPostWithLangFallback(featuredPost)
-      : undefined;
-  const lastPostToShow =
-    publishedPosts.length > 0 && getPostWithLangFallback(publishedPosts[0])
-      ? getPostWithLangFallback(publishedPosts[0])
-      : undefined;
+  // Filtra e ordena apenas posts published e com conteúdo válido no idioma ativo ou EN
+  const validPublishedPosts = posts
+    .filter((post) => post.status === 'published')
+    .map(getPostWithLangFallback)
+    .filter(isPost)
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+  const featuredPostToShow = validPublishedPosts.length > 0 ? validPublishedPosts[0] : undefined;
+  const lastPostToShow = validPublishedPosts.length > 0 ? validPublishedPosts[1] : undefined;
 
   return (
     <div className='home'>
-      <RecentPosts posts={publishedPosts.slice(0, 12)} lang={lang} />
+      <RecentPosts posts={validPublishedPosts.slice(0, 12)} lang={lang} />
       <CategoryList />
       {featuredPostToShow && <Featured post={featuredPostToShow} lang={lang} />}
       <Sponsors />

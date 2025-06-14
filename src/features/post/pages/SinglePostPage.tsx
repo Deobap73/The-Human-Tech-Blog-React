@@ -51,7 +51,8 @@ export const SinglePostPage = () => {
       <div className='single-post-page single-post-page--error'>
         <h2 className='single-post-page__error-title'>Post not found or unpublished</h2>
         <Link to='/' className='single-post-page__back-link'>
-          <button className='single-post-page__back-button'>Voltar para o início</button>
+          {/* Removed the button, keeping only the Link */}
+          Voltar para o início
         </Link>
       </div>
     );
@@ -76,7 +77,8 @@ export const SinglePostPage = () => {
       </div>
       <Comments postId={post._id} className='single-post-page__comments' />
       <Link to='/' className='single-post-page__back-link'>
-        <button className='single-post-page__back-button'>Voltar para o início</button>
+        {/* Removed the button, keeping only the Link */}
+        Voltar para o início
       </Link>
     </div>
   );
