@@ -11,6 +11,10 @@ import { useTranslation } from 'react-i18next';
 import CategoryList from '../../post/components/CategoryList';
 import { Featured } from '../../post/components/Featured';
 
+/**
+ * HomePage: Main entry for blog readers. Displays hero post, recent, featured, and sponsored posts.
+ * Uses BEM className (.home) for consistency.
+ */
 export const HomePage = () => {
   const { i18n } = useTranslation();
   const lang = i18n.language.split('-')[0] || 'en';
@@ -35,20 +39,39 @@ export const HomePage = () => {
 
   const publishedPosts = posts.filter((post) => post.status === 'published');
 
-  // Função utilitária: se não houver conteúdo em lang, devolve a versão 'en'
-  const getPostWithLangFallback = (post: Post) => {
-    if (post.translations[lang]?.content && post.translations[lang]?.content.trim() !== '') {
+  // Fallback multilíngua: se a tradução do idioma estiver vazia, clona a tradução "en" para o idioma pedido
+  const getPostWithLangFallback = (post: Post): Post => {
+    if (
+      post.translations[lang] &&
+      post.translations[lang].title &&
+      post.translations[lang].content &&
+      post.translations[lang].content.trim() !== ''
+    ) {
       return post;
     }
-    if (post.translations['en']?.content) {
-      return { ...post, translations: { ...post.translations, [lang]: post.translations['en'] } };
+    // Força a existência da tradução no idioma ativo com base na tradução "en"
+    if (post.translations['en']) {
+      return {
+        ...post,
+        translations: {
+          ...post.translations,
+          [lang]: post.translations['en'],
+        },
+      };
     }
-    return null;
+    // Último recurso: devolve o post como está
+    return post;
   };
 
-  const featuredPostToShow = featuredPost ? getPostWithLangFallback(featuredPost) : undefined;
+  // Cálculo dos posts para Featured e LastPost com fallback
+  const featuredPostToShow =
+    featuredPost && getPostWithLangFallback(featuredPost)
+      ? getPostWithLangFallback(featuredPost)
+      : undefined;
   const lastPostToShow =
-    publishedPosts.length > 0 ? getPostWithLangFallback(publishedPosts[0]) : undefined;
+    publishedPosts.length > 0 && getPostWithLangFallback(publishedPosts[0])
+      ? getPostWithLangFallback(publishedPosts[0])
+      : undefined;
 
   return (
     <div className='home'>
@@ -60,3 +83,5 @@ export const HomePage = () => {
     </div>
   );
 };
+
+export default HomePage;
