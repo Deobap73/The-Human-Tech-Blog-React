@@ -7,6 +7,10 @@
     <title>The Human Tech Blog</title>
   </head>
   <body>
+    <!-- Force dark mode BEFORE React mounts, even for first-time visitors -->
+    <script>
+      document.body.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
