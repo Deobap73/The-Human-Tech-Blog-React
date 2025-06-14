@@ -93,17 +93,24 @@
   }
 
   &__back-button {
-    padding: var(--padding-base) var(--padding-lg);
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: var(--font-size-base);
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-
+    justify-content: center;
+    width: 20rem;
+    min-width: 48px;
+    min-height: 48px;
+    padding: 0 1.5rem;
+    font-size: 1.15rem;
+    border: 2px solid #2995e2;
+    border-left: none;
+    border-right: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
+    backdrop-filter: blur(2.5px);
+    transition: border 0.2s, box-shadow 0.2s, background 0.25s;
     &:hover {
-      background-color: darken(var(--primary), 10%);
+      background: rgba(0, 48, 104, 0.388);
+    }
+    &:active {
+      background: none !important;
     }
   }
 

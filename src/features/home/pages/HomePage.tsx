@@ -1,4 +1,4 @@
-// The-Human-Tech-Blog-React/src/features/home/pages/HomePage.tsx
+// src/features/home/pages/HomePage.tsx
 
 import { useEffect, useState } from 'react';
 import '../styles/HomePage.scss';
@@ -11,10 +11,6 @@ import { useTranslation } from 'react-i18next';
 import CategoryList from '../../post/components/CategoryList';
 import { Featured } from '../../post/components/Featured';
 
-/**
- * HomePage: Main entry for blog readers. Displays hero post, recent, featured, and sponsored posts.
- * Uses BEM className (.home) for consistency.
- */
 export const HomePage = () => {
   const { i18n } = useTranslation();
   const lang = i18n.language.split('-')[0] || 'en';
@@ -39,14 +35,28 @@ export const HomePage = () => {
 
   const publishedPosts = posts.filter((post) => post.status === 'published');
 
+  // Função utilitária: se não houver conteúdo em lang, devolve a versão 'en'
+  const getPostWithLangFallback = (post: Post) => {
+    if (post.translations[lang]?.content && post.translations[lang]?.content.trim() !== '') {
+      return post;
+    }
+    if (post.translations['en']?.content) {
+      return { ...post, translations: { ...post.translations, [lang]: post.translations['en'] } };
+    }
+    return null;
+  };
+
+  const featuredPostToShow = featuredPost ? getPostWithLangFallback(featuredPost) : undefined;
+  const lastPostToShow =
+    publishedPosts.length > 0 ? getPostWithLangFallback(publishedPosts[0]) : undefined;
+
   return (
     <div className='home'>
-      {/* <AboutMe /> */}
       <RecentPosts posts={publishedPosts.slice(0, 12)} lang={lang} />
       <CategoryList />
-      {featuredPost && <Featured post={featuredPost} lang={lang} />}
+      {featuredPostToShow && <Featured post={featuredPostToShow} lang={lang} />}
       <Sponsors />
-      {publishedPosts.length > 0 && <LastPost post={publishedPosts[0]} lang={lang} />}
+      {lastPostToShow && <LastPost post={lastPostToShow} lang={lang} />}
     </div>
   );
 };

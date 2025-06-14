@@ -1,4 +1,4 @@
-// The-Human-Tech-Blog-React/src/components/sponsors/Sponsors.tsx
+// src/features/sponsors/components/Sponsors.tsx
 
 import { useEffect, useState } from 'react';
 import '../styles/Sponsors.scss';
@@ -15,9 +15,10 @@ export const Sponsors = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const apiBase = import.meta.env.VITE_API_BASE_URL || '/api';
     const fetchSponsors = async () => {
       try {
-        const res = await fetch('/api/sponsors');
+        const res = await fetch(`${apiBase}/sponsors`, { credentials: 'include' });
         if (!res.ok) throw new Error('Failed to load sponsors');
         const data = await res.json();
         setSponsors(data);
