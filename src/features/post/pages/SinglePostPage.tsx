@@ -1,4 +1,4 @@
-// The-Human-Tech-Blog-React/src/features/post/pages/SinglePostPage.tsx
+// /src/features/post/pages/SinglePostPage.tsx
 
 import '../styles/SinglePostPage.scss';
 import { useParams, Link } from 'react-router-dom';
@@ -8,11 +8,14 @@ import axios from '../../../shared/utils/axios';
 import { Post, PostTranslation } from '../../../shared/types/Post';
 import { BookmarkButton } from '../../../features/post/components/BookmarkButton';
 import Comments from '../components/Comments';
-import { isValidPost } from '../../../shared/utils/validation';
 import ReactionButton from '../../reaction/components/ReactionButton';
 import ReactionList from '../../reaction/components/ReactionList';
 import { getPostTranslation, getCategoryName } from '../../../shared/utils/i18nHelpers';
 
+/**
+ * SinglePostPage: Displays a single post with multilanguage fallback logic.
+ * Uses getPostTranslation for robust multilanguage fallback.
+ */
 export const SinglePostPage = () => {
   const { slug } = useParams();
   const { i18n } = useTranslation();
@@ -23,16 +26,22 @@ export const SinglePostPage = () => {
     const fetchPost = async () => {
       try {
         const res = await axios.get(`/posts/slug/${slug}`);
-        setPost(res.data);
-        setError(!isValidPost(res.data, i18n.language));
+        // Always use multilanguage fallback for validation
+        const translation = getPostTranslation(res.data.translations, i18n.language);
+        const postIsValid =
+          res.data.status === 'published' &&
+          translation.title &&
+          translation.title.trim().length > 0;
+        setPost(postIsValid ? res.data : null);
+        setError(!postIsValid);
       } catch {
-        console.error('Failed to load post');
         setError(true);
       }
     };
     fetchPost();
   }, [slug, i18n.language]);
 
+  // Use robust fallback multilanguage logic for all fields
   const translation: PostTranslation =
     post && post.translations
       ? getPostTranslation(post.translations, i18n.language)
@@ -76,9 +85,10 @@ export const SinglePostPage = () => {
       </div>
       <Comments postId={post._id} className='single-post-page__comments' />
       <Link to='/' className='single-post-page__back-link'>
-        {/* Removed the button, keeping only the Link */}
         Voltar para o início
       </Link>
     </div>
   );
 };
+
+export default SinglePostPage;

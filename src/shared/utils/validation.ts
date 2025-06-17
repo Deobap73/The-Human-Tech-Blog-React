@@ -7,7 +7,5 @@ import { getPostTranslation } from './i18nHelpers';
  */
 export const isValidPost = (post: Post, lang: string = 'en'): boolean => {
   const t = getPostTranslation(post.translations, lang);
-  return Boolean(
-    post && typeof t.title === 'string' && t.title.trim().length > 0 && post.status === 'published'
-  );
+  return Boolean(post && post.status === 'published' && t.title && t.title.trim().length > 0);
 };

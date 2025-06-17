@@ -13,29 +13,29 @@ export const getPostTranslation = (
   lang: string = 'en'
 ): PostTranslation => {
   // Helper to check if a translation object actually has visible content
-  const hasContent = (t?: PostTranslation) =>
-    t && ((t.title && t.title.trim() !== '') || (t.content && t.content.trim() !== ''));
+  const hasContent = (t?: PostTranslation): t is PostTranslation =>
+    !!t && ((!!t.title && t.title.trim() !== '') || (!!t.content && t.content.trim() !== ''));
 
   // 1. Try exact lang (e.g. 'pt')
   if (hasContent(translations[lang])) {
-    return translations[lang];
+    return translations[lang]!;
   }
   // 2. Try base lang (e.g. 'pt-PT' → 'pt')
   const baseLang = lang.split('-')[0];
   if (lang !== baseLang && hasContent(translations[baseLang])) {
-    return translations[baseLang];
+    return translations[baseLang]!;
   }
   // 3. Fallback for English if exists and not empty
   if (hasContent(translations['en'])) {
-    return translations['en'];
+    return translations['en']!;
   }
   // 4. Fallback for *any* non-empty translation
   for (const key in translations) {
     if (hasContent(translations[key])) {
-      return translations[key];
+      return translations[key]!;
     }
   }
-  // 5. Empty fallback
+  // 5. Empty fallback: always return a valid PostTranslation
   return { title: '', description: '', content: '' };
 };
 
