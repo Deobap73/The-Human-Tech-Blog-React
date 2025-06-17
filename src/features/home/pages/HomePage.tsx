@@ -1,4 +1,4 @@
-// src/features/home/pages/HomePage.tsx
+// /src/features/home/pages/HomePage.tsx
 
 import { useEffect, useState } from 'react';
 import '../styles/HomePage.scss';
@@ -10,10 +10,11 @@ import axios from '../../../shared/utils/axios';
 import { useTranslation } from 'react-i18next';
 import CategoryList from '../../post/components/CategoryList';
 import { Featured } from '../../post/components/Featured';
+import { getPostTranslation } from '../../../shared/utils/i18nHelpers';
 
 /**
  * HomePage: Main entry for blog readers. Displays hero post, recent, featured, and sponsored posts.
- * Uses BEM className (.home) for consistency.
+ * Uses BEM className (.home) for consistency and robust multilanguage fallback.
  */
 export const HomePage = () => {
   const { i18n } = useTranslation();
@@ -33,36 +34,13 @@ export const HomePage = () => {
     fetchPosts();
   }, []);
 
-  // Type guard para garantir que só posts válidos são processados
-  const isPost = (post: Post | null): post is Post => post !== null;
-
-  // Função utilitária multilíngua: só retorna posts que têm conteúdo para a língua ativa ou fallback EN
-  const getPostWithLangFallback = (post: Post): Post | null => {
-    if (
-      post.translations[lang] &&
-      post.translations[lang].title &&
-      post.translations[lang].content &&
-      post.translations[lang].content.trim() !== ''
-    ) {
-      return post;
-    }
-    if (post.translations['en'] && post.translations['en'].content.trim() !== '') {
-      return {
-        ...post,
-        translations: {
-          ...post.translations,
-          [lang]: post.translations['en'],
-        },
-      };
-    }
-    return null; // Post não tem conteúdo útil em nenhuma língua
-  };
-
-  // Filtra e ordena apenas posts published e com conteúdo válido no idioma ativo ou EN
+  // Helper: Return only posts that are published AND have a translation in the active lang or fallback (EN, etc)
   const validPublishedPosts = posts
     .filter((post) => post.status === 'published')
-    .map(getPostWithLangFallback)
-    .filter(isPost)
+    .filter((post) => {
+      const translation = getPostTranslation(post.translations, lang);
+      return translation.title && translation.title.trim().length > 0;
+    })
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   const featuredPostToShow = validPublishedPosts.length > 0 ? validPublishedPosts[0] : undefined;
