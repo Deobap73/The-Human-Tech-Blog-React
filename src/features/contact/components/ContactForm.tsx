@@ -1,36 +1,16 @@
 // /src/features/contact/components/ContactForm.tsx
 
-import '../styles/ContactForm.scss';
 import { useTranslation } from 'react-i18next';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { safeApiPost } from '../../../shared/utils/apiHelpers';
+import '../styles/ContactForm.scss';
 
 export const ContactForm = () => {
   const { t } = useTranslation();
-  const [csrfToken, setCsrfToken] = useState<string>('');
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  // Helper para endpoint CSRF correto conforme ambiente
-  const getCsrfEndpoint = () => {
-    if (import.meta.env.PROD) {
-      return 'https://api.thehumantechblog.com/api/auth/csrf';
-    }
-    // Em dev, vai pelo proxy do Vite (localhost)
-    return '/api/auth/csrf';
-  };
-
-  // Obter CSRF token ao montar componente
-  useEffect(() => {
-    fetch(getCsrfEndpoint(), { credentials: 'include' })
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed to get CSRF token');
-        return res.json();
-      })
-      .then((data) => setCsrfToken(data.csrfToken))
-      .catch(() => setError('Failed to get CSRF token.'));
-    // eslint-disable-next-line
-  }, []);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -40,28 +20,18 @@ export const ContactForm = () => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
+    setLoading(true);
 
     try {
-      const res = await fetch(
-        import.meta.env.PROD ? 'https://api.thehumantechblog.com/api/contact' : '/api/contact',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-csrf-token': csrfToken,
-          },
-          credentials: 'include',
-          body: JSON.stringify(form),
-        }
-      );
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || data.message || 'Failed to send');
-      }
+      await safeApiPost('/contact', form);
       setSuccess(t('contact.form.success'));
       setForm({ name: '', email: '', subject: '', message: '' });
     } catch (err: any) {
-      setError(err.message || 'Send failed');
+      setError(
+        err?.response?.data?.error || err?.response?.data?.message || err.message || 'Send failed'
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -103,8 +73,8 @@ export const ContactForm = () => {
         onChange={handleChange}
         required
       />
-      <button className='contact-form__button' type='submit' disabled={!csrfToken}>
-        {t('contact.form.button')}
+      <button className='contact-form__button' type='submit' disabled={loading}>
+        {loading ? t('contact.form.sending') || 'Sending...' : t('contact.form.button')}
       </button>
       {success && <div className='success-text'>{success}</div>}
       {error && <div className='error-text'>{error}</div>}
