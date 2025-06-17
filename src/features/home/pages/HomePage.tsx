@@ -12,10 +12,6 @@ import CategoryList from '../../post/components/CategoryList';
 import { Featured } from '../../post/components/Featured';
 import { getPostTranslation } from '../../../shared/utils/i18nHelpers';
 
-/**
- * HomePage: Main entry for blog readers. Displays hero post, recent, featured, and sponsored posts.
- * Uses BEM className (.home) for consistency and robust multilanguage fallback.
- */
 export const HomePage = () => {
   const { i18n } = useTranslation();
   const lang = i18n.language.split('-')[0] || 'en';
@@ -34,11 +30,16 @@ export const HomePage = () => {
     fetchPosts();
   }, []);
 
+  // DEBUG - garantir que o lang está correto
+  console.log('[HomePage] Active lang:', lang);
+
   // Helper: Return only posts that are published AND have a translation in the active lang or fallback (EN, etc)
   const validPublishedPosts = posts
     .filter((post) => post.status === 'published')
     .filter((post) => {
       const translation = getPostTranslation(post.translations, lang);
+      // DEBUG
+      console.log('[HomePage] Post:', post.slug, 'lang:', lang, 'translation:', translation);
       return translation.title && translation.title.trim().length > 0;
     })
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());

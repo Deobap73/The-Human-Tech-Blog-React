@@ -1,5 +1,3 @@
-// /src/features/post/pages/SinglePostPage.tsx
-
 import '../styles/SinglePostPage.scss';
 import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -12,10 +10,6 @@ import ReactionButton from '../../reaction/components/ReactionButton';
 import ReactionList from '../../reaction/components/ReactionList';
 import { getPostTranslation, getCategoryName } from '../../../shared/utils/i18nHelpers';
 
-/**
- * SinglePostPage: Displays a single post with multilanguage fallback logic.
- * Uses getPostTranslation for robust multilanguage fallback.
- */
 export const SinglePostPage = () => {
   const { slug } = useParams();
   const { i18n } = useTranslation();
@@ -41,7 +35,6 @@ export const SinglePostPage = () => {
     fetchPost();
   }, [slug, i18n.language]);
 
-  // Use robust fallback multilanguage logic for all fields
   const translation: PostTranslation =
     post && post.translations
       ? getPostTranslation(post.translations, i18n.language)
