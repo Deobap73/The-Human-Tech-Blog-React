@@ -1,4 +1,4 @@
-/* The-Human-Tech-Blog-React/src/pages/posts/_slug/SinglePostPage.scss */
+// src/features/post/styles/SinglePostPage.scss
 
 .single-post-page {
   max-width: var(--layout-max-width);
@@ -6,89 +6,126 @@
   padding: 0 var(--padding-xl);
   color: var(--textColor);
 
-  // Modifier for error state
-  &--error {
-    text-align: center;
-    padding: var(--padding-xl);
-  }
-
-  &__error-title {
-    font-size: var(--font-size-xl);
-    color: var(--color-error); // Assuming you have an error color variable
-    margin-bottom: var(--margin-base);
-  }
-
-  &__loading {
-    text-align: center;
-    padding: var(--padding-xl);
-    font-size: var(--font-size-lg);
-    color: var(--text-color-secondary);
-  }
-
-  &__header {
+  &__main-grid {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: var(--margin-base);
-    position: relative; // For positioning bookmark button
+    gap: 2rem;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 1rem;
   }
-
+  &__info {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 1rem;
+  }
   &__title {
     font-size: var(--post-title-size);
     font-weight: bold;
-    text-align: center;
-    flex-grow: 1; // Allows title to take up available space
+    margin-bottom: 0.3rem;
+  }
+  &__user {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  &__avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #2995e2;
+  }
+  &__username {
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  &__date {
+    font-size: 0.93rem;
+    color: #818181;
+    margin-top: 0.2rem;
   }
 
+  &__media {
+    flex: 3;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+    gap: 0.7rem;
+  }
   &__image {
-    width: 100%;
-    height: auto;
-    margin-bottom: var(--margin-2b);
+    width: 220px;
+    height: 140px;
     border-radius: 8px;
+    object-fit: cover;
+    margin-bottom: 0.5rem;
+    background: #f9f9f9;
+    border: 1px solid #eaeaea;
+  }
+  &__bookmark-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
   }
 
-  &__excerpt {
-    font-size: var(--post-body-size);
-    line-height: 1.8;
-    margin-bottom: var(--margin-2b);
+  &__category-bar {
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0.7rem 0;
+    margin-bottom: 0.7rem;
   }
-
   &__category {
-    display: inline-block; // Or block, depending on desired layout
     font-size: var(--font-size-sm);
     color: var(--primary);
-    background-color: var(--background-light); // Example background
+    background-color: var(--background-light);
     padding: var(--padding-xs) var(--padding-base);
     border-radius: 20px;
-    margin-bottom: var(--margin-base);
     font-weight: 600;
   }
 
-  &__bookmark-button {
-    // These styles are specific to how the bookmark button behaves within this page
-    // The core button styles should be in BookmarkButton.scss
-    position: absolute;
-    top: 0; // Adjust as needed
-    right: 0; // Adjust as needed
-    z-index: 2; // Ensure it's above other content
+  &__content-grid {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1.2rem;
+  }
+  &__body {
+    flex: 3;
+    padding-top: 1rem;
+    font-size: var(--post-body-size);
+    line-height: 1.8;
+  }
+  &__description {
+    margin-bottom: 1.5rem;
+  }
+  &__sidebar {
+    flex: 2;
+    border-left: 1px solid #ececec;
+    padding-left: 2rem;
   }
 
   &__reactions {
     display: flex;
-    gap: var(--gap-base); // Space between ReactionList and ReactionButton
+    gap: 1.5rem;
     align-items: center;
     margin-top: var(--margin-base);
     margin-bottom: var(--margin-lg);
   }
 
   &__comments {
-    margin-top: var(--margin-xl); // Space above comments section
+    margin-top: var(--margin-xl);
+  }
+  &__comments-title {
+    font-size: 1.17rem;
+    margin-bottom: 0.6rem;
   }
 
   &__back-link {
-    display: flex; // Changed to flex for centering content easily
-    justify-content: center; // Centers text horizontally
-    align-items: center; // Centers text vertically
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 20rem;
     min-width: 48px;
     min-height: 48px;
@@ -101,9 +138,9 @@
     box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
     backdrop-filter: blur(2.5px);
     transition: border 0.2s, box-shadow 0.2s, background 0.25s;
-    margin: var(--margin-xl) auto 0; // Center the link and add top margin
-    text-decoration: none; // Remove default link underline
-    color: inherit; // Ensure text color is inherited or set explicitly
+    margin: var(--margin-xl) auto 0;
+    text-decoration: none;
+    color: inherit;
 
     &:hover {
       background: rgba(0, 48, 104, 0.388);
@@ -113,28 +150,42 @@
     }
   }
 
-  /* Media Queries */
-  @media (max-width: 768px) {
-    padding: 0 var(--padding-base);
+  // Error and loading states
+  &--error {
+    text-align: center;
+    padding: var(--padding-xl);
+  }
+  &__error-title {
+    font-size: var(--font-size-xl);
+    color: var(--color-error);
+    margin-bottom: var(--margin-base);
+  }
+  &__loading {
+    text-align: center;
+    padding: var(--padding-xl);
+    font-size: var(--font-size-lg);
+    color: var(--text-color-secondary);
+  }
 
-    &__title {
-      font-size: var(--font-size-2b);
-    }
-
-    &__header {
+  // Responsive
+  @media (max-width: 900px) {
+    &__main-grid,
+    &__content-grid {
       flex-direction: column;
+      gap: 1.5rem;
+    }
+    &__sidebar {
+      border-left: none;
+      padding-left: 0;
+      margin-top: 1.5rem;
+    }
+    &__media {
       align-items: center;
-      margin-bottom: var(--margin-lg); // More space below header on small screens
     }
-
-    &__bookmark-button {
-      position: static; // Remove absolute positioning on small screens
-      margin: var(--margin-base) auto; // Center it
-    }
-
-    &__reactions {
-      flex-direction: column; // Stack reactions vertically
-      align-items: flex-start; // Align to the left
+    &__image {
+      width: 100%;
+      height: auto;
+      min-height: 140px;
     }
   }
 }

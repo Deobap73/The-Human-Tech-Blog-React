@@ -1,14 +1,23 @@
+// src/features/post/pages/SinglePostPage.tsx
+
 import '../styles/SinglePostPage.scss';
 import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from '../../../shared/utils/axios';
 import { Post, PostTranslation } from '../../../shared/types/Post';
-import { BookmarkButton } from '../../../features/post/components/BookmarkButton';
+import { BookmarkButton } from '../components/BookmarkButton';
 import Comments from '../components/Comments';
-import ReactionButton from '../../reaction/components/ReactionButton';
-import ReactionList from '../../reaction/components/ReactionList';
+import { ReactionButtons } from '../components/ReactionButtons';
 import { getPostTranslation, getCategoryName } from '../../../shared/utils/i18nHelpers';
+import RecentCategoryPosts from '../components/RecentCategoryPosts'; // Novo componente
+
+// Define o tipo do utilizador localmente, visto não estar exportado do Post
+type PostUser = {
+  _id?: string;
+  name?: string;
+  avatar?: string;
+};
 
 export const SinglePostPage = () => {
   const { slug } = useParams();
@@ -20,7 +29,6 @@ export const SinglePostPage = () => {
     const fetchPost = async () => {
       try {
         const res = await axios.get(`/posts/slug/${slug}`);
-        // Always use multilanguage fallback for validation
         const translation = getPostTranslation(res.data.translations, i18n.language);
         const postIsValid =
           res.data.status === 'published' &&
@@ -35,19 +43,6 @@ export const SinglePostPage = () => {
     fetchPost();
   }, [slug, i18n.language]);
 
-  const translation: PostTranslation =
-    post && post.translations
-      ? getPostTranslation(post.translations, i18n.language)
-      : { title: '', description: '', content: '' };
-
-  const firstCategoryName =
-    post?.categories &&
-    post.categories.length > 0 &&
-    typeof post.categories[0] === 'object' &&
-    (post.categories[0] as any)?.translations
-      ? getCategoryName(post.categories[0] as any, i18n.language)
-      : '';
-
   if (error) {
     return (
       <div className='single-post-page single-post-page--error'>
@@ -61,22 +56,85 @@ export const SinglePostPage = () => {
 
   if (!post) return <div className='single-post-page__loading'>Loading...</div>;
 
+  // Multi-language support
+  const translation: PostTranslation = post.translations
+    ? getPostTranslation(post.translations, i18n.language)
+    : { title: '', description: '', content: '' };
+
+  const category =
+    post.categories && post.categories.length > 0 && typeof post.categories[0] === 'object'
+      ? getCategoryName(post.categories[0] as any, i18n.language)
+      : '';
+
+  // User Info (safe fallback)
+  const user: PostUser = (post as any).user || (post as any).author || {};
+
+  // Corrige o categoryId (string ou object)
+  const categoryId =
+    post.categories && post.categories.length > 0
+      ? typeof post.categories[0] === 'object'
+        ? (post.categories[0] as any)._id
+        : post.categories[0]
+      : '';
+
   return (
     <div className='single-post-page'>
-      <div className='single-post-page__header'>
-        <h1 className='single-post-page__title'>{translation.title}</h1>
-        <BookmarkButton postId={post._id} className='single-post-page__bookmark-button' />
+      <div className='single-post-page__main-grid'>
+        {/* Left block: Title, user, avatar, data */}
+        <div className='single-post-page__info'>
+          <h1 className='single-post-page__title'>{translation.title}</h1>
+          <div className='single-post-page__user'>
+            <img
+              src={
+                user.avatar ||
+                `https://api.dicebear.com/8.x/pixel-art/svg?seed=${user._id || 'guest'}`
+              }
+              alt={user.name || 'User'}
+              className='single-post-page__avatar'
+              width={48}
+              height={48}
+            />
+            <div>
+              <div className='single-post-page__username'>{user.name || 'User'}</div>
+              <div className='single-post-page__date'>
+                {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ''}
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* Right block: Image + Bookmark */}
+        <div className='single-post-page__media'>
+          {post.image && (
+            <img src={post.image} alt={translation.title} className='single-post-page__image' />
+          )}
+          <BookmarkButton postId={post._id} className='single-post-page__bookmark-button' />
+        </div>
       </div>
-      {post.image && (
-        <img src={post.image} alt={translation.title} className='single-post-page__image' />
-      )}
-      <p className='single-post-page__excerpt'>{translation.description}</p>
-      {firstCategoryName && <span className='single-post-page__category'>{firstCategoryName}</span>}
+
+      <div className='single-post-page__category-bar'>
+        <span className='single-post-page__category'>{category}</span>
+      </div>
+
+      <div className='single-post-page__content-grid'>
+        <div className='single-post-page__body'>
+          <div className='single-post-page__description'>{translation.description}</div>
+        </div>
+        <aside className='single-post-page__sidebar'>
+          <RecentCategoryPosts
+            categoryId={categoryId}
+            currentPostId={post._id}
+            lang={i18n.language}
+          />
+        </aside>
+      </div>
+
       <div className='single-post-page__reactions'>
-        <ReactionList targetType='post' targetId={post._id} />
-        <ReactionButton targetType='post' targetId={post._id} />
+        <ReactionButtons postId={post._id} />
       </div>
-      <Comments postId={post._id} className='single-post-page__comments' />
+      <div className='single-post-page__comments'>
+        <h3 className='single-post-page__comments-title'>Comments</h3>
+        <Comments postId={post._id} className='single-post-page__comments-list' />
+      </div>
       <Link to='/' className='single-post-page__back-link'>
         Voltar para o início
       </Link>
