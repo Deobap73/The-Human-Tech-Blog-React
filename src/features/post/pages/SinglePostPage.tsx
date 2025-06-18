@@ -130,11 +130,7 @@ export const SinglePostPage = () => {
         {/* Sidebar (desktop: sticky/right; mobile: below) */}
         <aside className='single-post-page__sidebar'>
           <section className='single-post-page__popular-posts'>
-            <RecentCategoryPosts
-              categoryId={categoryId}
-              currentPostId={post._id}
-              lang={i18n.language}
-            />
+            <RecentCategoryPosts currentPostId={post._id} lang={i18n.language} />
           </section>
           <section className='single-post-page__categories-list'>
             <CategoryList />
