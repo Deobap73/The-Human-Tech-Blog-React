@@ -1,7 +1,7 @@
 // src/features/post/pages/CategoryPage.tsx
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import api from '../../../shared/utils/axios';
 import { useTranslation } from 'react-i18next';
@@ -71,6 +71,9 @@ const CategoryPage = () => {
       ) : (
         <p className='category-page__no-posts'>No posts found for this category.</p>
       )}
+      <Link to='/' className='category-page__back-link'>
+        Voltar para o início
+      </Link>
     </div>
   );
 };

@@ -50,8 +50,11 @@ export const Card = ({ post, lang }: CardProps) => {
           <p className='card-post__description'>{displayDescription}</p>
 
           <div className='card-post__actions'>
-            <Link to={`/${lang}/posts/${post.slug}`} className='card-post__read-more-link'>
-              <button className='card-post__read-more-button'>Read More</button>
+            <Link
+              to={`/${lang}/posts/${post.slug}`}
+              className='card-post__read-more-link' // Adicione a classe do botão aqui
+            >
+              Read More
             </Link>
 
             <BookmarkButton postId={post._id} />
