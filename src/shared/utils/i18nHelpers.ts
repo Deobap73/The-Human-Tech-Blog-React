@@ -1,5 +1,3 @@
-// src/shared/utils/i18nHelpers.ts
-
 import { Post, PostTranslation, PostTranslations } from '../types/Post';
 import { Category } from '../types/Category';
 import { Tag } from '../types/Tag';
@@ -7,14 +5,17 @@ import { Tag } from '../types/Tag';
 /**
  * Returns a translated version of the post for the given language (with safe fallback).
  * Fallback: active lang → stripped lang (pt-PT → pt) → 'en' → any non-empty translation.
+ * Ignores empty translation objects (e.g. {content: '<p></p>'})
  */
 export const getPostTranslation = (
   translations: PostTranslations,
   lang: string = 'en'
 ): PostTranslation => {
-  // Helper: type guard + só aceita traduções com título OU content com texto
+  // Helper: returns true if translation has real title or content (not just empty tags)
   const hasContent = (t?: PostTranslation): t is PostTranslation =>
-    !!t && ((!!t.title && t.title.trim() !== '') || (!!t.content && t.content.trim() !== ''));
+    !!t &&
+    ((!!t.title && t.title.trim() !== '') ||
+      (!!t.content && t.content.replace(/<[^>]*>/g, '').trim() !== ''));
 
   // 1. Try exact lang (e.g. 'pt')
   if (hasContent(translations[lang])) {
