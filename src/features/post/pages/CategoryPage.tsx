@@ -1,3 +1,5 @@
+// src/features/post/pages/CategoryPage.tsx
+
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
@@ -36,7 +38,7 @@ const CategoryPage = () => {
     fetchCategoryAndPosts();
   }, [slug]);
 
-  // Tradução multilíngue segura
+  // Safe multilingual translation
   const name = category ? getCategoryName(category, i18n.language) : slug;
   const description =
     category?.translations?.[i18n.language]?.description ||
@@ -65,7 +67,7 @@ const CategoryPage = () => {
       )}
       {!category && <h2 className='category-page__title'>{slug}</h2>}
       {posts.length > 0 ? (
-        <CardList posts={posts} />
+        <CardList posts={posts} lang={i18n.language} />
       ) : (
         <p className='category-page__no-posts'>No posts found for this category.</p>
       )}
