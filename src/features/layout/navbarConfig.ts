@@ -41,19 +41,33 @@ export const navbarConfigs: Record<string, NavbarConfig> = {
   '/user': {
     showTile: false,
   },
+  '/posts/': {
+    showTile: false,
+    background: undefined,
+  },
   // Add more routes as needed
 };
 
 export function getNavbarConfig(pathname: string): NavbarConfig {
   // Remove language prefix, e.g., /en/about → /about
   const path = pathname.replace(/^\/[a-z]{2}(\/|$)/, '/');
-  // Exact match, or starts with route
-  let config = navbarConfigs[path];
-  if (!config) {
-    const match = Object.keys(navbarConfigs).find(
-      (route) => route !== '/' && path.startsWith(route)
-    );
-    config = (match && navbarConfigs[match]) || navbarConfigs['/'];
+
+  // 1. Exact match
+  if (navbarConfigs[path]) {
+    return navbarConfigs[path];
   }
-  return config || { showTile: false };
+
+  // 2. Verifica se está em SinglePostPage: /posts/:slug
+  if (/^\/posts\/[^/]+/.test(path)) {
+    return navbarConfigs['/posts/'];
+  }
+
+  // 3. Starts with route
+  const match = Object.keys(navbarConfigs).find((route) => route !== '/' && path.startsWith(route));
+  if (match) {
+    return navbarConfigs[match];
+  }
+
+  // 4. Fallback home
+  return navbarConfigs['/'] || { showTile: false };
 }
