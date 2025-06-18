@@ -236,5 +236,13 @@
       "error": "Falha no registro. Por favor, tente novamente.",
       "unexpectedError": "Ocorreu um erro inesperado"
     }
+  },
+  "postPage": {
+    "backToHome": "Voltar para o Início",
+    "postNotFound": "Post não encontrado ou não publicado",
+    "comments": "Comentários",
+    "mostPopular": "Mais Populares",
+    "noPopularPosts": "Nenhum outro post disponível.",
+    "loading": "Carregando..."
   }
 }

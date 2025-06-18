@@ -10,9 +10,10 @@ import { BookmarkButton } from '../components/BookmarkButton';
 import Comments from '../components/Comments';
 import { ReactionButtons } from '../components/ReactionButtons';
 import { getPostTranslation, getCategoryName } from '../../../shared/utils/i18nHelpers';
-import RecentCategoryPosts from '../components/RecentCategoryPosts'; // Novo componente
+import RecentCategoryPosts from '../components/RecentCategoryPosts';
+import CategoryList from '../components/CategoryList';
 
-// Define o tipo do utilizador localmente, visto não estar exportado do Post
+// Local User Type for Post
 type PostUser = {
   _id?: string;
   name?: string;
@@ -21,7 +22,7 @@ type PostUser = {
 
 export const SinglePostPage = () => {
   const { slug } = useParams();
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const [post, setPost] = useState<Post | null>(null);
   const [error, setError] = useState(false);
 
@@ -46,9 +47,11 @@ export const SinglePostPage = () => {
   if (error) {
     return (
       <div className='single-post-page single-post-page--error'>
-        <h2 className='single-post-page__error-title'>Post not found or unpublished</h2>
+        <h2 className='single-post-page__error-title'>
+          {t('postNotFound', 'Post not found or unpublished')}
+        </h2>
         <Link to='/' className='single-post-page__back-link'>
-          <button className='single-post-page__back-button'>Voltar para o início</button>
+          <button className='single-post-page__back-button'>{t('backToHome')}</button>
         </Link>
       </div>
     );
@@ -79,64 +82,69 @@ export const SinglePostPage = () => {
 
   return (
     <div className='single-post-page'>
-      <div className='single-post-page__main-grid'>
-        {/* Left block: Title, user, avatar, data */}
-        <div className='single-post-page__info'>
-          <h1 className='single-post-page__title'>{translation.title}</h1>
-          <div className='single-post-page__user'>
-            <img
-              src={
-                user.avatar ||
-                `https://api.dicebear.com/8.x/pixel-art/svg?seed=${user._id || 'guest'}`
-              }
-              alt={user.name || 'User'}
-              className='single-post-page__avatar'
-              width={48}
-              height={48}
-            />
-            <div>
-              <div className='single-post-page__username'>{user.name || 'User'}</div>
-              <div className='single-post-page__date'>
-                {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ''}
+      {/* Main article section */}
+      <div className='single-post-page__content'>
+        <div className='single-post-page__main-article'>
+          <div className='single-post-page__post-header'>
+            <h1 className='single-post-page__title'>{translation.title}</h1>
+            <div className='single-post-page__user'>
+              <img
+                src={
+                  user.avatar ||
+                  `https://api.dicebear.com/8.x/pixel-art/svg?seed=${user._id || 'guest'}`
+                }
+                alt={user.name || 'User'}
+                className='single-post-page__avatar'
+                width={48}
+                height={48}
+              />
+              <div>
+                <div className='single-post-page__username'>{user.name || 'User'}</div>
+                <div className='single-post-page__date'>
+                  {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ''}
+                </div>
               </div>
             </div>
+            {post.image && (
+              <img src={post.image} alt={translation.title} className='single-post-page__image' />
+            )}
+            <BookmarkButton postId={post._id} className='single-post-page__bookmark-button' />
+          </div>
+          <div className='single-post-page__category-bar'>
+            <span className='single-post-page__category'>{category}</span>
+          </div>
+          <div className='single-post-page__body'>
+            <div className='single-post-page__description'>{translation.description}</div>
+          </div>
+          <div className='single-post-page__reactions'>
+            <ReactionButtons postId={post._id} />
+          </div>
+          <div className='single-post-page__comments'>
+            <h3 className='single-post-page__comments-title'>
+              {t('postPage.comments', 'Comments')}
+            </h3>
+            <Comments postId={post._id} className='single-post-page__comments-list' />
           </div>
         </div>
-        {/* Right block: Image + Bookmark */}
-        <div className='single-post-page__media'>
-          {post.image && (
-            <img src={post.image} alt={translation.title} className='single-post-page__image' />
-          )}
-          <BookmarkButton postId={post._id} className='single-post-page__bookmark-button' />
-        </div>
-      </div>
 
-      <div className='single-post-page__category-bar'>
-        <span className='single-post-page__category'>{category}</span>
-      </div>
-
-      <div className='single-post-page__content-grid'>
-        <div className='single-post-page__body'>
-          <div className='single-post-page__description'>{translation.description}</div>
-        </div>
+        {/* Sidebar (desktop: sticky/right; mobile: below) */}
         <aside className='single-post-page__sidebar'>
-          <RecentCategoryPosts
-            categoryId={categoryId}
-            currentPostId={post._id}
-            lang={i18n.language}
-          />
+          <section className='single-post-page__popular-posts'>
+            <RecentCategoryPosts
+              categoryId={categoryId}
+              currentPostId={post._id}
+              lang={i18n.language}
+            />
+          </section>
+          <section className='single-post-page__categories-list'>
+            <CategoryList />
+          </section>
         </aside>
       </div>
 
-      <div className='single-post-page__reactions'>
-        <ReactionButtons postId={post._id} />
-      </div>
-      <div className='single-post-page__comments'>
-        <h3 className='single-post-page__comments-title'>Comments</h3>
-        <Comments postId={post._id} className='single-post-page__comments-list' />
-      </div>
-      <Link to='/' className='single-post-page__back-link'>
-        Voltar para o início
+      {/* Fixed "Back to Home" button */}
+      <Link to='/' className='single-post-page__back-link single-post-page__back-link--fixed'>
+        {t('postPage.backToHome')}
       </Link>
     </div>
   );

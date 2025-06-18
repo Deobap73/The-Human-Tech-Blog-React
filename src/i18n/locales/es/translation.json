@@ -4,20 +4,20 @@
     "contact": "Contacto",
     "about": "Acerca de",
     "write": "Escribir",
-    "admin": "Admin",
+    "admin": "Administración",
     "logout": "Cerrar sesión",
     "login": "Iniciar sesión",
     "profile": "Perfil",
-    "title": "El Blog de Tecnología Humana",
+    "title": "El Blog de Human Tech",
     "description": "Explore el mundo de la gestión de proyectos, frontend, UI/UX y Scrum a través de mis ojos. Reflexiones personales e ideas sobre la vida y la tecnología",
-    "title.home": "El Blog de Tecnología Humana",
+    "title.home": "El Blog de Human Tech",
     "description.home": "Explore el mundo de la gestión de proyectos, frontend, UI/UX y Scrum a través de mis ojos. Reflexiones personales e ideas sobre la vida y la tecnología.",
     "title.about": "Deolindo Baptista",
-    "description.about": "No siempre conozco el camino correcto, pero sé que quiero construirlo con empatía, diseño y buenas preguntas. Este espacio trata de eso.",
+    "description.about": "No siempre sé el camino correcto, pero sé que quiero construirlo con empatía, diseño y buenas preguntas. Este espacio trata de eso.",
     "title.contact": "Contacto",
-    "description.contact": "¿Quiere ponerse en contacto? Para comentarios, sugerencias u oportunidades profesionales.",
+    "description.contact": "¿Quieres contactar? Ponte en contacto para comentarios, sugerencias u oportunidades profesionales.",
     "headerBackgroundAlt": "Imagen de fondo del encabezado",
-    "logoAlt": "Logotipo de The Human Tech Blog",
+    "logoAlt": "Logotipo del Blog de Human Tech",
     "searchPlaceholder": "Buscar artículos..."
   },
   "searchBar": {
@@ -34,18 +34,18 @@
     "delete": "Eliminar",
     "cancel": "Cancelar",
     "no_tags": "Aún no hay etiquetas.",
-    "error_fetch_tags": "Error al obtener etiquetas.",
+    "error_fetch_tags": "Error al obtener las etiquetas.",
     "error_save_tag": "Error al guardar la etiqueta.",
     "error_delete_tag": "Error al eliminar la etiqueta.",
-    "confirm_delete_tag": "¿Está seguro? Las etiquetas utilizadas por las publicaciones no se pueden eliminar.",
+    "confirm_delete_tag": "¿Está seguro? Las etiquetas utilizadas en publicaciones no se pueden eliminar.",
     "dashboard": "Panel de control",
     "posts": "Publicaciones",
     "messages": "Mensajes",
-    "moderateComments": "Moderar Comentarios",
-    "settings": "Configuración"
+    "moderateComments": "Moderar comentarios",
+    "settings": "Ajustes"
   },
   "adminCategoryForm": {
-    "title": "Administrar Categorías",
+    "title": "Administrar categorías",
     "name": "Nombre",
     "namePlaceholder": "Nombre de la categoría",
     "description": "Descripción",
@@ -56,13 +56,13 @@
     "update": "Actualizar",
     "cancel": "Cancelar",
     "error": "Error al guardar la categoría",
-    "requiredName": "El nombre (ES) es obligatorio",
-    "requiredDescription": "La descripción (ES) es obligatoria",
-    "deleteConfirm": "¿Eliminar esta categoría? Las categorías utilizadas por las publicaciones no se pueden eliminar.",
+    "requiredName": "El nombre (EN) es obligatorio",
+    "requiredDescription": "La descripción (EN) es obligatoria",
+    "deleteConfirm": "¿Eliminar esta categoría? Las categorías utilizadas por publicaciones no se pueden eliminar.",
     "noCategories": "No se encontraron categorías."
   },
   "adminTagForm": {
-    "title": "Administrar Etiquetas",
+    "title": "Administrar etiquetas",
     "name": "Nombre",
     "namePlaceholder": "Nombre de la etiqueta",
     "description": "Descripción",
@@ -72,35 +72,35 @@
     "update": "Actualizar",
     "cancel": "Cancelar",
     "error": "Error al guardar la etiqueta",
-    "requiredName": "El nombre (ES) es obligatorio",
-    "deleteConfirm": "¿Eliminar esta etiqueta? Las etiquetas utilizadas por las publicaciones no se pueden eliminar.",
+    "requiredName": "El nombre (EN) es obligatorio",
+    "deleteConfirm": "¿Eliminar esta etiqueta? Las etiquetas utilizadas por publicaciones no se pueden eliminar.",
     "noTags": "No se encontraron etiquetas."
   },
   "adminNotificationForm": {
-    "title": "Administrar Notificaciones",
+    "title": "Administrar notificaciones",
     "notificationTitle": "Título",
     "notificationTitlePlaceholder": "Título de la notificación",
     "message": "Mensaje",
-    "messagePlaceholder": "Introduzca el mensaje de notificación...",
+    "messagePlaceholder": "Introduzca el mensaje de la notificación...",
     "create": "Crear",
     "update": "Actualizar",
     "cancel": "Cancelar",
     "error": "Error al guardar la notificación",
-    "requiredTitle": "El título (ES) es obligatorio",
+    "requiredTitle": "El título (EN) es obligatorio",
     "deleteConfirm": "¿Eliminar esta notificación?",
     "noNotifications": "No se encontraron notificaciones."
   },
   "adminPostForm": {
     "title": "Título",
     "titlePlaceholder": "Título de la publicación",
-    "requiredTitle": "El título es obligatorio (ES)",
+    "requiredTitle": "El título es obligatorio (EN)",
     "description": "Descripción",
-    "descriptionPlaceholder": "Descripción corta",
-    "requiredDescription": "La descripción es obligatoria (ES)",
+    "descriptionPlaceholder": "Descripción breve",
+    "requiredDescription": "La descripción es obligatoria (EN)",
     "content": "Contenido",
     "contentPlaceholder": "Contenido completo",
-    "requiredContent": "El contenido es obligatorio (ES)",
-    "image": "Imagen de la Publicación",
+    "requiredContent": "El contenido es obligatorio (EN)",
+    "image": "Imagen de la publicación",
     "tags": "Etiquetas",
     "categories": "Categorías",
     "status": "Estado",
@@ -108,11 +108,11 @@
     "published": "Publicado",
     "save": "Guardar",
     "error": "Error al guardar la publicación",
-    "createSuccess": "Categoría creada exitosamente!",
-    "updateSuccess": "Categoría actualizada exitosamente!"
+    "createSuccess": "¡Categoría creada con éxito!",
+    "updateSuccess": "¡Categoría actualizada con éxito!"
   },
   "notAuthorized": {
-    "title": "Acceso Denegado",
+    "title": "Acceso denegado",
     "message": "No tiene permiso para acceder a esta página.",
     "goHome": "Ir a Inicio"
   },
@@ -120,35 +120,35 @@
     "loading": "Cargando..."
   },
   "recentPosts": {
-    "title": "Tecnología Humana en Foco: ¡Las Últimas Reflexiones y Perspectivas!",
+    "title": "Human Tech en Foco: ¡Las últimas reflexiones e ideas!",
     "desc": "Sumérjase en las intersecciones entre el universo digital y la experiencia humana. Aquí encontrará las cuatro publicaciones más recientes, con ideas sobre gestión de proyectos, frontend, UI/UX, Scrum y cómo la tecnología moldea nuestras vidas.",
-    "readMore": "Leer Más",
+    "readMore": "Leer más",
     "noTitle": "Sin título"
   },
   "about": {
     "intro": {
       "years": "36",
-      "yearsText": "Años de experiencia laboral",
+      "yearsText": "Años de experiencia trabajando",
       "slogan": "Uniendo código y liderazgo para impulsar el crecimiento.",
-      "myStory": "Soy un entusiasta de la tecnología y bloguero que comparte mi viaje por el lado humano de la tecnología. Únase a mí mientras exploro la intersección de la tecnología y la humanidad."
+      "myStory": "Soy un entusiasta de la tecnología y blogger que comparte mi viaje a través del lado humano de la tecnología. Únase a mí mientras exploro la intersección entre la tecnología y la humanidad."
     },
     "me": {
       "profileAlt": "Foto de perfil",
-      "title": "Sobre",
-      "titleAccent": "Mí",
+      "title": "Acerca",
+      "titleAccent": "de mí",
       "greeting": "Hola, mi nombre es",
       "nameHighlight": "Berto",
       "description": {
-        "1": "Futuro Gerente de Proyectos con mentalidad de desarrollador. Apasionado por construir soluciones inteligentes, ",
+        "1": "Futuro Project Manager con mentalidad de desarrollador. Apasionado por construir soluciones inteligentes, ",
         "highlight": "liderar equipos,",
-        "2": " y convertir ideas en productos reales. Siempre aprendiendo, siempre creando."
+        "2": " y transformar ideas en productos reales. Siempre aprendiendo, siempre creando."
       },
       "info": {
         "name": "Nombre",
         "phone": "Teléfono",
         "email": "Correo electrónico",
         "address": "Dirección",
-        "socialMedia": "Redes Sociales"
+        "socialMedia": "Redes sociales"
       },
       "viewProjects": "VER MÁS PROYECTOS"
     },
@@ -156,14 +156,14 @@
       "titleBase": "Mi",
       "titleHighlight": "Experiencia",
       "1": {
-        "title": "Asesor de Gestión",
+        "title": "Consultor de Gestión",
         "date": "1989–2019",
-        "description": "Desarrollé y ejecuté estrategias comerciales, lo que resultó en un crecimiento del 32% en los ingresos y nuevas asociaciones."
+        "description": "Desarrolló y ejecutó estrategias comerciales, lo que resultó en un crecimiento del 32% en los ingresos y nuevas asociaciones."
       },
       "2": {
         "title": "Optimizador de Operaciones y Procesos",
         "date": "2012–2014",
-        "description": "Analicé rutas de transporte utilizando Google Maps y GPS internos, reduciendo los retrasos en las entregas en un 20%."
+        "description": "Analizó rutas de transporte utilizando Google Maps y GPS internos, reduciendo los retrasos en las entregas en un 20%."
       },
       "3": {
         "title": "Desarrollador Web Full Stack",
@@ -171,18 +171,17 @@
         "description": "Desarrollador Web Full Stack: Construye aplicaciones web completas. Experiencia en Front-end y estilo."
       },
       "4": {
-        "title": "Certificación en Gestión de Proyectos Ágil",
+        "title": "Certificación en Gestión Ágil de Proyectos",
         "date": "2024–2025",
-        "description": "Certificación en Gestión de Proyectos Ágil: ¡Domine Scrum, Kanban y más. Impulse el proyecto al éxito!"
+        "description": "Certificación en Gestión Ágil de Proyectos: ¡Domina Scrum, Kanban y más. Impulsa proyectos al éxito!"
       }
     }
   },
-
   "contact": {
     "info": {
       "subtitle": "Contáctenos",
-      "title": "Póngase en Contacto",
-      "desc": "¿Tiene curiosidad sobre la gestión de proyectos, frontend o UI/UX? <br /> ¿O quizás le gustaría explorar reflexiones sobre la vida a través de la lente de la tecnología? <br /> Sea cual sea el tema, me encantaría conocer su perspectiva. ¡Póngase en contacto!",
+      "title": "Ponte en Contacto",
+      "desc": "¿Curioso sobre la gestión de proyectos, frontend o UI/UX? <br /> ¿O quizás te gustaría explorar reflexiones sobre la vida a través del lente de la tecnología? <br /> Sea cual sea el tema, me encantaría escuchar tu perspectiva. ¡Ponte en contacto!",
       "phoneLabel": "Número de Teléfono",
       "phoneValue": "(+49) 176 34644129",
       "emailLabel": "Dirección de Correo Electrónico",
@@ -193,47 +192,54 @@
       "addressValue": "Passau, Alemania"
     },
     "form": {
-      "title": "¿Tiene Preguntas?",
-      "desc": "Hablemos, comparta sus ideas o encuéntreme.",
-      "placeholderName": "Su Nombre",
-      "placeholderEmail": "Su Correo Electrónico",
-      "placeholderSubject": "Su Asunto",
-      "placeholderMessage": "Su Mensaje",
+      "title": "¿Tienes alguna pregunta?",
+      "desc": "Hablemos, comparte tus ideas o encuéntrame.",
+      "placeholderName": "Tu Nombre",
+      "placeholderEmail": "Tu Correo Electrónico",
+      "placeholderSubject": "Tu Asunto",
+      "placeholderMessage": "Tu Mensaje",
       "button": "ENVIAR MENSAJE",
       "sending": "Enviando...",
       "required": "Nombre, correo electrónico y mensaje son obligatorios.",
-      "success": "¡Mensaje enviado con éxito! Me pondré en contacto con usted pronto.",
-      "error": "No se pudo enviar su mensaje. Por favor, inténtelo de nuevo más tarde."
+      "success": "¡Mensaje enviado con éxito! Me pondré en contacto contigo pronto.",
+      "error": "Error al enviar tu mensaje. Por favor, inténtalo de nuevo más tarde."
     }
   },
-
   "auth": {
-    "logoAlt": "Logotipo de The Human Tech Blog",
+    "logoAlt": "Logotipo del Blog de Human Tech",
     "login": {
       "title": "Bienvenido de nuevo",
-      "placeholderEmail": "Correo Electrónico",
+      "placeholderEmail": "Correo electrónico",
       "placeholderPassword": "Contraseña",
-      "button": "Iniciar Sesión",
+      "button": "Iniciar sesión",
       "error": "Credenciales inválidas",
-      "orWith": "O iniciar sesión con",
+      "orWith": "O inicia sesión con",
       "google": "Google",
       "github": "GitHub",
-      "noAccount": "¿No tiene una cuenta?",
-      "createAccount": "Cree una"
+      "noAccount": "¿No tienes una cuenta?",
+      "createAccount": "Crear una"
     },
     "register": {
-      "title": "Bienvenido al blog",
-      "sentence": "Cree su cuenta gratuita para unirse a la comunidad de Human Tech Blog.",
+      "title": "Registrarse",
+      "sentence": "Crea tu cuenta gratuita para unirte a la comunidad de Human Tech Blog.",
       "placeholderName": "Nombre",
       "placeholderEmail": "Correo electrónico",
       "placeholderPassword": "Contraseña",
       "showPassword": "Mostrar contraseña",
       "hidePassword": "Ocultar contraseña",
-      "button": "Crear Cuenta",
-      "haveAccount": "¿Ya tiene una cuenta?",
-      "loginHere": "Inicie sesión aquí",
-      "error": "Error en el registro. Por favor, inténtelo de nuevo.",
-      "unexpectedError": "Se ha producido un error inesperado"
+      "button": "Crear cuenta",
+      "haveAccount": "¿Ya tienes una cuenta?",
+      "loginHere": "Inicia sesión aquí",
+      "error": "El registro falló. Por favor, inténtalo de nuevo.",
+      "unexpectedError": "Ocurrió un error inesperado"
     }
+  },
+  "postPage": {
+    "backToHome": "Volver a Inicio",
+    "postNotFound": "Publicación no encontrada o no publicada",
+    "comments": "Comentarios",
+    "mostPopular": "Más populares",
+    "noPopularPosts": "No hay otras publicaciones disponibles.",
+    "loading": "Cargando..."
   }
 }

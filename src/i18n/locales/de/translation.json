@@ -4,18 +4,18 @@
     "contact": "Kontakt",
     "about": "Über",
     "write": "Schreiben",
-    "admin": "Admin",
+    "admin": "Verwaltung",
     "logout": "Abmelden",
     "login": "Anmelden",
     "profile": "Profil",
     "title": "Der Human Tech Blog",
-    "description": "Erkunden Sie die Welt des Projektmanagements, Frontend, UI/UX und Scrum durch meine Augen. Persönliche Reflexionen und Einblicke in Leben und Technologie",
+    "description": "Entdecken Sie die Welt des Projektmanagements, Frontend, UI/UX und Scrum durch meine Augen. Persönliche Reflexionen und Einblicke in Leben und Technologie",
     "title.home": "Der Human Tech Blog",
-    "description.home": "Erkunden Sie die Welt des Projektmanagements, Frontend, UI/UX und Scrum durch meine Augen. Persönliche Reflexionen und Einblicke in Leben und Technologie.",
+    "description.home": "Entdecken Sie die Welt des Projektmanagements, Frontend, UI/UX und Scrum durch meine Augen. Persönliche Reflexionen und Einblicke in Leben und Technologie.",
     "title.about": "Deolindo Baptista",
     "description.about": "Ich kenne nicht immer den richtigen Weg, aber ich weiß, dass ich ihn mit Empathie, Design und guten Fragen gestalten möchte. Dieser Raum handelt davon.",
     "title.contact": "Kontakt",
-    "description.contact": "Möchten Sie Kontakt aufnehmen? Für Feedback, Vorschläge oder berufliche Möglichkeiten.",
+    "description.contact": "Möchten Sie Kontakt aufnehmen? Melden Sie sich für Feedback, Vorschläge oder berufliche Möglichkeiten.",
     "headerBackgroundAlt": "Hintergrundbild des Headers",
     "logoAlt": "Logo des Human Tech Blogs",
     "searchPlaceholder": "Artikel suchen..."
@@ -51,13 +51,13 @@
     "description": "Beschreibung",
     "descriptionPlaceholder": "Beschreibung",
     "logo": "Logo (URL)",
-    "logoPlaceholder": "Fügen Sie die URL des Logo-Bildes hier ein",
+    "logoPlaceholder": "Logo-Bild-URL hier einfügen",
     "create": "Erstellen",
     "update": "Aktualisieren",
     "cancel": "Abbrechen",
     "error": "Fehler beim Speichern der Kategorie",
-    "requiredName": "Name (DE) ist erforderlich",
-    "requiredDescription": "Beschreibung (DE) ist erforderlich",
+    "requiredName": "Name (EN) ist erforderlich",
+    "requiredDescription": "Beschreibung (EN) ist erforderlich",
     "deleteConfirm": "Diese Kategorie löschen? Von Beiträgen verwendete Kategorien können nicht gelöscht werden.",
     "noCategories": "Keine Kategorien gefunden."
   },
@@ -72,7 +72,7 @@
     "update": "Aktualisieren",
     "cancel": "Abbrechen",
     "error": "Fehler beim Speichern des Tags",
-    "requiredName": "Name (DE) ist erforderlich",
+    "requiredName": "Name (EN) ist erforderlich",
     "deleteConfirm": "Diesen Tag löschen? Von Beiträgen verwendete Tags können nicht gelöscht werden.",
     "noTags": "Keine Tags gefunden."
   },
@@ -86,20 +86,20 @@
     "update": "Aktualisieren",
     "cancel": "Abbrechen",
     "error": "Fehler beim Speichern der Benachrichtigung",
-    "requiredTitle": "Titel (DE) ist erforderlich",
+    "requiredTitle": "Titel (EN) ist erforderlich",
     "deleteConfirm": "Diese Benachrichtigung löschen?",
     "noNotifications": "Keine Benachrichtigungen gefunden."
   },
   "adminPostForm": {
     "title": "Titel",
     "titlePlaceholder": "Beitragstitel",
-    "requiredTitle": "Titel ist erforderlich (DE)",
+    "requiredTitle": "Titel ist erforderlich (EN)",
     "description": "Beschreibung",
     "descriptionPlaceholder": "Kurzbeschreibung",
-    "requiredDescription": "Beschreibung ist erforderlich (DE)",
+    "requiredDescription": "Beschreibung ist erforderlich (EN)",
     "content": "Inhalt",
     "contentPlaceholder": "Vollständiger Inhalt",
-    "requiredContent": "Inhalt ist erforderlich (DE)",
+    "requiredContent": "Inhalt ist erforderlich (EN)",
     "image": "Beitragsbild",
     "tags": "Tags",
     "categories": "Kategorien",
@@ -117,11 +117,10 @@
     "goHome": "Zur Startseite"
   },
   "route": {
-    "loading": "Lädt..."
+    "loading": "Wird geladen..."
   },
-
   "recentPosts": {
-    "title": "Menschliche Technologie im Fokus: Die neuesten Reflexionen und Einblicke!",
+    "title": "Human Tech im Fokus: Die neuesten Reflexionen und Einblicke!",
     "desc": "Tauchen Sie ein in die Schnittstellen zwischen dem digitalen Universum und der menschlichen Erfahrung. Hier finden Sie die vier neuesten Beiträge mit Einblicken in Projektmanagement, Frontend, UI/UX, Scrum und wie Technologie unser Leben prägt.",
     "readMore": "Mehr lesen",
     "noTitle": "Kein Titel"
@@ -129,9 +128,9 @@
   "about": {
     "intro": {
       "years": "36",
-      "yearsText": "Jahre Berufserfahrung",
-      "slogan": "Code und Führung zusammenführen, um Wachstum voranzutreiben.",
-      "myStory": "Ich bin ein Tech-Enthusiast und Blogger und teile meine Reise durch die menschliche Seite der Technologie. Begleiten Sie mich, während ich die Schnittstelle von Technologie und Menschheit erkunde."
+      "yearsText": "Jahre Erfahrung in der Arbeit",
+      "slogan": "Code und Führung zusammenbringen, um Wachstum voranzutreiben.",
+      "myStory": "Ich bin ein Tech-Enthusiast und Blogger, der meine Reise durch die menschliche Seite der Technologie teilt. Begleiten Sie mich, während ich die Schnittstelle von Technologie und Menschlichkeit erkunde."
     },
     "me": {
       "profileAlt": "Profilfoto",
@@ -140,9 +139,9 @@
       "greeting": "Hallo, mein Name ist",
       "nameHighlight": "Berto",
       "description": {
-        "1": "Angehender Projektmanager mit Entwickler-Denkweise. Leidenschaftlich beim Aufbau intelligenter Lösungen, ",
+        "1": "Angehender Projektmanager mit Entwickler-Mindset. Leidenschaftlich beim Aufbau intelligenter Lösungen, ",
         "highlight": "Führen von Teams,",
-        "2": " und der Umwandlung von Ideen in echte Produkte. Immer am Lernen, immer am Kreieren."
+        "2": " und Verwandeln von Ideen in echte Produkte. Immer am Lernen, immer am Kreieren."
       },
       "info": {
         "name": "Name",
@@ -151,7 +150,7 @@
         "address": "Adresse",
         "socialMedia": "Soziale Medien"
       },
-      "viewProjects": "MEHR PROJEKTE ANZEIGEN"
+      "viewProjects": "WEITERE PROJEKTE ANSEHEN"
     },
     "experience": {
       "titleBase": "Meine",
@@ -159,31 +158,30 @@
       "1": {
         "title": "Managementberater",
         "date": "1989–2019",
-        "description": "Entwicklung und Umsetzung kommerzieller Strategien, was zu einem Umsatzwachstum von 32% und neuen Partnerschaften führte."
+        "description": "Entwicklung und Umsetzung von Vertriebsstrategien, was zu einem Umsatzwachstum von 32% und neuen Partnerschaften führte."
       },
       "2": {
-        "title": "Operations- und Prozessoptimierer",
+        "title": "Operations- & Prozessoptimierer",
         "date": "2012–2014",
-        "description": "Analyse von Transportrouten mithilfe von Google Maps und internen GPS-Geräten, wodurch Lieferverzögerungen um 20% reduziert wurden."
+        "description": "Analyse von Transportrouten mithilfe von Google Maps und internen GPS-Systemen, wodurch Lieferverzögerungen um 20% reduziert wurden."
       },
       "3": {
         "title": "Full Stack Webentwickler",
         "date": "2023–2024",
-        "description": "Full Stack Webentwickler: Erstellen Sie komplette Webanwendungen. Expertise in Frontend und Styling."
+        "description": "Full Stack Webentwickler: Erstellt komplette Webanwendungen. Expertise in Front-End und Styling."
       },
       "4": {
-        "title": "Zertifizierung für agiles Projektmanagement",
+        "title": "Zertifizierung für Agiles Projektmanagement",
         "date": "2024–2025",
-        "description": "Zertifizierung für agiles Projektmanagement: Beherrschen Sie Scrum, Kanban und mehr. Bringen Sie Projekte zum Erfolg!"
+        "description": "Zertifizierung für Agiles Projektmanagement: Beherrschen Sie Scrum, Kanban und mehr. Bringen Sie Projekte zum Erfolg!"
       }
     }
   },
-
   "contact": {
     "info": {
       "subtitle": "Kontaktieren Sie uns",
-      "title": "Nehmen Sie Kontakt auf",
-      "desc": "Neugierig auf Projektmanagement, Frontend oder UI/UX? <br /> Oder möchten Sie vielleicht Reflexionen über das Leben durch die Brille der Technologie erkunden? <br /> Was auch immer das Thema ist, ich würde gerne Ihre Perspektive hören. Nehmen Sie Kontakt auf!",
+      "title": "Melden Sie sich",
+      "desc": "Neugierig auf Projektmanagement, Frontend oder UI/UX? <br /> Oder möchten Sie vielleicht Reflexionen über das Leben aus technologischer Sicht erkunden? <br /> Egal, um welches Thema es sich handelt, ich würde gerne Ihre Perspektive hören. Nehmen Sie Kontakt auf!",
       "phoneLabel": "Telefonnummer",
       "phoneValue": "(+49) 176 34644129",
       "emailLabel": "E-Mail-Adresse",
@@ -194,8 +192,8 @@
       "addressValue": "Passau, Deutschland"
     },
     "form": {
-      "title": "Haben Sie Fragen?",
-      "desc": "Lassen Sie uns reden, teilen Sie Ihre Ideen oder treffen Sie mich.",
+      "title": "Haben Sie eine Frage?",
+      "desc": "Lassen Sie uns reden, Ihre Ideen teilen oder mich treffen.",
       "placeholderName": "Ihr Name",
       "placeholderEmail": "Ihre E-Mail",
       "placeholderSubject": "Ihr Betreff",
@@ -203,27 +201,26 @@
       "button": "NACHRICHT SENDEN",
       "sending": "Senden...",
       "required": "Name, E-Mail und Nachricht sind erforderlich.",
-      "success": "Nachricht erfolgreich gesendet! Ich werde mich bald bei Ihnen melden.",
+      "success": "Nachricht erfolgreich gesendet! Ich melde mich bald bei Ihnen.",
       "error": "Fehler beim Senden Ihrer Nachricht. Bitte versuchen Sie es später erneut."
     }
   },
-
   "auth": {
     "logoAlt": "Logo des Human Tech Blogs",
     "login": {
       "title": "Willkommen zurück",
       "placeholderEmail": "E-Mail",
       "placeholderPassword": "Passwort",
-      "button": "Login",
+      "button": "Anmelden",
       "error": "Ungültige Anmeldeinformationen",
       "orWith": "Oder anmelden mit",
       "google": "Google",
       "github": "GitHub",
       "noAccount": "Sie haben noch kein Konto?",
-      "createAccount": "Erstellen Sie eines"
+      "createAccount": "Eines erstellen"
     },
     "register": {
-      "title": "Willkommen im Blog",
+      "title": "Registrieren",
       "sentence": "Erstellen Sie Ihr kostenloses Konto, um der Human Tech Blog Community beizutreten.",
       "placeholderName": "Name",
       "placeholderEmail": "E-Mail",
@@ -231,10 +228,18 @@
       "showPassword": "Passwort anzeigen",
       "hidePassword": "Passwort ausblenden",
       "button": "Konto erstellen",
-      "haveAccount": "Haben Sie bereits ein Konto?",
+      "haveAccount": "Sie haben bereits ein Konto?",
       "loginHere": "Hier anmelden",
       "error": "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.",
-      "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten"
+      "unexpectedError": "Unerwarteter Fehler aufgetreten"
     }
+  },
+  "postPage": {
+    "backToHome": "Zurück zur Startseite",
+    "postNotFound": "Beitrag nicht gefunden oder unveröffentlicht",
+    "comments": "Kommentare",
+    "mostPopular": "Am beliebtesten",
+    "noPopularPosts": "Keine weiteren Beiträge verfügbar.",
+    "loading": "Wird geladen..."
   }
 }

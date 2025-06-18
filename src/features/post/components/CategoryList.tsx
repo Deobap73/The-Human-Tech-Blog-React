@@ -1,4 +1,4 @@
-// /src/features/post/components/CategoryList.tsx
+// src/features/post/components/CategoryList.tsx
 
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -8,11 +8,10 @@ import { useTranslation } from 'react-i18next';
 import { getCategoryName } from '../../../shared/utils/i18nHelpers';
 import '../styles/CategoryList.scss';
 
-export const CategoryList = () => {
+const CategoryList = () => {
   const { i18n } = useTranslation();
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
-  // Grab the language param for proper route formatting
   const params = useParams();
   const lang = params.lang || i18n.language.split('-')[0] || 'en';
 
@@ -21,8 +20,7 @@ export const CategoryList = () => {
       try {
         const res = await axios.get<Category[]>('/categories');
         setCategories(res.data);
-      } catch (err) {
-        // Handle error (optionally show a toast)
+      } catch {
         setCategories([]);
       } finally {
         setLoading(false);
@@ -31,7 +29,10 @@ export const CategoryList = () => {
     fetchCategories();
   }, []);
 
-  if (loading) return <div className='category-list__loading'>Loading categories...</div>;
+  if (loading)
+    return (
+      <div className='category-list__loading'>{i18n.t('loading', 'Loading categories...')}</div>
+    );
 
   return (
     <ul className='category-list'>
@@ -40,7 +41,6 @@ export const CategoryList = () => {
           <Link
             to={`/${lang}/categories/${cat.slug}`}
             className='category-list__link'
-            // Optionally, add aria-label for accessibility
             aria-label={`See posts in category ${getCategoryName(cat, i18n.language)}`}>
             {cat.logo && (
               <img

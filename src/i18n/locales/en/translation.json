@@ -242,5 +242,14 @@
       "error": "Registration failed. Please try again.",
       "unexpectedError": "Unexpected error occurred"
     }
+  },
+
+  "postPage": {
+    "backToHome": "Back to Home",
+    "postNotFound": "Post not found or unpublished",
+    "comments": "Comments",
+    "mostPopular": "Most Popular",
+    "noPopularPosts": "No other posts available.",
+    "loading": "Loading..."
   }
 }
