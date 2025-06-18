@@ -1,5 +1,3 @@
-// The-Human-Tech-Blog-React\src\features\post\pages\CategoryPage.tsx
-
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
@@ -47,29 +45,29 @@ const CategoryPage = () => {
     Object.values(category?.translations || {})[0]?.description ||
     '';
 
-  if (loading) return <p className='category-loading'>Loading...</p>;
+  if (loading) return <p className='category-page__loading'>Loading...</p>;
 
   return (
     <div className='category-page'>
       {category && (
-        <div className='category-header'>
+        <div className='category-page__header'>
           {category.logo && (
             <img
               src={category.logo}
               alt={name}
-              className='category-logo'
+              className='category-page__logo'
               style={{ height: 40, marginRight: 12 }}
             />
           )}
-          <h2 className='category-title'>{name}</h2>
-          {description && <div className='category-description'>{description}</div>}
+          <h2 className='category-page__title'>{name}</h2>
+          {description && <div className='category-page__description'>{description}</div>}
         </div>
       )}
-      {!category && <h2 className='category-title'>{slug}</h2>}
+      {!category && <h2 className='category-page__title'>{slug}</h2>}
       {posts.length > 0 ? (
         <CardList posts={posts} />
       ) : (
-        <p className='no-posts'>No posts found for this category.</p>
+        <p className='category-page__no-posts'>No posts found for this category.</p>
       )}
     </div>
   );

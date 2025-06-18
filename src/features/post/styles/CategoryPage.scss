@@ -1,27 +1,37 @@
-/* ✅ The-Human-Tech-Blog-React/src/features/category/styles/CategoryPage.scss */
+/* The-Human-Tech-Blog-React/src/features/category/styles/CategoryPage.scss */
 
 .category-page {
   padding: 2rem;
   max-width: 1024px;
   margin: 0 auto;
 
-  h2 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    color: #222;
+  &__header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem; /* Adicionado um pouco de espaço abaixo do cabeçalho */
   }
 
-  .loading,
-  .empty {
+  &__logo {
+    height: 40px;
+    margin-right: 12px;
+  }
+
+  &__title {
+    font-size: 2rem;
+    margin-bottom: 0; /* Removido margin-bottom para alinhar com logo */
+    color: var(--text-color);
+  }
+
+  &__description {
+    font-size: 1.1rem;
+    color: var(--text-color-secondary); // Ou uma cor apropriada
+    margin-top: 0.5rem; // Espaço acima da descrição, se ela aparecer abaixo do título
+  }
+
+  &__loading,
+  &__no-posts {
     font-style: italic;
     color: #777;
-    margin-top: 2rem;
-  }
-
-  .posts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1.5rem;
     margin-top: 2rem;
   }
 }
