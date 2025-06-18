@@ -22,6 +22,8 @@
     backdrop-filter: blur(2.5px); // Glass effect!
     transition: border 0.2s, box-shadow 0.2s, background 0.25s;
     outline: none;
+    text-decoration: none;
+    color: inherit;
 
     cursor: pointer;
 
