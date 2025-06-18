@@ -1,4 +1,4 @@
-// src/features/post/components/RecentCategoryPosts.tsx
+// /src/features/post/components/RecentCategoryPosts.tsx
 
 import { useEffect, useState } from 'react';
 import api from '../../../shared/utils/axios';
@@ -6,15 +6,15 @@ import { Post } from '../../../shared/types/Post';
 import { Category } from '../../../shared/types/Category';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { getCategoryName } from '../../../shared/utils/i18nHelpers';
+import '../styles/RecentCategoryPosts.scss';
 
-// Most Popular-style, always shows the latest post for each category (except the current post)
 interface Props {
-  categoryId: string;
   currentPostId: string;
   lang: string;
 }
 
-const RecentCategoryPosts = ({ currentPostId, lang }: Props) => {
+export const RecentCategoryPosts = ({ currentPostId, lang }: Props) => {
   const { t } = useTranslation();
   const [categories, setCategories] = useState<Category[]>([]);
   const [postsByCategory, setPostsByCategory] = useState<{ [catId: string]: Post | null }>({});
@@ -24,7 +24,6 @@ const RecentCategoryPosts = ({ currentPostId, lang }: Props) => {
     api.get<Category[]>('/categories').then(async (catRes) => {
       setCategories(catRes.data);
 
-      // For each category, get latest published post except current
       const promises = catRes.data.map(async (cat) => {
         try {
           const postsRes = await api.get<Post[]>(`/categories/${cat._id}/posts`);
@@ -47,10 +46,10 @@ const RecentCategoryPosts = ({ currentPostId, lang }: Props) => {
     });
   }, [currentPostId]);
 
-  if (loading)
-    return <div className='recent-category-posts__loading'>{t('loading', 'Loading...')}</div>;
+  if (loading) {
+    return <div className='recent-category-posts__loading'>{t('postPage.loading')}</div>;
+  }
 
-  // Only categories with a published post (not current)
   const categoryPosts = categories
     .map((cat) => ({
       cat,
@@ -59,28 +58,49 @@ const RecentCategoryPosts = ({ currentPostId, lang }: Props) => {
     .filter(({ post }) => !!post);
 
   return (
-    <div className='recent-category-posts'>
-      <h4 className='recent-category-posts__title'>{t('mostPopular', 'Most Popular')}</h4>
+    <aside className='recent-category-posts' aria-label={t('postPage.mostPopular')}>
+      <h3 className='recent-category-posts__header'>{t('postPage.mostPopular')}</h3>
       <ul className='recent-category-posts__list'>
-        {categoryPosts.length === 0 && <li>{t('noPopularPosts', 'No other posts available.')}</li>}
+        {categoryPosts.length === 0 && (
+          <li className='recent-category-posts__empty'>{t('postPage.noPopularPosts')}</li>
+        )}
         {categoryPosts.map(({ cat, post }) =>
           post ? (
-            <li key={cat._id} className='recent-category-posts__item'>
-              <Link to={`/${lang}/posts/${post.slug}`} className='recent-category-posts__link'>
-                <img
-                  src={post.image || cat.logo || '/default-category.webp'}
-                  className='recent-category-posts__thumb'
-                  alt={
-                    post.translations?.[lang]?.title || post.translations?.en?.title || post.slug
-                  }
-                  loading='lazy'
-                />
-                <div className='recent-category-posts__info'>
-                  <span className='recent-category-posts__cat'>
-                    {cat.translations?.[lang]?.name || cat.translations?.en?.name || cat.slug}
+            <li className='recent-category-posts__card' key={cat._id}>
+              <Link to={`/${lang}/posts/${post.slug}`} className='recent-category-posts__card-link'>
+                <div className='recent-category-posts__image-wrapper'>
+                  <img
+                    src={post.image || cat.logo || '/default-category.webp'}
+                    className='recent-category-posts__image'
+                    alt={
+                      post.translations?.[lang]?.title || post.translations?.en?.title || post.slug
+                    }
+                  />
+                </div>
+                <span className='recent-category-posts__category'>
+                  {cat.translations?.[lang]?.name || cat.translations?.en?.name || cat.slug}
+                </span>
+                <h4 className='recent-category-posts__title'>
+                  {post.translations?.[lang]?.title || post.translations?.en?.title || post.slug}
+                </h4>
+                {post.translations?.[lang]?.description && (
+                  <div className='recent-category-posts__desc'>
+                    {post.translations[lang].description.substring(0, 60)}...
+                  </div>
+                )}
+                <div className='recent-category-posts__meta'>
+                  <img
+                    className='recent-category-posts__author-avatar'
+                    src={`https://api.dicebear.com/8.x/pixel-art/svg?seed=${
+                      post.author?._id || 'guest'
+                    }`}
+                    alt={post.author?.name || 'User'}
+                  />
+                  <span className='recent-category-posts__author-name'>
+                    {post.author?.name || 'User'}
                   </span>
-                  <span className='recent-category-posts__title-text'>
-                    {post.translations?.[lang]?.title || post.translations?.en?.title || post.slug}
+                  <span className='recent-category-posts__date'>
+                    {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ''}
                   </span>
                 </div>
               </Link>
@@ -88,7 +108,7 @@ const RecentCategoryPosts = ({ currentPostId, lang }: Props) => {
           ) : null
         )}
       </ul>
-    </div>
+    </aside>
   );
 };
 
