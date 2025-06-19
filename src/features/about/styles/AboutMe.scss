@@ -41,10 +41,12 @@
     margin-top: 1.8rem;
 
     @media (max-width: 600px) {
-      width: 90vw;
-      height: 70vw;
-      min-width: unset;
+      width: 410px;
+      height: 420px;
+      min-width: 0;
       margin: 0 auto;
+      // Em telas muito pequenas, nunca estoura o viewport
+      max-width: 98vw;
     }
   }
 
@@ -57,9 +59,10 @@
     position: relative;
     box-shadow: 0 4px 48px rgba(0, 0, 0, 0.4);
     background: #232323;
+    // Nenhuma alteração extra aqui, pois já preenche o wrapper
   }
 
-  // Orange corner frame
+  // Frames (ajustados para acompanhar imagem menor em mobile)
   &__frame {
     position: absolute;
     border: 3.5px solid var(--primary);
@@ -74,6 +77,13 @@
       border-bottom: none;
       border-right: none;
       border-top-left-radius: 7px;
+
+      @media (max-width: 600px) {
+        top: -12px;
+        left: -12px;
+        width: 42px;
+        height: 42px;
+      }
     }
     &--bottom {
       bottom: -20px;
@@ -84,6 +94,14 @@
       border-top: none;
       border-left: none;
       border-bottom-right-radius: 7px;
+
+      @media (max-width: 600px) {
+        bottom: -14px;
+        right: -14px;
+        width: 180px;
+        height: 300px;
+        border-width: 13px;
+      }
     }
   }
 

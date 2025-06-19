@@ -66,42 +66,45 @@ export const RecentCategoryPosts = ({ currentPostId, lang }: Props) => {
         )}
         {categoryPosts.map(({ cat, post }) =>
           post ? (
-            <li className='recent-category-posts__card' key={cat._id}>
-              <Link to={`/${lang}/posts/${post.slug}`} className='recent-category-posts__card-link'>
-                <div className='recent-category-posts__image-wrapper'>
+            <li className='recent-category-posts__item' key={cat._id}>
+              <Link to={`/${lang}/posts/${post.slug}`} className='recent-category-posts__link'>
+                <div className='recent-category-posts__thumb'>
                   <img
                     src={post.image || cat.logo || '/default-category.webp'}
-                    className='recent-category-posts__image'
                     alt={
                       post.translations?.[lang]?.title || post.translations?.en?.title || post.slug
                     }
+                    className='recent-category-posts__image'
                   />
                 </div>
-                <span className='recent-category-posts__category'>
-                  {cat.translations?.[lang]?.name || cat.translations?.en?.name || cat.slug}
-                </span>
-                <h4 className='recent-category-posts__title'>
-                  {post.translations?.[lang]?.title || post.translations?.en?.title || post.slug}
-                </h4>
-                {post.translations?.[lang]?.description && (
-                  <div className='recent-category-posts__desc'>
-                    {post.translations[lang].description.substring(0, 60)}...
+                <div className='recent-category-posts__content'>
+                  <span className='recent-category-posts__cat'>
+                    {cat.translations?.[lang]?.name || cat.translations?.en?.name || cat.slug}
+                  </span>
+                  {/* Show DESCRIPTION instead of title, limit to 60 chars */}
+                  <span className='recent-category-posts__desc'>
+                    {post.translations?.[lang]?.description?.slice(0, 60) ||
+                      post.translations?.en?.description?.slice(0, 60) ||
+                      post.slug}
+                    {(post.translations?.[lang]?.description?.length ||
+                      post.translations?.en?.description?.length ||
+                      0) > 60 && '...'}
+                  </span>
+                  <div className='recent-category-posts__meta'>
+                    <img
+                      className='recent-category-posts__author-avatar'
+                      src={`https://api.dicebear.com/8.x/pixel-art/svg?seed=${
+                        post.author?._id || 'guest'
+                      }`}
+                      alt={post.author?.name || 'User'}
+                    />
+                    <span className='recent-category-posts__author-name'>
+                      {post.author?.name || 'User'}
+                    </span>
+                    <span className='recent-category-posts__date'>
+                      {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ''}
+                    </span>
                   </div>
-                )}
-                <div className='recent-category-posts__meta'>
-                  <img
-                    className='recent-category-posts__author-avatar'
-                    src={`https://api.dicebear.com/8.x/pixel-art/svg?seed=${
-                      post.author?._id || 'guest'
-                    }`}
-                    alt={post.author?.name || 'User'}
-                  />
-                  <span className='recent-category-posts__author-name'>
-                    {post.author?.name || 'User'}
-                  </span>
-                  <span className='recent-category-posts__date'>
-                    {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ''}
-                  </span>
                 </div>
               </Link>
             </li>

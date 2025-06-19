@@ -1,3 +1,5 @@
+// /src/features/post/pages/SinglePostPage.tsx
+
 import '../styles/SinglePostPage.scss';
 import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -71,73 +73,71 @@ export const SinglePostPage = () => {
 
   return (
     <div className='single-post-page'>
-      <div className='single-post-page__content'>
-        {/* Main Article */}
-        <article className='single-post-page__main-article'>
-          <header className='single-post-page__post-header'>
-            <div className='single-post-page__image-block'>
-              {post.image && (
-                <img src={post.image} alt={translation.title} className='single-post-page__image' />
-              )}
-            </div>
-            <div className='single-post-page__title-block'>
-              <h1 className='single-post-page__title'>{translation.title}</h1>
-              <div className='single-post-page__user'>
-                <img
-                  src={
-                    user.avatar ||
-                    `https://api.dicebear.com/8.x/pixel-art/svg?seed=${user._id || 'guest'}`
-                  }
-                  alt={user.name || 'User'}
-                  className='single-post-page__avatar'
-                  width={48}
-                  height={48}
-                />
-                <div>
-                  <div className='single-post-page__username'>{user.name || 'User'}</div>
-                  <div className='single-post-page__date'>
-                    {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ''}
-                  </div>
-                </div>
+      {/* ---------- Primeiro bloco: Header horizontal ---------- */}
+      <section className='single-post-page__header-row'>
+        <div className='single-post-page__header-info'>
+          <h1 className='single-post-page__title'>{translation.title}</h1>
+          <div className='single-post-page__meta'>
+            <img
+              src={
+                user.avatar ||
+                `https://api.dicebear.com/8.x/pixel-art/svg?seed=${user._id || 'guest'}`
+              }
+              alt={user.name || 'User'}
+              className='single-post-page__avatar'
+              width={48}
+              height={48}
+            />
+            <div>
+              <div className='single-post-page__username'>{user.name || 'User'}</div>
+              <div className='single-post-page__date'>
+                {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ''}
               </div>
-              <BookmarkButton postId={post._id} className='single-post-page__bookmark-button' />
             </div>
-          </header>
+          </div>
+          <BookmarkButton postId={post._id} className='single-post-page__bookmark-button' />
+        </div>
+        <div className='single-post-page__header-image'>
+          {post.image && (
+            <img src={post.image} alt={translation.title} className='single-post-page__image' />
+          )}
+        </div>
+      </section>
 
+      {/* ---------- Segundo bloco: Main + Sidebar ---------- */}
+      <div className='single-post-page__body-row'>
+        <main className='single-post-page__main' aria-label={translation.title}>
           <div className='single-post-page__category-bar'>
             <span className='single-post-page__category'>{category}</span>
           </div>
-
-          <div className='single-post-page__body'>
-            <div className='single-post-page__description'>{translation.description}</div>
-          </div>
-
+          <div className='single-post-page__description'>{translation.description}</div>
           <div className='single-post-page__reactions'>
             <ReactionButtons postId={post._id} />
           </div>
-          <div className='single-post-page__comments'>
+          <section className='single-post-page__comments-section'>
             <h3 className='single-post-page__comments-title'>
               {t('postPage.comments', 'Comments')}
             </h3>
             <Comments postId={post._id} className='single-post-page__comments-list' />
-          </div>
-        </article>
+          </section>
+        </main>
 
-        {/* Sidebar (desktop sticky, mobile: goes below) */}
-        <aside className='single-post-page__sidebar'>
-          <section className='single-post-page__popular-posts'>
+        <aside className='single-post-page__sidebar' aria-label='Sidebar'>
+          <section className='single-post-page__sidebar-block'>
             <RecentCategoryPosts currentPostId={post._id} lang={i18n.language} />
           </section>
-          <section className='single-post-page__categories-list'>
+          <section className='single-post-page__sidebar-block'>
             <CategoryList />
           </section>
         </aside>
       </div>
 
-      {/* "Back to Home" button centralized at bottom */}
-      <Link to='/' className='single-post-page__back-link'>
-        {t('postPage.backToHome')}
-      </Link>
+      {/* ---------- Terceiro bloco: Botão Voltar para início ---------- */}
+      <div className='single-post-page__footer'>
+        <Link to='/' className='single-post-page__back-link'>
+          {t('postPage.backToHome')}
+        </Link>
+      </div>
     </div>
   );
 };

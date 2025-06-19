@@ -1,15 +1,14 @@
-/* /src/features/contact/styles/ContactForm.scss */
-
 .contact-form {
   background: #0b1922;
   border-radius: 20px;
   box-shadow: 0 0 0 2px var(--primary), 0 6px 36px rgba(29, 161, 242, 0.06);
   padding: var(--padding-xl) var(--padding-xl);
-  width: 500px;
-  max-width: 100%;
+  width: 100%;
+  max-width: 500px;
   display: flex;
   flex-direction: column;
   gap: var(--gap-base);
+  margin: 0 auto;
 
   &__title {
     color: var(--primary);
@@ -51,7 +50,8 @@
 
   &__button {
     justify-content: center;
-    width: 20rem;
+    width: 100%;
+    max-width: 20rem;
     min-width: 48px;
     min-height: 48px;
     padding: 0 1.5rem;
@@ -64,6 +64,8 @@
     box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
     backdrop-filter: blur(2.5px);
     transition: border 0.2s, box-shadow 0.2s, background 0.25s;
+    margin: 0 auto;
+
     &:hover {
       border-left: none;
       border-right: none;
@@ -71,6 +73,32 @@
     }
     &:active {
       background: none !important;
+    }
+  }
+
+  // RESPONSIVO
+  @media (max-width: 650px) {
+    max-width: 96vw;
+    padding: var(--padding-lg) var(--padding-base);
+
+    &__button {
+      font-size: 1.02rem;
+      min-height: 44px;
+      border-radius: 9px;
+      padding: 0 1rem;
+    }
+  }
+  @media (max-width: 480px) {
+    padding: var(--padding-base) var(--padding-xs);
+
+    &__title {
+      font-size: var(--font-size-md);
+    }
+    &__button {
+      font-size: 0.97rem;
+      min-height: 38px;
+      border-radius: 7px;
+      padding: 0 0.6rem;
     }
   }
 }
