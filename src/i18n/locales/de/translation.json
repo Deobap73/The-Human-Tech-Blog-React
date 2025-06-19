@@ -8,6 +8,7 @@
     "logout": "Abmelden",
     "login": "Anmelden",
     "profile": "Profil",
+    "chat": "Chat",
     "title": "Der Human Tech Blog",
     "description": "Entdecken Sie die Welt des Projektmanagements, Frontend, UI/UX und Scrum durch meine Augen. Persönliche Reflexionen und Einblicke in Leben und Technologie",
     "title.home": "Der Human Tech Blog",
@@ -241,5 +242,14 @@
     "mostPopular": "Am beliebtesten",
     "noPopularPosts": "Keine weiteren Beiträge verfügbar.",
     "loading": "Wird geladen..."
+  },
+  "chat": {
+    "title": "Chats",
+    "placeholder": "Wählen Sie eine Konversation aus",
+    "inputPlaceholder": "Geben Sie Ihre Nachricht ein...",
+    "send": "Senden",
+    "loading": "Nachrichten werden geladen...",
+    "you": "Du",
+    "noName": "Kein Name"
   }
 }

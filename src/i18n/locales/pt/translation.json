@@ -8,6 +8,7 @@
     "logout": "Sair",
     "login": "Entrar",
     "profile": "Perfil",
+    "chat": "Chat",
     "title": "O Blog de Tecnologia Humana",
     "description": "Explore o mundo da gestão de projetos, frontend, UI/UX e Scrum através dos meus olhos. Reflexões pessoais e insights sobre vida e tecnologia",
     "title.home": "O Blog de Tecnologia Humana",
@@ -244,5 +245,15 @@
     "mostPopular": "Mais Populares",
     "noPopularPosts": "Nenhum outro post disponível.",
     "loading": "Carregando..."
+  },
+
+  "chat": {
+    "title": "Conversas",
+    "placeholder": "Selecione uma conversa",
+    "inputPlaceholder": "Digite sua mensagem...",
+    "send": "Enviar",
+    "loading": "Carregando mensagens...",
+    "you": "Você",
+    "noName": "Sem Nome"
   }
 }

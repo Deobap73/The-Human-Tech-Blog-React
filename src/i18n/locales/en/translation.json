@@ -254,12 +254,32 @@
     "loading": "Loading..."
   },
   "chat": {
-    "title": "Chats",
-    "placeholder": "Select a conversation",
-    "inputPlaceholder": "Type your message...",
-    "send": "Send",
-    "loading": "Loading messages...",
-    "you": "You",
-    "noName": "No Name"
+    "window": {
+      "emptyTitle": "Select a conversation",
+      "emptyDesc": "Choose a chat to start messaging."
+    },
+    "sidebar": {
+      "empty": "No chats found",
+      "search": "Search",
+      "noMessage": "No messages",
+      "attach": "Attach",
+      "camera": "Camera",
+      "settings": "Settings",
+      "add": "Add Chat",
+      "close": "Close sidebar",
+      "error": "Failed to load chats",
+      "title": "Chats"
+    },
+    "messagelist": {
+      "empty": "No messages yet",
+      "error": "Failed to load messages",
+      "you": "You"
+    },
+    "input": {
+      "placeholder": "Type your message…",
+      "send": "Send",
+      "mic": "Record audio",
+      "attach": "Attach"
+    }
   }
 }

@@ -8,6 +8,7 @@
     "logout": "Cerrar sesión",
     "login": "Iniciar sesión",
     "profile": "Perfil",
+    "chat": "Chat",
     "title": "El Blog de Human Tech",
     "description": "Explore el mundo de la gestión de proyectos, frontend, UI/UX y Scrum a través de mis ojos. Reflexiones personales e ideas sobre la vida y la tecnología",
     "title.home": "El Blog de Human Tech",
@@ -241,5 +242,14 @@
     "mostPopular": "Más populares",
     "noPopularPosts": "No hay otras publicaciones disponibles.",
     "loading": "Cargando..."
+  },
+  "chat": {
+    "title": "Chats",
+    "placeholder": "Seleccione una conversación",
+    "inputPlaceholder": "Escribe tu mensaje...",
+    "send": "Enviar",
+    "loading": "Cargando mensajes...",
+    "you": "Tú",
+    "noName": "Sin nombre"
   }
 }

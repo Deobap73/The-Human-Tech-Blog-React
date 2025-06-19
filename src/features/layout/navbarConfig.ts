@@ -45,6 +45,10 @@ export const navbarConfigs: Record<string, NavbarConfig> = {
     showTile: false,
     background: undefined,
   },
+  '/chat': {
+    showTile: false,
+    background: undefined,
+  },
   // Add more routes as needed
 };
 
