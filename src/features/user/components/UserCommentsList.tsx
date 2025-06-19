@@ -23,18 +23,20 @@ const UserCommentsList = () => {
   }, []);
 
   return (
-    <section className='user-page__comments'>
-      <h3>My Comments</h3>
+    <section className='user-comments'>
+      <h3 className='user-comments__header'>My Comments</h3>
       {loading ? (
-        <p>Loading comments...</p>
+        <div className='user-comments__loading'>Loading comments...</div>
       ) : comments.length === 0 ? (
-        <p>No comments yet.</p>
+        <div className='user-comments__empty'>No comments yet.</div>
       ) : (
-        <ul>
+        <ul className='user-comments__list'>
           {comments.map((comment) => (
-            <li key={comment._id}>
-              <span>{comment.text}</span>
-              <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
+            <li key={comment._id} className='user-comments__item'>
+              <span className='user-comments__text'>{comment.text}</span>
+              <span className='user-comments__date'>
+                {new Date(comment.createdAt).toLocaleDateString()}
+              </span>
             </li>
           ))}
         </ul>

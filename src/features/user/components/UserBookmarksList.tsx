@@ -26,17 +26,28 @@ const UserBookmarksList = () => {
   }, []);
 
   return (
-    <section className='user-page__favorites'>
-      <h3>My Favorites</h3>
+    <section className='user-bookmarks'>
+      <h3 className='user-bookmarks__header'>My Favorites</h3>
       {loading ? (
-        <p>Loading bookmarks...</p>
+        <div className='user-bookmarks__loading'>Loading bookmarks...</div>
       ) : bookmarks.length === 0 ? (
-        <p>No bookmarks yet.</p>
+        <div className='user-bookmarks__empty'>No bookmarks yet.</div>
       ) : (
-        <ul>
+        <ul className='user-bookmarks__list'>
           {bookmarks.map((bm) => (
-            <li key={bm._id}>
-              <a href={`/posts/${bm.postId.slug}`}>{bm.postId.title}</a>
+            <li key={bm._id} className='user-bookmarks__item'>
+              {bm.postId.image && (
+                <img
+                  src={bm.postId.image}
+                  alt={bm.postId.title}
+                  className='user-bookmarks__thumb'
+                  width={44}
+                  height={44}
+                />
+              )}
+              <a href={`/posts/${bm.postId.slug}`} className='user-bookmarks__link'>
+                {bm.postId.title}
+              </a>
             </li>
           ))}
         </ul>

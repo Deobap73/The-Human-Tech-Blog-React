@@ -11,26 +11,29 @@ const UserProfileInfo = () => {
   if (!user) return null;
 
   return (
-    <section className='user-page__profile'>
-      <div className='user-page__avatar'>
+    <div className='user-profile'>
+      <div className='user-profile__avatar'>
         <img
           src={user.avatar || `https://api.dicebear.com/8.x/pixel-art/svg?seed=${user._id}`}
           alt={user.name}
-          width={80}
-          height={80}
+          width={88}
+          height={88}
         />
       </div>
-      <div className='user-page__info'>
-        <h2>{user.name}</h2>
-        <p>{user.email}</p>
-        <button onClick={() => setEditOpen(true)}>Edit Profile</button>
-        <button className='user-page__logout-btn' onClick={logout}>
-          Logout
-        </button>
+      <div className='user-profile__info'>
+        <h2 className='user-profile__name'>{user.name}</h2>
+        <div className='user-profile__email'>{user.email}</div>
+        <div className='user-profile__actions'>
+          <button className='user-profile__edit-btn' onClick={() => setEditOpen(true)}>
+            Edit Profile
+          </button>
+          <button className='user-profile__logout-btn' onClick={logout}>
+            Logout
+          </button>
+        </div>
       </div>
-      {/* Modal só aparece se editOpen for true */}
       <EditProfileModal isOpen={editOpen} onClose={() => setEditOpen(false)} onUpdate={() => {}} />
-    </section>
+    </div>
   );
 };
 

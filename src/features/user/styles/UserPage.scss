@@ -1,106 +1,195 @@
+// src/features/user/styles/UserPage.scss
+
 .user-page {
-  max-width: 700px;
+  width: 100%;
+  max-width: 730px;
   margin: 0 auto;
-  padding: 2rem;
-  background: #fff;
-  border-radius: 1rem;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  padding: var(--padding-xl) var(--padding-base) var(--padding-xl) var(--padding-base);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
 
-  &__profile {
+  &__card {
+    background: var(--background-secondary);
+    border-radius: 22px;
+    box-shadow: 0 6px 36px rgba(29, 161, 242, 0.07), 0 0 0 2px var(--primary);
+    padding: 2.2rem 2.5rem 2rem 2.5rem;
+    margin-bottom: 0.5rem;
     display: flex;
-    align-items: center;
-    margin-bottom: 2rem;
+    flex-direction: column;
     gap: 1.5rem;
-  }
 
-  &__avatar img {
-    border-radius: 50%;
-    border: 2px solid #007bff;
-    background: #f0f0f0;
-  }
-
-  &__info h2 {
-    margin: 0 0 0.25rem 0;
-    font-size: 1.5rem;
-    color: #222;
-  }
-
-  &__info p {
-    margin: 0;
-    color: #555;
-    font-size: 1rem;
-  }
-
-  &__logout-btn {
-    margin-top: 1rem;
-    background: #c00;
-    color: #fff;
-    border: none;
-    padding: 0.5rem 1.25rem;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: background 0.2s;
-    &:hover {
-      background: #900;
+    &--list {
+      padding: 1.5rem 2rem 1.2rem 2rem;
+      background: var(--background);
+      box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
     }
   }
 
-  &__myposts {
-    margin-top: 2rem;
-    h3 {
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
-      color: #333;
+  // Responsive
+  @media (max-width: 700px) {
+    max-width: 98vw;
+    &__card,
+    &__card--list {
+      padding: 1.1rem 0.7rem;
     }
   }
-
-  &__postlist {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  &__postitem {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid #f0f0f0;
-  }
-
-  &__postlink {
-    text-decoration: none;
-    color: #007bff;
-    &:hover {
-      text-decoration: underline;
-    }
-    font-weight: 500;
-  }
-
-  &__postdate {
-    font-size: 0.95rem;
-    color: #888;
-  }
-
-  &__favorites {
-    margin-top: 2.5rem;
-    h3 {
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
-      color: #333;
+  @media (max-width: 480px) {
+    &__card,
+    &__card--list {
+      padding: 0.7rem 0.2rem;
+      border-radius: 11px;
     }
   }
 }
 
+/* Profile block improvements */
+.user-page__profile {
+  display: flex;
+  align-items: center;
+  gap: 2.1rem;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+
+.user-page__avatar img {
+  border-radius: 50%;
+  border: 3px solid var(--primary);
+  background: #fff;
+  width: 92px;
+  height: 92px;
+  object-fit: cover;
+  box-shadow: 0 2px 16px rgba(29, 161, 242, 0.07);
+}
+
+.user-page__info {
+  flex: 1 1 300px;
+  min-width: 120px;
+
+  h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.65rem;
+    color: var(--text-color);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  p {
+    margin: 0 0 0.7rem 0;
+    color: var(--text-color-secondary);
+    font-size: 1.08rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  button {
+    margin-right: 0.7rem;
+    margin-bottom: 0.3rem;
+    padding: 0.5rem 1.1rem;
+    border: 1.5px solid var(--primary);
+    background: transparent;
+    color: var(--primary);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.18s;
+    cursor: pointer;
+    &:hover,
+    &:focus {
+      background: var(--primary);
+      color: #fff;
+      border: 1.5px solid var(--primary-hover);
+      outline: none;
+    }
+    &:last-child {
+      background: var(--error);
+      color: #fff;
+      border-color: var(--error);
+      &:hover,
+      &:focus {
+        background: #8a2424;
+        border-color: #8a2424;
+      }
+    }
+  }
+}
+
+.user-page__myposts,
+.user-page__favorites,
+.user-page__comments {
+  h3 {
+    font-size: 1.18rem;
+    margin-bottom: 1.05rem;
+    color: var(--primary);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+  }
+  p {
+    color: var(--text-color-secondary);
+    font-size: 1rem;
+    margin-bottom: 0.6rem;
+  }
+}
+
+.user-page__postlist,
+.user-page__favorites ul,
+.user-page__comments ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.user-page__postitem,
+.user-page__favorites li,
+.user-page__comments li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0 0.75rem 0;
+  border-bottom: 1px solid #e9f4fd;
+  font-size: 1rem;
+  color: var(--text-color);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.user-page__postlink,
+.user-page__favorites a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.15s;
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+    color: var(--primary-hover);
+    outline: none;
+  }
+}
+
+.user-page__postdate,
+.user-page__comments li span:last-child {
+  font-size: 0.94rem;
+  color: var(--text-color-secondary);
+  margin-left: 1.2rem;
+  min-width: 76px;
+  text-align: right;
+}
+
+/* Unauth block */
 .user-page__unauth {
   max-width: 500px;
   margin: 6rem auto 0;
   padding: 2rem;
   text-align: center;
-  background: #fff;
+  background: var(--background);
   border-radius: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   h2 {
-    color: #c00;
+    color: var(--error);
   }
 }

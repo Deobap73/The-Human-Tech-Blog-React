@@ -1,0 +1,59 @@
+/* /src/features/user/styles/UserBookmarksList.scss */
+
+.user-bookmarks {
+  &__header {
+    font-size: 1.17rem;
+    color: var(--primary);
+    font-weight: 700;
+    margin-bottom: 1.05rem;
+    letter-spacing: 0.03em;
+  }
+  &__loading,
+  &__empty {
+    color: var(--text-color-secondary);
+    text-align: center;
+    font-size: 1rem;
+    margin-bottom: 0.7rem;
+  }
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 0 0.85rem 0;
+    border-bottom: 1px solid rgba(41, 149, 226, 0.08);
+    transition: background 0.13s;
+
+    &:last-child {
+      border-bottom: none;
+    }
+    &:hover {
+      background: rgba(41, 149, 226, 0.04);
+    }
+  }
+  &__thumb {
+    width: 44px;
+    height: 44px;
+    border-radius: 7px;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(41, 149, 226, 0.06);
+    background: #fff;
+    border: 1.5px solid #f0f4fa;
+  }
+  &__link {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.15s;
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+      color: var(--primary-hover);
+    }
+    font-size: 1.07rem;
+  }
+}

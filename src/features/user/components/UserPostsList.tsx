@@ -1,12 +1,15 @@
 // src/features/user/components/UserPostsList.tsx
 
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import api from '../../../shared/utils/axios';
-import { Post } from '../../../shared/types/Post';
+import { Post, PostTranslation } from '../../../shared/types/Post';
+import { getPostTranslation } from '../../../shared/utils/i18nHelpers';
 
 const UserPostsList = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     api
@@ -17,24 +20,30 @@ const UserPostsList = () => {
   }, []);
 
   return (
-    <section className='user-page__myposts'>
-      <h3>My Posts</h3>
+    <section className='user-posts'>
+      <h3 className='user-posts__header'>My Posts</h3>
       {loading ? (
-        <p>Loading posts...</p>
+        <div className='user-posts__loading'>Loading posts...</div>
       ) : posts.length === 0 ? (
-        <p>No posts yet.</p>
+        <div className='user-posts__empty'>No posts yet.</div>
       ) : (
-        <ul className='user-page__postlist'>
-          {posts.map((post) => (
-            <li key={post._id} className='user-page__postitem'>
-              <a href={`/posts/${post.slug}`} className='user-page__postlink'>
-                <strong>{post.title}</strong>
-              </a>
-              <span className='user-page__postdate'>
-                {new Date(post.createdAt).toLocaleDateString()}
-              </span>
-            </li>
-          ))}
+        <ul className='user-posts__list'>
+          {posts.map((post) => {
+            const translation: PostTranslation = getPostTranslation(
+              post.translations,
+              i18n.language
+            );
+            return (
+              <li key={post._id} className='user-posts__item'>
+                <a href={`/posts/${post.slug}`} className='user-posts__link'>
+                  <span className='user-posts__title'>{translation.title}</span>
+                </a>
+                <span className='user-posts__date'>
+                  {new Date(post.createdAt).toLocaleDateString()}
+                </span>
+              </li>
+            );
+          })}
         </ul>
       )}
     </section>
