@@ -1,7 +1,7 @@
 // The-Human-Tech-Blog-React/src/features/chat/pages/ChatPage.tsx
 
 import { useState } from 'react';
-import ChatSidebar from '../components/ChatSidebar';
+import ChatSidebar from '../components/ ChatSidebar';
 import ChatWindow from '../components/ChatWindow';
 import { useTranslation } from 'react-i18next';
 

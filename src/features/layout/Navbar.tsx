@@ -8,6 +8,7 @@ import logo from '../../assets/Logo.webp';
 import ThemeToggle from './ThemeToggle';
 import { LoginModal } from '../auth/components/LoginModal';
 import { IoPersonSharp } from 'react-icons/io5';
+import { IoIosChatbubbles } from 'react-icons/io';
 import SearchBar from '../../features/search/components/SearchBar';
 import LanguageSelector from '../../shared/components/LanguageSelector';
 import { useTranslation } from 'react-i18next';
@@ -35,7 +36,7 @@ const Navbar = () => {
 
   // Set compact mode for admin/user pages (height 80px)
   const config = getNavbarConfig(location.pathname);
-  const isCompact = !config.background && !config.showTile; // <-- melhor lógica
+  const isCompact = !config.background && !config.showTile;
   const navbarClasses = `navbar ${theme === 'dark' ? 'navbar--dark' : 'navbar--light'}${
     isCompact ? ' navbar--compact' : ''
   }`;
@@ -153,7 +154,16 @@ const Navbar = () => {
                       <IoPersonSharp size={28} style={{ verticalAlign: 'middle' }} />
                     )}
                   </Link>
-                  <span className='navbar__user-name'>{user.name}</span>
+                  {/* Chat icon for logged-in users only */}
+                  <Link
+                    to={buildUrl('chat', activeLang)}
+                    className='navbar__user-chat'
+                    title={t('navbar.chat')}
+                    aria-label={t('navbar.chat')}
+                    onClick={handleNavClick}
+                    style={{ display: 'inline-flex', alignItems: 'center', marginLeft: 12 }}>
+                    <IoIosChatbubbles size={26} style={{ verticalAlign: 'middle' }} />
+                  </Link>
                   <button
                     onClick={handleLogout}
                     className='navbar__user-logout'
