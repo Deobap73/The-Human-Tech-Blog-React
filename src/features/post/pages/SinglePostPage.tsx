@@ -1,5 +1,3 @@
-// src/features/post/pages/SinglePostPage.tsx
-
 import '../styles/SinglePostPage.scss';
 import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -13,7 +11,7 @@ import { getPostTranslation, getCategoryName } from '../../../shared/utils/i18nH
 import RecentCategoryPosts from '../components/RecentCategoryPosts';
 import CategoryList from '../components/CategoryList';
 
-// Local User Type for Post
+// User type (avatar opcional)
 type PostUser = {
   _id?: string;
   name?: string;
@@ -59,7 +57,6 @@ export const SinglePostPage = () => {
 
   if (!post) return <div className='single-post-page__loading'>Loading...</div>;
 
-  // Multi-language support
   const translation: PostTranslation = post.translations
     ? getPostTranslation(post.translations, i18n.language)
     : { title: '', description: '', content: '' };
@@ -69,53 +66,52 @@ export const SinglePostPage = () => {
       ? getCategoryName(post.categories[0] as any, i18n.language)
       : '';
 
-  // User Info (safe fallback)
+  // User Info
   const user: PostUser = (post as any).user || (post as any).author || {};
-
-  // Corrige o categoryId (string ou object)
-  const categoryId =
-    post.categories && post.categories.length > 0
-      ? typeof post.categories[0] === 'object'
-        ? (post.categories[0] as any)._id
-        : post.categories[0]
-      : '';
 
   return (
     <div className='single-post-page'>
-      {/* Main article section */}
       <div className='single-post-page__content'>
-        <div className='single-post-page__main-article'>
-          <div className='single-post-page__post-header'>
-            <h1 className='single-post-page__title'>{translation.title}</h1>
-            <div className='single-post-page__user'>
-              <img
-                src={
-                  user.avatar ||
-                  `https://api.dicebear.com/8.x/pixel-art/svg?seed=${user._id || 'guest'}`
-                }
-                alt={user.name || 'User'}
-                className='single-post-page__avatar'
-                width={48}
-                height={48}
-              />
-              <div>
-                <div className='single-post-page__username'>{user.name || 'User'}</div>
-                <div className='single-post-page__date'>
-                  {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ''}
+        {/* Main Article */}
+        <article className='single-post-page__main-article'>
+          <header className='single-post-page__post-header'>
+            <div className='single-post-page__image-block'>
+              {post.image && (
+                <img src={post.image} alt={translation.title} className='single-post-page__image' />
+              )}
+            </div>
+            <div className='single-post-page__title-block'>
+              <h1 className='single-post-page__title'>{translation.title}</h1>
+              <div className='single-post-page__user'>
+                <img
+                  src={
+                    user.avatar ||
+                    `https://api.dicebear.com/8.x/pixel-art/svg?seed=${user._id || 'guest'}`
+                  }
+                  alt={user.name || 'User'}
+                  className='single-post-page__avatar'
+                  width={48}
+                  height={48}
+                />
+                <div>
+                  <div className='single-post-page__username'>{user.name || 'User'}</div>
+                  <div className='single-post-page__date'>
+                    {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ''}
+                  </div>
                 </div>
               </div>
+              <BookmarkButton postId={post._id} className='single-post-page__bookmark-button' />
             </div>
-            {post.image && (
-              <img src={post.image} alt={translation.title} className='single-post-page__image' />
-            )}
-            <BookmarkButton postId={post._id} className='single-post-page__bookmark-button' />
-          </div>
+          </header>
+
           <div className='single-post-page__category-bar'>
             <span className='single-post-page__category'>{category}</span>
           </div>
+
           <div className='single-post-page__body'>
             <div className='single-post-page__description'>{translation.description}</div>
           </div>
+
           <div className='single-post-page__reactions'>
             <ReactionButtons postId={post._id} />
           </div>
@@ -125,9 +121,9 @@ export const SinglePostPage = () => {
             </h3>
             <Comments postId={post._id} className='single-post-page__comments-list' />
           </div>
-        </div>
+        </article>
 
-        {/* Sidebar (desktop: sticky/right; mobile: below) */}
+        {/* Sidebar (desktop sticky, mobile: goes below) */}
         <aside className='single-post-page__sidebar'>
           <section className='single-post-page__popular-posts'>
             <RecentCategoryPosts currentPostId={post._id} lang={i18n.language} />
@@ -138,8 +134,8 @@ export const SinglePostPage = () => {
         </aside>
       </div>
 
-      {/* Fixed "Back to Home" button */}
-      <Link to='/' className='single-post-page__back-link single-post-page__back-link--fixed'>
+      {/* "Back to Home" button centralized at bottom */}
+      <Link to='/' className='single-post-page__back-link'>
         {t('postPage.backToHome')}
       </Link>
     </div>
