@@ -29,7 +29,7 @@
     padding: 2.2rem 2rem 1.7rem 2rem;
     display: flex;
     flex-direction: column;
-    animation: modalIn 0.23s cubic-bezier(0.52, 0.47, 0.44, 0.93);
+    animation: edit-profile-modal__in 0.23s cubic-bezier(0.52, 0.47, 0.44, 0.93);
 
     @media (max-width: 520px) {
       width: 98vw;
@@ -59,7 +59,8 @@
       color: var(--text-color);
       font-size: 1.07rem;
     }
-    input {
+    input[type='text'],
+    input[type='email'] {
       border: 1.8px solid #26313d;
       border-radius: 8px;
       padding: 0.7rem 0.9rem;
@@ -76,6 +77,57 @@
         outline: none;
       }
     }
+  }
+
+  &__avatar-block {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin-top: 0.3rem;
+    width: 100%;
+
+    @media (max-width: 450px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+  }
+
+  &__avatar-preview {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary);
+    background: #eee;
+    box-shadow: 0 1px 9px rgba(41, 149, 226, 0.1);
+  }
+
+  &__avatar-input {
+    flex: 1;
+    font-size: 0.99em;
+    padding: 0.15rem;
+    color: var(--text-color-secondary);
+    background: transparent;
+  }
+
+  &__avatar-hint {
+    font-size: 0.93em;
+    color: var(--text-color-secondary);
+    margin-left: 0.5em;
+    align-self: flex-end;
+    opacity: 0.77;
+  }
+
+  &__avatar-url {
+    width: 100%;
+    margin-top: 6px;
+    font-size: 0.98em;
+    border-radius: 6px;
+    border: 1px solid #d8e2ee;
+    background: #f7fbff;
+    padding: 0.5em;
+    color: var(--text-color);
   }
 
   &__actions {
@@ -132,7 +184,7 @@
   }
 }
 
-@keyframes modalIn {
+@keyframes edit-profile-modal__in {
   from {
     opacity: 0;
     transform: translateY(30px) scale(0.97);
