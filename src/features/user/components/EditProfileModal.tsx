@@ -1,13 +1,13 @@
 // src/features/user/components/EditProfileModal.tsx
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import api from '../../../shared/utils/axios';
 import { useAuth } from '../../../shared/hooks/useAuth';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  onUpdate: () => void; // callback to refresh user info
+  onUpdate: () => void;
 }
 
 const EditProfileModal = ({ isOpen, onClose, onUpdate }: Props) => {
@@ -18,12 +18,14 @@ const EditProfileModal = ({ isOpen, onClose, onUpdate }: Props) => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
-  // Reset fields on open
-  if (isOpen && !saving && user) {
-    if (name !== user.name) setName(user.name);
-    if (email !== user.email) setEmail(user.email);
-    if (avatar !== user.avatar) setAvatar(user.avatar || '');
-  }
+  // Reset fields ONLY when modal opens or user changes
+  useEffect(() => {
+    if (isOpen && user) {
+      setName(user.name || '');
+      setEmail(user.email || '');
+      setAvatar(user.avatar || '');
+    }
+  }, [isOpen, user]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
