@@ -251,5 +251,14 @@
     "mostPopular": "Most Popular",
     "noPopularPosts": "No other posts available.",
     "loading": "Loading..."
+  },
+  "chat": {
+    "title": "Chats",
+    "placeholder": "Select a conversation",
+    "inputPlaceholder": "Type your message...",
+    "send": "Send",
+    "loading": "Loading messages...",
+    "you": "You",
+    "noName": "No Name"
   }
 }

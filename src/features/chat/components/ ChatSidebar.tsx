@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import api from '../../../shared/utils/axios';
 import { useAuth } from '../../../shared/hooks/useAuth';
+import { useTranslation } from 'react-i18next';
 
 interface Conversation {
   _id: string;
@@ -12,6 +13,7 @@ interface Conversation {
 const ChatSidebar = ({ onSelect }: { onSelect: (id: string) => void }) => {
   const { user } = useAuth();
   const [conversations, setConversations] = useState<Conversation[]>([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchConversations = async () => {
@@ -27,14 +29,14 @@ const ChatSidebar = ({ onSelect }: { onSelect: (id: string) => void }) => {
 
   return (
     <aside className='chat-sidebar'>
-      <h3>Chats</h3>
+      <h3>{t('chat.title')}</h3>
       <ul>
         {conversations.map((conv) => (
           <li key={conv._id} onClick={() => onSelect(conv._id)}>
             {conv.participants
               .map((p) => p.name)
               .filter((name) => name !== user?.name)
-              .join(', ') || 'No Name'}
+              .join(', ') || t('chat.noName')}
           </li>
         ))}
       </ul>

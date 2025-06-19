@@ -1,19 +1,18 @@
 // The-Human-Tech-Blog-React/src/features/chat/components/MessageInput.tsx
 
 import { useState } from 'react';
-import api from '../../../shared/utils/axios';
+import { useSocketContext } from '../../../shared/context/SocketContext';
+import { useTranslation } from 'react-i18next';
 
 const MessageInput = ({ conversationId }: { conversationId: string }) => {
   const [text, setText] = useState('');
+  const { sendMessage } = useSocketContext();
+  const { t } = useTranslation();
 
-  const handleSend = async () => {
+  const handleSend = () => {
     if (!text.trim()) return;
-    try {
-      await api.post(`/messages/${conversationId}`, { text });
-      setText('');
-    } catch (err) {
-      // Optionally add feedback (toast)
-    }
+    sendMessage(conversationId, text);
+    setText('');
   };
 
   return (
@@ -22,12 +21,12 @@ const MessageInput = ({ conversationId }: { conversationId: string }) => {
         type='text'
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder='Type your message...'
+        placeholder={t('chat.inputPlaceholder')}
         onKeyDown={(e) => {
           if (e.key === 'Enter') handleSend();
         }}
       />
-      <button onClick={handleSend}>Send</button>
+      <button onClick={handleSend}>{t('chat.send')}</button>
     </div>
   );
 };

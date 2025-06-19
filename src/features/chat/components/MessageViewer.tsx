@@ -1,19 +1,18 @@
-// src/features/chat/components/MessageViewer.tsx
+// /src/features/chat/components/MessageViewer.tsx
 
 import { useEffect, useRef, useState } from 'react';
 import api from '../../../shared/utils/axios';
 import { useAuth } from '../../../shared/hooks/useAuth';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
-import { io } from 'socket.io-client';
+import { useSocketContext } from '../../../shared/context/SocketContext';
 import { ChatMessage } from '../../../shared/types/ChatMessage';
-
-const socket = io(import.meta.env.VITE_API_URL || 'http://localhost:5000', {
-  withCredentials: true,
-});
+import { useTranslation } from 'react-i18next';
 
 const MessageViewer = ({ conversationId }: { conversationId: string }) => {
   const { user } = useAuth();
+  const { socket, joinConversation, leaveConversation } = useSocketContext();
+  const { t } = useTranslation();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(true);
   const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -22,7 +21,6 @@ const MessageViewer = ({ conversationId }: { conversationId: string }) => {
     const fetchMessages = async () => {
       try {
         const res = await api.get(`/messages/${conversationId}`);
-        console.log(res.data);
         setMessages(res.data);
       } finally {
         setLoading(false);
@@ -36,20 +34,24 @@ const MessageViewer = ({ conversationId }: { conversationId: string }) => {
   }, [messages]);
 
   useEffect(() => {
-    socket.emit('joinConversation', conversationId);
-    const handleNewMessage = (msg: any) => {
-      if (msg.conversation === conversationId || msg.conversationId === conversationId) {
+    if (!socket) return;
+    joinConversation(conversationId);
+    const handleNewMessage = (msg: ChatMessage) => {
+      if (
+        msg.conversationId === conversationId ||
+        (msg as any).conversation?._id === conversationId
+      ) {
         setMessages((prev) => [...prev, msg]);
       }
     };
-    socket.on('newMessage', handleNewMessage);
+    socket.on('chat:newMessage', handleNewMessage);
     return () => {
-      socket.off('newMessage', handleNewMessage);
-      socket.emit('leaveConversation', conversationId);
+      socket.off('chat:newMessage', handleNewMessage);
+      leaveConversation(conversationId);
     };
-  }, [conversationId]);
+  }, [socket, conversationId, joinConversation, leaveConversation]);
 
-  if (loading) return <p>Loading messages...</p>;
+  if (loading) return <p>{t('chat.loading')}</p>;
 
   return (
     <div className='chat-message-viewer'>
@@ -62,13 +64,13 @@ const MessageViewer = ({ conversationId }: { conversationId: string }) => {
         const contentHTML = DOMPurify.sanitize(marked.parse(msg.text) as string);
 
         return (
-          <div key={msg._id} className={`chat-message ${isSelf ? 'self' : ''}`}>
+          <div key={msg._id} className={`chat-message${isSelf ? ' chat-message--self' : ''}`}>
             <strong>
               {isSelf
-                ? 'You'
+                ? t('chat.you')
                 : typeof msg.sender === 'object' && 'name' in msg.sender
-                ? msg.sender.name
-                : 'User'}
+                ? (msg.sender as any).name
+                : t('chat.noName')}
             </strong>
             <em>({timestamp})</em>:
             <div dangerouslySetInnerHTML={{ __html: contentHTML }} />
