@@ -31,7 +31,7 @@
 
   &__image-wrapper {
     position: relative;
-    width: 340px;
+    width: 380px;
     height: 420px;
     min-width: 240px;
     display: flex;
@@ -41,8 +41,7 @@
     margin-top: 1.8rem;
 
     @media (max-width: 600px) {
-      width: 410px;
-      height: 420px;
+      width: 70vw;
       min-width: 0;
       margin: 0 auto;
       // Em telas muito pequenas, nunca estoura o viewport
@@ -115,6 +114,7 @@
     z-index: 3;
 
     @media (max-width: 900px) {
+      align-items: center;
       margin-left: 0;
       min-width: unset;
       width: 98vw;
