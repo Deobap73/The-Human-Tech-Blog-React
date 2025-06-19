@@ -3,6 +3,7 @@
 import { useAuth } from '../../../shared/hooks/useAuth';
 import EditProfileModal from './EditProfileModal';
 import { useState } from 'react';
+import '../styles/UserProfileInfo.scss';
 
 const UserProfileInfo = () => {
   const { user, logout } = useAuth();

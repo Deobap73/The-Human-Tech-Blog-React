@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import api from '../../../shared/utils/axios';
 import { Post, PostTranslation } from '../../../shared/types/Post';
 import { getPostTranslation } from '../../../shared/utils/i18nHelpers';
+import '../styles/UserPostsList.scss';
 
 const UserPostsList = () => {
   const [posts, setPosts] = useState<Post[]>([]);

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import api from '../../../shared/utils/axios';
+import '../styles/UserBookmarksList.scss';
 
 interface Bookmark {
   _id: string;

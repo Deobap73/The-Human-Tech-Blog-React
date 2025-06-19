@@ -18,21 +18,24 @@
     padding: 1.2rem 0.5rem;
   }
 
-  &__avatar img {
-    width: 88px;
-    height: 88px;
-    border-radius: 50%;
-    border: 3px solid var(--primary);
-    box-shadow: 0 2px 16px rgba(41, 149, 226, 0.18);
-    background: #fff;
-    object-fit: cover;
-    transition: border 0.18s;
+  &__avatar {
+    img {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      border: 3px solid var(--primary);
+      box-shadow: 0 2px 16px rgba(41, 149, 226, 0.18);
+      background: #fff;
+      object-fit: cover;
+      transition: border 0.18s;
+    }
   }
 
   &__info {
     flex: 1 1 300px;
     min-width: 130px;
   }
+
   &__name {
     font-size: 1.65rem;
     font-weight: 800;
@@ -40,17 +43,20 @@
     margin: 0 0 0.3rem 0;
     letter-spacing: 0.02em;
   }
+
   &__email {
     font-size: 1.05rem;
     color: var(--text-color-secondary);
     margin-bottom: 0.7rem;
     word-break: break-all;
   }
+
   &__actions {
     display: flex;
     gap: 0.8rem;
     flex-wrap: wrap;
   }
+
   &__edit-btn,
   &__logout-btn {
     padding: 0.5rem 1.3rem;
@@ -63,6 +69,7 @@
     cursor: pointer;
     transition: background 0.18s, color 0.18s, border 0.18s;
     outline: none;
+
     &:hover,
     &:focus {
       background: var(--primary);
@@ -70,10 +77,12 @@
       border-color: var(--primary-hover);
     }
   }
+
   &__logout-btn {
     border: 2px solid var(--error);
     color: var(--error);
     background: transparent;
+
     &:hover,
     &:focus {
       background: var(--error);

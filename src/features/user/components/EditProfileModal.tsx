@@ -2,6 +2,7 @@
 import { useState, useEffect, ChangeEvent } from 'react';
 import api from '../../../shared/utils/axios';
 import { useAuth } from '../../../shared/hooks/useAuth';
+import '../styles/EditProfileModal.scss';
 
 interface Props {
   isOpen: boolean;
@@ -84,7 +85,13 @@ const EditProfileModal = ({ isOpen, onClose, onUpdate }: Props) => {
         <form onSubmit={handleSave}>
           <label>
             Name
-            <input value={name} onChange={(e) => setName(e.target.value)} required minLength={2} />
+            <input
+              type='text'
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              minLength={2}
+            />
           </label>
           <label>
             Email

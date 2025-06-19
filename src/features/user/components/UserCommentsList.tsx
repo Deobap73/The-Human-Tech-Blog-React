@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import api from '../../../shared/utils/axios';
+import '../styles/UserCommentsList.scss';
 
 interface Comment {
   _id: string;
