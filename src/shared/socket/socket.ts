@@ -1,33 +1,49 @@
-// src/shared/socket.ts
 import { io, Socket } from 'socket.io-client';
-import { getAccessToken } from '../utils/auth';
+import { getAccessToken } from '../utils/authTokenStorage';
 
-let socket: Socket | null = null;
+let socketInstance: Socket | null = null;
 
-export const connectSocket = () => {
-  if (!socket || !socket.connected) {
+export const connectSocket = (): Socket => {
+  if (!socketInstance || socketInstance.disconnected) {
     const token = getAccessToken();
-    socket = io(import.meta.env.VITE_API_URL, {
+
+    socketInstance = io(import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL, {
       auth: { token },
       withCredentials: true,
-      transports: ['websocket'],
+      transports: ['websocket', 'polling'],
+      autoConnect: true,
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
     });
 
-    socket.on('connect', () => {
-      console.log('✅ Socket connected:', socket?.id);
+    socketInstance.on('connect', () => {
+      console.log('✅ Socket connected:', socketInstance?.id);
     });
 
-    socket.on('disconnect', () => {
+    socketInstance.on('disconnect', () => {
       console.log('❌ Socket disconnected');
     });
+
+    socketInstance.on('connect_error', (err) => {
+      console.error('Socket connection error:', err.message);
+    });
+  }
+
+  return socketInstance;
+};
+
+export const getSocket = (): Socket | null => {
+  return socketInstance;
+};
+
+export const disconnectSocket = () => {
+  if (socketInstance) {
+    socketInstance.disconnect();
+    socketInstance = null;
   }
 };
 
-export const getSocket = (): Socket | null => socket;
-
-export const disconnectSocket = () => {
-  if (socket) {
-    socket.disconnect();
-    socket = null;
-  }
+export const isSocketConnected = (): boolean => {
+  return socketInstance?.connected ?? false;
 };

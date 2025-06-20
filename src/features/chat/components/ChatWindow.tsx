@@ -2,6 +2,7 @@
 import MessageViewer from './MessageViewer';
 import MessageInput from './MessageInput';
 import { useTranslation } from 'react-i18next';
+import '../styles/ChatWindow.scss';
 
 const ChatWindow = ({ conversationId }: { conversationId: string }) => {
   const { t } = useTranslation();

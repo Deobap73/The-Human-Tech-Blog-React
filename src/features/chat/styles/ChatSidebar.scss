@@ -2,7 +2,6 @@
 
 .chat-sidebar {
   width: 350px;
-  background: var(--background-secondary);
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -17,7 +16,6 @@
     align-items: center;
     gap: 1.2em;
     padding: 2.3em 1.7em 1.3em 2.1em;
-    background: var(--background);
     border-radius: 24px 0 0 0;
   }
 

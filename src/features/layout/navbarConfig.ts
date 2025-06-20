@@ -11,6 +11,7 @@ export interface NavbarConfig {
   showTile?: boolean;
   tileTitle?: (t: TFunction) => string;
   tileDescription?: (t: TFunction) => string;
+  hideNavbar?: boolean; // <--- Add this new property
 }
 
 export const navbarConfigs: Record<string, NavbarConfig> = {
@@ -48,6 +49,7 @@ export const navbarConfigs: Record<string, NavbarConfig> = {
   '/chat': {
     showTile: false,
     background: undefined,
+    hideNavbar: true, // <--- Set this to true for the chat page
   },
   // Add more routes as needed
 };

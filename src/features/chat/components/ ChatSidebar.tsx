@@ -1,9 +1,11 @@
 // /src/features/chat/components/ChatSidebar.tsx
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../../../shared/utils/axios';
 import { useAuth } from '../../../shared/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
 import { RiHome2Line, RiSearch2Line } from 'react-icons/ri';
+import '../styles/ChatSidebar.scss';
 
 interface Conversation {
   _id: string;
@@ -136,9 +138,9 @@ const ChatSidebar = ({ onSelect }: ChatSidebarProps) => {
 
       {/* Neon Home Button */}
       <div className='chat-sidebar__footer'>
-        <button className='chat-sidebar__footer-home' title='Home'>
+        <Link to='/' className='chat-sidebar__footer-home' title='Home'>
           <RiHome2Line size={28} />
-        </button>
+        </Link>
       </div>
     </aside>
   );

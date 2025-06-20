@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import api from '../../../shared/utils/axios';
 import { useAuth } from '../../../shared/hooks/useAuth';
-import { useSocketContext } from '../../../shared/context/SocketContext';
+import { useSocket } from '../../../shared/hooks/useSocket';
 
 const EMOJIS = ['👍', '😂', '😢', '😮', '😡', '❤️'];
 
@@ -14,11 +14,10 @@ interface ReactionButtonProps {
 
 const ReactionButton = ({ targetType, targetId }: ReactionButtonProps) => {
   const { user } = useAuth();
-  const { socket } = useSocketContext();
+  const { socket, isConnected } = useSocket();
   const [myReactions, setMyReactions] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Busca minhas reações ao target
   useEffect(() => {
     const fetchReactions = async () => {
       try {
@@ -27,25 +26,36 @@ const ReactionButton = ({ targetType, targetId }: ReactionButtonProps) => {
         if (user) {
           setMyReactions(reactions.filter((r) => r.userId === user._id).map((r) => r.emoji));
         }
-      } catch {
+      } catch (err) {
+        console.error('Failed to fetch reactions:', err);
         setMyReactions([]);
       }
     };
+
     fetchReactions();
+
     if (socket) {
-      socket.on('reaction:update', fetchReactions);
-      return () => {
-        socket.off('reaction:update', fetchReactions);
-      };
+      socket.on('reaction:updated', (payload: { targetType: string; targetId: string }) => {
+        if (payload.targetType === targetType && payload.targetId === targetId) {
+          fetchReactions();
+        }
+      });
     }
+
+    return () => {
+      socket?.off('reaction:updated');
+    };
   }, [targetType, targetId, user, socket]);
 
   const handleReaction = async (emoji: string) => {
+    if (!user || loading || !isConnected) return;
+
     setLoading(true);
     try {
       await api.post('/reactions', { targetType, targetId, emoji });
-      // Notifica outros via socket
-      socket?.emit('reaction:toggle', { targetType, targetId });
+      socket?.emit('reaction:toggle', { targetType, targetId, emoji });
+    } catch (err) {
+      console.error('Failed to send reaction:', err);
     } finally {
       setLoading(false);
     }
@@ -57,9 +67,10 @@ const ReactionButton = ({ targetType, targetId }: ReactionButtonProps) => {
         <button
           key={emoji}
           onClick={() => handleReaction(emoji)}
-          disabled={!user || loading}
+          disabled={!user || loading || !isConnected}
           className={myReactions.includes(emoji) ? 'active' : ''}
-          title={emoji}>
+          title={emoji}
+          aria-label={`React with ${emoji}`}>
           {emoji}
         </button>
       ))}

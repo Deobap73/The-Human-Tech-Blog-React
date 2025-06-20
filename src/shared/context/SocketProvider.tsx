@@ -1,97 +1,104 @@
 // The-Human-Tech-Blog-React/src/shared/context/SocketProvider.tsx
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { io, Socket } from 'socket.io-client';
 import { getAccessToken } from '../utils/authTokenStorage';
 import { SocketContext } from './SocketContext';
 import type { ReactNode } from 'react';
 
-export const SocketProvider = ({ children }: { children: ReactNode }) => {
+interface SocketProviderProps {
+  children: ReactNode;
+}
+
+export const SocketProvider = ({ children }: SocketProviderProps) => {
   const [socket, setSocket] = useState<Socket | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
   const [reactionUpdates, setReactionUpdates] = useState<any>(null);
-
   const { user } = useAuth();
+  const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
     const token = getAccessToken();
     if (!token) {
-      setSocket(null);
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+        socketRef.current = null;
+        setSocket(null);
+        setIsConnected(false);
+      }
       return;
     }
-    const newSocket = io(import.meta.env.VITE_API_URL || 'http://localhost:5000', {
-      auth: { token },
-      withCredentials: true,
-    });
 
-    setSocket(newSocket);
+    // Só cria nova conexão se não existir ou se desconectou
+    if (!socketRef.current || socketRef.current.disconnected) {
+      const newSocket = io(import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL, {
+        auth: { token },
+        withCredentials: true,
+        transports: ['websocket', 'polling'],
+        autoConnect: true,
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+      });
 
-    newSocket.on('connect', () => {
-      // Connected!
-    });
-    newSocket.on('disconnect', () => {
-      setSocket(null);
-    });
+      socketRef.current = newSocket;
+      setSocket(newSocket);
 
-    // Real-time notifications
-    newSocket.on('notification:new', (notif) => {
-      setNotifications((prev) => [notif, ...prev]);
-    });
+      newSocket.on('connect', () => {
+        setIsConnected(true);
+        console.log('Socket connected:', newSocket.id);
+      });
 
-    newSocket.on('reaction:updated', (payload) => {
-      setReactionUpdates({ ...payload, timestamp: Date.now() });
-    });
+      newSocket.on('disconnect', () => {
+        setIsConnected(false);
+        console.log('Socket disconnected');
+      });
+
+      newSocket.on('connect_error', (err) => {
+        console.error('Socket connection error:', err.message);
+      });
+
+      newSocket.on('notification:new', (notif) => {
+        setNotifications((prev) => [notif, ...prev]);
+      });
+
+      newSocket.on('reaction:updated', (payload) => {
+        setReactionUpdates({ ...payload, timestamp: Date.now() });
+      });
+    }
 
     return () => {
-      newSocket.disconnect();
+      // Não desconecta o socket global aqui - mantém a conexão ativa
+      // Apenas limpa os listeners específicos se necessário
     };
   }, [user]);
 
-  // --- CHAT METHODS ---
-
-  const joinConversation = useCallback(
-    (conversationId: string) => {
-      socket?.emit('chat:join', conversationId);
-    },
-    [socket]
+  const value = useMemo(
+    () => ({
+      socket,
+      isConnected,
+      notifications,
+      reactionUpdates,
+      sendMessage: (conversationId: string, text: string) => {
+        socket?.emit('chat:message', { conversationId, text });
+      },
+      joinConversation: (conversationId: string) => {
+        socket?.emit('chat:join', conversationId);
+      },
+      leaveConversation: (conversationId: string) => {
+        socket?.emit('chat:leave', conversationId);
+      },
+      markAsRead: async (id: string) => {
+        // Implementação existente
+      },
+      deleteNotification: async (id: string) => {
+        // Implementação existente
+      },
+    }),
+    [socket, isConnected, notifications, reactionUpdates]
   );
 
-  const leaveConversation = useCallback(
-    (conversationId: string) => {
-      socket?.emit('chat:leave', conversationId);
-    },
-    [socket]
-  );
-
-  const sendMessage = useCallback(
-    (conversationId: string, text: string) => {
-      socket?.emit('chat:message', { conversationId, text });
-    },
-    [socket]
-  );
-
-  // Notifications helpers (mantidos)
-  const markAsRead = useCallback(async (id: string) => {
-    /*...*/
-  }, []);
-  const deleteNotification = useCallback(async (id: string) => {
-    /*...*/
-  }, []);
-
-  return (
-    <SocketContext.Provider
-      value={{
-        socket,
-        sendMessage,
-        joinConversation,
-        leaveConversation,
-        notifications,
-        markAsRead,
-        deleteNotification,
-        reactionUpdates,
-      }}>
-      {children}
-    </SocketContext.Provider>
-  );
+  return <SocketContext.Provider value={value}>{children}</SocketContext.Provider>;
 };

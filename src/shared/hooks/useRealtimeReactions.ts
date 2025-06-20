@@ -3,19 +3,29 @@
 import { useEffect } from 'react';
 import { useSocketContext } from '../context/SocketContext';
 
-type ReactionRealtimeHandler = (event: { targetType: string; targetId: string }) => void;
+type ReactionRealtimeHandler = (event: {
+  targetType: string;
+  targetId: string;
+  emoji?: string;
+  userId?: string;
+}) => void;
 
 export function useRealtimeReactions(
   targetType: string,
   targetId: string,
   onUpdate: ReactionRealtimeHandler
 ) {
-  const { socket } = useSocketContext();
+  const { socket, isConnected } = useSocketContext();
 
   useEffect(() => {
-    if (!socket) return;
+    if (!socket || !isConnected) return;
 
-    const handler = (event: { targetType: string; targetId: string }) => {
+    const handler = (event: {
+      targetType: string;
+      targetId: string;
+      emoji?: string;
+      userId?: string;
+    }) => {
       if (event.targetType === targetType && event.targetId === targetId) {
         onUpdate(event);
       }
@@ -26,5 +36,5 @@ export function useRealtimeReactions(
     return () => {
       socket.off('reaction:updated', handler);
     };
-  }, [socket, targetType, targetId, onUpdate]);
+  }, [socket, isConnected, targetType, targetId, onUpdate]);
 }

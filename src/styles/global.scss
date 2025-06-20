@@ -1,6 +1,7 @@
 /**
  * Global Variables and Resets for The Human Tech Blog
  * All modules must follow these standards for consistency and accessibility
+ * BEM methodology | strict mode
  */
 
 :root {
@@ -32,7 +33,7 @@
   --letter-spacing-small: 0.5px;
   --text-uppercase: uppercase;
 
-  /* --- Spacing, Gap, Padding, Margin (completa e auditada) --- */
+  /* Spacing */
   --spacing-xxs: 0.125rem;
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
@@ -84,20 +85,45 @@
   /* Color palette (light/dark is set below) */
   --background: #fff;
   --background-secondary: #f4f4f4;
+  --background-tertiary: #161c29; /* NEW: For input fields (afundado) */
+  --background-chatbubble: #232b36; /* NEW: For received chat bubbles */
+  --background-chatself: #1da1f2; /* NEW: For self chat bubbles */
+  --background-sidebar: #232b36; /* NEW: Sidebar dark background */
+  --background-glass: rgba(22, 28, 41, 0.97); /* NEW: Glassmorphism cards */
+
   --text-color: #23262f;
   --text-color-secondary: #393c43;
   --text-color-tertiary: #1da1f2;
+  --text-color-inverse: #fff; /* NEW: For text on colored backgrounds */
+  --text-color-placeholder: #8da3c7; /* NEW: For input placeholder */
+
   --primary: #1da1f2;
   --primary-hover: #1769aa;
+
   --success: #2ecc40;
   --error: #f41919;
   --warning: #ff9800;
   --info: #17a2b8;
+
+  /* Neon/Shadow (main blue) */
+  --neon-shadow: 0 0 12px #1da1f2, 0 6px 30px #1da1f299;
   --neon-border-shadow: 0 0 5px var(--primary), 0 0 12px var(--primary), 0 0 16px var(--primary),
     0 0 35px var(--primary);
 
+  /* Button/Inputs: custom shadows (NEW for chat) */
+  --btn-shadow-elevated: 0 2px 8px 0 #1da1f2, 0 8px 36px #1da1f299;
+  --btn-shadow-neon: 0 0 14px 5px #1da1f2, 0 2px 16px #1da1f2a2;
+  --btn-shadow-hover: 0 0 26px 8px #1da1f2, 0 8px 32px #1da1f2b1;
+  --input-shadow-inset: inset 0 2px 7px #192846, inset 0 0.7px 0.2px #101829;
+
   /* Shadows */
-  --shadow-card: 0 4px 12px rgb(0, 0, 0);
+  --shadow-card: 0 4px 12px rgb(0, 0, 0, 0.11);
+  --shadow-card-strong: 0 8px 36px 0 rgba(23, 34, 74, 0.23);
+
+  /* Border radius */
+  --border-radius-lg: 24px;
+  --border-radius-md: 16px;
+  --border-radius-sm: 8px;
 
   /* Skeleton Loader */
   --skeleton-bg: #e0e0e0;
@@ -112,9 +138,14 @@
 [data-theme='light'] {
   --background: linear-gradient(149deg, #fbfffd 0%, #edeff3 50%, #4c4d50 100%);
   --background-secondary: #f8fafd;
+  --background-tertiary: #e3ebf5;
+  --background-sidebar: #f8fafd;
+  --background-chatbubble: #f4f6fa;
+  --background-chatself: #1da1f2;
   --text-color: #23262f;
   --text-color-secondary: #a1a1a3;
   --text-color-tertiary: #003a5f;
+  --text-color-inverse: #fff;
   --primary: #1da1f2;
   --primary-hover: #2995e2;
 }
@@ -122,12 +153,18 @@
 /* Theme: Dark */
 [data-theme='dark'] {
   --background: linear-gradient(140deg, #010c21 18%, #373c52 30%, #02040d 84%);
-  --background-secondary: #232b36;
+  --background-secondary: linear-gradient(140deg, #262a32 18%, #191f27 70%, #141822 94%);
+  --background-tertiary: #161c29;
+  --background-sidebar: #232b36;
+  --background-chatbubble: #232b36;
+  --background-chatself: #1da1f2;
   --text-color: #fcfcfc;
   --text-color-secondary: #a2a2b5;
   --text-color-tertiary: #1da1f2;
+  --text-color-inverse: #fff;
   --primary: #1da1f2;
   --primary-hover: #2995e2;
+  --neon-shadow: 0 0 12px #1da1f2, 0 6px 30px #1da1f2;
   --neon-border-shadow: 0 0 5px var(--primary), 0 0 12px var(--primary), 0 0 16px var(--primary),
     0 0 35px var(--primary);
   color-scheme: dark;
@@ -227,18 +264,17 @@ a {
 
   &:hover,
   &:focus {
-    border: 2px solid #2995e2; // azul claro (ajusta se tua paleta for diferente)
+    border: 2px solid #2995e2;
     border-left: none;
     border-right: none;
     border-radius: 12px;
     box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
-    backdrop-filter: blur(2.5px); // Glass effect!
+    backdrop-filter: blur(2.5px);
     transition: border 0.2s, box-shadow 0.2s, background 0.25s;
     outline: none;
   }
   &:active {
     background: none !important;
-
     box-shadow: none !important;
     text-decoration: none !important;
     outline: none !important;
@@ -262,11 +298,16 @@ button {
   background: none;
 }
 
+/* 
+  Button and input reset
+  All chat-specific styles are controlled in feature-level SCSS,
+  only global tokens, radii and shadows here.
+*/
 button:not([class]) {
   display: inline-flex;
   align-items: center;
   gap: 0.5em;
-  border-radius: 8px;
+  border-radius: var(--border-radius-sm);
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
