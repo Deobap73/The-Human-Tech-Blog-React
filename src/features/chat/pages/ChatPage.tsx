@@ -1,5 +1,4 @@
-// The-Human-Tech-Blog-React/src/features/chat/pages/ChatPage.tsx
-
+// /src/features/chat/pages/ChatPage.tsx
 import { useState } from 'react';
 import ChatSidebar from '../components/ ChatSidebar';
 import ChatWindow from '../components/ChatWindow';
@@ -10,13 +9,11 @@ const ChatPage = () => {
   const { t } = useTranslation();
 
   return (
-    <div className='chat-page' style={{ display: 'flex', gap: '1rem' }}>
+    <div
+      className='chat-page'
+      style={{ display: 'flex', gap: '0', width: '100vw', minHeight: '100vh' }}>
       <ChatSidebar onSelect={setConversationId} />
-      {conversationId ? (
-        <ChatWindow conversationId={conversationId} />
-      ) : (
-        <div className='chat-placeholder'>{t('chat.placeholder')}</div>
-      )}
+      <ChatWindow conversationId={conversationId} />
     </div>
   );
 };

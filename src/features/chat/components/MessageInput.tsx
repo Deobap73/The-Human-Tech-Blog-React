@@ -4,6 +4,7 @@ import { useState } from 'react';
 import api from '../../../shared/utils/axios';
 import { useTranslation } from 'react-i18next';
 import { RiSendPlane2Line, RiAttachment2, RiMicLine } from 'react-icons/ri';
+import '../styles/MessageInput.scss';
 
 const MessageInput = ({ conversationId }: { conversationId: string }) => {
   const [text, setText] = useState('');

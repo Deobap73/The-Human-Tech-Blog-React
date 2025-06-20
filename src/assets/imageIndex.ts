@@ -3,7 +3,6 @@ import cloudinary from './cloudinary.webp';
 import confluence from './confluence.webp';
 import external from './external.png';
 import frontEndUx from './frontEndUx.webp';
-import frontPage from './frontPage.webp';
 import hostinger from './hostinger.webp';
 import imageDownload from './imageDownload.png';
 import jira from './jira.webp';
@@ -24,7 +23,6 @@ const images: {
   confluence: string;
   external: string;
   frontEndUx: string;
-  frontPage: string;
   hostinger: string;
   imageDownload: string;
   jira: string;
@@ -44,7 +42,6 @@ const images: {
   confluence,
   external,
   frontEndUx,
-  frontPage,
   hostinger,
   imageDownload,
   jira,
