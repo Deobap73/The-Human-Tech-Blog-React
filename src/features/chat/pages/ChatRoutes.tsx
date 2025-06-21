@@ -44,8 +44,10 @@ const ChatLayout = () => {
 
   return (
     <div className='chat-page'>
-      <ChatSidebar onSelect={handleSelect} />
-      {!isMobile && <ChatWindow conversationId={selectedConversation} />}
+      <div className='chat-page__container'>
+        <ChatSidebar onSelect={handleSelect} />
+        {!isMobile && <ChatWindow conversationId={selectedConversation} />}
+      </div>
     </div>
   );
 };
