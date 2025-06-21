@@ -6,7 +6,6 @@
   flex: 1 1 0;
   min-width: 0;
   height: 100vh;
-  background: var(--background-sidebar);
   border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
   box-shadow: var(--shadow-card-strong);
   position: relative;
@@ -24,48 +23,6 @@
     pointer-events: none;
   }
 
-    // Mobile/tablet-only header
-  &__header--mobile {
-    display: none; // Esconde por default, mostra só mobile/tablet!
-    @media (max-width: 1024px) {
-      display: flex;
-      align-items: center;
-      gap: var(--gap-xs);
-      padding: var(--padding-base) var(--padding-base) var(--padding-sm) var(--padding-base);
-      background: var(--background-sidebar);
-      border-bottom: 1.5px solid rgba(40, 55, 92, 0.14);
-      min-height: 58px;
-      position: relative;
-      z-index: 2;
-    }
-  }
-
-  &__header-back {
-    background: none;
-    border: none;
-    color: var(--primary);
-    font-size: 2.2rem;
-    margin-right: var(--gap-xs);
-    cursor: pointer;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    transition: color 0.14s;
-    &:hover,
-    &:focus-visible {
-      color: var(--primary-hover);
-    }
-  }
-  &__header-mobile-title {
-    font-size: 1.16rem;
-    font-weight: 700;
-    color: var(--primary);
-    letter-spacing: 0.01em;
-    margin-left: 0.3em;
-    user-select: none;
-  }
-}
-
   // Header: Avatar + username + status
   &__header {
     position: relative;
@@ -77,6 +34,7 @@
     min-height: 80px;
     background: transparent;
     border-bottom: 1.5px solid rgba(40, 55, 92, 0.18);
+
     .chat-window__header-avatar {
       width: 44px;
       height: 44px;
@@ -104,12 +62,13 @@
       opacity: 0.89;
       font-weight: 400;
     }
+    // Shared back button style (desktop/general)
     .chat-window__header-back {
       background: none;
       border: none;
       outline: none;
       color: var(--primary);
-      font-size: 1.7rem;
+      font-size: 1.7rem; // Adjust as needed for desktop vs mobile
       margin-right: var(--gap-sm);
       cursor: pointer;
       transition: color 0.17s;
@@ -120,6 +79,48 @@
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+  }
+
+  // Mobile/tablet-only header
+  &__header--mobile {
+    display: none; // Esconde por default, mostra só mobile/tablet!
+    @media (max-width: 1024px) {
+      display: flex;
+      align-items: center;
+      gap: var(--gap-xs);
+      padding: var(--padding-base) var(--padding-base) var(--padding-sm) var(--padding-base);
+      background: var(--background-sidebar);
+      border-bottom: 1.5px solid rgba(40, 55, 92, 0.14);
+      min-height: 58px;
+      position: relative;
+      z-index: 2;
+    }
+
+    // Specific back button style for mobile header
+    .chat-window__header-back {
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-size: 2.2rem; // Larger for mobile
+      margin-right: var(--gap-xs);
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      transition: color 0.14s;
+      &:hover,
+      &:focus-visible {
+        color: var(--primary-hover);
+      }
+    }
+    .chat-window__header-mobile-title {
+      font-size: 1.16rem;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: 0.01em;
+      margin-left: 0.3em;
+      user-select: none;
     }
   }
 
@@ -134,6 +135,7 @@
     padding: var(--padding-md) var(--padding-xl) var(--padding-md) var(--padding-xl);
     overflow-y: auto;
     background: transparent;
+
     // For "Today" label (como no mockup)
     .chat-window__day-label {
       align-self: center;
@@ -163,6 +165,7 @@
     word-break: break-word;
     line-height: 1.55;
     transition: background 0.15s, color 0.15s;
+
     // Received
     &--received {
       background: var(--background-chatbubble);
@@ -265,20 +268,21 @@
     background: var(--background-sidebar);
     position: relative;
     z-index: 1;
-    & .chat-window__empty-icon {
+
+    .chat-window__empty-icon {
       margin-bottom: var(--margin-md);
       opacity: 0.39;
       svg {
         filter: drop-shadow(0 0 7px var(--primary));
       }
     }
-    & .chat-window__empty-title {
+    .chat-window__empty-title {
       color: var(--primary);
       font-weight: 700;
       font-size: var(--heading-h4);
       margin-bottom: var(--margin-xs);
     }
-    & .chat-window__empty-desc {
+    .chat-window__empty-desc {
       color: var(--text-color-secondary);
       font-size: var(--font-size-md);
       max-width: 22em;
@@ -298,9 +302,10 @@
     border-radius: 0;
     box-shadow: none;
     padding: 0;
-    &__header,
-    &__messages,
-    &__input-area {
+
+    .chat-window__header,
+    .chat-window__messages,
+    .chat-window__input-area {
       padding-left: var(--padding-base);
       padding-right: var(--padding-base);
     }

@@ -4,6 +4,7 @@ import { Routes, Route, useParams, useNavigate, useLocation } from 'react-router
 import { useEffect, useState } from 'react';
 import ChatSidebar from '../components/ ChatSidebar';
 import ChatWindow from '../components/ChatWindow';
+import '../styles/ChatPage.scss';
 
 // Custom hook para detectar mobile
 function useIsMobile(breakpoint = 700) {

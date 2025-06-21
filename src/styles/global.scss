@@ -84,7 +84,7 @@
 
   /* Color palette (light/dark is set below) */
   --background: #fff;
-  --background-secondary: #f4f4f4;
+  --background-secondary: linear-gradient(140deg, #262a32 18%, #191f27 70%, #141822 94%);
   --background-tertiary: #161c29; /* NEW: For input fields (afundado) */
   --background-chatbubble: #232b36; /* NEW: For received chat bubbles */
   --background-chatself: #1da1f2; /* NEW: For self chat bubbles */
@@ -137,7 +137,7 @@
 /* Theme: Light */
 [data-theme='light'] {
   --background: linear-gradient(149deg, #fbfffd 0%, #edeff3 50%, #4c4d50 100%);
-  --background-secondary: #f8fafd;
+  --background-secondary: linear-gradient(140deg, #262a32 18%, #191f27 70%, #141822 94%);
   --background-tertiary: #e3ebf5;
   --background-sidebar: #f8fafd;
   --background-chatbubble: #f4f6fa;

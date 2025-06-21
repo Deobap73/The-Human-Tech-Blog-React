@@ -1,11 +1,12 @@
-// /src/features/chat/components/ChatSidebar.tsx
+// src/features/chat/components/ChatSidebar.tsx
 
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../../shared/utils/axios';
 import { useAuth } from '../../../shared/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
-import { RiHome2Line, RiSearch2Line, RiAddFill } from 'react-icons/ri'; // Add icon
+import { RiHome2Line, RiSearch2Line, RiAddFill } from 'react-icons/ri';
+import { getAvatar } from '../../../shared/utils/getAvatar';
 import '../styles/ChatSidebar.scss';
 
 interface Conversation {
@@ -35,6 +36,7 @@ const ChatSidebar = ({ onSelect }: ChatSidebarProps) => {
       try {
         const res = await api.get('/conversations');
         if (mounted) setConversations(res.data);
+        // DEBUG: console.log('DEBUG conversations:', res.data);
       } catch {
         if (mounted) setError(t('chat.sidebar.error', 'Failed to load chats'));
       } finally {
@@ -57,7 +59,7 @@ const ChatSidebar = ({ onSelect }: ChatSidebarProps) => {
       {/* Sidebar Header */}
       <div className='chat-sidebar__header'>
         <span className='chat-sidebar__avatar'>
-          <img src={user?.avatar || '/images/default-avatar.png'} alt='User avatar' />
+          <img src={getAvatar(user || undefined)} alt='User avatar' />
         </span>
         <span className='chat-sidebar__title'>{t('chat.sidebar.title', 'Chats')}</span>
         <button className='chat-sidebar__add-btn' title='New chat'>
@@ -109,11 +111,7 @@ const ChatSidebar = ({ onSelect }: ChatSidebarProps) => {
               key={conv._id}
               onClick={() => onSelect(conv._id)}
               tabIndex={0}>
-              <img
-                src={other?.avatar || '/images/1.jpg'}
-                alt={other?.name}
-                className='chat-sidebar__item-avatar'
-              />
+              <img src={getAvatar(other)} alt={other?.name} className='chat-sidebar__item-avatar' />
               <div className='chat-sidebar__item-main'>
                 <div className='chat-sidebar__item-top'>
                   <span className='chat-sidebar__item-name'>{other?.name || 'Unknown'}</span>

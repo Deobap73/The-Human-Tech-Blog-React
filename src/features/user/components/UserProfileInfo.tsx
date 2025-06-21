@@ -1,8 +1,9 @@
 // src/features/user/components/UserProfileInfo.tsx
 
 import { useAuth } from '../../../shared/hooks/useAuth';
-import EditProfileModal from './EditProfileModal';
 import { useState } from 'react';
+import EditProfileModal from './EditProfileModal';
+import { getAvatar } from '../../../shared/utils/getAvatar';
 import '../styles/UserProfileInfo.scss';
 
 const UserProfileInfo = () => {
@@ -14,12 +15,7 @@ const UserProfileInfo = () => {
   return (
     <div className='user-profile'>
       <div className='user-profile__avatar'>
-        <img
-          src={user.avatar || `https://api.dicebear.com/8.x/pixel-art/svg?seed=${user._id}`}
-          alt={user.name}
-          width={88}
-          height={88}
-        />
+        <img src={getAvatar(user)} alt={user.name} width={88} height={88} />
       </div>
       <div className='user-profile__info'>
         <h2 className='user-profile__name'>{user.name}</h2>
