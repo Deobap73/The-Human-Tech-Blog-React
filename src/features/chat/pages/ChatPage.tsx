@@ -10,9 +10,7 @@ const ChatPage = () => {
   const { t } = useTranslation();
 
   return (
-    <div
-      className='chat-page'
-      style={{ display: 'flex', gap: '0', width: '100vw', minHeight: '100vh' }}>
+    <div className='chat-page'>
       <ChatSidebar onSelect={setConversationId} />
       <ChatWindow conversationId={conversationId} />
     </div>

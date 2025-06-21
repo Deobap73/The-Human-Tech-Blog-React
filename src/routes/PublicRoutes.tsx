@@ -16,9 +16,8 @@ import { NavigateToDefaultLang, RedirectToBrowserLang } from './Redirects';
 import LoginPage from '../features/auth/pages/LoginPage';
 import ContactPage from '../features/contact/pages/ContactPage';
 import PrivateRoute from './PrivateRoute';
-import ChatPage from '../features/chat/pages/ChatPage';
+import ChatRoutes from '../features/chat/pages/ChatRoutes';
 
-// PATCH AQUI — Redireciona /admin para idioma
 const SupportedLangs = ['en', 'pt', 'de', 'es'];
 
 const PublicRoutes = () => {
@@ -27,6 +26,21 @@ const PublicRoutes = () => {
       {/* REDIRECT: /admin -> /[lang]/admin */}
       <Route path='/admin/*' element={<RedirectToBrowserLang path='admin' />} />
 
+      {/* 
+        ISOLATED CHAT ROUTE
+        - /:lang/chat does NOT use Layout, Navbar or Footer
+        - Still protected by PrivateRoute and supports all languages
+      */}
+      <Route
+        path='/:lang/chat/*'
+        element={
+          <PrivateRoute>
+            <ChatRoutes />
+          </PrivateRoute>
+        }
+      />
+
+      {/* ALL NORMAL ROUTES WITH LAYOUT */}
       <Route path='/:lang' element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path='about' element={<AboutPage />} />
@@ -40,16 +54,11 @@ const PublicRoutes = () => {
         <Route path='tags' element={<AdminTagsPage />} />
         <Route path='categories/:slug' element={<CategoryPage />} />
         <Route path='search' element={<SearchResultsPage />} />
-        <Route
-          path='chat'
-          element={
-            <PrivateRoute>
-              <ChatPage />
-            </PrivateRoute>
-          }
-        />
+        {/* Remove <Route path='chat' ...> daqui! */}
         <Route path='*' element={<NavigateToDefaultLang />} />
       </Route>
+
+      {/* OUTSIDE LAYOUT */}
       <Route path='/login' element={<LoginPage />} />
       <Route path='/' element={<RedirectToBrowserLang />} />
     </Routes>
