@@ -7,7 +7,7 @@ import DOMPurify from 'dompurify';
 import { useTranslation } from 'react-i18next';
 import { ChatMessage } from '../../../shared/types/ChatMessage';
 import { RiErrorWarningLine } from 'react-icons/ri';
-
+import '../styles/MessageViewer.scss';
 const MessageViewer = ({ conversationId }: { conversationId: string }) => {
   const { user } = useAuth();
   const { t } = useTranslation();
