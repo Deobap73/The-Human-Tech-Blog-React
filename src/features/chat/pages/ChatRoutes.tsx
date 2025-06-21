@@ -1,10 +1,11 @@
 // /src/features/chat/pages/ChatRoutes.tsx
-import { Routes, Route, useParams, useNavigate } from 'react-router-dom';
+
+import { Routes, Route, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import ChatSidebar from '../components/ ChatSidebar';
 import ChatWindow from '../components/ChatWindow';
 
-// Helper para detectar mobile
+// Custom hook para detectar mobile
 function useIsMobile(breakpoint = 700) {
   const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoint);
   useEffect(() => {
@@ -18,19 +19,27 @@ function useIsMobile(breakpoint = 700) {
 const ChatLayout = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Estado usado só para Desktop (não interfere em mobile)
+  // Estado para conversa seleccionada (só desktop/tablet)
   const [selectedConversation, setSelectedConversation] = useState<string>('');
 
-  // O handler de seleção para Sidebar
+  // Quando usuário seleciona uma conversa:
   const handleSelect = (id: string) => {
     if (isMobile) {
-      // Navega para /chat/:id
-      navigate(`/chat/${id}`);
+      // Navega para rota só do ChatWindow
+      navigate(`${id}`);
     } else {
       setSelectedConversation(id);
     }
   };
+
+  // Opcional: se voltar ao /chat, limpa a conversa seleccionada em desktop
+  useEffect(() => {
+    if (!isMobile && location.pathname.match(/\/chat\/?$/)) {
+      setSelectedConversation('');
+    }
+  }, [isMobile, location.pathname]);
 
   return (
     <div className='chat-page'>
@@ -40,17 +49,21 @@ const ChatLayout = () => {
   );
 };
 
-// Página apenas do ChatWindow para mobile
+// Página só do ChatWindow (mobile)
 const ChatWindowPage = () => {
   const { conversationId } = useParams<{ conversationId: string }>();
-  return <ChatWindow conversationId={conversationId || ''} />;
+  return (
+    <div className='chat-page chat-page--window-only'>
+      <ChatWindow conversationId={conversationId || ''} />
+    </div>
+  );
 };
 
 const ChatRoutes = () => (
   <Routes>
-    {/* Página principal do chat (Sidebar + ChatWindow ou só Sidebar em mobile) */}
+    {/* Sidebar (e ChatWindow em desktop/tablet) */}
     <Route path='/' element={<ChatLayout />} />
-    {/* Mobile: rota só para ChatWindow */}
+    {/* Mobile: só ChatWindow */}
     <Route path='/:conversationId' element={<ChatWindowPage />} />
   </Routes>
 );

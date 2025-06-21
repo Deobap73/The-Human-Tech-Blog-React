@@ -26,11 +26,7 @@ const PublicRoutes = () => {
       {/* REDIRECT: /admin -> /[lang]/admin */}
       <Route path='/admin/*' element={<RedirectToBrowserLang path='admin' />} />
 
-      {/* 
-        ISOLATED CHAT ROUTE
-        - /:lang/chat does NOT use Layout, Navbar or Footer
-        - Still protected by PrivateRoute and supports all languages
-      */}
+      {/* ISOLATED CHAT ROUTE - Fora do Layout */}
       <Route
         path='/:lang/chat/*'
         element={
@@ -40,7 +36,7 @@ const PublicRoutes = () => {
         }
       />
 
-      {/* ALL NORMAL ROUTES WITH LAYOUT */}
+      {/* EVERYTHING ELSE WITHIN THE LAYOUT */}
       <Route path='/:lang' element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path='about' element={<AboutPage />} />
@@ -54,10 +50,8 @@ const PublicRoutes = () => {
         <Route path='tags' element={<AdminTagsPage />} />
         <Route path='categories/:slug' element={<CategoryPage />} />
         <Route path='search' element={<SearchResultsPage />} />
-        {/* Remove <Route path='chat' ...> daqui! */}
         <Route path='*' element={<NavigateToDefaultLang />} />
       </Route>
-
       {/* OUTSIDE LAYOUT */}
       <Route path='/login' element={<LoginPage />} />
       <Route path='/' element={<RedirectToBrowserLang />} />

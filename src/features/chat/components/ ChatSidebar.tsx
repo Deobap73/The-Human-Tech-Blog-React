@@ -1,10 +1,11 @@
 // /src/features/chat/components/ChatSidebar.tsx
+
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../../shared/utils/axios';
 import { useAuth } from '../../../shared/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
-import { RiHome2Line, RiSearch2Line } from 'react-icons/ri';
+import { RiHome2Line, RiSearch2Line, RiAddFill } from 'react-icons/ri'; // Add icon
 import '../styles/ChatSidebar.scss';
 
 interface Conversation {
@@ -59,7 +60,9 @@ const ChatSidebar = ({ onSelect }: ChatSidebarProps) => {
           <img src={user?.avatar || '/images/default-avatar.png'} alt='User avatar' />
         </span>
         <span className='chat-sidebar__title'>{t('chat.sidebar.title', 'Chats')}</span>
-        <button className='chat-sidebar__add-btn' title='New chat'></button>
+        <button className='chat-sidebar__add-btn' title='New chat'>
+          <RiAddFill size={28} />
+        </button>
       </div>
 
       {/* Search Input */}
@@ -111,27 +114,29 @@ const ChatSidebar = ({ onSelect }: ChatSidebarProps) => {
                 alt={other?.name}
                 className='chat-sidebar__item-avatar'
               />
-              <div className='chat-sidebar__item-info'>
-                <span className='chat-sidebar__item-name'>{other?.name || 'Unknown'}</span>
-                <span className='chat-sidebar__item-last'>
-                  {conv.lastMessage?.text?.slice(0, 38) || 'No messages'}
-                </span>
+              <div className='chat-sidebar__item-main'>
+                <div className='chat-sidebar__item-top'>
+                  <span className='chat-sidebar__item-name'>{other?.name || 'Unknown'}</span>
+                  {conv.lastMessage?.createdAt && (
+                    <span className='chat-sidebar__item-time'>
+                      {new Date(conv.lastMessage.createdAt).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </span>
+                  )}
+                </div>
+                <div className='chat-sidebar__item-bottom'>
+                  <span className='chat-sidebar__item-last'>
+                    {conv.lastMessage?.text?.slice(0, 36) || 'No messages'}
+                  </span>
+                  {conv.unreadCount ? (
+                    <span className='chat-sidebar__item-unread'>
+                      {conv.unreadCount > 99 ? '99+' : conv.unreadCount}
+                    </span>
+                  ) : null}
+                </div>
               </div>
-              {/* Unread badge */}
-              {conv.unreadCount ? (
-                <span className='chat-sidebar__item-unread'>
-                  {conv.unreadCount > 99 ? '99+' : conv.unreadCount}
-                </span>
-              ) : null}
-              {/* Time of last message */}
-              {conv.lastMessage?.createdAt && (
-                <span className='chat-sidebar__item-time'>
-                  {new Date(conv.lastMessage.createdAt).toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
-                </span>
-              )}
             </li>
           );
         })}

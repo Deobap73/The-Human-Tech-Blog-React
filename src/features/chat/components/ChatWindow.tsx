@@ -1,11 +1,31 @@
 // /src/features/chat/components/ChatWindow.tsx
+
+import { useNavigate } from 'react-router-dom';
 import MessageViewer from './MessageViewer';
 import MessageInput from './MessageInput';
 import { useTranslation } from 'react-i18next';
+import { RiArrowLeftSLine } from 'react-icons/ri';
+import { useEffect, useState } from 'react';
 import '../styles/ChatWindow.scss';
+
+// Helper: Detecta se é mobile/tablet
+function useIsMobile(breakpoint = 1024) {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= breakpoint);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= breakpoint);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [breakpoint]);
+  return isMobile;
+}
 
 const ChatWindow = ({ conversationId }: { conversationId: string }) => {
   const { t } = useTranslation();
+  const isMobile = useIsMobile();
+  const navigate = useNavigate();
+
+  // Mostra "voltar" só em mobile/tablet e quando há conversa selecionada
+  const showBack = isMobile && conversationId;
 
   if (!conversationId) {
     return (
@@ -27,6 +47,20 @@ const ChatWindow = ({ conversationId }: { conversationId: string }) => {
 
   return (
     <div className='chat-window'>
+      {/* Header customizável — botão voltar só mobile */}
+      {showBack && (
+        <div className='chat-window__header chat-window__header--mobile'>
+          <button
+            className='chat-window__header-back'
+            onClick={() => navigate(-1)}
+            aria-label={t('chat.window.back', 'Back')}
+            type='button'>
+            <RiArrowLeftSLine />
+          </button>
+          {/* Placeholder para nome do chat (adapta se tiveres username ou avatar) */}
+          <span className='chat-window__header-mobile-title'>{t('chat.window.chat', 'Chat')}</span>
+        </div>
+      )}
       <MessageViewer conversationId={conversationId} />
       <MessageInput conversationId={conversationId} />
     </div>

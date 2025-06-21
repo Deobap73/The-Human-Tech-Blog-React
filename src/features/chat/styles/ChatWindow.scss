@@ -24,6 +24,48 @@
     pointer-events: none;
   }
 
+    // Mobile/tablet-only header
+  &__header--mobile {
+    display: none; // Esconde por default, mostra só mobile/tablet!
+    @media (max-width: 1024px) {
+      display: flex;
+      align-items: center;
+      gap: var(--gap-xs);
+      padding: var(--padding-base) var(--padding-base) var(--padding-sm) var(--padding-base);
+      background: var(--background-sidebar);
+      border-bottom: 1.5px solid rgba(40, 55, 92, 0.14);
+      min-height: 58px;
+      position: relative;
+      z-index: 2;
+    }
+  }
+
+  &__header-back {
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-size: 2.2rem;
+    margin-right: var(--gap-xs);
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    transition: color 0.14s;
+    &:hover,
+    &:focus-visible {
+      color: var(--primary-hover);
+    }
+  }
+  &__header-mobile-title {
+    font-size: 1.16rem;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: 0.01em;
+    margin-left: 0.3em;
+    user-select: none;
+  }
+}
+
   // Header: Avatar + username + status
   &__header {
     position: relative;
