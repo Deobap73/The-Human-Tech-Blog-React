@@ -100,6 +100,84 @@
       display: block;
     }
   }
+
+  // File preview and error messages
+  &__preview {
+    // Main wrapper for file preview
+    display: flex;
+    align-items: center;
+    gap: 0.7em;
+    margin-top: 0.38em; // This margin might need adjustment if preview is outside the flex container
+    background: var(--background-tertiary);
+    border-radius: var(--border-radius-md);
+    padding: 0.44em 1.1em 0.44em 0.7em;
+    box-shadow: 0 2px 10px rgba(20, 32, 62, 0.08);
+    // Add position absolute to place it correctly above the input area
+    position: absolute;
+    bottom: calc(var(--padding-xl) + 86px); // Adjust based on input area height
+    left: var(--padding-xl);
+    right: var(--padding-xl);
+    max-width: calc(100% - (var(--padding-xl) * 2));
+    width: fit-content; // Or set a specific max-width if needed
+
+    // Preview image
+    &__img {
+      max-width: 72px;
+      max-height: 60px;
+      border-radius: var(--border-radius-sm);
+      box-shadow: 0 2px 8px rgba(29, 161, 242, 0.09);
+      object-fit: cover;
+      border: 1.5px solid var(--primary);
+      background: #fff;
+    }
+
+    // Preview PDF text
+    &__pdf {
+      font-size: var(--font-size-sm);
+      color: var(--primary);
+      font-weight: 500;
+      padding-right: 8px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 160px;
+      white-space: nowrap;
+    }
+
+    // Remove file button
+    &__remove {
+      background: none;
+      border: none;
+      color: var(--error);
+      font-size: 1.2em;
+      cursor: pointer;
+      border-radius: 50%;
+      padding: 0.12em 0.15em;
+      display: flex;
+      align-items: center;
+      transition: background 0.15s;
+      &:hover,
+      &:focus-visible {
+        background: rgba(244, 25, 25, 0.08);
+      }
+    }
+  }
+
+  // File error message
+  &__file-error {
+    color: var(--error);
+    font-size: var(--font-size-xs);
+    // These margins will need adjustment if __file-error is positioned absolutely
+    // and not part of the main flex flow in a predictable way.
+    margin-top: 0.25em;
+    margin-left: 2.7em;
+    font-weight: 500;
+    // To ensure it appears correctly below the input area and potentially the preview:
+    position: absolute;
+    bottom: var(--padding-xl); // Aligns it to the bottom of the input area
+    left: var(--padding-xl);
+    right: var(--padding-xl);
+    text-align: center; // Center the error message if it's full width
+  }
 }
 
 // Responsive: reduced padding for mobile/tablet
@@ -107,8 +185,17 @@
   .chat-input {
     padding: var(--padding-sm) var(--padding-base);
     min-height: 62px;
+
     &__send {
       font-size: 1.4rem;
+    }
+
+    // Adjust preview and error for mobile padding
+    &__preview,
+    &__file-error {
+      left: var(--padding-base);
+      right: var(--padding-base);
+      max-width: calc(100% - (var(--padding-base) * 2));
     }
   }
 }
