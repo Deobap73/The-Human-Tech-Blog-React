@@ -59,6 +59,7 @@ const ChatSidebar = ({ onSelect }: ChatSidebarProps) => {
           <img src={user?.avatar || '/images/default-avatar.png'} alt='User avatar' />
         </span>
         <span className='chat-sidebar__title'>{t('chat.sidebar.title', 'Chats')}</span>
+        <button className='chat-sidebar__add-btn' title='New chat'></button>
       </div>
 
       {/* Search Input */}
