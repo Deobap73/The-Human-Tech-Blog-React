@@ -12,71 +12,9 @@
   position: relative;
   z-index: 1;
   scroll-behavior: smooth;
-
-  // Loader
-  &__loading {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-base);
-    align-items: flex-start;
-    justify-content: flex-end;
-    width: 100%;
-    height: 100%;
-    min-height: 150px;
-    padding: var(--padding-lg) 0;
-    .skeleton--bubble {
-      width: 60%;
-      height: 2.3em;
-      border-radius: 24px;
-      margin-bottom: var(--margin-xs);
-      background: var(--skeleton-bg);
-      box-shadow: 0 2px 10px rgba(20, 32, 62, 0.08);
-    }
-  }
-
-  // Empty state
-  &__empty {
-    width: 100%;
-    height: 100%;
-    min-height: 160px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    opacity: 0.87;
-    svg {
-      margin-bottom: var(--margin-sm);
-      opacity: 0.44;
-    }
-    div {
-      color: var(--text-color-secondary);
-      font-size: var(--font-size-md);
-      font-weight: 500;
-    }
-  }
-
-  // Error state
-  &__error {
-    width: 100%;
-    min-height: 140px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: var(--gap-xs);
-    svg {
-      margin-bottom: var(--margin-xs);
-      opacity: 0.7;
-    }
-    div {
-      color: var(--error);
-      font-size: var(--font-size-md);
-      font-weight: 600;
-    }
-  }
+  // ...existing styles...
 }
 
-// Cada mensagem
 .chat-message {
   display: flex;
   width: 100%;
@@ -102,7 +40,7 @@
     font-size: var(--font-size-base);
     transition: background 0.17s, color 0.17s;
 
-    // Se for mensagem do próprio, adapta cor/fundo:
+    // ...existing...
     .chat-message--self & {
       background: var(--background-chatself);
       color: var(--text-color-inverse);
@@ -115,8 +53,72 @@
     }
   }
 
+  &__attachment {
+    margin-top: 0.37em;
+    display: flex;
+    align-items: center;
+    gap: 0.55em;
+    &--img {
+      .chat-message__imgbtn {
+        background: transparent;
+        border: none;
+        padding: 0;
+        border-radius: var(--border-radius-md);
+        cursor: pointer;
+        position: relative;
+        img {
+          max-width: 140px;
+          max-height: 110px;
+          border-radius: var(--border-radius-md);
+          box-shadow: 0 2px 8px rgba(40, 60, 120, 0.14);
+          display: block;
+        }
+        .chat-message__imgicon {
+          position: absolute;
+          right: 8px;
+          bottom: 8px;
+          color: var(--primary);
+          background: rgba(255, 255, 255, 0.91);
+          border-radius: 7px;
+          padding: 1px 3px;
+          font-size: 1.1em;
+        }
+        &:hover,
+        &:focus-visible {
+          box-shadow: 0 0 0 2px var(--primary-hover);
+          outline: none;
+        }
+      }
+    }
+    &--pdf {
+      color: var(--primary);
+      font-size: 1em;
+      align-items: center;
+      gap: 0.4em;
+      .chat-message__pdfname {
+        font-weight: 600;
+        color: var(--primary);
+        margin-right: 0.7em;
+        font-size: 0.98em;
+      }
+      .chat-message__pdfdownload {
+        color: var(--primary);
+        background: none;
+        border: none;
+        cursor: pointer;
+        margin-left: 0.3em;
+        border-radius: 6px;
+        padding: 0.1em 0.16em;
+        transition: background 0.14s;
+        &:hover,
+        &:focus-visible {
+          background: rgba(29, 161, 242, 0.14);
+        }
+      }
+    }
+  }
   &__content {
-    // Markdown/html normalizado
+    // markdown styles
     p,
     span,
     strong,
@@ -135,7 +137,6 @@
       }
     }
   }
-
   &__meta {
     display: block;
     font-size: var(--font-size-xs);
@@ -150,7 +151,35 @@
   }
 }
 
-// Responsivo igual ao resto do chat
+// Simple image lightbox/modal for attachments
+.chat-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(13, 18, 34, 0.93);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadein-lightbox 0.18s;
+  cursor: zoom-out;
+  &__img {
+    max-width: 97vw;
+    max-height: 90vh;
+    border-radius: 18px;
+    box-shadow: 0 6px 32px rgba(0, 0, 0, 0.21);
+    background: #fff;
+    display: block;
+  }
+}
+@keyframes fadein-lightbox {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @media (max-width: 1024px) {
   .chat-messages {
     padding: var(--padding-sm) var(--padding-base);
