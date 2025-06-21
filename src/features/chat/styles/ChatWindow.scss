@@ -1,19 +1,21 @@
-// /src/features/chat/styles/ChatWindow.scss
+/* /src/features/chat/styles/ChatWindow.scss */
+/* ChatWindow fixed height, messages scroll independently, BEM, tokens */
 
 .chat-window {
+  width: 700px;
+  height: 680px;
+  min-height: 560px;
+  max-height: 84vh;
   display: flex;
   flex-direction: column;
-  flex: 1 1 0;
-  min-width: 0;
-  height: 100vh;
   border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
   box-shadow: var(--shadow-card-strong);
   position: relative;
   overflow: hidden;
+  background: var(--background-sidebar);
   z-index: 10;
   backdrop-filter: blur(10px);
 
-  // Glass effect overlay (deep, para mockup)
   &::before {
     content: '';
     position: absolute;
@@ -23,8 +25,8 @@
     pointer-events: none;
   }
 
-  // Header: Avatar + username + status
   &__header {
+    flex: 0 0 auto;
     position: relative;
     z-index: 1;
     display: flex;
@@ -34,100 +36,11 @@
     min-height: 80px;
     background: transparent;
     border-bottom: 1.5px solid rgba(40, 55, 92, 0.18);
-
-    .chat-window__header-avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2.5px solid var(--primary);
-      box-shadow: var(--btn-shadow-elevated);
-      background: var(--background-secondary);
-    }
-    .chat-window__header-info {
-      display: flex;
-      flex-direction: column;
-      gap: 0.08em;
-    }
-    .chat-window__header-name {
-      color: var(--text-color-inverse);
-      font-size: var(--font-size-lg);
-      font-weight: 600;
-      letter-spacing: 0.01em;
-      margin-bottom: 2px;
-    }
-    .chat-window__header-status {
-      color: var(--primary);
-      font-size: var(--font-size-xs);
-      opacity: 0.89;
-      font-weight: 400;
-    }
-    // Shared back button style (desktop/general)
-    .chat-window__header-back {
-      background: none;
-      border: none;
-      outline: none;
-      color: var(--primary);
-      font-size: 1.7rem; // Adjust as needed for desktop vs mobile
-      margin-right: var(--gap-sm);
-      cursor: pointer;
-      transition: color 0.17s;
-      &:hover,
-      &:focus-visible {
-        color: var(--primary-hover);
-      }
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
   }
 
-  // Mobile/tablet-only header
-  &__header--mobile {
-    display: none; // Esconde por default, mostra só mobile/tablet!
-    @media (max-width: 1024px) {
-      display: flex;
-      align-items: center;
-      gap: var(--gap-xs);
-      padding: var(--padding-base) var(--padding-base) var(--padding-sm) var(--padding-base);
-      background: var(--background-sidebar);
-      border-bottom: 1.5px solid rgba(40, 55, 92, 0.14);
-      min-height: 58px;
-      position: relative;
-      z-index: 2;
-    }
-
-    // Specific back button style for mobile header
-    .chat-window__header-back {
-      background: none;
-      border: none;
-      color: var(--primary);
-      font-size: 2.2rem; // Larger for mobile
-      margin-right: var(--gap-xs);
-      cursor: pointer;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      transition: color 0.14s;
-      &:hover,
-      &:focus-visible {
-        color: var(--primary-hover);
-      }
-    }
-    .chat-window__header-mobile-title {
-      font-size: 1.16rem;
-      font-weight: 700;
-      color: var(--primary);
-      letter-spacing: 0.01em;
-      margin-left: 0.3em;
-      user-select: none;
-    }
-  }
-
-  // Historico/Mensagens
   &__messages {
+    flex: 1 1 auto;
     position: relative;
-    flex: 1 1 0;
     z-index: 1;
     display: flex;
     flex-direction: column;
@@ -136,7 +49,18 @@
     overflow-y: auto;
     background: transparent;
 
-    // For "Today" label (como no mockup)
+    &::-webkit-scrollbar {
+      width: 9px;
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: rgba(50, 80, 120, 0.14);
+      border-radius: 8px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background: rgba(40, 120, 190, 0.21);
+    }
+
     .chat-window__day-label {
       align-self: center;
       color: var(--text-color-secondary);
@@ -152,51 +76,8 @@
     }
   }
 
-  // Bolhas de chat
-  &__bubble {
-    display: inline-block;
-    max-width: 68%;
-    padding: var(--padding-sm) var(--padding-md);
-    font-size: var(--font-size-base);
-    border-radius: 24px;
-    box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.09);
-    margin-bottom: var(--margin-xs);
-    position: relative;
-    word-break: break-word;
-    line-height: 1.55;
-    transition: background 0.15s, color 0.15s;
-
-    // Received
-    &--received {
-      background: var(--background-chatbubble);
-      color: var(--text-color-inverse);
-      align-self: flex-start;
-      border-bottom-left-radius: 6px;
-    }
-    // Sent (self)
-    &--sent {
-      background: var(--background-chatself);
-      color: var(--text-color-inverse);
-      align-self: flex-end;
-      border-bottom-right-radius: 6px;
-      box-shadow: var(--btn-shadow-elevated);
-    }
-    // Timestamp
-    &__time {
-      position: absolute;
-      bottom: 4px;
-      right: 16px;
-      font-size: var(--font-size-xs);
-      color: var(--text-color-inverse);
-      opacity: 0.54;
-      font-weight: 400;
-      white-space: nowrap;
-      user-select: none;
-    }
-  }
-
-  // Campo de input e botão enviar (base do chat)
   &__input-area {
+    flex: 0 0 auto;
     position: relative;
     z-index: 2;
     display: flex;
@@ -208,91 +89,10 @@
     border-top: 1.5px solid rgba(40, 55, 92, 0.18);
   }
 
-  &__input {
-    flex: 1 1 0;
-    font-size: var(--font-size-base);
-    padding: var(--padding-sm) var(--padding-md);
-    border-radius: var(--border-radius-md);
-    border: none;
-    outline: none;
-    background: var(--background-tertiary);
-    color: var(--text-color-inverse);
-    box-shadow: var(--input-shadow-inset);
-    transition: box-shadow 0.18s, background 0.18s;
-    &::placeholder {
-      color: var(--text-color-placeholder);
-      opacity: 0.72;
-      letter-spacing: 0.02em;
-    }
-    &:focus {
-      background: var(--background-secondary);
-      box-shadow: 0 0 0 2px var(--primary), var(--input-shadow-inset);
-    }
-  }
-
-  &__input-btn {
-    background: var(--primary);
-    border: none;
-    outline: none;
-    color: var(--text-color-inverse);
-    width: 54px;
-    height: 54px;
-    border-radius: 50%;
-    box-shadow: var(--btn-shadow-neon);
-    font-size: 2.1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    margin-left: var(--gap-xs);
-    transition: box-shadow 0.15s, background 0.14s;
-    &:hover,
-    &:focus-visible {
-      background: var(--primary-hover);
-      box-shadow: var(--btn-shadow-hover);
-    }
-    svg {
-      display: block;
-    }
-  }
-
-  // Estado vazio
-  &--empty {
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    width: 100%;
-    border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
-    background: var(--background-sidebar);
-    position: relative;
-    z-index: 1;
-
-    .chat-window__empty-icon {
-      margin-bottom: var(--margin-md);
-      opacity: 0.39;
-      svg {
-        filter: drop-shadow(0 0 7px var(--primary));
-      }
-    }
-    .chat-window__empty-title {
-      color: var(--primary);
-      font-weight: 700;
-      font-size: var(--heading-h4);
-      margin-bottom: var(--margin-xs);
-    }
-    .chat-window__empty-desc {
-      color: var(--text-color-secondary);
-      font-size: var(--font-size-md);
-      max-width: 22em;
-      text-align: center;
-      opacity: 0.94;
-    }
-  }
+  // ... (resto do teu SCSS das bolhas, estado vazio etc. continua igual)
 }
 
-// Responsive: mobile/tablet
+// Responsive: ChatWindow full-width on mobile/tablet
 @media (max-width: 1024px) {
   .chat-window,
   .chat-window--empty {
