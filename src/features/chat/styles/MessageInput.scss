@@ -1,8 +1,9 @@
-// /src/features/chat/styles/MessageInput.scss
+/* /src/features/chat/styles/MessageInput.scss */
+/* BEM, tokens, autosizing textarea for chat */
 
 .chat-input {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: var(--gap-base);
   padding: var(--padding-md) var(--padding-xl) var(--padding-xl) var(--padding-xl);
   border-top: 1.5px solid rgba(40, 55, 92, 0.18);
@@ -12,7 +13,7 @@
   z-index: 5;
   min-height: 86px;
 
-  // Botão lateral (anexar, microfone)
+  // Side icons (attach, mic)
   &__icon {
     background: none;
     border: none;
@@ -36,7 +37,7 @@
     }
   }
 
-  // Campo de input
+  // Multiline textarea (auto grows up to 7 lines)
   &__field {
     flex: 1 1 0;
     border: none;
@@ -48,6 +49,11 @@
     box-shadow: var(--input-shadow-inset);
     outline: none;
     transition: box-shadow 0.16s, background 0.17s;
+    min-height: 36px;
+    max-height: 148px; // Match style attr
+    line-height: 1.55;
+    overflow-y: auto;
+    resize: none;
     &::placeholder {
       color: var(--text-color-placeholder);
       opacity: 0.77;
@@ -58,9 +64,14 @@
       color: var(--text-color-inverse);
       box-shadow: 0 0 0 2px var(--primary), var(--input-shadow-inset);
     }
+    // Remove blue outline (desktop)
+    &:active,
+    &:focus-visible {
+      outline: none;
+    }
   }
 
-  // Botão enviar
+  // Send button
   &__send {
     background: var(--primary);
     border: none;
@@ -91,7 +102,7 @@
   }
 }
 
-// Responsivo: padding reduzido em mobile/tablet
+// Responsive: reduced padding for mobile/tablet
 @media (max-width: 1024px) {
   .chat-input {
     padding: var(--padding-sm) var(--padding-base);
