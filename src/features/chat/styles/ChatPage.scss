@@ -1,114 +1,38 @@
 // The-Human-Tech-Blog-React\src\features\chat\styles\ChatPage.scss
 
+// Desktop/Tablet: cards lado a lado, centralizados, tamanho fixo
+
 .chat-page {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: stretch;
+  justify-content: space-evenly;
+  background: var(--background-chat);
   min-height: 100vh;
-  width: 100vw;
-  background: var(--background-secondary);
-  position: relative;
+  padding: var(--padding-xl);
+  box-sizing: border-box;
 
-  // “Container” do chat central (glass card, sombra, borda arredondada, margin auto)
-  &::before {
-    content: '';
-    display: block;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 0;
-    background: var(--background-secondary);
-  }
-
-  // Container visual
-  > .chat-sidebar,
-  > .chat-window {
-    position: relative;
-    z-index: 2;
-    box-shadow: var(--shadow-card-strong);
-    background: var(--background-sidebar);
-    border-radius: var(--border-radius-lg);
-    margin: 0;
-  }
-
-  // O card "flutuante" centralizado
   > .chat-sidebar {
-    border-radius: var(--border-radius-lg) 0 0 var(--border-radius-lg);
-    box-shadow: none;
-    background: transparent;
+    width: 20vw;
     margin-right: 0;
   }
   > .chat-window {
-    border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
+    width: 50vw;
     margin-left: 0;
+  }
+
+  > .chat-sidebar,
+  > .chat-window {
+    margin: 0;
     box-shadow: none;
-    background: transparent;
-  }
-
-  // Container global
-  &__container {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: stretch;
-    width: 100%;
-    max-width: 1120px;
-    min-height: 80vh;
-    margin: var(--margin-xl) auto;
-    box-shadow: var(--shadow-card-strong);
+    height: 100%;
+    min-height: 90vh;
     border-radius: var(--border-radius-lg);
-    background: var(--background-sidebar);
-    overflow: hidden;
+    box-shadow: var(--shadow-card-strong);
   }
 }
 
-/* Modo container para desktop/tablet */
-@media (min-width: 700px) {
-  .chat-page {
-    background: var(--background-secondary);
-    min-height: 100vh;
-    padding: var(--padding-xl);
-    box-sizing: border-box;
-
-    > .chat-sidebar,
-    > .chat-window {
-      height: 680px;
-      min-height: 580px;
-      max-height: 84vh;
-      margin: 0;
-      box-shadow: none;
-    }
-    justify-content: center;
-    align-items: center;
-
-    // O “cartão” que envolve ambos
-    &__container {
-      margin: var(--margin-xxl) auto;
-      max-width: 1100px;
-      min-width: 920px;
-      min-height: 640px;
-      height: auto;
-      box-shadow: var(--shadow-card-strong);
-      border-radius: var(--border-radius-lg);
-      background: var(--background-sidebar);
-      overflow: hidden;
-      display: flex;
-      flex-direction: row;
-      align-items: stretch;
-      width: 100%;
-      padding: 0;
-      position: relative;
-      z-index: 3;
-    }
-  }
-}
-
-/* Mobile: ocupa 100% da viewport, sem cartão central */
+// Mobile: ocupa 100% da viewport, sidebar/window nunca juntos
 @media (max-width: 699px) {
   .chat-page {
     flex-direction: column;
@@ -118,10 +42,6 @@
     width: 100vw;
     background: var(--background-secondary);
 
-    &::before {
-      display: none;
-    }
-
     > .chat-sidebar,
     > .chat-window {
       border-radius: 0;
@@ -130,16 +50,6 @@
       width: 100vw;
       min-height: 100vh;
       max-height: 100vh;
-    }
-    &__container {
-      border-radius: 0;
-      box-shadow: none;
-      margin: 0;
-      min-width: 0;
-      max-width: none;
-      width: 100vw;
-      padding: 0;
-      background: var(--background-sidebar);
     }
   }
 }

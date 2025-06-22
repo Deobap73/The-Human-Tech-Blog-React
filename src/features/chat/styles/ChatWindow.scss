@@ -1,28 +1,40 @@
-/* /src/features/chat/styles/ChatWindow.scss */
-/* ChatWindow fixed height, messages scroll independently, BEM, tokens */
+// /src/features/chat/styles/ChatWindow.scss
 
 .chat-window {
-  width: 700px;
-  height: 680px;
-  min-height: 560px;
-  max-height: 84vh;
+  width: 50vw;
+  min-width: 430px;
+  height: 100%;
+  max-height: 100%;
   display: flex;
   flex-direction: column;
   border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
   box-shadow: var(--shadow-card-strong);
   position: relative;
   overflow: hidden;
-  background: var(--background-sidebar);
+  background: var(--background-chatSidebar);
   z-index: 10;
   backdrop-filter: blur(10px);
 
-  &::before {
-    content: '';
+  // ====== PENCIL IMAGE FIXED AT LEFT EDGE ======
+  &__pencil {
     position: absolute;
-    inset: 0;
-    background: var(--background-glass, rgba(22, 28, 41, 0.97));
-    z-index: 0;
-    pointer-events: none;
+    top: 70px; // Ajusta conforme o topo do mockup
+    left: 48px; // alinhado com a separação da sidebar
+    width: 28px;
+    height: 62.4vh;
+    display: flex;
+    justify-content: center;
+    z-index: 22;
+    pointer-events: none; // Não interfere com o chat
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 16px 18px rgba(12, 16, 30, 0.26))
+        drop-shadow(0 2px 5px rgba(50, 60, 100, 0.16));
+      user-select: none;
+    }
   }
 
   &__header {
@@ -45,21 +57,19 @@
     display: flex;
     flex-direction: column;
     gap: var(--gap-xs);
-    padding: var(--padding-md) var(--padding-xl) var(--padding-md) var(--padding-xl);
-    overflow-y: auto;
+    // AQUI AFASTAMOS AS MENSAGENS PARA A DIREITA (padding-left maior)
+    padding: var(--padding-md) var(--padding-xl) var(--padding-md) 110px;
     background: transparent;
 
+    // Esconde a scrollbar mas permite scroll
     &::-webkit-scrollbar {
-      width: 9px;
-      background: transparent;
+      width: 0 !important;
+      height: 0 !important;
+      display: none !important;
+      background: transparent !important;
     }
-    &::-webkit-scrollbar-thumb {
-      background: rgba(50, 80, 120, 0.14);
-      border-radius: 8px;
-    }
-    &::-webkit-scrollbar-thumb:hover {
-      background: rgba(40, 120, 190, 0.21);
-    }
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
 
     .chat-window__day-label {
       align-self: center;
@@ -72,7 +82,6 @@
       background: var(--background-secondary);
       border-radius: var(--border-radius-sm);
       padding: 0.2em 0.85em;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     }
   }
 
@@ -84,15 +93,14 @@
     align-items: center;
     gap: var(--gap-base);
     background: transparent;
-    padding: var(--padding-md) var(--padding-xl) var(--padding-xl) var(--padding-xl);
+    // Empurra também o input para a direita
+    padding: var(--padding-md) var(--padding-xl) var(--padding-xl) 110px;
     min-height: 86px;
     border-top: 1.5px solid rgba(40, 55, 92, 0.18);
   }
-
-  // ... (resto do teu SCSS das bolhas, estado vazio etc. continua igual)
 }
 
-// Responsive: ChatWindow full-width on mobile/tablet
+// Mobile/tablet: full width/height, sem cantos arredondados
 @media (max-width: 1024px) {
   .chat-window,
   .chat-window--empty {
@@ -102,12 +110,5 @@
     border-radius: 0;
     box-shadow: none;
     padding: 0;
-
-    .chat-window__header,
-    .chat-window__messages,
-    .chat-window__input-area {
-      padding-left: var(--padding-base);
-      padding-right: var(--padding-base);
-    }
   }
 }

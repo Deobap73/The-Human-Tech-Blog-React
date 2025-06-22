@@ -88,7 +88,6 @@
   --background-tertiary: #161c29; /* NEW: For input fields (afundado) */
   --background-chatbubble: #232b36; /* NEW: For received chat bubbles */
   --background-chatself: #1da1f2; /* NEW: For self chat bubbles */
-  --background-sidebar: #232b36; /* NEW: Sidebar dark background */
   --background-glass: rgba(22, 28, 41, 0.97); /* NEW: Glassmorphism cards */
 
   --text-color: #23262f;
@@ -105,16 +104,18 @@
   --warning: #ff9800;
   --info: #17a2b8;
 
-  /* Neon/Shadow (main blue) */
-  --neon-shadow: 0 0 12px #1da1f2, 0 6px 30px #1da1f299;
-  --neon-border-shadow: 0 0 5px var(--primary), 0 0 12px var(--primary), 0 0 16px var(--primary),
-    0 0 35px var(--primary);
-
-  /* Button/Inputs: custom shadows (NEW for chat) */
-  --btn-shadow-elevated: 0 2px 8px 0 #1da1f2, 0 8px 36px #1da1f299;
-  --btn-shadow-neon: 0 0 14px 5px #1da1f2, 0 2px 16px #1da1f2a2;
+  /* Button/Inputs/backgrpounds: custom shadows (NEW for chat) */
+  --background-chat: linear-gradient(145deg, #22252e, #363942, #101012);
+  --background-chatSidebar: #222933;
+  --background-chat-input: #0b0f13;
+  --background-chat-blue: linear-gradient(145deg, #1facff, #1a91da);
+  --background-chat-darktBlue: #232b36;
+  --btn-shadow-chat: 3px 3px 6px #13191f, -2px -2px 6px #3a3e42;
+  --btn-shadow-elevated-blue: 5px 5px 7px #0c4061, -1.5px -1.5px 6px #2effff;
   --btn-shadow-hover: 0 0 26px 8px #1da1f2, 0 8px 32px #1da1f2b1;
-  --input-shadow-inset: inset 0 2px 7px #192846, inset 0 0.7px 0.2px #101829;
+  --convarsation-shadow-elevated-lightBlue: 4px 4px 8px #0c4061, -4px -4px 8px #2effff;
+  --convarsation-shadow-elevated-darktBlue: 5px 5px 8px #0e1116, -5px -5px 8px #384556;
+  --input-shadow-pressed: inset 5px 5px 10px #040608, inset -5px -5px 10px #12181e;
 
   /* Shadows */
   --shadow-card: 0 4px 12px rgb(0, 0, 0, 0.11);
@@ -122,7 +123,8 @@
 
   /* Border radius */
   --border-radius-lg: 24px;
-  --border-radius-md: 16px;
+  --border-radius-base: 16px;
+  --border-radius-md: 10px;
   --border-radius-sm: 8px;
 
   /* Skeleton Loader */
@@ -139,7 +141,7 @@
   --background: linear-gradient(149deg, #fbfffd 0%, #edeff3 50%, #4c4d50 100%);
   --background-secondary: linear-gradient(140deg, #262a32 18%, #191f27 70%, #141822 94%);
   --background-tertiary: #e3ebf5;
-  --background-sidebar: #f8fafd;
+  --background-chat: #f8fafd;
   --background-chatbubble: #f4f6fa;
   --background-chatself: #1da1f2;
   --text-color: #23262f;
@@ -155,7 +157,7 @@
   --background: linear-gradient(140deg, #010c21 18%, #373c52 30%, #02040d 84%);
   --background-secondary: linear-gradient(140deg, #262a32 18%, #191f27 70%, #141822 94%);
   --background-tertiary: #161c29;
-  --background-sidebar: #232b36;
+  --background-chat: #232b36;
   --background-chatbubble: #232b36;
   --background-chatself: #1da1f2;
   --text-color: #fcfcfc;

@@ -1,4 +1,5 @@
 import agileProjects from './agileProjects.webp';
+import blackPencil from './blackPencil.webp';
 import cloudinary from './cloudinary.webp';
 import confluence from './confluence.webp';
 import external from './external.png';
@@ -19,6 +20,7 @@ import videoDownload from './videoDownload.png';
 
 const images: {
   agileProjects: string;
+  blackPencil: string;
   cloudinary: string;
   confluence: string;
   external: string;
@@ -38,6 +40,8 @@ const images: {
   videoDownload: string;
 } = {
   agileProjects,
+  blackPencil,
+
   cloudinary,
   confluence,
   external,

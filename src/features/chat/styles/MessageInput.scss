@@ -5,13 +5,13 @@
   display: flex;
   align-items: flex-end;
   gap: var(--gap-base);
-  padding: var(--padding-md) var(--padding-xl) var(--padding-xl) var(--padding-xl);
+  padding: var(--padding-md) var(--padding-xl) var(--padding-md) var(--padding-xl);
   border-top: 1.5px solid rgba(40, 55, 92, 0.18);
   background: transparent;
   position: sticky;
   bottom: 0;
   z-index: 5;
-  min-height: 86px;
+  height: 15vh;
 
   &__icon {
     background: none;
@@ -58,7 +58,6 @@
       object-fit: cover;
       border-radius: var(--border-radius-sm);
       margin-right: 0.45em;
-      box-shadow: 0 2px 12px rgba(20, 32, 62, 0.11);
     }
     &-pdf {
       font-size: 0.98em;
@@ -98,20 +97,26 @@
 
   &__field {
     flex: 1 1 0;
-    border: none;
-    border-radius: var(--border-radius-md);
-    background: var(--background-tertiary);
-    padding: var(--padding-sm) var(--padding-md);
     font-size: var(--font-size-base);
-    color: var(--text-color-inverse);
-    box-shadow: var(--input-shadow-inset);
+    padding: var(--padding-xs) var(--padding-md);
+    border-radius: var(--border-radius-sm);
+    border: none;
     outline: none;
-    transition: box-shadow 0.16s, background 0.17s;
+    background: var(--background-chat-input);
+    box-shadow: var(--input-shadow-pressed);
+    color: var(--text-color-inverse);
+    transition: box-shadow 0.22s, background 0.18s;
     min-height: 36px;
     max-height: 148px;
     line-height: 1.55;
     overflow-y: auto;
     resize: none;
+    &::-webkit-scrollbar {
+      width: 0 !important;
+      height: 0 !important;
+      display: none !important;
+      background: transparent !important;
+    }
     &::placeholder {
       color: var(--text-color-placeholder);
       opacity: 0.77;
@@ -120,7 +125,6 @@
     &:focus {
       background: var(--background-secondary);
       color: var(--text-color-inverse);
-      box-shadow: 0 0 0 2px var(--primary), var(--input-shadow-inset);
     }
     &:active,
     &:focus-visible {
@@ -142,7 +146,6 @@
     margin-left: var(--gap-xs);
     transition: background 0.18s, box-shadow 0.16s;
     cursor: pointer;
-    box-shadow: var(--btn-shadow-neon);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -150,7 +153,6 @@
     &:focus-visible {
       background: var(--primary-hover);
       outline: none;
-      box-shadow: var(--btn-shadow-hover);
     }
     &:active {
       background: var(--primary);
