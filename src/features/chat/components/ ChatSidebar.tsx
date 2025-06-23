@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { RiHome2Line, RiSearch2Line, RiAddFill } from 'react-icons/ri';
 import { getAvatar } from '../../../shared/utils/getAvatar';
 import SelectUserModal from './SelectUserModal';
+import toast from 'react-hot-toast';
 import '../styles/ChatSidebar.scss';
 
 interface Conversation {
@@ -55,25 +56,31 @@ const ChatSidebar = ({ onSelect }: ChatSidebarProps) => {
     return other?.name?.toLowerCase().includes(search.toLowerCase());
   });
 
-  // Handler for starting a new conversation
-  const handleUserSelect = async (selectedUser: { _id: string }) => {
-    setShowModal(false);
+  // Handler for starting a new conversation with feedback
+  const handleUserSelect = async (selectedUser: { _id: string; name: string }) => {
     try {
-      // For admin, POST /api/conversations with { userId }
       const res = await api.post('/conversations', { userId: selectedUser._id });
-      // Add new conversation or navigate to it
       if (res.data && res.data._id) {
-        setConversations((prev) => {
-          // Avoid duplicate
-          if (prev.some((c) => c._id === res.data._id)) return prev;
-          return [res.data, ...prev];
-        });
-        // Optionally, auto-select the conversation after creation
+        // Detect if conversation already exists (status 200)
+        const exists = conversations.find((c) => c._id === res.data._id);
+        if (exists) {
+          toast('Chat already exists, redirected.', { icon: '👉' });
+        } else {
+          setConversations((prev) => [res.data, ...prev]);
+          toast.success('Conversation created!');
+        }
         onSelect(res.data._id);
       }
     } catch (e: any) {
-      // Could use toast or error UI
-      alert('Failed to create conversation.');
+      // Mostra erro detalhado se houver
+      if (e?.response?.data?.error === 'Only admin can initiate chat') {
+        toast.error('You can only chat with admins.');
+      } else if (e?.response?.data?.error) {
+        toast.error(e.response.data.error);
+      } else {
+        toast.error('Failed to create conversation.');
+      }
+      throw new Error(e?.response?.data?.error || 'Could not create conversation.');
     }
   };
 

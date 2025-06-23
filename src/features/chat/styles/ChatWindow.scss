@@ -7,7 +7,7 @@
   max-height: 100%;
   display: flex;
   flex-direction: column;
-
+  isolation: isolate;
   position: relative;
   overflow: hidden;
   background: var(--background-chatSidebar);

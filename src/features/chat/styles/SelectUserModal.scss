@@ -1,15 +1,21 @@
 /* /src/features/chat/styles/SelectUserModal.scss */
 
 .select-user-modal {
+  position: fixed; // Adicione isso ao elemento raiz do modal
+  inset: 0;
+  z-index: 1000; // Valor alto garantido
+  display: flex;
+  align-items: center;
+  justify-content: center;
   &__backdrop {
-    position: fixed;
+    position: absolute;
     inset: 0;
     background: rgba(30, 32, 40, 0.48);
-    z-index: 98;
+    z-index: 1;
   }
 
   &__content {
-    position: fixed;
+    position: relative;
     top: 50%;
     left: 50%;
     width: 98vw;
@@ -19,8 +25,8 @@
     border-radius: 2xl;
     box-shadow: 0 4px 40px rgba(0, 20, 40, 0.15);
     padding: 2rem 1.5rem 1.5rem 1.5rem;
-    transform: translate(-50%, -50%);
-    z-index: 99;
+
+    z-index: 2;
     outline: none;
     display: flex;
     flex-direction: column;
@@ -120,6 +126,28 @@
     color: #87b3d3;
     text-transform: capitalize;
     letter-spacing: 0.3px;
+  }
+
+  &__select-btn {
+    margin-left: auto;
+    padding: 0.35rem 1.1rem;
+    background: #1da1f2;
+    border: none;
+    border-radius: 1rem;
+    color: #fff;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.18s;
+    &:hover:not(:disabled),
+    &:focus:not(:disabled) {
+      background: #1197d6;
+    }
+    &:disabled {
+      background: #95badf;
+      color: #224963;
+      cursor: not-allowed;
+    }
   }
 
   &__loading,
