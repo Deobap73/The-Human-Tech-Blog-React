@@ -2,9 +2,10 @@
 /* BEM, tokens, autosizing textarea for chat */
 
 .chat-input {
+  width: 100%;
   display: flex;
   align-items: flex-end;
-  gap: var(--gap-base);
+  gap: var(--gap-xs);
   padding: var(--padding-md) var(--padding-xl) var(--padding-md) var(--padding-xl);
   border-top: 1.5px solid rgba(40, 55, 92, 0.18);
   background: transparent;
@@ -170,8 +171,16 @@
 
 @media (max-width: 1024px) {
   .chat-input {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 99;
+    width: 100vw;
+    max-width: 100vw;
+    background: var(--background-chatSidebar);
     padding: var(--padding-sm) var(--padding-base);
-    min-height: 62px;
+    border-top: 1.5px solid rgba(40, 55, 92, 0.18);
     &__send {
       font-size: 1.4rem;
     }

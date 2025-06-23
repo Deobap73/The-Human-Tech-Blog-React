@@ -3,7 +3,7 @@
 .chat-page {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-around;
   background: var(--background-chat);
   height: 100vh;
   padding: var(--padding-xl);
@@ -33,11 +33,11 @@
 @media (max-width: 1024px) {
   .chat-page {
     flex-direction: column;
-    align-items: stretch;
+    align-items: center;
     justify-content: flex-start;
-    min-height: 100vh;
+    height: 100dvh;
+    height: 100vh;
     width: 100vw;
-    padding: 0;
     background: var(--background-secondary);
 
     > .chat-sidebar,
@@ -46,7 +46,11 @@
       box-shadow: none;
       margin: 0;
       width: 100vw;
+      height: 100dvh;
+      height: 100vh;
+      min-height: 100dvh;
       min-height: 100vh;
+      max-height: 100dvh;
       max-height: 100vh;
     }
   }
