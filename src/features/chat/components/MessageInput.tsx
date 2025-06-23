@@ -54,7 +54,7 @@ const MessageInput = ({ conversationId, setMessages }: MessageInputProps) => {
   };
 
   return (
-    <div className='chat-input-area'>
+    <div className='chat-input'>
       <label className='chat-input__attachment'>
         <RiAttachment2 size={22} />
         <input
