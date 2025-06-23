@@ -1,12 +1,9 @@
-// The-Human-Tech-Blog-React\src\features\chat\styles\ChatPage.scss
-
-// Desktop/Tablet: cards lado a lado, centralizados, tamanho fixo
+// /src/features/chat/styles/ChatPage.scss
 
 .chat-page {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  justify-content: space-evenly;
   background: var(--background-chat);
   height: 100vh;
   padding: var(--padding-xl);
@@ -32,14 +29,15 @@
   }
 }
 
-// Mobile: ocupa 100% da viewport, sidebar/window nunca juntos
-@media (max-width: 699px) {
+// Tablet/mobile: sidebar OR window, full width/height
+@media (max-width: 1024px) {
   .chat-page {
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
     min-height: 100vh;
     width: 100vw;
+    padding: 0;
     background: var(--background-secondary);
 
     > .chat-sidebar,

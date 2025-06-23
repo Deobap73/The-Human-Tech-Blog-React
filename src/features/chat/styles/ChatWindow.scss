@@ -17,14 +17,14 @@
   // ====== PENCIL IMAGE FIXED AT LEFT EDGE ======
   &__pencil {
     position: absolute;
-    top: 70px; // Ajusta conforme o topo do mockup
-    left: 48px; // alinhado com a separação da sidebar
+    top: 70px;
+    left: 48px;
     width: 28px;
     height: 62.4vh;
     display: flex;
     justify-content: center;
     z-index: 22;
-    pointer-events: none; // Não interfere com o chat
+    pointer-events: none;
 
     img {
       width: 100%;
@@ -33,6 +33,13 @@
       filter: drop-shadow(0 16px 18px rgba(12, 16, 30, 0.26))
         drop-shadow(0 2px 5px rgba(50, 60, 100, 0.16));
       user-select: none;
+    }
+  }
+
+  // Oculta o pencil no tablet/mobile
+  @media (max-width: 1024px) {
+    &__pencil {
+      display: none;
     }
   }
 

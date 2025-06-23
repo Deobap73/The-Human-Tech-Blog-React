@@ -1,56 +1,55 @@
 // /src/features/chat/pages/ChatRoutes.tsx
-
 import { Routes, Route, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import ChatSidebar from '../components/ ChatSidebar';
 import ChatWindow from '../components/ChatWindow';
 import '../styles/ChatPage.scss';
 
-// Custom hook para detectar mobile
-function useIsMobile(breakpoint = 700) {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoint);
+// Custom hook for responsive detection (tablet breakpoint)
+function useIsTablet(breakpoint = 1024) {
+  const [isTablet, setIsTablet] = useState(window.innerWidth < breakpoint);
   useEffect(() => {
-    const onResize = () => setIsMobile(window.innerWidth < breakpoint);
+    const onResize = () => setIsTablet(window.innerWidth < breakpoint);
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, [breakpoint]);
-  return isMobile;
+  return isTablet;
 }
 
 const ChatLayout = () => {
-  const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Estado para conversa seleccionada (só desktop/tablet)
+  // Selected conversation (only desktop)
   const [selectedConversation, setSelectedConversation] = useState<string>('');
 
-  // Quando usuário seleciona uma conversa:
+  // On conversation select: desktop updates state, tablet/mobile navigates
   const handleSelect = (id: string) => {
-    if (isMobile) {
-      // Navega para rota só do ChatWindow
+    if (isTablet) {
       navigate(`${id}`);
     } else {
       setSelectedConversation(id);
     }
   };
 
-  // Opcional: se voltar ao /chat, limpa a conversa seleccionada em desktop
+  // Clear selection on route change (desktop)
   useEffect(() => {
-    if (!isMobile && location.pathname.match(/\/chat\/?$/)) {
+    if (!isTablet && location.pathname.match(/\/chat\/?$/)) {
       setSelectedConversation('');
     }
-  }, [isMobile, location.pathname]);
+  }, [isTablet, location.pathname]);
 
   return (
     <div className='chat-page'>
       <ChatSidebar onSelect={handleSelect} />
-      {!isMobile && <ChatWindow conversationId={selectedConversation} />}
+      {/* Show ChatWindow only on desktop */}
+      {!isTablet && <ChatWindow conversationId={selectedConversation} />}
     </div>
   );
 };
 
-// Página só do ChatWindow (mobile)
+// Only ChatWindow (tablet/mobile)
 const ChatWindowPage = () => {
   const { conversationId } = useParams<{ conversationId: string }>();
   return (
@@ -62,9 +61,9 @@ const ChatWindowPage = () => {
 
 const ChatRoutes = () => (
   <Routes>
-    {/* Sidebar (e ChatWindow em desktop/tablet) */}
+    {/* Desktop/tablet root */}
     <Route path='/' element={<ChatLayout />} />
-    {/* Mobile: só ChatWindow */}
+    {/* Tablet/mobile: ChatWindow only */}
     <Route path='/:conversationId' element={<ChatWindowPage />} />
   </Routes>
 );

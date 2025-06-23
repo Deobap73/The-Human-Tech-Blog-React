@@ -35,6 +35,7 @@
     min-height: 220px;
   }
   @media (max-width: 768px) {
+    width: 98vw;
     height: 35vh;
     min-height: 120px;
   }
@@ -74,7 +75,7 @@
       aspect-ratio: 16 / 8;
     }
     @media (max-width: 768px) {
-      aspect-ratio: 16 / 12;
+      width: 98%;
     }
   }
 
@@ -356,6 +357,10 @@
         padding: 0.8rem 0;
         border-radius: 0.6rem;
         font-size: 1.18rem;
+      }
+      .navbar__user {
+        flex-wrap: wrap;
+        justify-content: center;
       }
     }
     &__topbar {

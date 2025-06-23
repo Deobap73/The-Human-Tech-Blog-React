@@ -72,7 +72,7 @@ const ChatSidebar = ({ onSelect }: ChatSidebarProps) => {
         onSelect(res.data._id);
       }
     } catch (e: any) {
-      // Mostra erro detalhado se houver
+      // Show detailed error if any
       if (e?.response?.data?.error === 'Only admin can initiate chat') {
         toast.error('You can only chat with admins.');
       } else if (e?.response?.data?.error) {

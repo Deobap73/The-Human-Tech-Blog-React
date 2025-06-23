@@ -11,20 +11,20 @@ import { ChatMessage } from '../../../shared/types/ChatMessage';
 import api from '../../../shared/utils/axios';
 import '../styles/ChatWindow.scss';
 
-// Helper: Detecta se é mobile/tablet
-function useIsMobile(breakpoint = 1024) {
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= breakpoint);
+// Responsive detection for tablet/mobile (1024px)
+function useIsTablet(breakpoint = 1024) {
+  const [isTablet, setIsTablet] = useState(window.innerWidth <= breakpoint);
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= breakpoint);
+    const handleResize = () => setIsTablet(window.innerWidth <= breakpoint);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [breakpoint]);
-  return isMobile;
+  return isTablet;
 }
 
 const ChatWindow = ({ conversationId }: { conversationId: string }) => {
   const { t } = useTranslation();
-  const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
   const navigate = useNavigate();
 
   // Centralize message state here!
@@ -41,8 +41,8 @@ const ChatWindow = ({ conversationId }: { conversationId: string }) => {
       .finally(() => setLoading(false));
   }, [conversationId]);
 
-  // Mostra "voltar" só em mobile/tablet e quando há conversa selecionada
-  const showBack = isMobile && conversationId;
+  // Show "back" only on tablet/mobile and when a conversation is selected
+  const showBack = isTablet && conversationId;
 
   if (!conversationId) {
     return (
@@ -64,9 +64,12 @@ const ChatWindow = ({ conversationId }: { conversationId: string }) => {
 
   return (
     <div className='chat-window'>
-      <div className='chat-window__pencil'>
-        <img src={pencilImg} alt='Black pencil decorative' draggable='false' />
-      </div>
+      {/* Pencil overlay (hide on tablet/mobile) */}
+      {!isTablet && (
+        <div className='chat-window__pencil'>
+          <img src={pencilImg} alt='Black pencil decorative' draggable='false' />
+        </div>
+      )}
       {showBack && (
         <div className='chat-window__header chat-window__header--mobile'>
           <button
@@ -79,7 +82,6 @@ const ChatWindow = ({ conversationId }: { conversationId: string }) => {
           <span className='chat-window__header-mobile-title'>{t('chat.window.chat', 'Chat')}</span>
         </div>
       )}
-      {/* Pass messages and setMessages as props */}
       <MessageViewer
         conversationId={conversationId}
         messages={messages}
