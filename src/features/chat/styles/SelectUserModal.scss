@@ -21,7 +21,7 @@
     z-index: 2;
     background: #1c2330;
     color: #f7f7f7;
-    border-radius: 2xl;
+    border-radius: var(--border-radius-lg);
     box-shadow: 0 4px 40px rgba(0, 20, 40, 0.15);
     padding: 2rem 1.5rem 1.5rem 1.5rem;
     display: flex;
