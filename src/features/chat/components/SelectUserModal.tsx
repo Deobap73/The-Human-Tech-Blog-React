@@ -1,5 +1,7 @@
 // /src/features/chat/components/SelectUserModal.tsx
+
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { UserSummary, fetchUsers } from '../../../shared/services/userService';
 import { getAvatar } from '../../../shared/utils/getAvatar';
 import toast from 'react-hot-toast';
@@ -13,6 +15,16 @@ interface SelectUserModalProps {
   currentUserRole: string;
 }
 
+const getModalRoot = (): HTMLElement => {
+  let modalRoot = document.getElementById('modal-root');
+  if (!modalRoot) {
+    modalRoot = document.createElement('div');
+    modalRoot.id = 'modal-root';
+    document.body.appendChild(modalRoot);
+  }
+  return modalRoot;
+};
+
 const SelectUserModal = ({
   open,
   onClose,
@@ -22,7 +34,7 @@ const SelectUserModal = ({
 }: SelectUserModalProps) => {
   const [users, setUsers] = useState<UserSummary[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
-  const [loadingSelect, setLoadingSelect] = useState<string | null>(null); // userId que está loading
+  const [loadingSelect, setLoadingSelect] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [error, setError] = useState('');
   const [inlineError, setInlineError] = useState('');
@@ -56,7 +68,7 @@ const SelectUserModal = ({
     }
   }, [open]);
 
-  // Filter users: admins for user, all except self for admin
+  // Filtra utilizadores conforme o role (admin vê todos, user vê só admins)
   const filteredUsers = users
     .filter((user) => user._id !== currentUserId)
     .filter((user) => (currentUserRole === 'admin' ? true : user.role === 'admin'))
@@ -80,10 +92,16 @@ const SelectUserModal = ({
 
   if (!open) return null;
 
-  return (
+  // PORTAL — garante sempre top-level
+  return createPortal(
     <div className='select-user-modal'>
       <div className='select-user-modal__backdrop' onClick={onClose} />
-      <div className='select-user-modal__content' tabIndex={-1} ref={modalRef}>
+      <div
+        className='select-user-modal__content'
+        tabIndex={-1}
+        ref={modalRef}
+        aria-modal='true'
+        role='dialog'>
         <h2 className='select-user-modal__title'>Select user to chat</h2>
         <input
           className='select-user-modal__search'
@@ -92,7 +110,11 @@ const SelectUserModal = ({
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <button className='select-user-modal__close' onClick={onClose} title='Close modal'>
+        <button
+          className='select-user-modal__close'
+          onClick={onClose}
+          title='Close modal'
+          aria-label='Close modal'>
           ×
         </button>
         {loadingUsers ? (
@@ -134,7 +156,8 @@ const SelectUserModal = ({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    getModalRoot()
   );
 };
 
