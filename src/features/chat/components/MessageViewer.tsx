@@ -1,7 +1,6 @@
 // /src/features/chat/components/MessageViewer.tsx
 
 import { useEffect, useRef, useState } from 'react';
-import api from '../../../shared/utils/axios';
 import { useAuth } from '../../../shared/hooks/useAuth';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
@@ -10,32 +9,23 @@ import { ChatMessage } from '../../../shared/types/ChatMessage';
 import { RiErrorWarningLine, RiFilePdf2Line, RiDownloadLine, RiImage2Line } from 'react-icons/ri';
 import '../styles/MessageViewer.scss';
 
-const MessageViewer = ({ conversationId }: { conversationId: string }) => {
+interface MessageViewerProps {
+  conversationId: string;
+  messages: ChatMessage[];
+  setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
+  loading: boolean;
+}
+
+const MessageViewer = ({ conversationId, messages, setMessages, loading }: MessageViewerProps) => {
   const { user } = useAuth();
   const { t } = useTranslation();
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const [lightbox, setLightbox] = useState<{ url: string; alt: string } | null>(null);
 
-  useEffect(() => {
-    let mounted = true;
-    setLoading(true);
-    setError('');
-    api
-      .get(`/messages/${conversationId}`)
-      .then((res) => mounted && setMessages(res.data))
-      .catch(() => mounted && setError(t('chat.messagelist.error', 'Failed to load messages')))
-      .finally(() => mounted && setLoading(false));
-    return () => {
-      mounted = false;
-    };
-  }, [conversationId, t]);
-
+  // Scroll to bottom on new messages
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, conversationId]);
 
   if (loading)
     return (
@@ -43,13 +33,6 @@ const MessageViewer = ({ conversationId }: { conversationId: string }) => {
         <div className='skeleton skeleton--bubble' />
         <div className='skeleton skeleton--bubble' />
         <div className='skeleton skeleton--bubble' />
-      </div>
-    );
-  if (error)
-    return (
-      <div className='chat-messages__error'>
-        <RiErrorWarningLine size={40} color='#ef5959' />
-        <div>{error}</div>
       </div>
     );
   if (messages.length === 0)
@@ -75,33 +58,38 @@ const MessageViewer = ({ conversationId }: { conversationId: string }) => {
         });
         const contentHTML = DOMPurify.sanitize(marked.parse(msg.text) as string);
 
-        // Show attachment if exists
+        // Attachments (optional)
         let attachment = null;
-        if (msg.fileUrl && msg.fileType) {
-          if (msg.fileType.startsWith('image/')) {
+        if ((msg as any).fileUrl && (msg as any).fileType) {
+          if ((msg as any).fileType.startsWith('image/')) {
             attachment = (
               <div className='chat-message__attachment chat-message__attachment--img'>
                 <button
                   className='chat-message__imgbtn'
                   title={t('chat.attachment.openImg', 'Open image')}
-                  onClick={() => setLightbox({ url: msg.fileUrl!, alt: msg.fileName || 'Image' })}
+                  onClick={() =>
+                    setLightbox({
+                      url: (msg as any).fileUrl!,
+                      alt: (msg as any).fileName || 'Image',
+                    })
+                  }
                   type='button'
                   aria-label={t('chat.attachment.openImg', 'Open image')}>
-                  <img src={msg.fileUrl} alt={msg.fileName || 'attachment'} />
+                  <img src={(msg as any).fileUrl} alt={(msg as any).fileName || 'attachment'} />
                   <RiImage2Line size={18} className='chat-message__imgicon' />
                 </button>
               </div>
             );
-          } else if (msg.fileType === 'application/pdf') {
+          } else if ((msg as any).fileType === 'application/pdf') {
             attachment = (
               <div className='chat-message__attachment chat-message__attachment--pdf'>
                 <RiFilePdf2Line size={32} />
-                <span className='chat-message__pdfname'>{msg.fileName || 'PDF file'}</span>
+                <span className='chat-message__pdfname'>{(msg as any).fileName || 'PDF file'}</span>
                 <a
-                  href={msg.fileUrl}
+                  href={(msg as any).fileUrl}
                   target='_blank'
                   rel='noopener noreferrer'
-                  download={msg.fileName}
+                  download={(msg as any).fileName}
                   className='chat-message__pdfdownload'
                   title={t('chat.attachment.download', 'Download PDF')}
                   aria-label={t('chat.attachment.download', 'Download PDF')}>
@@ -127,7 +115,7 @@ const MessageViewer = ({ conversationId }: { conversationId: string }) => {
                 {isSelf
                   ? t('chat.messagelist.you', 'You')
                   : typeof msg.sender === 'object' && 'name' in msg.sender
-                  ? msg.sender.name
+                  ? (msg.sender as any).name
                   : 'User'}
                 {' • '}
                 {time}
@@ -136,7 +124,7 @@ const MessageViewer = ({ conversationId }: { conversationId: string }) => {
           </div>
         );
       })}
-      {/* Simple image lightbox */}
+      {/* Lightbox para imagem */}
       {lightbox && (
         <div className='chat-lightbox' onClick={() => setLightbox(null)} tabIndex={-1}>
           <img src={lightbox.url} alt={lightbox.alt} className='chat-lightbox__img' />

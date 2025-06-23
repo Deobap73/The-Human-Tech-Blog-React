@@ -1,12 +1,14 @@
 // /src/features/chat/components/ChatWindow.tsx
 
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import MessageViewer from './MessageViewer';
 import MessageInput from './MessageInput';
 import { useTranslation } from 'react-i18next';
 import { RiArrowLeftSLine } from 'react-icons/ri';
-import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import pencilImg from '../../../assets/blackPencil.webp';
+import { ChatMessage } from '../../../shared/types/ChatMessage';
+import api from '../../../shared/utils/axios';
 import '../styles/ChatWindow.scss';
 
 // Helper: Detecta se é mobile/tablet
@@ -24,6 +26,20 @@ const ChatWindow = ({ conversationId }: { conversationId: string }) => {
   const { t } = useTranslation();
   const isMobile = useIsMobile();
   const navigate = useNavigate();
+
+  // Centralize message state here!
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Load messages on mount or when conversationId changes
+  useEffect(() => {
+    if (!conversationId) return;
+    setLoading(true);
+    api
+      .get(`/messages/${conversationId}`)
+      .then((res) => setMessages(res.data))
+      .finally(() => setLoading(false));
+  }, [conversationId]);
 
   // Mostra "voltar" só em mobile/tablet e quando há conversa selecionada
   const showBack = isMobile && conversationId;
@@ -48,11 +64,9 @@ const ChatWindow = ({ conversationId }: { conversationId: string }) => {
 
   return (
     <div className='chat-window'>
-      {/* Pencil overlay */}
       <div className='chat-window__pencil'>
         <img src={pencilImg} alt='Black pencil decorative' draggable='false' />
       </div>
-      {/* Header customizável — botão voltar só mobile */}
       {showBack && (
         <div className='chat-window__header chat-window__header--mobile'>
           <button
@@ -62,12 +76,17 @@ const ChatWindow = ({ conversationId }: { conversationId: string }) => {
             type='button'>
             <RiArrowLeftSLine />
           </button>
-          {/* Placeholder para nome do chat (adapta se tiveres username ou avatar) */}
           <span className='chat-window__header-mobile-title'>{t('chat.window.chat', 'Chat')}</span>
         </div>
       )}
-      <MessageViewer conversationId={conversationId} />
-      <MessageInput conversationId={conversationId} />
+      {/* Pass messages and setMessages as props */}
+      <MessageViewer
+        conversationId={conversationId}
+        messages={messages}
+        setMessages={setMessages}
+        loading={loading}
+      />
+      <MessageInput conversationId={conversationId} setMessages={setMessages} />
     </div>
   );
 };

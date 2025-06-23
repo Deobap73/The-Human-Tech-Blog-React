@@ -1,20 +1,57 @@
-/* /src/features/chat/styles/MessageViewer.scss*/
+/* /src/features/chat/styles/MessageViewer.scss */
 
 .chat-messages {
   flex: 1 1 0;
-  width: 95%;
+  width: 100%;
   display: flex;
-  height: 75vh;
   flex-direction: column;
   gap: var(--gap-xs);
-  margin-left: 2rem;
   padding: var(--padding-md) var(--padding-xl);
   background: transparent;
   position: relative;
   z-index: 1;
   scroll-behavior: smooth;
+
+  // SCROLL NATURAL EM TODAS AS PLATAFORMAS
+  height: 75vh;
+  max-height: 75vh;
+  min-height: 0;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 7px;
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(80, 130, 200, 0.18);
+    border-radius: 9px;
+  }
+  scrollbar-width: thin;
+  scrollbar-color: #1da1f2 #1c2330;
 }
 
+/* Mobile/Tablet: 100% altura da janela, padding reduzido, scroll fixo */
+@media (max-width: 1024px) {
+  .chat-messages {
+    height: 60vh;
+    max-height: 60vh;
+    padding: var(--padding-xs) var(--padding-sm);
+  }
+}
+
+@media (max-width: 700px) {
+  .chat-messages {
+    height: 100vh;
+    max-height: 100vh;
+    min-height: 0;
+    padding: var(--padding-xs) var(--padding-base);
+    border-radius: 0;
+    box-shadow: none;
+    margin-left: 0;
+  }
+}
+
+/* BEM para o resto da tua UI - Mantém igual ao teu projeto */
 .chat-message {
   display: flex;
   width: 100%;
@@ -39,8 +76,6 @@
     line-height: 1.55;
     font-size: var(--font-size-base);
     transition: background 0.17s, color 0.17s;
-
-    // Adicione um filter: drop-shadow() no container para aplicar a sombra ao pseudo-elemento também
     filter: drop-shadow(5px 5px 8px #0e1116) drop-shadow(-5px -5px 8px #384556);
 
     &::before {
@@ -69,7 +104,6 @@
       margin-right: var(--margin-base);
       text-align: right;
 
-      // Remove o pseudo-elemento das mensagens próprias
       &::before {
         display: none;
       }
@@ -153,7 +187,6 @@
     }
   }
   &__content {
-    // markdown styles
     p,
     span,
     strong,
@@ -186,7 +219,7 @@
   }
 }
 
-// Simple image lightbox/modal for attachments
+/* Lightbox para imagens */
 .chat-lightbox {
   position: fixed;
   inset: 0;
@@ -211,20 +244,5 @@
   }
   to {
     opacity: 1;
-  }
-}
-
-@media (max-width: 1024px) {
-  .chat-messages {
-    padding: var(--padding-sm) var(--padding-base);
-    &__loading,
-    &__empty,
-    &__error {
-      padding: var(--padding-base) 0;
-    }
-  }
-  .chat-message__bubble {
-    max-width: 87%;
-    padding: var(--padding-xs) var(--padding-sm);
   }
 }
