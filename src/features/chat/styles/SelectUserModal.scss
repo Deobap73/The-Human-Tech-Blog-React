@@ -1,0 +1,133 @@
+/* /src/features/chat/styles/SelectUserModal.scss */
+
+.select-user-modal {
+  &__backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(30, 32, 40, 0.48);
+    z-index: 98;
+  }
+
+  &__content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 98vw;
+    max-width: 360px;
+    background: #1c2330;
+    color: #f7f7f7;
+    border-radius: 2xl;
+    box-shadow: 0 4px 40px rgba(0, 20, 40, 0.15);
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    transform: translate(-50%, -50%);
+    z-index: 99;
+    outline: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    border: 2px solid #1da1f2;
+  }
+
+  &__title {
+    font-size: 1.35rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+    letter-spacing: 0.5px;
+    text-align: center;
+  }
+
+  &__close {
+    position: absolute;
+    top: 14px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.6rem;
+    cursor: pointer;
+    z-index: 2;
+    transition: color 0.2s;
+    &:hover {
+      color: #1da1f2;
+    }
+  }
+
+  &__search {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border-radius: 16px;
+    border: 1px solid #294780;
+    background: #23293a;
+    color: #fff;
+    font-size: 1rem;
+    margin-bottom: 0.7rem;
+    outline: none;
+    &:focus {
+      border-color: #1da1f2;
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    max-height: 260px;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    padding: 0.67rem 0.9rem;
+    border-radius: 1rem;
+    background: #21283a;
+    cursor: pointer;
+    font-size: 1rem;
+    border: 1px solid transparent;
+    transition: background 0.13s, border 0.2s;
+    &:hover,
+    &:focus {
+      background: #294780;
+      border-color: #1da1f2;
+    }
+    &:active {
+      background: #1a2230;
+    }
+  }
+
+  &__avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 100%;
+    object-fit: cover;
+    border: 2px solid #1da1f2;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(14, 20, 30, 0.1);
+  }
+
+  &__name {
+    font-weight: 500;
+    flex: 1;
+    color: #e8f6ff;
+  }
+
+  &__role {
+    font-size: 0.82rem;
+    color: #87b3d3;
+    text-transform: capitalize;
+    letter-spacing: 0.3px;
+  }
+
+  &__loading,
+  &__empty,
+  &__error {
+    padding: 0.85rem;
+    text-align: center;
+    color: #a0c4db;
+    font-size: 1rem;
+  }
+}

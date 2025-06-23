@@ -11,7 +11,7 @@ import AdminTagsPage from '../features/admin/pages/AdminTagsPage';
 import AdminCategoriesPage from '../features/admin/pages/AdminCategoriesPage';
 
 // Dynamic imports for better performance
-const AdminChatPage = lazy(() => import('../features/chat/pages/ChatPage'));
+const AdminChatPage = lazy(() => import('../features/chat/pages/ChatRoutes'));
 const AdminSettings = lazy(() => import('../features/admin/pages/AdminSettings'));
 
 const AdminRoutes = () => (

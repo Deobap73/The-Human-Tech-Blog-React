@@ -1,4 +1,4 @@
-// src/features/chat/components/ChatSidebar.tsx
+// /src/features/chat/components/ChatSidebar.tsx
 
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { useAuth } from '../../../shared/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
 import { RiHome2Line, RiSearch2Line, RiAddFill } from 'react-icons/ri';
 import { getAvatar } from '../../../shared/utils/getAvatar';
+import SelectUserModal from './SelectUserModal';
 import '../styles/ChatSidebar.scss';
 
 interface Conversation {
@@ -27,6 +28,7 @@ const ChatSidebar = ({ onSelect }: ChatSidebarProps) => {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -36,7 +38,6 @@ const ChatSidebar = ({ onSelect }: ChatSidebarProps) => {
       try {
         const res = await api.get('/conversations');
         if (mounted) setConversations(res.data);
-        // DEBUG: console.log('DEBUG conversations:', res.data);
       } catch {
         if (mounted) setError(t('chat.sidebar.error', 'Failed to load chats'));
       } finally {
@@ -54,6 +55,31 @@ const ChatSidebar = ({ onSelect }: ChatSidebarProps) => {
     return other?.name?.toLowerCase().includes(search.toLowerCase());
   });
 
+  // Handler for starting a new conversation
+  const handleUserSelect = async (selectedUser: { _id: string }) => {
+    setShowModal(false);
+    try {
+      // For admin, POST /api/conversations with { userId }
+      const res = await api.post('/conversations', { userId: selectedUser._id });
+      // Add new conversation or navigate to it
+      if (res.data && res.data._id) {
+        setConversations((prev) => {
+          // Avoid duplicate
+          if (prev.some((c) => c._id === res.data._id)) return prev;
+          return [res.data, ...prev];
+        });
+        // Optionally, auto-select the conversation after creation
+        onSelect(res.data._id);
+      }
+    } catch (e: any) {
+      // Could use toast or error UI
+      alert('Failed to create conversation.');
+    }
+  };
+
+  // Only show "+" if user is logged in
+  const canStartChat = !!user;
+
   return (
     <aside className='chat-sidebar'>
       {/* Sidebar Header */}
@@ -62,10 +88,26 @@ const ChatSidebar = ({ onSelect }: ChatSidebarProps) => {
           <img src={getAvatar(user || undefined)} alt='User avatar' />
         </span>
         <span className='chat-sidebar__title'>{t('chat.sidebar.title', 'Chats')}</span>
-        <button className='chat-sidebar__add-btn' title='New chat'>
-          <RiAddFill size={28} />
-        </button>
+        {canStartChat && (
+          <button
+            className='chat-sidebar__add-btn'
+            title='New chat'
+            onClick={() => setShowModal(true)}>
+            <RiAddFill size={28} />
+          </button>
+        )}
       </div>
+
+      {/* Modal to select user to chat */}
+      {user && (
+        <SelectUserModal
+          open={showModal}
+          onClose={() => setShowModal(false)}
+          onSelect={handleUserSelect}
+          currentUserId={user._id}
+          currentUserRole={user.role}
+        />
+      )}
 
       {/* Search Input */}
       <div className='chat-sidebar__search'>

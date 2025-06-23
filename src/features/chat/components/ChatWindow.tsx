@@ -6,6 +6,7 @@ import MessageInput from './MessageInput';
 import { useTranslation } from 'react-i18next';
 import { RiArrowLeftSLine } from 'react-icons/ri';
 import { useEffect, useState } from 'react';
+import pencilImg from '../../../assets/blackPencil.webp';
 import '../styles/ChatWindow.scss';
 
 // Helper: Detecta se é mobile/tablet
@@ -47,6 +48,10 @@ const ChatWindow = ({ conversationId }: { conversationId: string }) => {
 
   return (
     <div className='chat-window'>
+      {/* Pencil overlay */}
+      <div className='chat-window__pencil'>
+        <img src={pencilImg} alt='Black pencil decorative' draggable='false' />
+      </div>
       {/* Header customizável — botão voltar só mobile */}
       {showBack && (
         <div className='chat-window__header chat-window__header--mobile'>
