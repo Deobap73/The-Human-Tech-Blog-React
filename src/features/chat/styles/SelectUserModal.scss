@@ -1,12 +1,14 @@
 /* /src/features/chat/styles/SelectUserModal.scss */
 
 .select-user-modal {
-  position: fixed; // Adicione isso ao elemento raiz do modal
+  position: fixed;
   inset: 0;
-  z-index: 1000; // Valor alto garantido
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
+  pointer-events: auto;
+
   &__backdrop {
     position: absolute;
     inset: 0;
@@ -16,22 +18,26 @@
 
   &__content {
     position: relative;
-    top: 50%;
-    left: 50%;
-    width: 98vw;
-    max-width: 360px;
+    z-index: 2;
     background: #1c2330;
     color: #f7f7f7;
     border-radius: 2xl;
     box-shadow: 0 4px 40px rgba(0, 20, 40, 0.15);
     padding: 2rem 1.5rem 1.5rem 1.5rem;
-
-    z-index: 2;
-    outline: none;
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
     border: 2px solid #1da1f2;
+    min-width: 290px;
+    width: 96vw;
+    max-width: 370px;
+    max-height: 90vh;
+    overflow-y: auto;
+    outline: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: fixed;
   }
 
   &__title {
@@ -51,7 +57,7 @@
     color: #fff;
     font-size: 1.6rem;
     cursor: pointer;
-    z-index: 2;
+    z-index: 3;
     transition: color 0.2s;
     &:hover {
       color: #1da1f2;
@@ -157,5 +163,25 @@
     text-align: center;
     color: #a0c4db;
     font-size: 1rem;
+  }
+}
+
+// ----------- MOBILE RESPONSIVO ---------------
+@media (max-width: 700px) {
+  .select-user-modal {
+    align-items: flex-start;
+    &__content {
+      min-width: 0;
+      width: 100vw;
+      max-width: 100vw;
+      min-height: 100vh;
+      max-height: 100vh;
+      border-radius: 0;
+      padding: 1.6rem 0.9rem 1.5rem 0.9rem;
+      top: 0;
+      left: 0;
+      transform: none;
+      position: fixed;
+    }
   }
 }
