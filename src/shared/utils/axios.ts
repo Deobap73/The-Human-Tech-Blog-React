@@ -18,7 +18,7 @@ const getCookie = (name: string): string | undefined => {
   return undefined;
 };
 
-// Request interceptor (mantém igual)
+// Request interceptor (agora adiciona o header x-csrf-token)
 api.interceptors.request.use(
   (config) => {
     const token = getAccessToken();
@@ -26,10 +26,15 @@ api.interceptors.request.use(
       config.headers = config.headers || {};
       config.headers['Authorization'] = `Bearer ${token}`;
     }
-    // DEBUG log for mutating requests
+    // CSRF token for mutating requests
     const method = config.method?.toLowerCase();
     if (['post', 'put', 'patch', 'delete'].includes(method || '')) {
       const xsrfToken = getCookie('XSRF-TOKEN');
+      if (xsrfToken) {
+        config.headers = config.headers || {};
+        config.headers['x-csrf-token'] = xsrfToken; // <-- Corrigido: agora envia o header!
+      }
+      // DEBUG log
       console.log('[Axios] Preparing mutating request:', {
         method,
         url: config.url,
@@ -73,7 +78,6 @@ api.interceptors.response.use(
       } catch (refreshError) {
         // Refresh falhou - logout, redireciona para login, etc
         console.error('[axios] Token refresh failed, redirecting to login');
-        // Opcional: Limpar token
         setAccessToken('');
         window.location.href = '/login';
         return Promise.reject(refreshError);
