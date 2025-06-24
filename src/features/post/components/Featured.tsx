@@ -1,10 +1,11 @@
-// The-Human-Tech-Blog-React\src\features\post\components\Featured.tsx
+// src/features/post/components/Featured.tsx
 
 import '../../post/styles/Featured.scss';
 import { Post } from '../../../shared/types/Post';
 import { Link } from 'react-router-dom';
 import { isValidPost } from '../../../shared/utils/validation';
 import { getPostTranslation, getCategoryName } from '../../../shared/utils/i18nHelpers';
+import { resolveLogoUrl } from '../../../shared/utils/mediaHelpers';
 
 interface FeaturedProps {
   post?: Post;
@@ -25,23 +26,25 @@ export const Featured = ({ post, lang }: FeaturedProps) => {
 
   // Safe category display (populated or not)
   let firstCategory = 'Uncategorized';
+  let firstLogo = '';
   if (Array.isArray(post.categories) && post.categories.length > 0) {
     const cat = post.categories[0];
     if (cat && typeof cat === 'object' && 'translations' in cat) {
       firstCategory = getCategoryName(cat as any, lang);
+      // @ts-ignore
+      firstLogo = resolveLogoUrl((cat as any).logo);
     } else if (typeof cat === 'string') {
       firstCategory = cat;
     }
   }
 
+  // Imagem: post.image > logo da categoria > default
+  const imageSrc = post.image || firstLogo || '/default-image.jpg';
+
   return (
     <section className='featured'>
       <div className='featured__image-container featuredImage'>
-        <img
-          src={post.image || '/default-image.jpg'}
-          alt={translation.title || 'No title'}
-          className='featured__image'
-        />
+        <img src={imageSrc} alt={translation.title || 'No title'} className='featured__image' />
       </div>
       <div className='featured__content featuredArticle'>
         <span className='featured__category'>{firstCategory}</span>
@@ -54,3 +57,5 @@ export const Featured = ({ post, lang }: FeaturedProps) => {
     </section>
   );
 };
+
+export default Featured;

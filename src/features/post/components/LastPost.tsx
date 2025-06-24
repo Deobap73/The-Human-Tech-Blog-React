@@ -1,10 +1,11 @@
-// The-Human-Tech-Blog-React/src/features/post/components/LastPost.tsx
+// src/features/post/components/LastPost.tsx
 
 import '../styles/LastPost.scss';
 import { Link } from 'react-router-dom';
 import { Post } from '../../../shared/types/Post';
 import { isValidPost } from '../../../shared/utils/validation';
 import { getPostTranslation, getCategoryName } from '../../../shared/utils/i18nHelpers';
+import { resolveLogoUrl } from '../../../shared/utils/mediaHelpers';
 
 interface LastPostProps {
   post?: Post;
@@ -21,14 +22,20 @@ export const LastPost = ({ post, lang }: LastPostProps) => {
 
   // Safe category display (populated or not)
   let firstCategory = 'Uncategorized';
+  let firstLogo = '';
   if (Array.isArray(post.categories) && post.categories.length > 0) {
     const cat = post.categories[0];
     if (cat && typeof cat === 'object' && 'translations' in cat) {
       firstCategory = getCategoryName(cat as any, lang);
+      // @ts-ignore
+      firstLogo = resolveLogoUrl((cat as any).logo);
     } else if (typeof cat === 'string') {
       firstCategory = cat;
     }
   }
+
+  // Fallback: image do post > logo da categoria > default
+  const imageSrc = post.image || firstLogo || '/default-image.jpg';
 
   return (
     <section className='lastPost'>
@@ -41,12 +48,10 @@ export const LastPost = ({ post, lang }: LastPostProps) => {
         </Link>
       </div>
       <div className='lastPost__image-container'>
-        <img
-          src={post.image || '/default-image.jpg'}
-          alt={translation.title || 'No Title'}
-          className='lastPost__image'
-        />
+        <img src={imageSrc} alt={translation.title || 'No Title'} className='lastPost__image' />
       </div>
     </section>
   );
 };
+
+export default LastPost;

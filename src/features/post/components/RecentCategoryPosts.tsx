@@ -6,7 +6,7 @@ import { Post } from '../../../shared/types/Post';
 import { Category } from '../../../shared/types/Category';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getCategoryName } from '../../../shared/utils/i18nHelpers';
+import { resolveLogoUrl } from '../../../shared/utils/mediaHelpers';
 import '../styles/RecentCategoryPosts.scss';
 
 interface Props {
@@ -70,7 +70,7 @@ export const RecentCategoryPosts = ({ currentPostId, lang }: Props) => {
               <Link to={`/${lang}/posts/${post.slug}`} className='recent-category-posts__link'>
                 <div className='recent-category-posts__thumb'>
                   <img
-                    src={post.image || cat.logo || '/default-category.webp'}
+                    src={post.image || resolveLogoUrl(cat.logo) || '/default-category.webp'}
                     alt={
                       post.translations?.[lang]?.title || post.translations?.en?.title || post.slug
                     }

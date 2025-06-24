@@ -3,6 +3,8 @@
 import '../styles/RecentPosts.scss';
 import { Post } from '../../../shared/types/Post';
 import { Category } from '../../../shared/types/Category';
+import { getCategoryName } from '../../../shared/utils/i18nHelpers';
+import { resolveLogoUrl } from '../../../shared/utils/mediaHelpers';
 import { isValidPost } from '../../../shared/utils/validation';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -13,43 +15,23 @@ interface RecentPostsProps {
 }
 
 /**
- * Returns the logo URL of a category object or a default logo.
+ * Safely get the logo URL from a category object, fallback to default if needed.
  */
 function getCategoryLogo(category: string | Category | undefined): string {
   if (
+    category &&
     typeof category === 'object' &&
-    category !== null &&
     'logo' in category &&
     typeof category.logo === 'string' &&
     category.logo
   ) {
-    return category.logo;
+    return resolveLogoUrl(category.logo);
   }
   return '/default-logo.png';
 }
 
-/**
- * Returns the translated name of a category, falling back to English if needed.
- */
-function getCategoryName(category: string | Category | undefined, lang: string): string {
-  if (
-    typeof category === 'object' &&
-    category !== null &&
-    'translations' in category &&
-    category.translations &&
-    typeof category.translations === 'object'
-  ) {
-    // @ts-ignore
-    return category.translations[lang]?.name || category.translations.en?.name || 'Uncategorized';
-  }
-  if (typeof category === 'string') {
-    return category;
-  }
-  return 'Uncategorized';
-}
-
 export const RecentPosts = ({ posts, lang }: RecentPostsProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const validPosts = posts.filter((post) => isValidPost(post, lang)).slice(0, 4);
   if (validPosts.length === 0) return null;
 
@@ -78,9 +60,9 @@ export const RecentPosts = ({ posts, lang }: RecentPostsProps) => {
                 <div>
                   <div className='recent-posts__card-logo'>
                     <img
+                      className='recent-posts__card-logo-img'
                       src={logoSrc}
                       alt={categoryName}
-                      className='recent-posts__card-logo-img'
                       loading='lazy'
                     />
                   </div>

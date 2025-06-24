@@ -47,7 +47,13 @@ export const getPostTranslation = (
 /**
  * Returns the localized name for a category, or its slug as a fallback.
  */
-export const getCategoryName = (cat: Category, lang: string = 'en'): string => {
+export const getCategoryName = (
+  cat: Category | string | undefined,
+  lang: string = 'en'
+): string => {
+  if (!cat) return 'Uncategorized';
+  if (typeof cat === 'string') return cat;
+  // cat is Category
   return (
     cat.translations?.[lang]?.name ||
     cat.translations?.[lang.split('-')[0]]?.name ||

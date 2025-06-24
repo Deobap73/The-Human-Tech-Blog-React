@@ -108,7 +108,7 @@ export const SinglePostPage = () => {
           <div className='single-post-page__category-bar'>
             <span className='single-post-page__category'>{category}</span>
           </div>
-          <div className='single-post-page__description'>{translation.description}</div>
+          <div className='single-post-page__description'>{translation.content}</div>
           <div className='single-post-page__reactions'>
             <ReactionButtons postId={post._id} />
           </div>
