@@ -1,4 +1,4 @@
-// src/features/post/styles/WritePage.scss
+// /src/features/post/styles/WritePage.scss
 
 .write-page {
   // Page container
@@ -162,35 +162,6 @@
     }
   }
 
-  /*  &__btn {
-    display: inline-block;
-    margin-top: var(--margin-base);
-    background: var(--primary);
-    color: #fff;
-    padding: var(--padding-md) var(--padding-xl);
-    border: none;
-    border-radius: 14px;
-    font-weight: 700;
-    font-size: var(--font-size-md);
-    cursor: pointer;
-    box-shadow: 0 4px 18px rgba(29, 161, 242, 0.07);
-    transition: background 0.2s, transform 0.15s;
-
-    &:hover,
-    &:focus {
-      background: var(--primary-hover);
-      transform: translateY(-2px) scale(1.02);
-    }
-
-    &:disabled {
-      background: #c0c0c0;
-      cursor: not-allowed;
-      color: var(--text-color-secondary);
-      opacity: 0.7;
-      transform: none;
-    }
-  } */
-
   &__error {
     color: var(--error);
     background: #fff0f0;
@@ -204,22 +175,67 @@
     box-shadow: 0 2px 8px rgba(244, 25, 25, 0.04);
   }
 
-  /* Tiptap Editor tweaks */
-  .ProseMirror {
-    min-height: 220px;
-    font-size: var(--font-size-md);
-    padding: var(--padding-md);
-    background: var(--background-secondary);
+  .write-page__textarea {
+    resize: none;
+    min-height: 42px;
+    max-height: 250px;
+    overflow-y: auto;
+  }
+
+  /* === Sticky Toolbar + Editor Scrollable Area === */
+
+  &__editor-block {
+    position: relative;
+    margin-bottom: var(--margin-base);
+  }
+
+  &__toolbar-sticky {
+    position: sticky;
+    top: 0; // Sticks to the top of the form
+    z-index: 20;
+    background: var(--background);
+    padding-bottom: 0.25rem;
+    box-shadow: 0 2px 12px rgba(0, 48, 104, 0.05);
+  }
+
+  &__editor-content {
+    height: 80vh;
+    max-height: 80vh;
     border-radius: 10px;
+    background: var(--background-secondary);
     border: 1px solid #e3e8f7;
     box-shadow: 0 2px 8px rgba(29, 161, 242, 0.04);
-    margin-bottom: var(--margin-base);
-    outline: none;
-    transition: border 0.2s;
+    padding: 0.6rem 0.7rem;
 
-    &:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px var(--primary);
+    // The Tiptap ProseMirror should scroll internally
+    .ProseMirror {
+      min-height: 78vh;
+      max-height: 78vh;
+      overflow-y: auto;
+      font-size: var(--font-size-md);
+      padding: 0.8rem 0.5rem;
+      background: transparent;
+      border: none;
+      outline: none;
+      border-radius: 0;
+      box-shadow: none;
+
+      &:focus {
+        border: none;
+        box-shadow: none;
+      }
+    }
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 768px) {
+    &__editor-content {
+      height: 62vh;
+      max-height: 62vh;
+      .ProseMirror {
+        min-height: 60vh;
+        max-height: 60vh;
+      }
     }
   }
 
@@ -229,6 +245,7 @@
   }
 }
 
+/* Animation for feedback on save/publish */
 @keyframes bounce {
   0% {
     transform: scale(1);

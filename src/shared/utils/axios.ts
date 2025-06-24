@@ -18,7 +18,7 @@ const getCookie = (name: string): string | undefined => {
   return undefined;
 };
 
-// JWT and debug
+// Request interceptor (mantém igual)
 api.interceptors.request.use(
   (config) => {
     const token = getAccessToken();
@@ -46,11 +46,39 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor (JWT refresh logic, unchanged)
+// RESPONSE INTERCEPTOR: Automatic token refresh on 401
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    // ... [keep your original refresh logic here]
+    const originalRequest = error.config;
+
+    // Prevent infinite loop
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      try {
+        // Tenta refrescar o access token com o refresh token (cookie httpOnly)
+        const refreshResponse = await api.post('/auth/refresh', null, {
+          withCredentials: true,
+        });
+        const { accessToken } = refreshResponse.data;
+
+        if (accessToken) {
+          setAccessToken(accessToken); // Atualiza storage local
+          // Atualiza o header do request original
+          originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
+        }
+
+        // Repete o request original (resolve para quem chamou)
+        return api(originalRequest);
+      } catch (refreshError) {
+        // Refresh falhou - logout, redireciona para login, etc
+        console.error('[axios] Token refresh failed, redirecting to login');
+        // Opcional: Limpar token
+        setAccessToken('');
+        window.location.href = '/login';
+        return Promise.reject(refreshError);
+      }
+    }
     return Promise.reject(error);
   }
 );

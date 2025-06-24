@@ -268,13 +268,9 @@
       margin-bottom: var(--margin-base);
       grid-template-columns: 1fr;
     }
-    &__header-image {
-      min-width: 80px;
-      max-width: 180px;
-    }
-    &__image {
-      max-width: 160px;
-      height: 70px;
+    &__description {
+      font-size: var(--font-size-base);
+      margin: 5% 5% 1.2rem 5%;
     }
     &__sidebar-block {
       padding: 0.6rem 0.3rem;
@@ -293,14 +289,14 @@
     }
   }
   @media (max-width: 480px) {
-    &__header-image {
+    /*  &__header-image {
       min-width: 48px;
       max-width: 110px;
     }
     &__image {
       max-width: 85px;
       height: 42px;
-    }
+    } */
     &__sidebar-block {
       border-radius: 7px;
       padding: 0.3rem 0.12rem;

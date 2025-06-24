@@ -1,0 +1,57 @@
+// src/features/post/styles/EditorToolbar.scss
+
+.toolbar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: var(--gap-sm);
+  .editor-toolbar__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    min-width: 48px;
+    min-height: 48px;
+    padding: 0 0.8rem;
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: var(--primary);
+    background: var(--background-secondary);
+    border: 2px solid #2995e2;
+    border-left: none;
+    border-right: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
+    backdrop-filter: blur(2.5px);
+    cursor: pointer;
+    transition: border 0.2s, box-shadow 0.2s, background 0.25s, color 0.18s;
+
+    &:hover,
+    &:focus-visible {
+      background: rgba(0, 48, 104, 0.388);
+      color: var(--primary-hover);
+      border-color: var(--primary-hover);
+      outline: none;
+    }
+
+    &:active {
+      background: none !important;
+      color: #1769aa;
+      border-color: #1769aa;
+    }
+
+    &:disabled {
+      background: #c0c0c0;
+      cursor: not-allowed;
+      color: var(--text-color-secondary);
+      opacity: 0.7;
+      transform: none;
+    }
+  }
+
+  .editor-toolbar__action--draft,
+  .editor-toolbar__action--publish {
+    width: 10rem;
+  }
+}

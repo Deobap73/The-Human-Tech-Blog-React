@@ -1,6 +1,6 @@
 // /src/features/admin/posts/PostsList.tsx
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import api from '../../../shared/utils/axios';
 import { Post } from '../../../shared/types/Post';
 import '../styles/PostsList.scss';
@@ -25,6 +25,7 @@ const PostsList = () => {
   const deletePost = async (id: string) => {
     try {
       await api.delete(`/posts/${id}`);
+
       setPosts((prev) => prev.filter((p) => p._id !== id));
       toast.success('Post deleted');
     } catch (err) {
@@ -56,11 +57,9 @@ const PostsList = () => {
               </span>
             </p>
             <div className='posts-list__actions'>
-              <button
-                className='posts-list__edit-btn'
-                onClick={() => navigate(`/admin/posts/edit/${post._id}`)}>
+              <Link className='posts-list__edit-btn' to={`/admin/posts/edit/${post._id}`}>
                 Edit
-              </button>
+              </Link>
               <button className='posts-list__delete-btn' onClick={() => deletePost(post._id)}>
                 Delete
               </button>
