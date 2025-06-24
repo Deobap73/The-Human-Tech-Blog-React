@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
+import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
 import Toolbar from '../components/EditorToolbar';
 import api from '../../../shared/utils/axios';
@@ -54,7 +55,16 @@ const WritePage = () => {
   // Editor instance for each language
   const editors = LANGUAGES.reduce((acc, lang) => {
     acc[lang] = useEditor({
-      extensions: [StarterKit, Underline, Image],
+      extensions: [
+        StarterKit,
+        Underline,
+        Image,
+        TextAlign.configure({
+          types: ['heading', 'paragraph'],
+          alignments: ['left', 'center', 'right', 'justify'],
+          defaultAlignment: 'left',
+        }),
+      ],
       content: translations[lang].content,
     });
     return acc;

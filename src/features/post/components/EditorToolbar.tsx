@@ -6,12 +6,15 @@ import {
   Italic,
   Underline,
   Strikethrough,
-  Image as ImageIcon,
   Heading,
   List,
   ListOrdered,
   Undo2,
   Redo2,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  AlignJustify,
 } from 'lucide-react';
 import '../styles/EditorToolbar.scss';
 
@@ -26,7 +29,7 @@ interface EditorToolbarProps {
 
 /**
  * EditorToolbar component - A rich text toolbar for TipTap editors.
- * Includes formatting, list, heading, image, undo/redo and publish/save actions.
+ * Includes formatting, heading, list, alignment, undo/redo, publish/save actions.
  */
 const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
   if (!editor) return null;
@@ -138,6 +141,44 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
         <ListOrdered size={16} />
       </button>
 
+      {/* Alignment group */}
+      <button
+        type='button'
+        className={`editor-toolbar__btn${
+          editor.isActive({ textAlign: 'left' }) ? ' editor-toolbar__btn--active' : ''
+        }`}
+        aria-label='Align Left'
+        onClick={() => editor.chain().focus().setTextAlign('left').run()}>
+        <AlignLeft size={16} />
+      </button>
+      <button
+        type='button'
+        className={`editor-toolbar__btn${
+          editor.isActive({ textAlign: 'center' }) ? ' editor-toolbar__btn--active' : ''
+        }`}
+        aria-label='Align Center'
+        onClick={() => editor.chain().focus().setTextAlign('center').run()}>
+        <AlignCenter size={16} />
+      </button>
+      <button
+        type='button'
+        className={`editor-toolbar__btn${
+          editor.isActive({ textAlign: 'right' }) ? ' editor-toolbar__btn--active' : ''
+        }`}
+        aria-label='Align Right'
+        onClick={() => editor.chain().focus().setTextAlign('right').run()}>
+        <AlignRight size={16} />
+      </button>
+      <button
+        type='button'
+        className={`editor-toolbar__btn${
+          editor.isActive({ textAlign: 'justify' }) ? ' editor-toolbar__btn--active' : ''
+        }`}
+        aria-label='Align Justify'
+        onClick={() => editor.chain().focus().setTextAlign('justify').run()}>
+        <AlignJustify size={16} />
+      </button>
+
       {/* Undo/Redo group */}
       <button
         type='button'
@@ -152,18 +193,6 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
         aria-label='Redo'
         onClick={() => editor.chain().focus().redo().run()}>
         <Redo2 size={16} />
-      </button>
-
-      {/* Image insert */}
-      <button
-        type='button'
-        className='editor-toolbar__btn'
-        aria-label='Insert Image'
-        onClick={() => {
-          const url = window.prompt('Image URL');
-          if (url) editor.chain().focus().setImage({ src: url }).run();
-        }}>
-        <ImageIcon size={16} />
       </button>
 
       {/* Actions group */}
