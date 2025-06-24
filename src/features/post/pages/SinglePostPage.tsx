@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from '../../../shared/utils/axios';
 import { Post, PostTranslation } from '../../../shared/types/Post';
+import { getAvatar } from '../../../shared/utils/getAvatar';
 import { BookmarkButton } from '../components/BookmarkButton';
 import Comments from '../components/Comments';
 import { ReactionButtons } from '../components/ReactionButtons';
@@ -79,11 +80,8 @@ export const SinglePostPage = () => {
           <h1 className='single-post-page__title'>{translation.title}</h1>
           <div className='single-post-page__meta'>
             <img
-              src={
-                user.avatar ||
-                `https://api.dicebear.com/8.x/pixel-art/svg?seed=${user._id || 'guest'}`
-              }
-              alt={user.name || 'User'}
+              src={getAvatar(user || undefined)}
+              alt='User avatar'
               className='single-post-page__avatar'
               width={48}
               height={48}

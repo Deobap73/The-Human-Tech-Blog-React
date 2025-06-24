@@ -1,4 +1,5 @@
-// The-Human-Tech-Blog-React\src\features\admin\pages\AdminCategoriesPage.tsx
+// src/features/admin/pages/AdminCategoriesPage.tsx
+
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -11,6 +12,7 @@ import { Category, CategoryTranslation } from '../../../shared/types/Category';
 import { useToast } from '../../../shared/hooks/useToast';
 import Loader from '../../../shared/components/Loader';
 import '../../admin/styles/AdminCategoriesPage.scss';
+import { resolveLogoUrl } from '../../../shared/utils/mediaHelpers'; // <-- Import helper
 
 const LANGUAGES = ['en', 'pt', 'de', 'es'] as const;
 type Lang = (typeof LANGUAGES)[number];
@@ -205,7 +207,7 @@ const AdminCategoriesPage = () => {
             />
             {logo && (
               <img
-                src={logo}
+                src={resolveLogoUrl(logo)}
                 alt='logo preview'
                 className='admin-categories-page__logo-preview'
                 style={{
@@ -244,7 +246,7 @@ const AdminCategoriesPage = () => {
             <li key={cat._id} className='admin-categories-page__item'>
               {cat.logo && (
                 <img
-                  src={cat.logo}
+                  src={resolveLogoUrl(cat.logo)}
                   alt={tr?.name}
                   className='admin-categories-page__cat-logo'
                   style={{ height: 26, marginRight: 8 }}

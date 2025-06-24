@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { getCategoryName } from '../../../shared/utils/i18nHelpers';
 import { Post } from '../../../shared/types/Post';
 import { Category } from '../../../shared/types/Category';
+import { resolveLogoUrl } from '../../../shared/utils/mediaHelpers'; // <-- Import helper
 import CardList from '../components/CardList';
 import '../styles/CategoryPage.scss';
 
@@ -55,7 +56,7 @@ const CategoryPage = () => {
         <div className='category-page__header'>
           {category.logo && (
             <img
-              src={category.logo}
+              src={resolveLogoUrl(category.logo)}
               alt={name}
               className='category-page__logo'
               style={{ height: 40, marginRight: 12 }}

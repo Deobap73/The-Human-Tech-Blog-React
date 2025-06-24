@@ -6,6 +6,7 @@ import axios from '../../../shared/utils/axios';
 import { Category } from '../../../shared/types/Category';
 import { useTranslation } from 'react-i18next';
 import { getCategoryName } from '../../../shared/utils/i18nHelpers';
+import { resolveLogoUrl } from '../../../shared/utils/mediaHelpers'; // <-- Import helper
 import '../styles/CategoryList.scss';
 
 const CategoryList = () => {
@@ -45,7 +46,7 @@ const CategoryList = () => {
             {cat.logo && (
               <img
                 className='category-list__logo'
-                src={cat.logo}
+                src={resolveLogoUrl(cat.logo)}
                 alt={getCategoryName(cat, i18n.language)}
                 loading='lazy'
               />
