@@ -15,6 +15,7 @@ import { RecaptchaProvider } from './shared/context/RecaptchaProvider';
 import ToastProvider from './shared/components/ToastProvider';
 import api from './shared/utils/axios';
 import { getAccessToken } from './shared/utils/authTokenStorage';
+import { LoginModalProvider } from './shared/context/LoginModalContext'; // ADICIONADO
 
 // Set up axios with access token if available
 const token = getAccessToken();
@@ -24,18 +25,20 @@ if (token) {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
-        <ThemeProvider>
-          <SocketProvider>
-            <RecaptchaProvider>
-              <ToastProvider>
-                <App />
-              </ToastProvider>
-            </RecaptchaProvider>
-          </SocketProvider>
-        </ThemeProvider>
-      </AuthProvider>
-    </BrowserRouter>
+    <LoginModalProvider>
+      <BrowserRouter>
+        <AuthProvider>
+          <ThemeProvider>
+            <SocketProvider>
+              <RecaptchaProvider>
+                <ToastProvider>
+                  <App />
+                </ToastProvider>
+              </RecaptchaProvider>
+            </SocketProvider>
+          </ThemeProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    </LoginModalProvider>
   </React.StrictMode>
 );

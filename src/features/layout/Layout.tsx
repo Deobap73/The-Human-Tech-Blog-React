@@ -1,12 +1,17 @@
-// The-Human-Tech-Blog-React/src/features/layout/Layout.tsx
+// /src/features/layout/Layout.tsx
 
 import './styles/Layout.scss';
-import { Outlet, useLocation } from 'react-router-dom'; // Import useLocation
+import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import { Footer } from './Footer';
 import { useAuth } from '../../shared/hooks/useAuth';
 import { ReactNode } from 'react';
-import { getNavbarConfig } from './navbarConfig'; // Import getNavbarConfig
+import { getNavbarConfig } from './navbarConfig';
+
+// --- Import login modal and context hook
+import { LoginModal } from '../auth/components/LoginModal';
+import { RegisterModal } from '../auth/components/RegisterModal';
+import { useLoginModal } from '../../shared/hooks/useLoginModal';
 
 /**
  * Layout component that wraps the main content, navigation bar, and footer.
@@ -18,19 +23,24 @@ type Props = {
 
 const Layout = ({ children }: Props) => {
   const { loading } = useAuth();
-  const location = useLocation(); // Get the current location
-  const navbarConfig = getNavbarConfig(location.pathname); // Get the config for the current path
+  const location = useLocation();
+  const navbarConfig = getNavbarConfig(location.pathname);
 
-  // Display a consistent global loader while authentication state is loading
+  // --- Contexto do modal
+  const { isOpen, close, registerOpen, closeRegister } = useLoginModal();
+
   if (loading) return <div className='route-loader'>Loading...</div>;
 
   return (
     <div className='layout'>
-      {!navbarConfig.hideNavbar && <Navbar />} {/* Conditionally render Navbar */}
+      {!navbarConfig.hideNavbar && <Navbar />}
       <main className='layout__main' role='main'>
         {children || <Outlet />}
       </main>
       <Footer />
+      {/* Login/Register Modal Global */}
+      {isOpen && !registerOpen && <LoginModal onClose={close} />}
+      {isOpen && registerOpen && <RegisterModal onClose={closeRegister} />}
     </div>
   );
 };

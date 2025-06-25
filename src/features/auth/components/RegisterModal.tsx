@@ -1,10 +1,9 @@
-// src/components/auth/RegisterModal.tsx
+// src/features/auth/components/RegisterModal.tsx
 
 import '../styles/RegisterModal.scss';
 import { useState } from 'react';
 import { useAuth } from '../../../shared/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
-import { LoginModal } from './LoginModal';
+import { useLoginModal } from '../../../shared/hooks/useLoginModal';
 import logo from '../../../assets/Logo.webp';
 import { IoMdCloseCircle } from 'react-icons/io';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
@@ -12,31 +11,25 @@ import { useTranslation } from 'react-i18next';
 
 export const RegisterModal = ({ onClose }: { onClose: () => void }) => {
   const { t } = useTranslation();
-  const { register, login } = useAuth(); // <-- usa o serviço
-  const navigate = useNavigate();
+  const { register, login } = useAuth();
+  const { open, closeRegister } = useLoginModal();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const [showLogin, setShowLogin] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await register({ name, email, password }); // <-- usa helper
-      await login(email, password); // auto-login após registo
-      navigate('/');
+      await register({ name, email, password });
+      await login(email, password);
       onClose();
     } catch {
       setError(t('auth.register.error'));
     }
   };
-
-  if (showLogin) {
-    return <LoginModal onClose={onClose} />;
-  }
 
   return (
     <div className='register-overlay'>
@@ -99,7 +92,7 @@ export const RegisterModal = ({ onClose }: { onClose: () => void }) => {
         </form>
         <p className='register__footer'>
           {t('auth.register.haveAccount')}{' '}
-          <button type='button' onClick={() => setShowLogin(true)} className='register__link'>
+          <button type='button' className='register__link' onClick={open}>
             {t('auth.register.loginHere')}
           </button>
         </p>

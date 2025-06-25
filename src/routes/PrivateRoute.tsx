@@ -1,7 +1,7 @@
 // /src/routes/PrivateRoute.tsx
 
-import { useParams, Navigate } from 'react-router-dom';
 import { useAuth } from '../shared/hooks/useAuth';
+import { useLoginModal } from '../shared/hooks/useLoginModal';
 
 interface Props {
   children: React.ReactNode;
@@ -9,11 +9,19 @@ interface Props {
 
 const PrivateRoute = ({ children }: Props) => {
   const { user, loading } = useAuth();
-  const { lang } = useParams();
+  const { open } = useLoginModal();
 
+  // If still loading user info, show loader
   if (loading) return <div className='route-loader'>Loading...</div>;
-  // Show modal, not redirect (for now, fallback to /:lang, you may trigger modal from Navbar)
-  return user ? <>{children}</> : <Navigate to={`/${lang || 'en'}`} replace />;
+
+  // If not authenticated, open the login modal and block route access
+  if (!user) {
+    open();
+    return null; // Do not render children or redirect
+  }
+
+  // Authenticated: render protected content
+  return <>{children}</>;
 };
 
 export default PrivateRoute;
