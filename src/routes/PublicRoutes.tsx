@@ -21,10 +21,9 @@ import NotAuthorizedPage from '../pages/NotAuthorizedPage';
 import RegisterPage from '../features/auth/pages/RegisterPage';
 
 /**
- * PublicRoutes handles all the public and private routes of the application.
- * Ensures Home and public pages are never blocked by auth.
- * Private routes (like chat) are protected and will redirect to login if unauthenticated.
- * Order of routes is IMPORTANT! More specific routes must come before catch-alls.
+ * PublicRoutes: all content is under language prefix (/:lang).
+ * Login/register/not-authorized also under /:lang.
+ * No more /login or /register at root!
  */
 
 const SupportedLangs = ['en', 'pt', 'de', 'es'];
@@ -32,29 +31,22 @@ const SupportedLangs = ['en', 'pt', 'de', 'es'];
 const PublicRoutes = () => {
   return (
     <Routes>
-      {/* 1. Root path: Redirect to browser's preferred language (e.g., / -> /en) */}
+      {/* Root: Redirect to browser language */}
       <Route path='/' element={<RedirectToBrowserLang />} />
 
-      {/* 2. Login and Register - must always be public, never with /:lang prefix */}
-      <Route path='/login' element={<LoginPage />} />
-      <Route path='/register' element={<RegisterPage />} />
+      {/* No /login or /register at root! */}
 
-      {/* 3. Not Authorized page */}
-      <Route path='/not-authorized' element={<NotAuthorizedPage />} />
+      {/* Not Authorized, fallback to /:lang/not-authorized */}
+      <Route path='/not-authorized' element={<RedirectToBrowserLang path='not-authorized' />} />
 
-      {/* 4. Admin area: redirect /admin to language-specific route */}
+      {/* Admin area: redirect /admin to /:lang/admin */}
       <Route path='/admin/*' element={<RedirectToBrowserLang path='admin' />} />
 
-      {/* 5. All main content under language prefix with shared layout */}
+      {/* All app content under /:lang */}
       <Route path='/:lang' element={<Layout />}>
-        {/* HomePage - index route */}
         <Route index element={<HomePage />} />
-
-        {/* Public content pages */}
         <Route path='about' element={<AboutPage />} />
         <Route path='contact' element={<ContactPage />} />
-
-        {/* Blog posts, tags, categories */}
         <Route path='write' element={<WritePage />} />
         <Route path='posts/create' element={<WritePage />} />
         <Route path='posts/:slug' element={<SinglePostPage />} />
@@ -63,11 +55,13 @@ const PublicRoutes = () => {
         <Route path='categories/:slug' element={<CategoryPage />} />
         <Route path='search' element={<SearchResultsPage />} />
         <Route path='user' element={<UserPage />} />
-
-        {/* Admin area under language */}
+        {/* Admin area */}
         <Route path='admin/*' element={<AdminRoutes />} />
-
-        {/* Private Chat route (protected by PrivateRoute) */}
+        {/* Auth pages under language */}
+        <Route path='login' element={<LoginPage />} />
+        <Route path='register' element={<RegisterPage />} />
+        <Route path='not-authorized' element={<NotAuthorizedPage />} />
+        {/* Private Chat route */}
         <Route
           path='chat/*'
           element={
@@ -76,12 +70,11 @@ const PublicRoutes = () => {
             </PrivateRoute>
           }
         />
-
-        {/* Fallback for any unknown route under /:lang */}
+        {/* Fallback for /:lang/* */}
         <Route path='*' element={<NavigateToDefaultLang />} />
       </Route>
 
-      {/* 6. Fallback for any unknown route outside language prefix */}
+      {/* Fallback for any unknown route outside language prefix */}
       <Route path='*' element={<Navigate to='/' replace />} />
     </Routes>
   );
