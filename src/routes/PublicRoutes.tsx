@@ -12,7 +12,7 @@ import AdminTagsPage from '../features/admin/pages/AdminTagsPage';
 import TagPage from '../features/tag/pages/TagPage';
 import CategoryPage from '../features/post/pages/CategoryPage';
 import SearchResultsPage from '../features/search/pages/SearchResultsPage';
-import { NavigateToDefaultLang, RedirectToBrowserLang } from './Redirects';
+import { RedirectToBrowserLang } from './Redirects';
 import ContactPage from '../features/contact/pages/ContactPage';
 import PrivateRoute from './PrivateRoute';
 import ChatRoutes from '../features/chat/pages/ChatRoutes';

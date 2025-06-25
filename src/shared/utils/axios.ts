@@ -52,45 +52,15 @@ api.interceptors.request.use(
 );
 
 // --- Axios Response Interceptor (loop protection) ---
+// BLOCO NEUTRALIZADO! O loop será interrompido e podes isolar o problema
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const originalRequest = error.config;
-    if (
-      error.response &&
-      error.response.status === 401 &&
-      !originalRequest._retry &&
-      !window.location.pathname.startsWith('/logout')
-    ) {
-      originalRequest._retry = true;
-      const hasRefreshToken = !!getCookie('refreshToken');
-      if (!hasRefreshToken) {
-        setAccessToken('');
-        // Redirect to home instead of /login
-        window.location.href = '/';
-        return Promise.reject(error);
-      }
-
-      try {
-        const refreshResponse = await api.post('/auth/refresh', null, {
-          withCredentials: true,
-        });
-        const { accessToken } = refreshResponse.data;
-        if (accessToken) {
-          setAccessToken(accessToken);
-          originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
-        }
-        return api(originalRequest);
-      } catch (refreshError) {
-        setAccessToken('');
-        window.location.href = '/';
-        return Promise.reject(refreshError);
-      }
-    }
+    // Desativa todo o refresh logic e redirect em 401!
+    // Apenas rejeita o erro normalmente
     return Promise.reject(error);
   }
 );
 
-// ---------------------------
 // Default export for Rollup/Vite compatibility!
 export default api;
