@@ -3,30 +3,13 @@
 import axios from 'axios';
 import { setAccessToken, getAccessToken } from './authTokenStorage';
 
-// Utility to read cookies
+// Utility to read cookies (browser)
 const getCookie = (name: string): string | undefined => {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts.pop()?.split(';').shift();
   return undefined;
 };
-
-// Patch: Function to ensure CSRF cookie before mutating requests
-export async function ensureCsrfToken() {
-  // Only set if cookie does not exist
-  if (!getCookie('XSRF-TOKEN')) {
-    try {
-      await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'}/auth/csrf`,
-        { withCredentials: true }
-      );
-      // Now the XSRF-TOKEN cookie should be set
-    } catch (e) {
-      // Optionally handle error
-      console.error('[ensureCsrfToken] Failed to get CSRF cookie', e);
-    }
-  }
-}
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
@@ -35,26 +18,23 @@ const api = axios.create({
   xsrfHeaderName: 'X-CSRF-Token',
 });
 
+// --- Axios Request Interceptor ---
 api.interceptors.request.use(
-  async (config) => {
+  (config) => {
     const token = getAccessToken();
     if (token) {
       config.headers = config.headers || {};
       config.headers['Authorization'] = `Bearer ${token}`;
     }
-    // Ensure CSRF token is present for mutating requests
+    // CSRF token for mutating requests
     const method = config.method?.toLowerCase();
     if (['post', 'put', 'patch', 'delete'].includes(method || '')) {
-      // Wait for CSRF cookie if not present
-      if (!getCookie('XSRF-TOKEN')) {
-        await ensureCsrfToken();
-      }
       const xsrfToken = getCookie('XSRF-TOKEN');
       if (xsrfToken) {
         config.headers = config.headers || {};
         config.headers['x-csrf-token'] = xsrfToken;
       }
-      // DEBUG log
+      // Debug
       console.log('[Axios] Preparing mutating request:', {
         method,
         url: config.url,
@@ -71,33 +51,41 @@ api.interceptors.request.use(
   }
 );
 
-// RESPONSE INTERCEPTOR: Automatic token refresh on 401
+// --- Axios Response Interceptor (loop protection) ---
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-
-    // Prevent infinite loop
-    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+    // Prevent infinite loop: Only try refresh if not already tried AND if not logging out!
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest._retry &&
+      !window.location.pathname.startsWith('/login') &&
+      !window.location.pathname.startsWith('/logout')
+    ) {
       originalRequest._retry = true;
+
+      // Não tenta refresh se não existir refreshToken no cookie!
+      const hasRefreshToken = !!getCookie('refreshToken');
+      if (!hasRefreshToken) {
+        setAccessToken('');
+        // Redireciona, não tenta novamente
+        window.location.href = '/login';
+        return Promise.reject(error);
+      }
+
       try {
-        // Refresh the access token with the refresh token (httpOnly cookie)
-        await ensureCsrfToken(); // guarantee CSRF before refresh
         const refreshResponse = await api.post('/auth/refresh', null, {
           withCredentials: true,
         });
         const { accessToken } = refreshResponse.data;
-
         if (accessToken) {
           setAccessToken(accessToken);
           originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
         }
-
-        // Repeat the original request
         return api(originalRequest);
       } catch (refreshError) {
-        // Refresh failed - logout and redirect to login
-        console.error('[axios] Token refresh failed, redirecting to login');
         setAccessToken('');
         window.location.href = '/login';
         return Promise.reject(refreshError);

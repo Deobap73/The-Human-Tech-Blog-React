@@ -19,8 +19,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(res.data.user);
     } catch (err) {
       console.error('[AuthProvider] Error refetching user:', err);
-      setUser(null); // Garante que o usuário é limpo se o token 'me' falhar
-      localStorage.removeItem('access_token'); // Limpa access token inválido
+      setUser(null);
+      localStorage.removeItem('access_token');
       // O refresh token é httpOnly e será limpo pelo servidor no 401 da rota /refresh
     }
   };
@@ -36,19 +36,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   /**
    * Secure logout function using authService.logout.
    * Always refreshes CSRF token before POST logout.
+   * Garante cleanup local SEMPRE, impedindo qualquer loop de refresh.
    */
   const logout = async (): Promise<void> => {
     try {
       console.log('[AuthProvider] Logout chamado');
       await authService.logout();
-      console.log('[AuthProvider] Logout sucesso (servidor)');
+      // NOTA: O logout já limpa tokens e faz redirect
     } catch (error) {
       console.error('[AuthProvider] Logout failed:', error);
-    } finally {
+      // Mesmo em erro, limpar tudo local
+      setAccessToken('');
       localStorage.removeItem('access_token');
       delete api.defaults.headers.common['Authorization'];
       setUser(null);
-      console.log('[AuthProvider] Logout local limpo');
+      window.location.href = '/login';
+    } finally {
+      // Redundante, mas previne qualquer race de estado
+      setAccessToken('');
+      localStorage.removeItem('access_token');
+      delete api.defaults.headers.common['Authorization'];
+      setUser(null);
     }
   };
 
@@ -67,12 +75,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.warn(
         '[AuthProvider] Failed to refresh access token, likely no valid refresh token or session expired.'
       );
-      // IMPORTANTE: Se o refresh falhar, significa que o usuário não está logado.
-      // Limpe qualquer token de acesso local e defina o usuário como null.
       localStorage.removeItem('access_token');
       delete api.defaults.headers.common['Authorization'];
       setUser(null);
-      // NENHUM throw, pois a falha de refresh inicial é um comportamento esperado para usuários não logados.
+      // Sem throw (evita loop)
     }
   };
 
@@ -93,32 +99,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         const currentAccessToken = getAccessToken();
         if (currentAccessToken) {
-          // Tentar refetch do usuário com o token existente
           await refetchUser();
           if (user) {
-            // Se refetchUser for bem-sucedido, estamos logados
             console.log('[AuthProvider] User fetched with existing access token.');
           } else {
-            // Se o token existente for inválido, tentar refresh
             console.log('[AuthProvider] Existing access token invalid, attempting to refresh...');
             await refreshAccessToken();
             if (getAccessToken()) {
-              // Se o refresh for bem-sucedido, tente refetch user novamente
               await refetchUser();
             }
           }
         } else {
-          // Não há access token, tentar refresh (para pegar de um refresh token em cookie)
           console.log('[AuthProvider] No access token found, attempting initial refresh...');
           await refreshAccessToken();
           if (getAccessToken()) {
-            // Se o refresh for bem-sucedido, tente refetch user
             await refetchUser();
           }
         }
       } catch (err) {
         console.error('[AuthProvider] Initialization error:', err);
-        // Qualquer erro durante a inicialização deve resultar em usuário não autenticado
         setUser(null);
         localStorage.removeItem('access_token');
         delete api.defaults.headers.common['Authorization'];
@@ -134,7 +133,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => {
       cancelled = true;
     };
-  }, []); // Dependências vazias para rodar apenas na montagem
+  }, []);
 
   // Fallback para garantir que o loading é liberado
   useEffect(() => {
@@ -145,9 +144,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         loadingReleased.current = true;
         console.warn('[AuthProvider] Forced loading state release after timeout.');
       }
-    }, 3000); // Libera o loading após 3 segundos no máximo
+    }, 3000);
     return () => clearTimeout(t);
-  }, [loading]); // Observa o estado de loading
+  }, [loading]);
 
   return (
     <AuthContext.Provider
