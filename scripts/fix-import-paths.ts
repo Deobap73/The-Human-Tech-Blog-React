@@ -19,8 +19,6 @@ const importFixes: { from: string; to: string }[] = [
   { from: '@/shared/context/AuthContext', to: './shared/context/AuthContext' },
   { from: '@/features/home/pages/HomePage', to: './features/home/pages/HomePage' },
   { from: '@/features/about/pages/AboutPage', to: './features/about/pages/AboutPage' },
-  { from: '@/features/auth/pages/LoginPage', to: './features/auth/pages/LoginPage' },
-  { from: '@/features/auth/pages/RegisterPage', to: './features/auth/pages/RegisterPage' },
 ];
 
 for (const sourceFile of sourceFiles) {

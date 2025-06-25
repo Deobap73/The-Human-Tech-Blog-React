@@ -13,36 +13,26 @@ import TagPage from '../features/tag/pages/TagPage';
 import CategoryPage from '../features/post/pages/CategoryPage';
 import SearchResultsPage from '../features/search/pages/SearchResultsPage';
 import { NavigateToDefaultLang, RedirectToBrowserLang } from './Redirects';
-import LoginPage from '../features/auth/pages/LoginPage';
+// REMOVED: import LoginPage from '../features/auth/pages/LoginPage';
 import ContactPage from '../features/contact/pages/ContactPage';
 import PrivateRoute from './PrivateRoute';
 import ChatRoutes from '../features/chat/pages/ChatRoutes';
 import NotAuthorizedPage from '../pages/NotAuthorizedPage';
-import RegisterPage from '../features/auth/pages/RegisterPage';
+// REMOVED: import RegisterPage from '../features/auth/pages/RegisterPage';
 
 /**
  * PublicRoutes: all content is under language prefix (/:lang).
- * Login/register/not-authorized also under /:lang.
- * No more /login or /register at root!
+ * No more login/register pages!
  */
-
 const SupportedLangs = ['en', 'pt', 'de', 'es'];
 
 const PublicRoutes = () => {
   return (
     <Routes>
-      {/* Root: Redirect to browser language */}
       <Route path='/' element={<RedirectToBrowserLang />} />
-
-      {/* No /login or /register at root! */}
-
-      {/* Not Authorized, fallback to /:lang/not-authorized */}
       <Route path='/not-authorized' element={<RedirectToBrowserLang path='not-authorized' />} />
-
-      {/* Admin area: redirect /admin to /:lang/admin */}
       <Route path='/admin/*' element={<RedirectToBrowserLang path='admin' />} />
 
-      {/* All app content under /:lang */}
       <Route path='/:lang' element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path='about' element={<AboutPage />} />
@@ -57,9 +47,9 @@ const PublicRoutes = () => {
         <Route path='user' element={<UserPage />} />
         {/* Admin area */}
         <Route path='admin/*' element={<AdminRoutes />} />
-        {/* Auth pages under language */}
-        <Route path='login' element={<LoginPage />} />
-        <Route path='register' element={<RegisterPage />} />
+        {/* REMOVED: Auth pages under language */}
+        {/* <Route path='login' element={<LoginPage />} /> */}
+        {/* <Route path='register' element={<RegisterPage />} /> */}
         <Route path='not-authorized' element={<NotAuthorizedPage />} />
         {/* Private Chat route */}
         <Route
@@ -70,11 +60,9 @@ const PublicRoutes = () => {
             </PrivateRoute>
           }
         />
-        {/* Fallback for /:lang/* */}
         <Route path='*' element={<NavigateToDefaultLang />} />
       </Route>
 
-      {/* Fallback for any unknown route outside language prefix */}
       <Route path='*' element={<Navigate to='/' replace />} />
     </Routes>
   );

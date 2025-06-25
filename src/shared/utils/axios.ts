@@ -1,4 +1,4 @@
-// src/shared/utils/axios.ts
+// /src/shared/utils/axios.ts
 
 import axios from 'axios';
 import { setAccessToken, getAccessToken } from './authTokenStorage';
@@ -56,22 +56,18 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    // Prevent infinite loop: Only try refresh if not already tried AND if not logging out!
     if (
       error.response &&
       error.response.status === 401 &&
       !originalRequest._retry &&
-      !window.location.pathname.startsWith('/login') &&
       !window.location.pathname.startsWith('/logout')
     ) {
       originalRequest._retry = true;
-
-      // Não tenta refresh se não existir refreshToken no cookie!
       const hasRefreshToken = !!getCookie('refreshToken');
       if (!hasRefreshToken) {
         setAccessToken('');
-        // Redireciona, não tenta novamente
-        window.location.href = '/login';
+        // Redirect to home instead of /login
+        window.location.href = '/';
         return Promise.reject(error);
       }
 
@@ -87,7 +83,7 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         setAccessToken('');
-        window.location.href = '/login';
+        window.location.href = '/';
         return Promise.reject(refreshError);
       }
     }
@@ -95,4 +91,6 @@ api.interceptors.response.use(
   }
 );
 
+// ---------------------------
+// Default export for Rollup/Vite compatibility!
 export default api;

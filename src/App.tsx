@@ -5,8 +5,8 @@ import { useEffect } from 'react';
 import { useAuth } from './shared/hooks/useAuth';
 import { setAccessToken } from './shared/utils/authTokenStorage';
 import { Routes, Route } from 'react-router-dom';
-import LoginPage from './features/auth/pages/LoginPage';
-import RegisterPage from './features/auth/pages/RegisterPage';
+// REMOVED: import LoginPage from './features/auth/pages/LoginPage';
+// REMOVED: import RegisterPage from './features/auth/pages/RegisterPage';
 import PublicRoutes from './routes/PublicRoutes';
 import NotAuthorizedPage from './pages/NotAuthorizedPage';
 
@@ -23,14 +23,12 @@ function App() {
     const token = params.get('token');
     if (token) {
       setAccessToken(token);
-      // Remove token from URL for security/cleanliness
       params.delete('token');
       window.history.replaceState(
         {},
         document.title,
         window.location.pathname + (params.toString() ? `?${params}` : '')
       );
-      // Force reload so AuthProvider will initialize with the new token
       window.location.reload();
     }
   }, []);
@@ -45,8 +43,9 @@ function App() {
   // Public routes are always available, home is never blocked for unauthenticated users!
   return (
     <Routes>
-      <Route path='/login' element={<LoginPage />} />
-      <Route path='/register' element={<RegisterPage />} />
+      {/* REMOVED: Login and Register pages */}
+      {/* <Route path='/login' element={<LoginPage />} /> */}
+      {/* <Route path='/register' element={<RegisterPage />} /> */}
       <Route path='/not-authorized' element={<NotAuthorizedPage />} />
       <Route path='/*' element={<PublicRoutes />} />
     </Routes>

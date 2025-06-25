@@ -12,7 +12,8 @@ const PrivateRoute = ({ children }: Props) => {
   const { lang } = useParams();
 
   if (loading) return <div className='route-loader'>Loading...</div>;
-  return user ? <>{children}</> : <Navigate to={`/${lang || 'en'}/login`} replace />;
+  // Show modal, not redirect (for now, fallback to /:lang, you may trigger modal from Navbar)
+  return user ? <>{children}</> : <Navigate to={`/${lang || 'en'}`} replace />;
 };
 
 export default PrivateRoute;
