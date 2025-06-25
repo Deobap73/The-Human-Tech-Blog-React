@@ -3,13 +3,6 @@
 import axios from 'axios';
 import { setAccessToken, getAccessToken } from './authTokenStorage';
 
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
-  withCredentials: true,
-  xsrfCookieName: 'XSRF-TOKEN',
-  xsrfHeaderName: 'X-CSRF-Token',
-});
-
 // Utility to read cookies
 const getCookie = (name: string): string | undefined => {
   const value = `; ${document.cookie}`;
@@ -18,21 +11,48 @@ const getCookie = (name: string): string | undefined => {
   return undefined;
 };
 
-// Request interceptor (agora adiciona o header x-csrf-token)
+// Patch: Function to ensure CSRF cookie before mutating requests
+export async function ensureCsrfToken() {
+  // Only set if cookie does not exist
+  if (!getCookie('XSRF-TOKEN')) {
+    try {
+      await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'}/auth/csrf`,
+        { withCredentials: true }
+      );
+      // Now the XSRF-TOKEN cookie should be set
+    } catch (e) {
+      // Optionally handle error
+      console.error('[ensureCsrfToken] Failed to get CSRF cookie', e);
+    }
+  }
+}
+
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
+  withCredentials: true,
+  xsrfCookieName: 'XSRF-TOKEN',
+  xsrfHeaderName: 'X-CSRF-Token',
+});
+
 api.interceptors.request.use(
-  (config) => {
+  async (config) => {
     const token = getAccessToken();
     if (token) {
       config.headers = config.headers || {};
       config.headers['Authorization'] = `Bearer ${token}`;
     }
-    // CSRF token for mutating requests
+    // Ensure CSRF token is present for mutating requests
     const method = config.method?.toLowerCase();
     if (['post', 'put', 'patch', 'delete'].includes(method || '')) {
+      // Wait for CSRF cookie if not present
+      if (!getCookie('XSRF-TOKEN')) {
+        await ensureCsrfToken();
+      }
       const xsrfToken = getCookie('XSRF-TOKEN');
       if (xsrfToken) {
         config.headers = config.headers || {};
-        config.headers['x-csrf-token'] = xsrfToken; // <-- Corrigido: agora envia o header!
+        config.headers['x-csrf-token'] = xsrfToken;
       }
       // DEBUG log
       console.log('[Axios] Preparing mutating request:', {
@@ -61,22 +81,22 @@ api.interceptors.response.use(
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        // Tenta refrescar o access token com o refresh token (cookie httpOnly)
+        // Refresh the access token with the refresh token (httpOnly cookie)
+        await ensureCsrfToken(); // guarantee CSRF before refresh
         const refreshResponse = await api.post('/auth/refresh', null, {
           withCredentials: true,
         });
         const { accessToken } = refreshResponse.data;
 
         if (accessToken) {
-          setAccessToken(accessToken); // Atualiza storage local
-          // Atualiza o header do request original
+          setAccessToken(accessToken);
           originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
         }
 
-        // Repete o request original (resolve para quem chamou)
+        // Repeat the original request
         return api(originalRequest);
       } catch (refreshError) {
-        // Refresh falhou - logout, redireciona para login, etc
+        // Refresh failed - logout and redirect to login
         console.error('[axios] Token refresh failed, redirecting to login');
         setAccessToken('');
         window.location.href = '/login';
