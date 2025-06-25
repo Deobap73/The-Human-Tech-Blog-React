@@ -1,6 +1,6 @@
 // /src/routes/PublicRoutes.tsx
 
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Layout from '../features/layout/Layout';
 import HomePage from '../features/home/pages/HomePage';
 import AboutPage from '../features/about/pages/AboutPage';
@@ -13,26 +13,27 @@ import TagPage from '../features/tag/pages/TagPage';
 import CategoryPage from '../features/post/pages/CategoryPage';
 import SearchResultsPage from '../features/search/pages/SearchResultsPage';
 import { NavigateToDefaultLang, RedirectToBrowserLang } from './Redirects';
-// REMOVED: import LoginPage from '../features/auth/pages/LoginPage';
 import ContactPage from '../features/contact/pages/ContactPage';
 import PrivateRoute from './PrivateRoute';
 import ChatRoutes from '../features/chat/pages/ChatRoutes';
 import NotAuthorizedPage from '../pages/NotAuthorizedPage';
-// REMOVED: import RegisterPage from '../features/auth/pages/RegisterPage';
 
-/**
- * PublicRoutes: all content is under language prefix (/:lang).
- * No more login/register pages!
- */
+// --- ADD: Simple NotFoundPage component ---
+const NotFoundPage = () => (
+  <div style={{ padding: '2rem', textAlign: 'center' }}>
+    <h1>404 - Page Not Found</h1>
+  </div>
+);
+
 const SupportedLangs = ['en', 'pt', 'de', 'es'];
 
 const PublicRoutes = () => {
   return (
     <Routes>
+      {/* Root: Redirect to browser language */}
       <Route path='/' element={<RedirectToBrowserLang />} />
       <Route path='/not-authorized' element={<RedirectToBrowserLang path='not-authorized' />} />
       <Route path='/admin/*' element={<RedirectToBrowserLang path='admin' />} />
-
       <Route path='/:lang' element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path='about' element={<AboutPage />} />
@@ -45,13 +46,8 @@ const PublicRoutes = () => {
         <Route path='categories/:slug' element={<CategoryPage />} />
         <Route path='search' element={<SearchResultsPage />} />
         <Route path='user' element={<UserPage />} />
-        {/* Admin area */}
         <Route path='admin/*' element={<AdminRoutes />} />
-        {/* REMOVED: Auth pages under language */}
-        {/* <Route path='login' element={<LoginPage />} /> */}
-        {/* <Route path='register' element={<RegisterPage />} /> */}
         <Route path='not-authorized' element={<NotAuthorizedPage />} />
-        {/* Private Chat route */}
         <Route
           path='chat/*'
           element={
@@ -60,10 +56,11 @@ const PublicRoutes = () => {
             </PrivateRoute>
           }
         />
-        <Route path='*' element={<NavigateToDefaultLang />} />
+        {/* Fallback for unknown paths under /:lang */}
+        <Route path='*' element={<NotFoundPage />} />
       </Route>
-
-      <Route path='*' element={<Navigate to='/' replace />} />
+      {/* --- Fallback for unknown routes OUTSIDE /:lang: show NotFound instead of redirecting to '/' --- */}
+      <Route path='*' element={<NotFoundPage />} />
     </Routes>
   );
 };
