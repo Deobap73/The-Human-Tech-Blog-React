@@ -1,5 +1,3 @@
-// /src/features/post/pages/WritePage.tsx
-
 import { useEffect, useRef, useState } from 'react';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -9,7 +7,7 @@ import Underline from '@tiptap/extension-underline';
 import Toolbar from '../components/EditorToolbar';
 import api from '../../../shared/utils/axios';
 import { useAuth } from '../../../shared/hooks/useAuth';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { fetchTags } from '../../../shared/services/tagService';
 import { fetchCategories } from '../../../shared/services/categoryService';
 import { Tag } from '../../../shared/types/Tag';
@@ -18,9 +16,11 @@ import { createDraft, updateDraft, getDraftById } from '../../../shared/services
 import '../../../features/post/styles/WritePage.scss';
 import { toast } from 'react-hot-toast';
 
+// Supported languages for the blog
 const LANGUAGES = ['en', 'pt', 'de', 'es'] as const;
 type Language = (typeof LANGUAGES)[number];
 
+// Default translations structure
 const emptyTranslations = {
   en: { title: '', description: '', content: '' },
   pt: { title: '', description: '', content: '' },
@@ -49,7 +49,7 @@ const WritePage = () => {
   const [lastAutoSave, setLastAutoSave] = useState<Date | null>(null);
   const [draftId, setDraftId] = useState<string | null>(id || null);
 
-  // Track last draft saved data for comparison
+  // Track last draft saved data for comparison (to prevent redundant saves)
   const lastDraftRef = useRef<any>(null);
 
   // Editor instance for each language
@@ -138,7 +138,7 @@ const WritePage = () => {
     setActiveLang(lang);
   };
 
-  // Input handler for multilingual fields
+  // Input handler for multilingual fields (title, description)
   const handleInput = (field: 'title' | 'description', value: string) => {
     setTranslations((prev) => ({
       ...prev,
@@ -149,13 +149,14 @@ const WritePage = () => {
     }));
   };
 
-  // Tag/category selection (only valid IDs)
+  // Tag selection handler (only valid IDs)
   const handleTags = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = Array.from(e.target.selectedOptions)
       .map((o) => o.value)
       .filter((id) => availableTags.some((t) => t._id === id));
     setTags(selected);
   };
+  // Category selection handler (only valid IDs)
   const handleCategories = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = Array.from(e.target.selectedOptions)
       .map((o) => o.value)
@@ -163,7 +164,7 @@ const WritePage = () => {
     setCategories(selected);
   };
 
-  // Image upload handler (always refresh CSRF before uploading)
+  // Image upload handler (refresh CSRF before uploading)
   const handleImageUpload = async (file: File) => {
     const resToken = await api.get('/auth/csrf', { withCredentials: true });
     const csrfToken = resToken.data.csrfToken;
@@ -181,12 +182,24 @@ const WritePage = () => {
   };
 
   // ============ AUTO-SAVE LOGIC ==============
-  // Compare shallow objects
+  // Compare objects shallowly (prevent redundant saves)
   const isDraftChanged = (prev: any, next: any) => {
     return JSON.stringify(prev) !== JSON.stringify(next);
   };
 
-  // Auto-save every 60s
+  // Prevent auto-save with empty required fields
+  const isDraftValid = (draft: any) => {
+    return (
+      draft.title &&
+      draft.title.trim() !== '' &&
+      draft.description &&
+      draft.description.trim() !== '' &&
+      draft.content &&
+      draft.content.trim() !== ''
+    );
+  };
+
+  // Auto-save every 60s (only if changed AND valid)
   useEffect(() => {
     const interval = setInterval(() => {
       // Build current draft data
@@ -198,8 +211,8 @@ const WritePage = () => {
         categories,
         image: coverUrl,
       };
-      // Only save if changed
-      if (isDraftChanged(lastDraftRef.current, draftData)) {
+      // Only save if changed AND valid (required fields present)
+      if (isDraftChanged(lastDraftRef.current, draftData) && isDraftValid(draftData)) {
         handleAutoSave(draftData);
       }
     }, 60 * 1000); // 1 minute
@@ -231,7 +244,7 @@ const WritePage = () => {
   };
   // ============ END AUTO-SAVE LOGIC ==============
 
-  // Submit post handler (manual)
+  // Submit post handler (manual publish)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -241,12 +254,10 @@ const WritePage = () => {
       setSaving(false);
       return;
     }
-    // Aqui deverá chamar endpoint específico para publicar draft como post!
     try {
       const resToken = await api.get('/auth/csrf', { withCredentials: true });
       const csrfToken = resToken.data.csrfToken;
-
-      // Exemplo: PATCH /drafts/:id/publish (a definir no backend)
+      // Example: PATCH /drafts/:id/publish
       const res = await api.post(
         `/drafts/${draftId}/publish`,
         {},
@@ -264,6 +275,7 @@ const WritePage = () => {
     setSaving(false);
   };
 
+  // Auto-resize textarea for description
   function autoResize(e: React.ChangeEvent<HTMLTextAreaElement> | { target: HTMLTextAreaElement }) {
     const ta = e.target;
     ta.style.height = 'auto';
@@ -334,7 +346,6 @@ const WritePage = () => {
             </div>
           </div>
         )}
-        {/* ...restante do form permanece igual... */}
         <label htmlFor='cover-upload' className='write-page__upload-btn'>
           Upload cover
         </label>
