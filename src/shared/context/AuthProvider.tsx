@@ -7,12 +7,18 @@ import api from '../utils/axios';
 import { setAccessToken, getAccessToken } from '../utils/authTokenStorage';
 import { User } from './AuthContextDef';
 
+/**
+ * AuthProvider component manages authentication state and provides auth context to the app.
+ * Handles loading state, login, logout, registration, token refresh, and user fetching logic.
+ */
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const loadingReleased = useRef(false);
 
-  // Atualiza user
+  /**
+   * Fetches the authenticated user from the API.
+   */
   const refetchUser = async (): Promise<void> => {
     try {
       const res = await api.get('/auth/me');
@@ -21,10 +27,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.error('[AuthProvider] Error refetching user:', err);
       setUser(null);
       localStorage.removeItem('access_token');
-      // O refresh token é httpOnly e será limpo pelo servidor no 401 da rota /refresh
+      // The refresh token is httpOnly and will be cleared by the server on /refresh 401.
     }
   };
 
+  /**
+   * Login function using API. Sets access token and fetches user.
+   */
   const login = async (email: string, password: string): Promise<void> => {
     const res = await api.post('/auth/login', { email, password });
     const { accessToken } = res.data;
@@ -36,23 +45,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   /**
    * Secure logout function using authService.logout.
    * Always refreshes CSRF token before POST logout.
-   * Garante cleanup local SEMPRE, impedindo qualquer loop de refresh.
+   * Guarantees local cleanup to prevent any refresh loop.
    */
   const logout = async (): Promise<void> => {
     try {
-      console.log('[AuthProvider] Logout chamado');
+      console.log('[AuthProvider] Logout called');
       await authService.logout();
-      // NOTA: O logout já limpa tokens e faz redirect
     } catch (error) {
       console.error('[AuthProvider] Logout failed:', error);
-      // Mesmo em erro, limpar tudo local
       setAccessToken('');
       localStorage.removeItem('access_token');
       delete api.defaults.headers.common['Authorization'];
       setUser(null);
       window.location.href = '/login';
     } finally {
-      // Redundante, mas previne qualquer race de estado
       setAccessToken('');
       localStorage.removeItem('access_token');
       delete api.defaults.headers.common['Authorization'];
@@ -60,10 +66,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  /**
+   * Registration function.
+   */
   const register = async (payload: authService.RegisterPayload) => {
     return await authService.register(payload);
   };
 
+  /**
+   * Refreshes the access token using the refresh token (if present).
+   */
   const refreshAccessToken = async (): Promise<void> => {
     try {
       const res = await api.post('/auth/refresh');
@@ -78,13 +90,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       localStorage.removeItem('access_token');
       delete api.defaults.headers.common['Authorization'];
       setUser(null);
-      // Sem throw (evita loop)
+      // No throw (avoids refresh loop)
     }
   };
 
   useEffect(() => {
     let cancelled = false;
 
+    /**
+     * Releases the loading state if not already released.
+     */
     const releaseLoading = () => {
       if (!loadingReleased.current && !cancelled) {
         setLoading(false);
@@ -93,27 +108,54 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
     };
 
+    /**
+     * Auth initialization logic:
+     * 1. Try access token: fetch user.
+     * 2. If fails, try refresh token and fetch user again.
+     * 3. If both fail, set user as null.
+     */
     const init = async () => {
       setLoading(true);
       loadingReleased.current = false;
       try {
         const currentAccessToken = getAccessToken();
         if (currentAccessToken) {
-          await refetchUser();
-          if (user) {
-            console.log('[AuthProvider] User fetched with existing access token.');
-          } else {
+          // Try to fetch user with current token
+          try {
+            const res = await api.get('/auth/me');
+            setUser(res.data.user);
+            return;
+          } catch (err) {
+            // Access token invalid, try refresh
             console.log('[AuthProvider] Existing access token invalid, attempting to refresh...');
             await refreshAccessToken();
-            if (getAccessToken()) {
-              await refetchUser();
+            const refreshedToken = getAccessToken();
+            if (refreshedToken) {
+              try {
+                const res2 = await api.get('/auth/me');
+                setUser(res2.data.user);
+                return;
+              } catch {
+                setUser(null);
+              }
+            } else {
+              setUser(null);
             }
           }
         } else {
+          // No access token, try refresh token
           console.log('[AuthProvider] No access token found, attempting initial refresh...');
           await refreshAccessToken();
-          if (getAccessToken()) {
-            await refetchUser();
+          const refreshedToken = getAccessToken();
+          if (refreshedToken) {
+            try {
+              const res3 = await api.get('/auth/me');
+              setUser(res3.data.user);
+            } catch {
+              setUser(null);
+            }
+          } else {
+            setUser(null);
           }
         }
       } catch (err) {
@@ -135,7 +177,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, []);
 
-  // Fallback para garantir que o loading é liberado
+  // Fallback: ensures loading is released even if something stalls
   useEffect(() => {
     if (!loading) return;
     const t = setTimeout(() => {
