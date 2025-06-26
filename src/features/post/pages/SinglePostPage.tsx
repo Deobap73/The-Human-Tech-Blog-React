@@ -74,7 +74,7 @@ export const SinglePostPage = () => {
 
   return (
     <div className='single-post-page'>
-      {/* ---------- Primeiro bloco: Header horizontal ---------- */}
+      {/* ---------- First block: Horizontal Header ---------- */}
       <section className='single-post-page__header-row'>
         <div className='single-post-page__header-info'>
           <h1 className='single-post-page__title'>{translation.title}</h1>
@@ -102,13 +102,17 @@ export const SinglePostPage = () => {
         </div>
       </section>
 
-      {/* ---------- Segundo bloco: Main + Sidebar ---------- */}
+      {/* ---------- Second block: Main + Sidebar ---------- */}
       <div className='single-post-page__body-row'>
         <main className='single-post-page__main' aria-label={translation.title}>
           <div className='single-post-page__category-bar'>
             <span className='single-post-page__category'>{category}</span>
           </div>
-          <div className='single-post-page__description'>{translation.content}</div>
+          {/* Render formatted HTML content safely */}
+          <div
+            className='single-post-page__description'
+            dangerouslySetInnerHTML={{ __html: translation.content || '' }}
+          />
           <div className='single-post-page__reactions'>
             <ReactionButtons postId={post._id} />
           </div>
@@ -130,7 +134,7 @@ export const SinglePostPage = () => {
         </aside>
       </div>
 
-      {/* ---------- Terceiro bloco: Botão Voltar para início ---------- */}
+      {/* ---------- Third block: Back to home button ---------- */}
       <div className='single-post-page__footer'>
         <Link to='/' className='single-post-page__back-link'>
           {t('postPage.backToHome')}
