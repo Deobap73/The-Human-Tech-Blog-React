@@ -12,3 +12,8 @@ export const getAccessToken = (): string | null => {
   }
   return accessToken;
 };
+
+// Remove o JWT do localStorage
+export const removeAccessToken = () => {
+  localStorage.removeItem('jwt');
+};

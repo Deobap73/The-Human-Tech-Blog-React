@@ -5,7 +5,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import { Footer } from './Footer';
 import { useAuth } from '../../shared/hooks/useAuth';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react'; // Importa useEffect!
 import { getNavbarConfig } from './navbarConfig';
 
 // --- Import login modal and context hook
@@ -26,8 +26,17 @@ const Layout = ({ children }: Props) => {
   const location = useLocation();
   const navbarConfig = getNavbarConfig(location.pathname);
 
-  // --- Contexto do modal
-  const { isOpen, close, registerOpen, closeRegister } = useLoginModal();
+  // --- Modal context
+  const { isOpen, close, registerOpen, closeRegister, open } = useLoginModal();
+
+  // --- Listen for "auth:logout" event to open login modal ---
+  useEffect(() => {
+    const onLogout = () => {
+      open();
+    };
+    window.addEventListener('auth:logout', onLogout);
+    return () => window.removeEventListener('auth:logout', onLogout);
+  }, [open]);
 
   if (loading) return <div className='route-loader'>Loading...</div>;
 
