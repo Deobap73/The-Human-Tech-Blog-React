@@ -36,6 +36,24 @@
     }
   }
 
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    color: var(--textColor);
+    // Resetar quaisquer estilos padrão de hover/focus/active do navegador no link
+    &:hover,
+    &:focus,
+    &:active {
+      background: none; // Remover qualquer fundo
+      box-shadow: none; // Remover qualquer sombra
+      outline: none; // Remover outline
+      color: inherit; // Garantir que a cor do texto não mude
+      text-decoration: none; // Garantir que não haja sublinhado
+    }
+  }
+
   &__logo {
     width: 28px;
     height: 28px;
