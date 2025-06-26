@@ -1,5 +1,3 @@
-// /src/features/post/pages/WritePage.tsx
-
 import { useEffect, useRef, useState } from 'react';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -18,7 +16,7 @@ import { createDraft, updateDraft, getDraftById } from '../../../shared/services
 import '../../../features/post/styles/WritePage.scss';
 import { toast } from 'react-hot-toast';
 
-const AUTOSAVE_ENABLED = false; // <-- Toggle autosave (DevOps safe pause). To enable, set to true.
+const AUTOSAVE_ENABLED = false; // Toggle autosave
 
 const LANGUAGES = ['en', 'pt', 'de', 'es'] as const;
 type Language = (typeof LANGUAGES)[number];
@@ -197,7 +195,7 @@ const WritePage = () => {
 
   // Auto-save logic (PAUSED if AUTOSAVE_ENABLED === false)
   useEffect(() => {
-    if (!AUTOSAVE_ENABLED) return; // <--- Autosave PAUSED (DevOps safe toggle)
+    if (!AUTOSAVE_ENABLED) return;
     const interval = setInterval(() => {
       const draftData = {
         title: translations.en.title,
@@ -238,20 +236,41 @@ const WritePage = () => {
     setTimeout(() => setAutoSaveState('idle'), 4000);
   };
 
-  // Manual publish
+  // Manual publish (corrigido: cria draft se não existir)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
+    setError('');
+
     if (!translations.en.title || !translations.en.description || !translations.en.content) {
       setError('Title, Description, and Content (EN) are required!');
       setSaving(false);
       return;
     }
+
     try {
+      let currentDraftId = draftId;
+
+      // Cria draft se não existir (sem autosave)
+      if (!currentDraftId) {
+        const draftData = {
+          title: translations.en.title,
+          description: translations.en.description,
+          content: translations.en.content,
+          tags,
+          categories,
+          image: coverUrl,
+        };
+        const response = await createDraft(draftData);
+        currentDraftId = response._id;
+        setDraftId(currentDraftId);
+      }
+
+      // Agora publica
       const resToken = await api.get('/auth/csrf', { withCredentials: true });
       const csrfToken = resToken.data.csrfToken;
-      const res = await api.post(
-        `/drafts/${draftId}/publish`,
+      await api.post(
+        `/drafts/${currentDraftId}/publish`,
         {},
         {
           headers: { 'x-csrf-token': csrfToken },
@@ -264,6 +283,7 @@ const WritePage = () => {
       setError(err?.response?.data?.message || 'Failed to publish post');
       toast.error(err?.response?.data?.message || 'Failed to publish post');
     }
+
     setSaving(false);
   };
 
