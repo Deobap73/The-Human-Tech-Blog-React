@@ -41,16 +41,28 @@
     align-items: center;
     justify-content: center;
     font-weight: 500;
-    color: var(--textColor);
-    // Resetar quaisquer estilos padrão de hover/focus/active do navegador no link
+    color: inherit; // Usa a cor do pai
+
+    // Remove QUALQUER estilo do link nativo em todos os estados
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    color: inherit !important;
+    text-decoration: none !important;
+    filter: none !important;
+
+    // Reforça nos estados especiais
     &:hover,
     &:focus,
     &:active {
-      background: none; // Remover qualquer fundo
-      box-shadow: none; // Remover qualquer sombra
-      outline: none; // Remover outline
-      color: inherit; // Garantir que a cor do texto não mude
-      text-decoration: none; // Garantir que não haja sublinhado
+      background: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      outline: none !important;
+      color: inherit !important;
+      text-decoration: none !important;
+      filter: none !important;
     }
   }
 

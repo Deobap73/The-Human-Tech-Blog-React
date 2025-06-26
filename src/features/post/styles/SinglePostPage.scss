@@ -114,7 +114,7 @@
     font-weight: 600;
     letter-spacing: 0.5px;
   }
-    &__tags {
+  &__tags {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
@@ -125,7 +125,7 @@
   &__tag {
     display: inline-flex;
     align-items: center;
-    background: rgba(41, 149, 226, 0.10); // leve azul, em harmonia com o tema
+    background: rgba(41, 149, 226, 0.1); // leve azul, em harmonia com o tema
     color: var(--primary);
     font-size: 1rem;
     font-weight: 600;
@@ -147,7 +147,7 @@
       transform: translateY(-2px) scale(1.04);
     }
   }
-}
+
   &__description {
     font-size: var(--font-size-md);
     color: var(--text-color);
@@ -323,14 +323,14 @@
     }
   }
   @media (max-width: 480px) {
-    /*  &__header-image {
-      min-width: 48px;
-      max-width: 110px;
-    }
-    &__image {
-      max-width: 85px;
-      height: 42px;
-    } */
+    /*  &__header-image {
+        min-width: 48px;
+        max-width: 110px;
+      }
+      &__image {
+        max-width: 85px;
+        height: 42px;
+      } */
     &__sidebar-block {
       border-radius: 7px;
       padding: 0.3rem 0.12rem;
