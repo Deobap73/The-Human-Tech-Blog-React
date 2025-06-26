@@ -1,7 +1,17 @@
 // /src/features/post/pages/AdminDrafts.tsx
+
 import { Link } from 'react-router-dom';
 
-const AdminDrafts = ({ drafts }) => (
+interface Draft {
+  _id: string;
+  title: string;
+}
+
+interface AdminDraftsProps {
+  drafts: Draft[];
+}
+
+const AdminDrafts = ({ drafts }: AdminDraftsProps) => (
   <div>
     <h2>My Drafts</h2>
     <ul>
@@ -13,3 +23,5 @@ const AdminDrafts = ({ drafts }) => (
     </ul>
   </div>
 );
+
+export default AdminDrafts;
