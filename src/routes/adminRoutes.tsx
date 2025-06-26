@@ -28,6 +28,7 @@ const AdminRoutes = () => (
       <Route index element={<DashboardHome />} />
       <Route path='posts' element={<PostsList />} />
       <Route path='posts/create' element={<WritePage />} />
+      <Route path='write/:id' element={<WritePage />} />
       <Route path='drafts' element={<DraftsList />} />
       <Route path='posts/edit/:id' element={<DebugPage />} />
       <Route path='tags' element={<AdminTagsPage />} />

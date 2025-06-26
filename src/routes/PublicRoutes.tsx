@@ -39,6 +39,7 @@ const PublicRoutes = () => {
         <Route path='about' element={<AboutPage />} />
         <Route path='contact' element={<ContactPage />} />
         <Route path='write' element={<WritePage />} />
+        <Route path='write/:id' element={<WritePage />} />
         <Route path='posts/create' element={<WritePage />} />
         <Route path='posts/:slug' element={<SinglePostPage />} />
         <Route path='tags/:slug' element={<TagPage />} />
