@@ -234,6 +234,7 @@
   &__item {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 12px;
     padding: 18px 22px;
     border-bottom: 1px solid #e6eaf5;

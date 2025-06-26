@@ -1,79 +1,155 @@
-/* The-Human-Tech-Blog-React/src/features/admin/posts/styles/DraftsList.scss*/
+/* src/features/post/styles/DraftsList.scss */
 
 .drafts-list {
-  padding: 2rem;
+  padding: var(--padding-xl) 0;
+  max-width: 820px;
+  margin: 0 auto;
+  background: var(--background-secondary);
+  border-radius: 2rem;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+  transition: background 0.3s;
 
-  h2 {
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
+  @media (max-width: 768px) {
+    padding: var(--padding-base) 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  h3 {
+    margin-bottom: var(--margin-md);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-align: center;
+    letter-spacing: 1px;
   }
 
   ul {
-    list-style: none;
-    padding: 0;
     margin: 0;
+    padding: 0;
+    list-style: none;
+    border-radius: 12px;
+    background: var(--background);
+    box-shadow: 0 2px 10px rgba(0, 48, 104, 0.08);
+    overflow: hidden;
+  }
 
-    li {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background-color: #f9f9f9;
-      border: 1px solid #ddd;
-      padding: 1rem;
-      border-radius: 8px;
-      margin-bottom: 0.75rem;
-      transition: background-color 0.2s;
+  .draft-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap-base);
+    padding: 18px 22px;
+    border-bottom: 1px solid #e6eaf5;
+    transition: background 0.18s;
 
-      &:hover {
-        background-color: #f1f1f1;
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: var(--background-tertiary);
+    }
+
+    .draft-title {
+      flex: 1 1 0;
+      color: var(--primary);
+      font-size: 1.18rem;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 2.5px;
+      transition: color 0.2s;
+
+      &:hover,
+      &:focus {
+        color: var(--primary-hover);
+        text-decoration-thickness: 2.5px;
+      }
+    }
+
+    .delete-btn {
+      padding: 0.5rem 1rem;
+      min-width: 48px;
+      min-height: 48px;
+      font-size: 1.15rem;
+      font-weight: 700;
+      background: #fff0f0;
+      color: var(--error);
+      border: 1.5px solid var(--error);
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(244, 25, 25, 0.04);
+      transition: background 0.19s, color 0.19s, border 0.19s, transform 0.14s;
+
+      &:hover,
+      &:focus {
+        background: var(--error);
+        color: #fff;
+        border-color: var(--error);
+        transform: scale(1.07);
       }
 
-      .draft-info {
-        flex-grow: 1;
-
-        h3 {
-          margin: 0;
-          font-size: 1.2rem;
-        }
-
-        p {
-          margin: 0.2rem 0;
-          font-size: 0.95rem;
-          color: #666;
-        }
+      &:active {
+        background: #fff0f0;
+        color: var(--error);
       }
+    }
+  }
+}
 
-      .draft-actions {
-        display: flex;
-        gap: 0.75rem;
+// Empty State
+.drafts-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--background-secondary);
+  border-radius: 2rem;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+  max-width: 600px;
+  margin: 3rem auto;
+  padding: 3rem 1.5rem;
 
-        button {
-          padding: 0.5rem 1rem;
-          font-size: 0.9rem;
-          border: none;
-          border-radius: 6px;
-          cursor: pointer;
-          transition: background-color 0.2s;
+  p {
+    color: var(--text-color-secondary);
+    font-size: 1.17rem;
+    margin-bottom: var(--margin-md);
+    font-weight: 500;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
 
-          &.edit {
-            background-color: #3b82f6;
-            color: white;
+  .create-new-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 180px;
+    min-height: 48px;
+    padding: 0 1.5rem;
+    font-size: 1.12rem;
+    font-weight: 700;
+    border: 2px solid var(--primary);
+    border-radius: 12px;
+    background: var(--primary);
+    color: #fff;
+    box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, transform 0.15s;
 
-            &:hover {
-              background-color: #2563eb;
-            }
-          }
+    &:hover,
+    &:focus {
+      background: #fff;
+      color: var(--primary);
+      border-color: var(--primary-hover);
+      transform: translateY(-2px) scale(1.05);
+    }
 
-          &.delete {
-            background-color: #ef4444;
-            color: white;
-
-            &:hover {
-              background-color: #dc2626;
-            }
-          }
-        }
-      }
+    &:active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary-hover);
     }
   }
 }

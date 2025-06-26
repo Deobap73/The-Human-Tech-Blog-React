@@ -267,12 +267,14 @@ const AdminTagsPage = () => {
               />
               <b>{tr.name || '[untitled]'}</b>
               <span className='admin-tags-page__desc'>{tr.description || ''}</span>
-              <button className='admin-tags-page__edit' onClick={() => startEdit(tag)}>
-                {t('admin.edit')}
-              </button>
-              <button className='admin-tags-page__delete' onClick={() => handleDelete(tag._id)}>
-                {t('admin.delete')}
-              </button>
+              <div>
+                <button className='admin-tags-page__edit' onClick={() => startEdit(tag)}>
+                  {t('admin.edit')}
+                </button>
+                <button className='admin-tags-page__delete' onClick={() => handleDelete(tag._id)}>
+                  {t('admin.delete')}
+                </button>
+              </div>
             </li>
           );
         })}
