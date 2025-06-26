@@ -10,16 +10,23 @@ import { getAvatar } from '../../../shared/utils/getAvatar';
 import { BookmarkButton } from '../components/BookmarkButton';
 import Comments from '../components/Comments';
 import { ReactionButtons } from '../components/ReactionButtons';
-import { getPostTranslation, getCategoryName } from '../../../shared/utils/i18nHelpers';
+import { getPostTranslation, getCategoryName, getTagName } from '../../../shared/utils/i18nHelpers';
 import RecentCategoryPosts from '../components/RecentCategoryPosts';
 import CategoryList from '../components/CategoryList';
 
-// User type (avatar opcional)
 type PostUser = {
   _id?: string;
   name?: string;
   avatar?: string;
 };
+
+// --- NOVO: helper para obter o nome da tag na língua ativa
+function getTagLabel(tag: any, lang: string) {
+  // Preferência para translations, fallback para name
+  if (tag.translations && tag.translations[lang]?.name) return tag.translations[lang].name;
+  if (tag.translations && tag.translations.en?.name) return tag.translations.en.name;
+  return tag.name || 'Tag';
+}
 
 export const SinglePostPage = () => {
   const { slug } = useParams();
@@ -69,8 +76,10 @@ export const SinglePostPage = () => {
       ? getCategoryName(post.categories[0] as any, i18n.language)
       : '';
 
-  // User Info
   const user: PostUser = (post as any).user || (post as any).author || {};
+
+  // NOVO: Preparar tags do post
+  const tags = Array.isArray(post.tags) ? post.tags : [];
 
   return (
     <div className='single-post-page'>
@@ -108,6 +117,21 @@ export const SinglePostPage = () => {
           <div className='single-post-page__category-bar'>
             <span className='single-post-page__category'>{category}</span>
           </div>
+
+          {/* NOVO: bloco de tags */}
+          {tags.length > 0 && (
+            <div className='single-post-page__tags' aria-label={t('tags', 'Tags')}>
+              {tags.map((tag: any) => (
+                <Link
+                  to={`/${i18n.language}/tags/${tag.slug}`}
+                  className='single-post-page__tag'
+                  key={tag._id}>
+                  #{getTagLabel(tag, i18n.language)}
+                </Link>
+              ))}
+            </div>
+          )}
+
           {/* Render formatted HTML content safely */}
           <div
             className='single-post-page__description'

@@ -114,6 +114,40 @@
     font-weight: 600;
     letter-spacing: 0.5px;
   }
+    &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0.2rem 0 1.2rem 0;
+    padding: 0 0 0.2rem 0;
+  }
+
+  &__tag {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(41, 149, 226, 0.10); // leve azul, em harmonia com o tema
+    color: var(--primary);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.25em 0.95em;
+    border-radius: 14px;
+    border: 1px solid rgba(41, 149, 226, 0.18);
+    text-decoration: none;
+    transition: background 0.18s, color 0.18s, border 0.18s, transform 0.13s;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(30, 68, 112, 0.05);
+
+    &:hover,
+    &:focus-visible {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      text-decoration: none;
+      outline: none;
+      transform: translateY(-2px) scale(1.04);
+    }
+  }
+}
   &__description {
     font-size: var(--font-size-md);
     color: var(--text-color);
