@@ -6,7 +6,7 @@ import DashboardHome from '../features/admin/pages/DashboardHome';
 import PostsList from '../features/admin/posts/PostsList';
 import AdminRoute from './adminRoute';
 import WritePage from '../features/post/pages/WritePage';
-import DraftsList from '../features/post/pages/DraftsList';
+import DraftsList from '../features/post/components/DraftsList';
 import ModerationCommentsPage from '../features/admin/pages/ModerationCommentsPage';
 import AdminTagsPage from '../features/admin/pages/AdminTagsPage';
 import AdminCategoriesPage from '../features/admin/pages/AdminCategoriesPage';
