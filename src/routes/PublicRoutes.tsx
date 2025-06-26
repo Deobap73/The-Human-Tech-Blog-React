@@ -18,7 +18,7 @@ import PrivateRoute from './PrivateRoute';
 import ChatRoutes from '../features/chat/pages/ChatRoutes';
 import NotAuthorizedPage from '../pages/NotAuthorizedPage';
 
-// --- ADD: Simple NotFoundPage component ---
+// --- Simple NotFoundPage component ---
 const NotFoundPage = () => (
   <div style={{ padding: '2rem', textAlign: 'center' }}>
     <h1>404 - Page Not Found</h1>
@@ -34,12 +34,17 @@ const PublicRoutes = () => {
       <Route path='/' element={<RedirectToBrowserLang />} />
       <Route path='/not-authorized' element={<RedirectToBrowserLang path='not-authorized' />} />
       <Route path='/admin/*' element={<RedirectToBrowserLang path='admin' />} />
+
+      {/* Multilanguage routes, e.g. /en/write/:id */}
       <Route path='/:lang' element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path='about' element={<AboutPage />} />
         <Route path='contact' element={<ContactPage />} />
+
+        {/* Both create (no id) and edit (with id) */}
         <Route path='write' element={<WritePage />} />
         <Route path='write/:id' element={<WritePage />} />
+
         <Route path='posts/create' element={<WritePage />} />
         <Route path='posts/:slug' element={<SinglePostPage />} />
         <Route path='tags/:slug' element={<TagPage />} />
@@ -60,7 +65,7 @@ const PublicRoutes = () => {
         {/* Fallback for unknown paths under /:lang */}
         <Route path='*' element={<NotFoundPage />} />
       </Route>
-      {/* --- Fallback for unknown routes OUTSIDE /:lang: show NotFound instead of redirecting to '/' --- */}
+      {/* Fallback for unknown routes OUTSIDE /:lang */}
       <Route path='*' element={<NotFoundPage />} />
     </Routes>
   );

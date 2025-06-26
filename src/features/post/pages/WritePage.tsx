@@ -1,3 +1,5 @@
+// /src/features/post/pages/WritePage.tsx
+
 import { useEffect, useRef, useState } from 'react';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -16,11 +18,9 @@ import { createDraft, updateDraft, getDraftById } from '../../../shared/services
 import '../../../features/post/styles/WritePage.scss';
 import { toast } from 'react-hot-toast';
 
-// Supported languages for the blog
 const LANGUAGES = ['en', 'pt', 'de', 'es'] as const;
 type Language = (typeof LANGUAGES)[number];
 
-// Default translations structure
 const emptyTranslations = {
   en: { title: '', description: '', content: '' },
   pt: { title: '', description: '', content: '' },
@@ -32,9 +32,10 @@ type PostStatus = 'draft' | 'published' | 'archived';
 
 const WritePage = () => {
   const { user } = useAuth();
-  const { id } = useParams();
+  const { id, lang } = useParams<{ id?: string; lang?: string }>();
   const navigate = useNavigate();
-  const [activeLang, setActiveLang] = useState<Language>('en');
+  const activeLang: Language = (lang as Language) || 'en';
+  const [currentLang, setCurrentLang] = useState<Language>(activeLang);
   const [translations, setTranslations] = useState({ ...emptyTranslations });
   const [status, setStatus] = useState<PostStatus>('draft');
   const [tags, setTags] = useState<string[]>([]);
@@ -48,11 +49,9 @@ const WritePage = () => {
   const [autoSaveState, setAutoSaveState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [lastAutoSave, setLastAutoSave] = useState<Date | null>(null);
   const [draftId, setDraftId] = useState<string | null>(id || null);
-
-  // Track last draft saved data for comparison (to prevent redundant saves)
   const lastDraftRef = useRef<any>(null);
 
-  // Editor instance for each language
+  // Setup editors for each language
   const editors = LANGUAGES.reduce((acc, lang) => {
     acc[lang] = useEditor({
       extensions: [
@@ -70,7 +69,7 @@ const WritePage = () => {
     return acc;
   }, {} as Record<Language, ReturnType<typeof useEditor>>);
 
-  // Fetch tags and categories on mount
+  // Load tags & categories
   useEffect(() => {
     fetchTags()
       .then(setAvailableTags)
@@ -123,40 +122,41 @@ const WritePage = () => {
     // eslint-disable-next-line
   }, [translations]);
 
-  // Handle language tab switch (persist editor content)
+  // Tab switch
   const handleTabChange = (lang: Language) => {
-    const editor = editors[activeLang];
+    const editor = editors[currentLang];
     if (editor) {
       setTranslations((prev) => ({
         ...prev,
-        [activeLang]: {
-          ...prev[activeLang],
+        [currentLang]: {
+          ...prev[currentLang],
           content: editor.getHTML(),
         },
       }));
     }
-    setActiveLang(lang);
+    setCurrentLang(lang);
   };
 
-  // Input handler for multilingual fields (title, description)
+  // Input handler for multilingual fields
   const handleInput = (field: 'title' | 'description', value: string) => {
     setTranslations((prev) => ({
       ...prev,
-      [activeLang]: {
-        ...prev[activeLang],
+      [currentLang]: {
+        ...prev[currentLang],
         [field]: value,
       },
     }));
   };
 
-  // Tag selection handler (only valid IDs)
+  // Tag selection
   const handleTags = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = Array.from(e.target.selectedOptions)
       .map((o) => o.value)
       .filter((id) => availableTags.some((t) => t._id === id));
     setTags(selected);
   };
-  // Category selection handler (only valid IDs)
+
+  // Category selection
   const handleCategories = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = Array.from(e.target.selectedOptions)
       .map((o) => o.value)
@@ -164,30 +164,18 @@ const WritePage = () => {
     setCategories(selected);
   };
 
-  // Image upload handler (refresh CSRF before uploading)
+  // Image upload handler (with CSRF/JWT)
   const handleImageUpload = async (file: File) => {
     try {
-      // Get CSRF token (if your backend requires it)
       const resToken = await api.get('/auth/csrf', { withCredentials: true });
       const csrfToken = resToken.data.csrfToken;
       const formData = new FormData();
       formData.append('image', file);
-
-      // Get JWT from storage/context
+      // If you have JWT
       const jwt = localStorage.getItem('jwt') || (document.cookie.match(/jwt=([^;]+)/) || [])[1];
-
-      const headers: any = {
-        'x-csrf-token': csrfToken,
-      };
-      if (jwt) {
-        headers['Authorization'] = `Bearer ${jwt}`;
-      }
-
-      const res = await api.post('/posts/upload', formData, {
-        headers,
-        withCredentials: true,
-      });
-
+      const headers: any = { 'x-csrf-token': csrfToken };
+      if (jwt) headers['Authorization'] = `Bearer ${jwt}`;
+      const res = await api.post('/posts/upload', formData, { headers, withCredentials: true });
       setCoverUrl(res.data.imageUrl);
       toast.success('Image uploaded!');
     } catch (err: any) {
@@ -195,28 +183,19 @@ const WritePage = () => {
     }
   };
 
-  // ============ AUTO-SAVE LOGIC ==============
-  // Compare objects shallowly (prevent redundant saves)
-  const isDraftChanged = (prev: any, next: any) => {
-    return JSON.stringify(prev) !== JSON.stringify(next);
-  };
+  // Draft change & valid check
+  const isDraftChanged = (prev: any, next: any) => JSON.stringify(prev) !== JSON.stringify(next);
+  const isDraftValid = (draft: any) =>
+    draft.title &&
+    draft.title.trim() !== '' &&
+    draft.description &&
+    draft.description.trim() !== '' &&
+    draft.content &&
+    draft.content.trim() !== '';
 
-  // Prevent auto-save with empty required fields
-  const isDraftValid = (draft: any) => {
-    return (
-      draft.title &&
-      draft.title.trim() !== '' &&
-      draft.description &&
-      draft.description.trim() !== '' &&
-      draft.content &&
-      draft.content.trim() !== ''
-    );
-  };
-
-  // Auto-save every 60s (only if changed AND valid)
+  // Auto-save logic
   useEffect(() => {
     const interval = setInterval(() => {
-      // Build current draft data
       const draftData = {
         title: translations.en.title,
         description: translations.en.description,
@@ -225,7 +204,6 @@ const WritePage = () => {
         categories,
         image: coverUrl,
       };
-      // Only save if changed AND valid (required fields present)
       if (isDraftChanged(lastDraftRef.current, draftData) && isDraftValid(draftData)) {
         handleAutoSave(draftData);
       }
@@ -256,13 +234,11 @@ const WritePage = () => {
     }
     setTimeout(() => setAutoSaveState('idle'), 4000);
   };
-  // ============ END AUTO-SAVE LOGIC ==============
 
-  // Submit post handler (manual publish)
+  // Manual publish
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
-    // Validate English fields before publish
     if (!translations.en.title || !translations.en.description || !translations.en.content) {
       setError('Title, Description, and Content (EN) are required!');
       setSaving(false);
@@ -271,7 +247,6 @@ const WritePage = () => {
     try {
       const resToken = await api.get('/auth/csrf', { withCredentials: true });
       const csrfToken = resToken.data.csrfToken;
-      // Example: PATCH /drafts/:id/publish
       const res = await api.post(
         `/drafts/${draftId}/publish`,
         {},
@@ -281,7 +256,7 @@ const WritePage = () => {
         }
       );
       toast.success('Post published!');
-      navigate('/admin/posts');
+      navigate(`/${activeLang}/admin/posts`);
     } catch (err: any) {
       setError(err?.response?.data?.message || 'Failed to publish post');
       toast.error(err?.response?.data?.message || 'Failed to publish post');
@@ -289,14 +264,14 @@ const WritePage = () => {
     setSaving(false);
   };
 
-  // Auto-resize textarea for description
+  // Auto-resize textarea
   function autoResize(e: React.ChangeEvent<HTMLTextAreaElement> | { target: HTMLTextAreaElement }) {
     const ta = e.target;
     ta.style.height = 'auto';
     ta.style.height = `${ta.scrollHeight}px`;
   }
 
-  // ============= UI Render ==============
+  // UI Render
   return (
     <div className='write-page'>
       <h2>{draftId ? 'Edit Draft' : 'Create Draft'}</h2>
@@ -319,7 +294,7 @@ const WritePage = () => {
         {LANGUAGES.map((lang) => (
           <button
             key={lang}
-            className={`write-page__tab${activeLang === lang ? ' write-page__tab--active' : ''}`}
+            className={`write-page__tab${currentLang === lang ? ' write-page__tab--active' : ''}`}
             onClick={() => handleTabChange(lang)}
             type='button'>
             {lang.toUpperCase()}
@@ -331,14 +306,14 @@ const WritePage = () => {
         <input
           type='text'
           placeholder='Title'
-          value={translations[activeLang].title}
+          value={translations[currentLang].title}
           onChange={(e) => handleInput('title', e.target.value)}
-          required={activeLang === 'en'}
+          required={currentLang === 'en'}
           className='write-page__input'
         />
         <textarea
           placeholder='Description'
-          value={translations[activeLang].description}
+          value={translations[currentLang].description}
           onChange={(e) => {
             handleInput('description', e.target.value);
             autoResize(e);
@@ -349,14 +324,14 @@ const WritePage = () => {
           }}
           rows={2}
         />
-        {/* ====== Editor Block with Sticky Toolbar ====== */}
-        {editors[activeLang] && (
+        {/* Editor Block with Sticky Toolbar */}
+        {editors[currentLang] && (
           <div className='write-page__editor-block'>
             <div className='write-page__toolbar-sticky'>
-              <Toolbar editor={editors[activeLang]!} onPublish={() => undefined} />
+              <Toolbar editor={editors[currentLang]!} onPublish={() => undefined} />
             </div>
             <div className='write-page__editor-content'>
-              <EditorContent editor={editors[activeLang]!} />
+              <EditorContent editor={editors[currentLang]!} />
             </div>
           </div>
         )}

@@ -1,5 +1,7 @@
+// /src/features/post/components/DraftsList.tsx
+
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import api from '../../../shared/utils/axios';
 import '../styles/DraftsList.scss';
@@ -20,6 +22,8 @@ const DraftsList = () => {
   const [drafts, setDrafts] = useState<Draft[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { lang } = useParams<{ lang: string }>();
+  const activeLang = lang || 'en';
 
   const fetchDrafts = async () => {
     try {
@@ -49,6 +53,7 @@ const DraftsList = () => {
   function getDraftTitle(draft: Draft) {
     if (draft.translations) {
       return (
+        draft.translations[activeLang]?.title ||
         draft.translations.en?.title ||
         draft.translations.pt?.title ||
         draft.translations.de?.title ||
@@ -65,7 +70,7 @@ const DraftsList = () => {
     return (
       <div className='drafts-empty'>
         <p>You have no drafts yet.</p>
-        <button className='create-new-btn' onClick={() => navigate('/write')}>
+        <button className='create-new-btn' onClick={() => navigate(`/${activeLang}/write`)}>
           ✍️ Start a New Post
         </button>
       </div>
@@ -80,7 +85,7 @@ const DraftsList = () => {
           <li key={draft._id} className='draft-item'>
             <span
               className='draft-title'
-              onClick={() => navigate(`/write/${draft._id}`)}
+              onClick={() => navigate(`/${activeLang}/write/${draft._id}`)}
               style={{ cursor: 'pointer', color: '#2462c2', textDecoration: 'underline' }}>
               {getDraftTitle(draft)}
             </span>
