@@ -18,12 +18,17 @@ interface Draft {
   title?: string;
 }
 
-const DraftsList = () => {
+interface DraftsListProps {
+  adminMode?: boolean; // false (público) ou true (admin)
+}
+
+const DraftsList = ({ adminMode = false }: DraftsListProps) => {
   const [drafts, setDrafts] = useState<Draft[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { lang } = useParams<{ lang: string }>();
   const activeLang = lang || 'en';
+  const prefix = adminMode ? `/${activeLang}/admin` : `/${activeLang}`;
 
   const fetchDrafts = async () => {
     try {
@@ -70,7 +75,7 @@ const DraftsList = () => {
     return (
       <div className='drafts-empty'>
         <p>You have no drafts yet.</p>
-        <button className='create-new-btn' onClick={() => navigate(`/${activeLang}/write`)}>
+        <button className='create-new-btn' onClick={() => navigate(`${prefix}/write`)}>
           ✍️ Start a New Post
         </button>
       </div>
@@ -85,7 +90,7 @@ const DraftsList = () => {
           <li key={draft._id} className='draft-item'>
             <span
               className='draft-title'
-              onClick={() => navigate(`/${activeLang}/write/${draft._id}`)}
+              onClick={() => navigate(`${prefix}/write/${draft._id}`)}
               style={{ cursor: 'pointer', color: '#2462c2', textDecoration: 'underline' }}>
               {getDraftTitle(draft)}
             </span>

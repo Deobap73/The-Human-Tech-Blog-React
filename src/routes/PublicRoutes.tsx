@@ -1,11 +1,10 @@
-// /src/routes/PublicRoutes.tsx
-
 import { Routes, Route } from 'react-router-dom';
 import Layout from '../features/layout/Layout';
 import HomePage from '../features/home/pages/HomePage';
 import AboutPage from '../features/about/pages/AboutPage';
 import SinglePostPage from '../features/post/pages/SinglePostPage';
 import WritePage from '../features/post/pages/WritePage';
+import DraftsList from '../features/post/components/DraftsList';
 import AdminRoutes from './adminRoutes';
 import UserPage from '../features/user/pages/UserPage';
 import AdminTagsPage from '../features/admin/pages/AdminTagsPage';
@@ -18,7 +17,6 @@ import PrivateRoute from './PrivateRoute';
 import ChatRoutes from '../features/chat/pages/ChatRoutes';
 import NotAuthorizedPage from '../pages/NotAuthorizedPage';
 
-// --- Simple NotFoundPage component ---
 const NotFoundPage = () => (
   <div style={{ padding: '2rem', textAlign: 'center' }}>
     <h1>404 - Page Not Found</h1>
@@ -27,48 +25,49 @@ const NotFoundPage = () => (
 
 const SupportedLangs = ['en', 'pt', 'de', 'es'];
 
-const PublicRoutes = () => {
-  return (
-    <Routes>
-      {/* Root: Redirect to browser language */}
-      <Route path='/' element={<RedirectToBrowserLang />} />
-      <Route path='/not-authorized' element={<RedirectToBrowserLang path='not-authorized' />} />
-      <Route path='/admin/*' element={<RedirectToBrowserLang path='admin' />} />
+const PublicRoutes = () => (
+  <Routes>
+    {/* Root: Redirect to browser language */}
+    <Route path='/' element={<RedirectToBrowserLang />} />
+    <Route path='/not-authorized' element={<RedirectToBrowserLang path='not-authorized' />} />
+    <Route path='/admin/*' element={<RedirectToBrowserLang path='admin' />} />
 
-      {/* Multilanguage routes, e.g. /en/write/:id */}
-      <Route path='/:lang' element={<Layout />}>
-        <Route index element={<HomePage />} />
-        <Route path='about' element={<AboutPage />} />
-        <Route path='contact' element={<ContactPage />} />
+    {/* All multilanguage content inside /:lang */}
+    <Route path='/:lang' element={<Layout />}>
+      <Route index element={<HomePage />} />
+      <Route path='about' element={<AboutPage />} />
+      <Route path='contact' element={<ContactPage />} />
 
-        {/* Both create (no id) and edit (with id) */}
-        <Route path='write' element={<WritePage />} />
-        <Route path='write/:id' element={<WritePage />} />
+      {/* Drafts: always use /:lang/drafts */}
+      <Route path='drafts' element={<DraftsList />} />
 
-        <Route path='posts/create' element={<WritePage />} />
-        <Route path='posts/:slug' element={<SinglePostPage />} />
-        <Route path='tags/:slug' element={<TagPage />} />
-        <Route path='tags' element={<AdminTagsPage />} />
-        <Route path='categories/:slug' element={<CategoryPage />} />
-        <Route path='search' element={<SearchResultsPage />} />
-        <Route path='user' element={<UserPage />} />
-        <Route path='admin/*' element={<AdminRoutes />} />
-        <Route path='not-authorized' element={<NotAuthorizedPage />} />
-        <Route
-          path='chat/*'
-          element={
-            <PrivateRoute>
-              <ChatRoutes />
-            </PrivateRoute>
-          }
-        />
-        {/* Fallback for unknown paths under /:lang */}
-        <Route path='*' element={<NotFoundPage />} />
-      </Route>
-      {/* Fallback for unknown routes OUTSIDE /:lang */}
+      {/* Create & Edit: /:lang/write ou /:lang/write/:id */}
+      <Route path='write' element={<WritePage />} />
+      <Route path='write/:id' element={<WritePage />} />
+
+      <Route path='posts/create' element={<WritePage />} />
+      <Route path='posts/:slug' element={<SinglePostPage />} />
+      <Route path='tags/:slug' element={<TagPage />} />
+      <Route path='tags' element={<AdminTagsPage />} />
+      <Route path='categories/:slug' element={<CategoryPage />} />
+      <Route path='search' element={<SearchResultsPage />} />
+      <Route path='user' element={<UserPage />} />
+      <Route path='admin/*' element={<AdminRoutes />} />
+      <Route path='not-authorized' element={<NotAuthorizedPage />} />
+      <Route
+        path='chat/*'
+        element={
+          <PrivateRoute>
+            <ChatRoutes />
+          </PrivateRoute>
+        }
+      />
       <Route path='*' element={<NotFoundPage />} />
-    </Routes>
-  );
-};
+    </Route>
+
+    {/* Fallback for unknown routes OUTSIDE /:lang */}
+    <Route path='*' element={<NotFoundPage />} />
+  </Routes>
+);
 
 export default PublicRoutes;
