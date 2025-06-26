@@ -92,17 +92,16 @@ api.interceptors.response.use(
     // Se der 401 e ainda não tentámos refresh...
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
-  // Já está a refrescar, adiciona request à fila e espera
-  return new Promise<string>((resolve, reject) => {
-    failedQueue.push({ resolve, reject });
-  })
-    .then((token) => {
-      if (originalRequest.headers)
-        originalRequest.headers['Authorization'] = 'Bearer ' + token;
-      return api(originalRequest);
-    })
-    .catch((err) => Promise.reject(err));
-}
+        // Já está a refrescar, adiciona request à fila e espera
+        return new Promise<string>((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            if (originalRequest.headers)
+              originalRequest.headers['Authorization'] = 'Bearer ' + token;
+            return api(originalRequest);
+          })
+          .catch((err) => Promise.reject(err));
       }
 
       originalRequest._retry = true;
