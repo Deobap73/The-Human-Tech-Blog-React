@@ -18,6 +18,8 @@ import { createDraft, updateDraft, getDraftById } from '../../../shared/services
 import '../../../features/post/styles/WritePage.scss';
 import { toast } from 'react-hot-toast';
 
+const AUTOSAVE_ENABLED = false; // <-- Toggle autosave (DevOps safe pause). To enable, set to true.
+
 const LANGUAGES = ['en', 'pt', 'de', 'es'] as const;
 type Language = (typeof LANGUAGES)[number];
 
@@ -193,8 +195,9 @@ const WritePage = () => {
     draft.content &&
     draft.content.trim() !== '';
 
-  // Auto-save logic
+  // Auto-save logic (PAUSED if AUTOSAVE_ENABLED === false)
   useEffect(() => {
+    if (!AUTOSAVE_ENABLED) return; // <--- Autosave PAUSED (DevOps safe toggle)
     const interval = setInterval(() => {
       const draftData = {
         title: translations.en.title,
