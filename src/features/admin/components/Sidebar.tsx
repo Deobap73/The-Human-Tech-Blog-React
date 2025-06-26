@@ -37,6 +37,9 @@ const Sidebar = () => {
         <NavLink to={buildAdminUrl('posts', activeLang)} className='admin-sidebar-Navbar-link'>
           {t('admin.posts')}
         </NavLink>
+        <NavLink to={buildAdminUrl('drafts', activeLang)} className='admin-sidebar-Navbar-link'>
+          {t('admin.drafts', 'Rascunhos')}
+        </NavLink>
         <NavLink to={buildAdminUrl('tags', activeLang)} className='admin-sidebar-Navbar-link'>
           {t('admin.tags', 'Manage Tags')}
         </NavLink>

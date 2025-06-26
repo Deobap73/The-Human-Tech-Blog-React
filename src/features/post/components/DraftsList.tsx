@@ -1,11 +1,20 @@
-// src/features/post/pages/DraftsList.tsx
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Draft } from '../../../shared/types/Post';
-import api from '../../../shared/utils/axios';
 import { toast } from 'react-hot-toast';
+import api from '../../../shared/utils/axios';
 import '../styles/DraftsList.scss';
+
+interface Draft {
+  _id: string;
+  translations?: {
+    en?: { title?: string };
+    pt?: { title?: string };
+    de?: { title?: string };
+    es?: { title?: string };
+    [key: string]: { title?: string } | undefined;
+  };
+  title?: string;
+}
 
 const DraftsList = () => {
   const [drafts, setDrafts] = useState<Draft[]>([]);
@@ -37,13 +46,26 @@ const DraftsList = () => {
     }
   };
 
+  function getDraftTitle(draft: Draft) {
+    if (draft.translations) {
+      return (
+        draft.translations.en?.title ||
+        draft.translations.pt?.title ||
+        draft.translations.de?.title ||
+        draft.translations.es?.title ||
+        '(Untitled Draft)'
+      );
+    }
+    return draft.title || '(Untitled Draft)';
+  }
+
   if (loading) return <p>Loading drafts...</p>;
 
   if (drafts.length === 0) {
     return (
       <div className='drafts-empty'>
         <p>You have no drafts yet.</p>
-        <button className='create-new-btn' onClick={() => navigate('/admin/posts/create')}>
+        <button className='create-new-btn' onClick={() => navigate('/write')}>
           ✍️ Start a New Post
         </button>
       </div>
@@ -58,8 +80,9 @@ const DraftsList = () => {
           <li key={draft._id} className='draft-item'>
             <span
               className='draft-title'
-              onClick={() => navigate(`/admin/posts/edit/${draft._id}`)}>
-              {draft.title || <em>(Untitled Draft)</em>}
+              onClick={() => navigate(`/write/${draft._id}`)}
+              style={{ cursor: 'pointer', color: '#2462c2', textDecoration: 'underline' }}>
+              {getDraftTitle(draft)}
             </span>
             <button className='delete-btn' onClick={() => handleDelete(draft._id)}>
               🗑️

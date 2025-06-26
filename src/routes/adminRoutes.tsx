@@ -6,6 +6,7 @@ import DashboardHome from '../features/admin/pages/DashboardHome';
 import PostsList from '../features/admin/posts/PostsList';
 import AdminRoute from './adminRoute';
 import WritePage from '../features/post/pages/WritePage';
+import DraftsList from '../features/post/pages/DraftsList';
 import ModerationCommentsPage from '../features/admin/pages/ModerationCommentsPage';
 import AdminTagsPage from '../features/admin/pages/AdminTagsPage';
 import AdminCategoriesPage from '../features/admin/pages/AdminCategoriesPage';
@@ -27,7 +28,7 @@ const AdminRoutes = () => (
       <Route index element={<DashboardHome />} />
       <Route path='posts' element={<PostsList />} />
       <Route path='posts/create' element={<WritePage />} />
-      {/* <Route path='posts/edit/:id' element={<WritePage />} /> */}
+      <Route path='drafts' element={<DraftsList />} />
       <Route path='posts/edit/:id' element={<DebugPage />} />
       <Route path='tags' element={<AdminTagsPage />} />
       <Route path='categories' element={<AdminCategoriesPage />} />
