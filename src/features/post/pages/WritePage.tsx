@@ -166,19 +166,33 @@ const WritePage = () => {
 
   // Image upload handler (refresh CSRF before uploading)
   const handleImageUpload = async (file: File) => {
-    const resToken = await api.get('/auth/csrf', { withCredentials: true });
-    const csrfToken = resToken.data.csrfToken;
-    const formData = new FormData();
-    formData.append('image', file);
+    try {
+      // Get CSRF token (if your backend requires it)
+      const resToken = await api.get('/auth/csrf', { withCredentials: true });
+      const csrfToken = resToken.data.csrfToken;
+      const formData = new FormData();
+      formData.append('image', file);
 
-    const res = await api.post('/posts/upload', formData, {
-      headers: {
+      // Get JWT from storage/context
+      const jwt = localStorage.getItem('jwt') || (document.cookie.match(/jwt=([^;]+)/) || [])[1];
+
+      const headers: any = {
         'x-csrf-token': csrfToken,
-      },
-      withCredentials: true,
-    });
-    setCoverUrl(res.data.imageUrl);
-    toast.success('Image uploaded!');
+      };
+      if (jwt) {
+        headers['Authorization'] = `Bearer ${jwt}`;
+      }
+
+      const res = await api.post('/posts/upload', formData, {
+        headers,
+        withCredentials: true,
+      });
+
+      setCoverUrl(res.data.imageUrl);
+      toast.success('Image uploaded!');
+    } catch (err: any) {
+      toast.error('Failed to upload image: ' + (err?.response?.data?.message || err.message));
+    }
   };
 
   // ============ AUTO-SAVE LOGIC ==============
