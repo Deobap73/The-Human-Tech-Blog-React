@@ -21,19 +21,20 @@ export const Card = ({ post, lang }: CardProps) => {
     return null;
   }
 
-  console.log(`[Card] Post is valid. Processing post ID: ${post._id}, Slug: ${post.slug}`);
+  // Obter a tradução ativa
   const translation = getPostTranslation(post.translations, lang);
 
-  // Safe category display (populated or not)
-  let category = 'Uncategorized';
+  // Categoria: igual ao SinglePostPage
+  let category = '';
   if (Array.isArray(post.categories) && post.categories.length > 0) {
-    const cat = post.categories[0];
-    if (cat && typeof cat === 'object' && 'translations' in cat) {
-      category = getCategoryName(cat as any, lang);
-    } else if (typeof cat === 'string') {
-      category = cat;
+    const firstCat = post.categories[0];
+    if (firstCat && typeof firstCat === 'object' && 'translations' in firstCat) {
+      category = getCategoryName(firstCat as any, lang);
     }
   }
+
+  // Fallback: se não tiver categoria populada, mostra vazio ou "Uncategorized"
+  // Opcional: category = category || 'Uncategorized';
 
   const fullDescription = translation.description || '';
   const displayDescription =
@@ -44,16 +45,15 @@ export const Card = ({ post, lang }: CardProps) => {
       <img src={post.image} alt={translation.title || 'No title'} className='card-post__image' />
 
       <div className='card-post__description-container'>
-        <span className='card-post__category'>{category}</span>
+        <span className='card-post__category'>
+          {category /* Só mostra nome. Se quiser fallback: category || 'Uncategorized' */}
+        </span>
 
         <div className='card-post__text-content'>
           <p className='card-post__description'>{displayDescription}</p>
 
           <div className='card-post__actions'>
-            <Link
-              to={`/${lang}/posts/${post.slug}`}
-              className='card-post__read-more-link' // Adicione a classe do botão aqui
-            >
+            <Link to={`/${lang}/posts/${post.slug}`} className='card-post__read-more-link'>
               Read More
             </Link>
 
@@ -64,3 +64,5 @@ export const Card = ({ post, lang }: CardProps) => {
     </div>
   );
 };
+
+export default Card;

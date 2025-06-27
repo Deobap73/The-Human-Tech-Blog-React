@@ -1,13 +1,27 @@
 /* src/features/post/styles/CardList.scss */
 .card-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: flex-start;
+  display: grid;
+  grid-template-columns: 1fr; // Mobile: 1 coluna
+  gap: 2rem 1.5rem;
+  width: 100%;
+
+  // Tablet ≥ 600px: 2 colunas
+  @media (min-width: 600px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  // Desktop ≥ 1024px: pode aumentar gap se quiser, mas mantem 2 colunas
+  @media (min-width: 1024px) {
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem 2rem;
+  }
 }
 
+// Mensagem vazia alinhada
 .empty-message {
   font-size: 1.2rem;
   color: #666;
   padding: 2rem;
+  text-align: center;
+  grid-column: 1/-1;
 }

@@ -69,20 +69,21 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 160px;
-    max-width: 31.25rem;
     width: 100%;
+    position: relative;
+    padding-top: 56.25%;
   }
   &__image {
-    width: 98%;
-    max-width: 31.25rem;
-    height: 25rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     border-radius: 16px;
-    background: #222831;
+
     border: 1px solid #222c;
     box-shadow: 0 6px 26px rgba(0, 0, 0, 0.13);
-    display: block;
   }
 
   // ---------- Segundo bloco: main + sidebar ----------
@@ -153,6 +154,7 @@
     color: var(--text-color);
     margin-bottom: 1.2rem;
     line-height: 1.75;
+    text-align: justify;
   }
   &__reactions {
     margin: 1.2rem 0 1rem 0;
@@ -276,12 +278,12 @@
       margin-bottom: var(--margin-lg);
     }
     &__header-image {
-      max-width: 90vw;
-      min-width: 120px;
+      padding-top: 56.25%;
     }
     &__image {
-      max-width: 250px;
-      height: 110px;
+      position: relative;
+      width: 100%;
+      height: auto; // Ajuste de altura automática para manter a proporção 16:9
     }
     &__main {
       padding: 0;
