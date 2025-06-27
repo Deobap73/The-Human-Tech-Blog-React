@@ -13,28 +13,23 @@ type CardProps = {
 };
 
 export const Card = ({ post, lang }: CardProps) => {
-  if (!post) {
-    return null;
-  }
-  const postIsValid = isValidPost(post, lang);
-  if (!postIsValid) {
-    return null;
-  }
+  if (!post) return null;
+  if (!isValidPost(post, lang)) return null;
 
-  // Obter a tradução ativa
   const translation = getPostTranslation(post.translations, lang);
 
-  // Categoria: igual ao SinglePostPage
+  // --- Lógica igual à do SinglePostPage ---
   let category = '';
-  if (Array.isArray(post.categories) && post.categories.length > 0) {
-    const firstCat = post.categories[0];
-    if (firstCat && typeof firstCat === 'object' && 'translations' in firstCat) {
-      category = getCategoryName(firstCat as any, lang);
-    }
+  if (
+    Array.isArray(post.categories) &&
+    post.categories.length > 0 &&
+    typeof post.categories[0] === 'object'
+  ) {
+    category = getCategoryName(post.categories[0] as any, lang);
   }
 
-  // Fallback: se não tiver categoria populada, mostra vazio ou "Uncategorized"
-  // Opcional: category = category || 'Uncategorized';
+  // Fallback (opcional)
+  // category = category || 'Uncategorized';
 
   const fullDescription = translation.description || '';
   const displayDescription =
@@ -45,18 +40,14 @@ export const Card = ({ post, lang }: CardProps) => {
       <img src={post.image} alt={translation.title || 'No title'} className='card-post__image' />
 
       <div className='card-post__description-container'>
-        <span className='card-post__category'>
-          {category /* Só mostra nome. Se quiser fallback: category || 'Uncategorized' */}
-        </span>
+        <span className='card-post__category'>{category}</span>
 
         <div className='card-post__text-content'>
           <p className='card-post__description'>{displayDescription}</p>
-
           <div className='card-post__actions'>
             <Link to={`/${lang}/posts/${post.slug}`} className='card-post__read-more-link'>
               Read More
             </Link>
-
             <BookmarkButton postId={post._id} />
           </div>
         </div>
