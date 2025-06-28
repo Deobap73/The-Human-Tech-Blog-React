@@ -1,6 +1,6 @@
 // /src/pages/WritePage.tsx
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
@@ -14,7 +14,6 @@ import { fetchTags } from '../../../shared/services/tagService';
 import { fetchCategories } from '../../../shared/services/categoryService';
 import { Tag } from '../../../shared/types/Tag';
 import { Category } from '../../../shared/types/Category';
-import { createDraft, updateDraft, getDraftById } from '../../../shared/services/draftService';
 import '../../../features/post/styles/WritePage.scss';
 import { toast } from 'react-hot-toast';
 
@@ -31,13 +30,12 @@ const emptyTranslations = {
 
 const WritePage = () => {
   const { user } = useAuth();
-  const { id, lang } = useParams<{ id?: string; lang?: string }>();
+  const { lang } = useParams<{ lang?: string }>();
   const navigate = useNavigate();
   const activeLang: Language = (lang as Language) || 'en';
 
   const [currentLang, setCurrentLang] = useState<Language>(activeLang);
   const [translations, setTranslations] = useState({ ...emptyTranslations });
-  const [status, setStatus] = useState<PostStatus>('draft');
   const [tags, setTags] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [availableTags, setAvailableTags] = useState<Tag[]>([]);
@@ -47,25 +45,20 @@ const WritePage = () => {
   const [isQuickPost, setIsQuickPost] = useState<boolean>(false);
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
-  const [draftId, setDraftId] = useState<string | null>(id || null);
-  const lastDraftRef = useRef<any>(null);
 
-  const editors = LANGUAGES.reduce((acc, lang) => {
-    acc[lang] = useEditor({
-      extensions: [
-        StarterKit,
-        Underline,
-        Image,
-        TextAlign.configure({
-          types: ['heading', 'paragraph'],
-          alignments: ['left', 'center', 'right', 'justify'],
-          defaultAlignment: 'left',
-        }),
-      ],
-      content: translations[lang].content,
-    });
-    return acc;
-  }, {} as Record<Language, ReturnType<typeof useEditor>>);
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Underline,
+      Image,
+      TextAlign.configure({
+        types: ['heading', 'paragraph'],
+        alignments: ['left', 'center', 'right', 'justify'],
+        defaultAlignment: 'left',
+      }),
+    ],
+    content: '',
+  });
 
   useEffect(() => {
     fetchTags()
@@ -75,52 +68,6 @@ const WritePage = () => {
       .then(setAvailableCategories)
       .catch(() => toast.error('Failed to load categories'));
   }, []);
-
-  useEffect(() => {
-    if (!draftId) return;
-    getDraftById(draftId)
-      .then((draft) => {
-        setTranslations({
-          en: {
-            title: draft.title || '',
-            description: draft.description || '',
-            content: draft.content || '',
-          },
-          pt: draft.translations?.pt || { title: '', description: '', content: '' },
-          de: draft.translations?.de || { title: '', description: '', content: '' },
-          es: draft.translations?.es || { title: '', description: '', content: '' },
-        });
-        setTags(draft.tags || []);
-        setCategories(
-          (draft.categories || []).map((cat: any) => (typeof cat === 'string' ? cat : cat._id))
-        );
-        setCoverUrl(draft.image || '');
-        setStatus(draft.status || 'draft');
-        setIsQuickPost(draft.isQuickPost || false);
-        lastDraftRef.current = draft;
-      })
-      .catch(() => toast.error('Failed to load draft'));
-  }, [draftId]);
-
-  useEffect(() => {
-    LANGUAGES.forEach((lang) => {
-      editors[lang]?.commands.setContent(translations[lang].content || '');
-    });
-  }, [translations]);
-
-  const handleTabChange = (lang: Language) => {
-    const editor = editors[currentLang];
-    if (editor) {
-      setTranslations((prev) => ({
-        ...prev,
-        [currentLang]: {
-          ...prev[currentLang],
-          content: editor.getHTML(),
-        },
-      }));
-    }
-    setCurrentLang(lang);
-  };
 
   const handleInput = (field: 'title' | 'description', value: string) => {
     setTranslations((prev) => ({
@@ -137,39 +84,29 @@ const WritePage = () => {
     setSaving(true);
     setError('');
 
-    if (!translations.en.title || !translations.en.description || !translations.en.content) {
+    const postData = {
+      title: translations.en.title,
+      description: translations.en.description,
+      content: editor?.getHTML() || '',
+      tags,
+      categories,
+      image: coverUrl,
+      isQuickPost,
+    };
+
+    if (!postData.title || !postData.description || !postData.content) {
       setError('Title, Description, and Content (EN) are required!');
       setSaving(false);
       return;
     }
 
     try {
-      let currentDraftId = draftId;
-      if (!currentDraftId) {
-        const draftData = {
-          title: translations.en.title,
-          description: translations.en.description,
-          content: translations.en.content,
-          tags,
-          categories,
-          image: coverUrl,
-          isQuickPost,
-        };
-        const response = await createDraft(draftData);
-        currentDraftId = response._id;
-        setDraftId(currentDraftId);
-      }
-
       const resToken = await api.get('/auth/csrf', { withCredentials: true });
       const csrfToken = resToken.data.csrfToken;
-      await api.post(
-        `/drafts/${currentDraftId}/publish`,
-        {},
-        {
-          headers: { 'x-csrf-token': csrfToken },
-          withCredentials: true,
-        }
-      );
+      await api.post('/posts', postData, {
+        headers: { 'x-csrf-token': csrfToken },
+        withCredentials: true,
+      });
       toast.success('Post published!');
       navigate(`/${activeLang}/admin/posts`);
     } catch (err: any) {
@@ -182,33 +119,7 @@ const WritePage = () => {
 
   return (
     <div className='write-page'>
-      <h2>{draftId ? 'Edit Draft' : 'Create Draft'}</h2>
-      {/* Auto-save status */}
-      <div className='write-page__autosave'>
-        {autoSaveState === 'saving' && <span>Saving draft...</span>}
-        {autoSaveState === 'saved' && lastAutoSave && (
-          <span>
-            Draft saved at{' '}
-            {lastAutoSave.toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit',
-              second: '2-digit',
-            })}
-          </span>
-        )}
-        {autoSaveState === 'error' && <span style={{ color: 'red' }}>Auto-save error!</span>}
-      </div>
-      <div className='write-page__tabs'>
-        {LANGUAGES.map((lang) => (
-          <button
-            key={lang}
-            className={`write-page__tab${currentLang === lang ? ' write-page__tab--active' : ''}`}
-            onClick={() => handleTabChange(lang)}
-            type='button'>
-            {lang.toUpperCase()}
-          </button>
-        ))}
-      </div>
+      <h2>Create Post</h2>
       <form className='write-page__form' onSubmit={handleSubmit}>
         {error && <div className='write-page__error'>{error}</div>}
         <input
@@ -216,30 +127,23 @@ const WritePage = () => {
           placeholder='Title'
           value={translations[currentLang].title}
           onChange={(e) => handleInput('title', e.target.value)}
-          required={currentLang === 'en'}
           className='write-page__input'
+          required
         />
         <textarea
           placeholder='Description'
           value={translations[currentLang].description}
-          onChange={(e) => {
-            handleInput('description', e.target.value);
-            autoResize(e);
-          }}
+          onChange={(e) => handleInput('description', e.target.value)}
           className='write-page__textarea'
-          ref={(el) => {
-            if (el) autoResize({ target: el } as any);
-          }}
           rows={2}
         />
-        {/* Editor Block with Sticky Toolbar */}
-        {editors[currentLang] && (
+        {editor && (
           <div className='write-page__editor-block'>
             <div className='write-page__toolbar-sticky'>
-              <Toolbar editor={editors[currentLang]!} onPublish={() => undefined} />
+              <Toolbar editor={editor} onPublish={() => undefined} />
             </div>
             <div className='write-page__editor-content'>
-              <EditorContent editor={editors[currentLang]!} />
+              <EditorContent editor={editor} />
             </div>
           </div>
         )}
@@ -255,7 +159,20 @@ const WritePage = () => {
             const file = e.target.files?.[0];
             if (file) {
               setCover(file);
-              await handleImageUpload(file);
+              const formData = new FormData();
+              formData.append('image', file);
+              const resToken = await api.get('/auth/csrf', { withCredentials: true });
+              const csrfToken = resToken.data.csrfToken;
+              const jwt =
+                localStorage.getItem('jwt') || (document.cookie.match(/jwt=([^;]+)/) || [])[1];
+              const headers: any = { 'x-csrf-token': csrfToken };
+              if (jwt) headers['Authorization'] = `Bearer ${jwt}`;
+              const res = await api.post('/posts/upload', formData, {
+                headers,
+                withCredentials: true,
+              });
+              setCoverUrl(res.data.imageUrl);
+              toast.success('Image uploaded!');
             }
           }}
         />
@@ -264,21 +181,24 @@ const WritePage = () => {
             <img src={coverUrl} alt='Cover Preview' className='write-page__cover-img' />
           </div>
         )}
-        <label className='write-page__label' style={{ marginTop: 16 }}>
+        <label className='write-page__label'>
           Tags:
-          <select multiple value={tags} onChange={handleTags} className='write-page__select'>
-            {availableTags && availableTags.length > 0 ? (
+          <select
+            multiple
+            value={tags}
+            onChange={(e) => {
+              const selected = Array.from(e.target.selectedOptions).map((o) => o.value);
+              setTags(selected);
+            }}
+            className='write-page__select'>
+            {availableTags.length ? (
               availableTags.map((tag) => (
                 <option key={tag._id} value={tag._id}>
-                  {tag.translations && tag.translations.en && tag.translations.en.name
-                    ? tag.translations.en.name
-                    : '[no name]'}
+                  {tag.translations?.en?.name || '[no name]'}
                 </option>
               ))
             ) : (
-              <option key='no-tags' disabled>
-                No tags available
-              </option>
+              <option disabled>No tags available</option>
             )}
           </select>
         </label>
@@ -287,31 +207,20 @@ const WritePage = () => {
           <select
             multiple
             value={categories}
-            onChange={handleCategories}
+            onChange={(e) => {
+              const selected = Array.from(e.target.selectedOptions).map((o) => o.value);
+              setCategories(selected);
+            }}
             className='write-page__select'>
-            {availableCategories && availableCategories.length > 0 ? (
-              availableCategories
-                .filter((cat) => !!cat._id)
-                .map((cat) => (
-                  <option key={cat._id} value={cat._id}>
-                    {cat.translation?.name || '[no name]'}
-                  </option>
-                ))
+            {availableCategories.length ? (
+              availableCategories.map((cat) => (
+                <option key={cat._id} value={cat._id}>
+                  {cat.translation?.name || '[no name]'}
+                </option>
+              ))
             ) : (
-              <option key='no-categories' disabled>
-                No categories available
-              </option>
+              <option disabled>No categories available</option>
             )}
-          </select>
-        </label>
-        <label className='write-page__label'>
-          Status:
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value as PostStatus)}
-            className='write-page__select'>
-            <option value='draft'>Draft</option>
-            <option value='published'>Published</option>
           </select>
         </label>
         <label className='write-page__label'>
@@ -323,7 +232,7 @@ const WritePage = () => {
           This is a QuickPost (Tech Short)
         </label>
         <button type='submit' className='write-page__btn' disabled={saving}>
-          {saving ? 'Publishing...' : draftId ? 'Publish' : 'Create Draft'}
+          {saving ? 'Publishing...' : 'Publish'}
         </button>
       </form>
     </div>
