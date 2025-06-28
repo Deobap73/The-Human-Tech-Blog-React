@@ -15,6 +15,7 @@ export interface DraftData {
   image?: string;
   tags?: string[];
   categories?: string[];
+  isQuickPost?: boolean;
   // ...add more if needed
 }
 

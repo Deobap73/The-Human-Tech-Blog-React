@@ -48,7 +48,7 @@ export const HomePage = () => {
   const featuredPostToShow = validPublishedPosts.length > 0 ? validPublishedPosts[0] : undefined;
   const lastPostToShow = validPublishedPosts.length > 0 ? validPublishedPosts[1] : undefined;
 
-  const techShorts = validPublishedPosts.filter((post) => post.isQuickPost).slice(0, 3);
+  const techShorts = validPublishedPosts.filter((post) => post.isQuickPost).slice(0, 5);
 
   return (
     <div className='home'>

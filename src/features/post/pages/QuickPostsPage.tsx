@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Post } from '../../../shared/types/Post';
 import { getQuickPosts } from '../../../shared/services/postService';
 import QuickPostCard from '../components/QuickPostCard';
-import './QuickPostCard.scss';
+import '../styles/QuickPostCard.scss';
 
 export const QuickPostsPage = () => {
   const { i18n } = useTranslation();

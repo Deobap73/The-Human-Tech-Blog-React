@@ -3,7 +3,7 @@
 import { Link } from 'react-router-dom';
 import { Post } from '../../../shared/types/Post';
 import { getPostTranslation } from '../../../shared/utils/i18nHelpers';
-import './QuickPostCard.scss';
+import '../styles/QuickPostCard.scss';
 
 interface Props {
   post: Post;
