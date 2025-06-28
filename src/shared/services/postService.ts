@@ -38,7 +38,7 @@ export async function createPost(data: PostData) {
 /**
  * Fetch a published post by ID
  */
-export async function getPostById(id: string) {
+export async function fetchPost(id: string) {
   const res = await api.get(`/posts/${id}`, { withCredentials: true });
   return res.data.post;
 }
@@ -57,4 +57,29 @@ export async function updatePost(id: string, data: Partial<PostData>) {
     withCredentials: true,
   });
   return res.data.post;
+}
+
+export async function uploadPostImage(file: File) {
+  const formData = new FormData();
+  formData.append('image', file);
+
+  const resToken = await api.get('/auth/csrf', { withCredentials: true });
+  const csrfToken = resToken.data.csrfToken;
+
+  const res = await api.post('/posts/upload', formData, {
+    headers: {
+      'x-csrf-token': csrfToken,
+    },
+    withCredentials: true,
+  });
+
+  return res.data;
+}
+
+/**
+ * Fetch all QuickPosts (short-form articles)
+ */
+export async function getQuickPosts() {
+  const res = await api.get<Post[]>('/posts?quick=true', { withCredentials: true });
+  return res.data;
 }

@@ -1,4 +1,4 @@
-// /src/features/home/pages/HomePage.tsx
+// src/features/home/pages/HomePage.tsx
 
 import { useEffect, useState } from 'react';
 import '../styles/HomePage.scss';
@@ -18,6 +18,7 @@ export const HomePage = () => {
   const lang = i18n.language.split('-')[0] || 'en';
 
   const [posts, setPosts] = useState<Post[]>([]);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -25,44 +26,47 @@ export const HomePage = () => {
         const res = await axios.get('/posts');
         setPosts(res.data);
       } catch {
-        // Optionally, handle error state here for UX
+        // Optionally handle error
       }
     };
     fetchPosts();
   }, []);
 
-  // DEBUG - garantir que o lang está correto
-  console.log('[HomePage] Active lang:', lang);
+  useEffect(() => {
+    const updateScreen = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    updateScreen();
+    window.addEventListener('resize', updateScreen);
+    return () => window.removeEventListener('resize', updateScreen);
+  }, []);
 
-  // Helper: Return only posts that are published AND have a translation in the active lang or fallback (EN, etc)
   const validPublishedPosts = posts
     .filter((post) => post.status === 'published')
     .filter((post) => {
       const translation = getPostTranslation(post.translations, lang);
-      // DEBUG
-      console.log('[HomePage] Post:', post.slug, 'lang:', lang, 'translation:', translation);
       return translation.title && translation.title.trim().length > 0;
     })
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-  const featuredPostToShow = validPublishedPosts.length > 0 ? validPublishedPosts[0] : undefined;
-  const lastPostToShow = validPublishedPosts.length > 0 ? validPublishedPosts[1] : undefined;
+  const featuredPostToShow = validPublishedPosts[0];
+  const lastPostToShow = validPublishedPosts[1];
 
-  const techShorts = validPublishedPosts.filter((post) => post.isQuickPost).slice(0, 5);
+  const techShorts = validPublishedPosts.filter((post) => post.isQuickPost);
+  const shortsToRender = isMobile ? techShorts.slice(0, 4) : techShorts.slice(0, 5);
 
   return (
     <div className='home'>
       <RecentPosts posts={validPublishedPosts.slice(0, 12)} lang={lang} />
-      {techShorts.length > 0 && (
+      {shortsToRender.length > 0 && (
         <section className='home__shorts'>
-          <h2>Tech Shorts</h2>
-          <div className='home__shorts-list'>
-            {techShorts.map((post) => (
-              <QuickPostCard key={post._id} post={post} lang={lang} />
-            ))}
-          </div>
-          <a href={`/${lang}/shorts`} className='home__see-more'>
-            See all Tech Shorts
+          <h2 className='home__shorts-title'>Tech Shorts</h2>
+          <a href={`/${lang}/shorts`} className='home__shorts-link'>
+            <div className='home__shorts-list'>
+              {shortsToRender.map((post) => (
+                <QuickPostCard key={post._id} post={post} lang={lang} />
+              ))}
+            </div>
           </a>
         </section>
       )}
