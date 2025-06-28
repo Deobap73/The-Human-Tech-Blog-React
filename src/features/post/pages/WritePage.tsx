@@ -183,6 +183,21 @@ const WritePage = () => {
   return (
     <div className='write-page'>
       <h2>{draftId ? 'Edit Draft' : 'Create Draft'}</h2>
+      {/* Auto-save status */}
+      <div className='write-page__autosave'>
+        {autoSaveState === 'saving' && <span>Saving draft...</span>}
+        {autoSaveState === 'saved' && lastAutoSave && (
+          <span>
+            Draft saved at{' '}
+            {lastAutoSave.toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+            })}
+          </span>
+        )}
+        {autoSaveState === 'error' && <span style={{ color: 'red' }}>Auto-save error!</span>}
+      </div>
       <div className='write-page__tabs'>
         {LANGUAGES.map((lang) => (
           <button
@@ -207,9 +222,17 @@ const WritePage = () => {
         <textarea
           placeholder='Description'
           value={translations[currentLang].description}
-          onChange={(e) => handleInput('description', e.target.value)}
+          onChange={(e) => {
+            handleInput('description', e.target.value);
+            autoResize(e);
+          }}
           className='write-page__textarea'
+          ref={(el) => {
+            if (el) autoResize({ target: el } as any);
+          }}
+          rows={2}
         />
+        {/* Editor Block with Sticky Toolbar */}
         {editors[currentLang] && (
           <div className='write-page__editor-block'>
             <div className='write-page__toolbar-sticky'>
@@ -220,6 +243,77 @@ const WritePage = () => {
             </div>
           </div>
         )}
+        <label htmlFor='cover-upload' className='write-page__upload-btn'>
+          Upload cover
+        </label>
+        <input
+          id='cover-upload'
+          type='file'
+          accept='image/*'
+          style={{ display: 'none' }}
+          onChange={async (e) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              setCover(file);
+              await handleImageUpload(file);
+            }
+          }}
+        />
+        {coverUrl && (
+          <div className='write-page__cover-preview'>
+            <img src={coverUrl} alt='Cover Preview' className='write-page__cover-img' />
+          </div>
+        )}
+        <label className='write-page__label' style={{ marginTop: 16 }}>
+          Tags:
+          <select multiple value={tags} onChange={handleTags} className='write-page__select'>
+            {availableTags && availableTags.length > 0 ? (
+              availableTags.map((tag) => (
+                <option key={tag._id} value={tag._id}>
+                  {tag.translations && tag.translations.en && tag.translations.en.name
+                    ? tag.translations.en.name
+                    : '[no name]'}
+                </option>
+              ))
+            ) : (
+              <option key='no-tags' disabled>
+                No tags available
+              </option>
+            )}
+          </select>
+        </label>
+        <label className='write-page__label'>
+          Categories:
+          <select
+            multiple
+            value={categories}
+            onChange={handleCategories}
+            className='write-page__select'>
+            {availableCategories && availableCategories.length > 0 ? (
+              availableCategories
+                .filter((cat) => !!cat._id)
+                .map((cat) => (
+                  <option key={cat._id} value={cat._id}>
+                    {cat.translation?.name || '[no name]'}
+                  </option>
+                ))
+            ) : (
+              <option key='no-categories' disabled>
+                No categories available
+              </option>
+            )}
+          </select>
+        </label>
+        <label className='write-page__label'>
+          Status:
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value as PostStatus)}
+            className='write-page__select'>
+            <option value='draft'>Draft</option>
+            <option value='published'>Published</option>
+          </select>
+        </label>
         <label className='write-page__label'>
           <input
             type='checkbox'
