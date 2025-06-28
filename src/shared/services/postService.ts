@@ -1,43 +1,60 @@
-// src/shared/services/postService.ts
+// /src/shared/services/postService.ts
 
 import api from '../utils/axios';
-import { Post, PostPayload } from '../types/Post';
-import { safeApiPost, safeApiPut, safeApiDelete } from '../utils/apiHelpers';
+import { Post } from '../types/Post';
+
+export interface PostData {
+  title: string;
+  description: string;
+  content: string;
+  tags?: string[];
+  categories?: string[];
+  image?: string;
+  isQuickPost?: boolean;
+  translations?: {
+    pt?: Partial<PostData>;
+    de?: Partial<PostData>;
+    es?: Partial<PostData>;
+  };
+}
 
 /**
- * Fetch all posts.
+ * Create a new post (bypassing draft)
  */
-export const fetchPosts = () => api.get<Post[]>('/posts').then((res) => res.data);
+export async function createPost(data: PostData) {
+  const resToken = await api.get('/auth/csrf', { withCredentials: true });
+  const csrfToken = resToken.data.csrfToken;
+
+  const response = await api.post('/posts', data, {
+    headers: {
+      'x-csrf-token': csrfToken,
+    },
+    withCredentials: true,
+  });
+
+  return response.data.post;
+}
 
 /**
- * Create a new post (CSRF protected).
+ * Fetch a published post by ID
  */
-export const createPost = (data: PostPayload) => safeApiPost<Post>('/posts', data);
+export async function getPostById(id: string) {
+  const res = await api.get(`/posts/${id}`, { withCredentials: true });
+  return res.data.post;
+}
 
 /**
- * Update a post by ID (CSRF protected, PATCH).
+ * Update a published post
  */
-export const updatePost = (id: string, data: PostPayload) =>
-  // safeApiPut usa PUT, se só PATCH for permitido pelo backend, adicione um helper safeApiPatch
-  safeApiPut<Post>(`/posts/${id}`, data);
+export async function updatePost(id: string, data: Partial<PostData>) {
+  const resToken = await api.get('/auth/csrf', { withCredentials: true });
+  const csrfToken = resToken.data.csrfToken;
 
-/**
- * Delete a post by ID (CSRF protected).
- */
-export const deletePost = (id: string) => safeApiDelete(`/posts/${id}`);
-
-/**
- * Fetch a single post by ID.
- */
-export const fetchPost = (id: string) => api.get<Post>(`/posts/${id}`).then((res) => res.data);
-
-// Upload post image (CSRF)
-export const uploadPostImage = (file: File) => {
-  const formData = new FormData();
-  formData.append('image', file);
-  // Importante: não usar JSON nem helpers, mas garantir o token CSRF!
-  return safeApiPost<{ imageUrl: string }>('/posts/upload', formData);
-};
-
-// Fetch Quick Posts
-export const getQuickPosts = () => api.get<Post[]>('/posts?quick=true').then((res) => res.data);
+  const res = await api.patch(`/posts/${id}`, data, {
+    headers: {
+      'x-csrf-token': csrfToken,
+    },
+    withCredentials: true,
+  });
+  return res.data.post;
+}
