@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import '../styles/HomePage.scss';
 import { RecentPosts } from '../../post/components/RecentPosts';
 import { LastPost } from '../../post/components/LastPost';
+import QuickPostCard from '../../post/components/QuickPostCard';
 import { Sponsors } from '../../sponsors/components/Sponsors';
 import { Post } from '../../../shared/types/Post';
 import axios from '../../../shared/utils/axios';
@@ -47,9 +48,24 @@ export const HomePage = () => {
   const featuredPostToShow = validPublishedPosts.length > 0 ? validPublishedPosts[0] : undefined;
   const lastPostToShow = validPublishedPosts.length > 0 ? validPublishedPosts[1] : undefined;
 
+  const techShorts = validPublishedPosts.filter((post) => post.isQuickPost).slice(0, 3);
+
   return (
     <div className='home'>
       <RecentPosts posts={validPublishedPosts.slice(0, 12)} lang={lang} />
+      {techShorts.length > 0 && (
+        <section className='home__shorts'>
+          <h2>Tech Shorts</h2>
+          <div className='home__shorts-list'>
+            {techShorts.map((post) => (
+              <QuickPostCard key={post._id} post={post} lang={lang} />
+            ))}
+          </div>
+          <a href={`/${lang}/shorts`} className='home__see-more'>
+            See all Tech Shorts
+          </a>
+        </section>
+      )}
       <CategoryList />
       {featuredPostToShow && <Featured post={featuredPostToShow} lang={lang} />}
       <Sponsors />

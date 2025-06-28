@@ -5,6 +5,7 @@ import AboutPage from '../features/about/pages/AboutPage';
 import SinglePostPage from '../features/post/pages/SinglePostPage';
 import WritePage from '../features/post/pages/WritePage';
 import DraftsList from '../features/post/components/DraftsList';
+import QuickPostsPage from '../features/post/pages/QuickPostsPage';
 import AdminRoutes from './adminRoutes';
 import UserPage from '../features/user/pages/UserPage';
 import AdminTagsPage from '../features/admin/pages/AdminTagsPage';
@@ -47,6 +48,7 @@ const PublicRoutes = () => (
 
       <Route path='posts/create' element={<WritePage />} />
       <Route path='posts/:slug' element={<SinglePostPage />} />
+      <Route path='shorts' element={<QuickPostsPage />} />
       <Route path='tags/:slug' element={<TagPage />} />
       <Route path='tags' element={<AdminTagsPage />} />
       <Route path='categories/:slug' element={<CategoryPage />} />

@@ -22,6 +22,7 @@ export interface Post {
   categories: string[];
   tags?: string[];
   status: 'draft' | 'published' | 'archived';
+  isQuickPost?: boolean;
   author?: {
     _id: string;
     name: string;

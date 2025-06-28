@@ -1,0 +1,41 @@
+// src/features/post/styles/QuickPostCard.scss
+
+.quick-post-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--background-tertiary);
+  border-radius: var(--border-radius-base);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  transition: transform 0.2s ease;
+
+  &__link {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  &__image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+  }
+
+  &__content {
+    padding: var(--padding-base);
+  }
+
+  &__title {
+    font-size: var(--font-size-md);
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  &__description {
+    font-size: var(--font-size-sm);
+    color: var(--text-color-secondary);
+  }
+
+  &:hover {
+    transform: scale(1.01);
+  }
+}

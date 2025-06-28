@@ -38,3 +38,6 @@ export const uploadPostImage = (file: File) => {
   // Importante: não usar JSON nem helpers, mas garantir o token CSRF!
   return safeApiPost<{ imageUrl: string }>('/posts/upload', formData);
 };
+
+// Fetch Quick Posts
+export const getQuickPosts = () => api.get<Post[]>('/posts?quick=true').then((res) => res.data);
