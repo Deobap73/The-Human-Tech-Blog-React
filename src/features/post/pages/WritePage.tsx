@@ -1,6 +1,6 @@
 // /src/pages/WritePage.tsx
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
@@ -12,6 +12,12 @@ import { useAuth } from '../../../shared/hooks/useAuth';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchTags } from '../../../shared/services/tagService';
 import { fetchCategories } from '../../../shared/services/categoryService';
+import {
+  createPost,
+  updatePost,
+  fetchPost,
+  uploadPostImage,
+} from '../../../shared/services/postService';
 import { Tag } from '../../../shared/types/Tag';
 import { Category } from '../../../shared/types/Category';
 import '../../../features/post/styles/WritePage.scss';
@@ -29,13 +35,13 @@ const emptyTranslations = {
 };
 
 const WritePage = () => {
-  const { user } = useAuth();
-  const { lang } = useParams<{ lang?: string }>();
+  const { id, lang } = useParams<{ id?: string; lang?: string }>();
   const navigate = useNavigate();
   const activeLang: Language = (lang as Language) || 'en';
 
   const [currentLang, setCurrentLang] = useState<Language>(activeLang);
   const [translations, setTranslations] = useState({ ...emptyTranslations });
+  const [status, setStatus] = useState<PostStatus>('published');
   const [tags, setTags] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [availableTags, setAvailableTags] = useState<Tag[]>([]);
@@ -46,19 +52,22 @@ const WritePage = () => {
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Underline,
-      Image,
-      TextAlign.configure({
-        types: ['heading', 'paragraph'],
-        alignments: ['left', 'center', 'right', 'justify'],
-        defaultAlignment: 'left',
-      }),
-    ],
-    content: '',
-  });
+  const editors = LANGUAGES.reduce((acc, lang) => {
+    acc[lang] = useEditor({
+      extensions: [
+        StarterKit,
+        Underline,
+        Image,
+        TextAlign.configure({
+          types: ['heading', 'paragraph'],
+          alignments: ['left', 'center', 'right', 'justify'],
+          defaultAlignment: 'left',
+        }),
+      ],
+      content: translations[lang].content,
+    });
+    return acc;
+  }, {} as Record<Language, ReturnType<typeof useEditor>>);
 
   useEffect(() => {
     fetchTags()
@@ -68,6 +77,49 @@ const WritePage = () => {
       .then(setAvailableCategories)
       .catch(() => toast.error('Failed to load categories'));
   }, []);
+
+  useEffect(() => {
+    if (!id) return;
+    fetchPost(id)
+      .then((post) => {
+        setTranslations({
+          en: {
+            title: post.title || '',
+            description: post.description || '',
+            content: post.content || '',
+          },
+          pt: post.translations?.pt || { title: '', description: '', content: '' },
+          de: post.translations?.de || { title: '', description: '', content: '' },
+          es: post.translations?.es || { title: '', description: '', content: '' },
+        });
+        setTags(post.tags || []);
+        setCategories(post.categories || []);
+        setCoverUrl(post.image || '');
+        setStatus(post.status || 'published');
+        setIsQuickPost(post.isQuickPost || false);
+      })
+      .catch(() => toast.error('Failed to load post'));
+  }, [id]);
+
+  useEffect(() => {
+    LANGUAGES.forEach((lang) => {
+      editors[lang]?.commands.setContent(translations[lang].content || '');
+    });
+  }, [translations]);
+
+  const handleTabChange = (lang: Language) => {
+    const editor = editors[currentLang];
+    if (editor) {
+      setTranslations((prev) => ({
+        ...prev,
+        [currentLang]: {
+          ...prev[currentLang],
+          content: editor.getHTML(),
+        },
+      }));
+    }
+    setCurrentLang(lang);
+  };
 
   const handleInput = (field: 'title' | 'description', value: string) => {
     setTranslations((prev) => ({
@@ -79,47 +131,79 @@ const WritePage = () => {
     }));
   };
 
+  const handleTags = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selected = Array.from(e.target.selectedOptions).map((o) => o.value);
+    setTags(selected);
+  };
+
+  const handleCategories = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selected = Array.from(e.target.selectedOptions).map((o) => o.value);
+    setCategories(selected);
+  };
+
+  const handleImageUpload = async (file: File) => {
+    try {
+      const res = await uploadPostImage(file);
+      setCoverUrl(res.imageUrl);
+      toast.success('Image uploaded!');
+    } catch (err: any) {
+      toast.error('Failed to upload image');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
     setError('');
 
-    const postData = {
-      title: translations.en.title,
-      description: translations.en.description,
-      content: editor?.getHTML() || '',
-      tags,
-      categories,
-      image: coverUrl,
-      isQuickPost,
-    };
-
-    if (!postData.title || !postData.description || !postData.content) {
+    if (!translations.en.title || !translations.en.description || !translations.en.content) {
       setError('Title, Description, and Content (EN) are required!');
       setSaving(false);
       return;
     }
 
+    const payload = {
+      title: translations.en.title,
+      description: translations.en.description,
+      content: translations.en.content,
+      tags,
+      categories,
+      image: coverUrl,
+      isQuickPost,
+      translations,
+      status,
+    };
+
     try {
-      const resToken = await api.get('/auth/csrf', { withCredentials: true });
-      const csrfToken = resToken.data.csrfToken;
-      await api.post('/posts', postData, {
-        headers: { 'x-csrf-token': csrfToken },
-        withCredentials: true,
-      });
-      toast.success('Post published!');
+      if (id) {
+        await updatePost(id, payload);
+        toast.success('Post updated!');
+      } else {
+        await createPost(payload);
+        toast.success('Post created!');
+      }
       navigate(`/${activeLang}/admin/posts`);
     } catch (err: any) {
-      setError(err?.response?.data?.message || 'Failed to publish post');
-      toast.error(err?.response?.data?.message || 'Failed to publish post');
+      setError('Failed to submit post');
+      toast.error('Failed to submit post');
     }
-
     setSaving(false);
   };
 
   return (
     <div className='write-page'>
-      <h2>Create Post</h2>
+      <h2>{id ? 'Edit Post' : 'Create Post'}</h2>
+      <div className='write-page__tabs'>
+        {LANGUAGES.map((lang) => (
+          <button
+            key={lang}
+            className={`write-page__tab${currentLang === lang ? ' write-page__tab--active' : ''}`}
+            onClick={() => handleTabChange(lang)}
+            type='button'>
+            {lang.toUpperCase()}
+          </button>
+        ))}
+      </div>
       <form className='write-page__form' onSubmit={handleSubmit}>
         {error && <div className='write-page__error'>{error}</div>}
         <input
@@ -127,23 +211,22 @@ const WritePage = () => {
           placeholder='Title'
           value={translations[currentLang].title}
           onChange={(e) => handleInput('title', e.target.value)}
+          required={currentLang === 'en'}
           className='write-page__input'
-          required
         />
         <textarea
           placeholder='Description'
           value={translations[currentLang].description}
           onChange={(e) => handleInput('description', e.target.value)}
           className='write-page__textarea'
-          rows={2}
         />
-        {editor && (
+        {editors[currentLang] && (
           <div className='write-page__editor-block'>
             <div className='write-page__toolbar-sticky'>
-              <Toolbar editor={editor} onPublish={() => undefined} />
+              <Toolbar editor={editors[currentLang]!} onPublish={() => undefined} />
             </div>
             <div className='write-page__editor-content'>
-              <EditorContent editor={editor} />
+              <EditorContent editor={editors[currentLang]!} />
             </div>
           </div>
         )}
@@ -159,20 +242,7 @@ const WritePage = () => {
             const file = e.target.files?.[0];
             if (file) {
               setCover(file);
-              const formData = new FormData();
-              formData.append('image', file);
-              const resToken = await api.get('/auth/csrf', { withCredentials: true });
-              const csrfToken = resToken.data.csrfToken;
-              const jwt =
-                localStorage.getItem('jwt') || (document.cookie.match(/jwt=([^;]+)/) || [])[1];
-              const headers: any = { 'x-csrf-token': csrfToken };
-              if (jwt) headers['Authorization'] = `Bearer ${jwt}`;
-              const res = await api.post('/posts/upload', formData, {
-                headers,
-                withCredentials: true,
-              });
-              setCoverUrl(res.data.imageUrl);
-              toast.success('Image uploaded!');
+              await handleImageUpload(file);
             }
           }}
         />
@@ -183,23 +253,12 @@ const WritePage = () => {
         )}
         <label className='write-page__label'>
           Tags:
-          <select
-            multiple
-            value={tags}
-            onChange={(e) => {
-              const selected = Array.from(e.target.selectedOptions).map((o) => o.value);
-              setTags(selected);
-            }}
-            className='write-page__select'>
-            {availableTags.length ? (
-              availableTags.map((tag) => (
-                <option key={tag._id} value={tag._id}>
-                  {tag.translations?.en?.name || '[no name]'}
-                </option>
-              ))
-            ) : (
-              <option disabled>No tags available</option>
-            )}
+          <select multiple value={tags} onChange={handleTags} className='write-page__select'>
+            {availableTags.map((tag) => (
+              <option key={tag._id} value={tag._id}>
+                {tag.translations?.en?.name || '[no name]'}
+              </option>
+            ))}
           </select>
         </label>
         <label className='write-page__label'>
@@ -207,20 +266,23 @@ const WritePage = () => {
           <select
             multiple
             value={categories}
-            onChange={(e) => {
-              const selected = Array.from(e.target.selectedOptions).map((o) => o.value);
-              setCategories(selected);
-            }}
+            onChange={handleCategories}
             className='write-page__select'>
-            {availableCategories.length ? (
-              availableCategories.map((cat) => (
-                <option key={cat._id} value={cat._id}>
-                  {cat.translation?.name || '[no name]'}
-                </option>
-              ))
-            ) : (
-              <option disabled>No categories available</option>
-            )}
+            {availableCategories.map((cat) => (
+              <option key={cat._id} value={cat._id}>
+                {cat.translation?.name || '[no name]'}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className='write-page__label'>
+          Status:
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value as PostStatus)}
+            className='write-page__select'>
+            <option value='draft'>Draft</option>
+            <option value='published'>Published</option>
           </select>
         </label>
         <label className='write-page__label'>
@@ -232,7 +294,7 @@ const WritePage = () => {
           This is a QuickPost (Tech Short)
         </label>
         <button type='submit' className='write-page__btn' disabled={saving}>
-          {saving ? 'Publishing...' : 'Publish'}
+          {saving ? 'Publishing...' : id ? 'Update Post' : 'Publish Post'}
         </button>
       </form>
     </div>
