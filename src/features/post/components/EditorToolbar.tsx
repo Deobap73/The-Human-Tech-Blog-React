@@ -1,4 +1,4 @@
-// src/features/post/components/EditorToolbar.tsx
+// ✅ Path: /src/features/post/components/EditorToolbar.tsx
 
 import { Editor } from '@tiptap/react';
 import {
@@ -15,28 +15,22 @@ import {
   AlignCenter,
   AlignRight,
   AlignJustify,
+  Code2,
 } from 'lucide-react';
 import '../styles/EditorToolbar.scss';
 
-/**
- * Props for the EditorToolbar component.
- */
 interface EditorToolbarProps {
   editor: Editor;
   onPublish: () => void;
   onSaveDraft?: () => void;
 }
 
-/**
- * EditorToolbar component - A rich text toolbar for TipTap editors.
- * Includes formatting, heading, list, alignment, undo/redo, publish/save actions.
- */
 const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
   if (!editor) return null;
 
   return (
     <div className='toolbar'>
-      {/* Formatting group */}
+      {/* Formatting */}
       <button
         type='button'
         className={`editor-toolbar__btn${
@@ -74,54 +68,21 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
         <Strikethrough size={16} />
       </button>
 
-      {/* Heading group */}
-      <button
-        type='button'
-        className={`editor-toolbar__btn${
-          editor.isActive('heading', { level: 1 }) ? ' editor-toolbar__btn--active' : ''
-        }`}
-        aria-label='Heading 1'
-        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}>
-        H1
-      </button>
-      <button
-        type='button'
-        className={`editor-toolbar__btn${
-          editor.isActive('heading', { level: 2 }) ? ' editor-toolbar__btn--active' : ''
-        }`}
-        aria-label='Heading 2'
-        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}>
-        H2
-      </button>
-      <button
-        type='button'
-        className={`editor-toolbar__btn${
-          editor.isActive('heading', { level: 3 }) ? ' editor-toolbar__btn--active' : ''
-        }`}
-        aria-label='Heading 3'
-        onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}>
-        H3
-      </button>
-      <button
-        type='button'
-        className={`editor-toolbar__btn${
-          editor.isActive('heading', { level: 4 }) ? ' editor-toolbar__btn--active' : ''
-        }`}
-        aria-label='Heading 4'
-        onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}>
-        H4
-      </button>
-      <button
-        type='button'
-        className={`editor-toolbar__btn${
-          editor.isActive('heading', { level: 5 }) ? ' editor-toolbar__btn--active' : ''
-        }`}
-        aria-label='Heading 5'
-        onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}>
-        H5
-      </button>
+      {/* Headings */}
+      {[1, 2, 3, 4, 5].map((level) => (
+        <button
+          key={level}
+          type='button'
+          className={`editor-toolbar__btn${
+            editor.isActive('heading', { level }) ? ' editor-toolbar__btn--active' : ''
+          }`}
+          aria-label={`Heading ${level}`}
+          onClick={() => editor.chain().focus().toggleHeading({ level }).run()}>
+          H{level}
+        </button>
+      ))}
 
-      {/* List group */}
+      {/* Lists */}
       <button
         type='button'
         className={`editor-toolbar__btn${
@@ -141,45 +102,39 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
         <ListOrdered size={16} />
       </button>
 
-      {/* Alignment group */}
+      {/* Alignment */}
+      {['left', 'center', 'right', 'justify'].map((align) => (
+        <button
+          key={align}
+          type='button'
+          className={`editor-toolbar__btn${
+            editor.isActive({ textAlign: align }) ? ' editor-toolbar__btn--active' : ''
+          }`}
+          aria-label={`Align ${align}`}
+          onClick={() => editor.chain().focus().setTextAlign(align).run()}>
+          {
+            {
+              left: <AlignLeft size={16} />,
+              center: <AlignCenter size={16} />,
+              right: <AlignRight size={16} />,
+              justify: <AlignJustify size={16} />,
+            }[align]
+          }
+        </button>
+      ))}
+
+      {/* Code block */}
       <button
         type='button'
         className={`editor-toolbar__btn${
-          editor.isActive({ textAlign: 'left' }) ? ' editor-toolbar__btn--active' : ''
+          editor.isActive('codeBlock') ? ' editor-toolbar__btn--active' : ''
         }`}
-        aria-label='Align Left'
-        onClick={() => editor.chain().focus().setTextAlign('left').run()}>
-        <AlignLeft size={16} />
-      </button>
-      <button
-        type='button'
-        className={`editor-toolbar__btn${
-          editor.isActive({ textAlign: 'center' }) ? ' editor-toolbar__btn--active' : ''
-        }`}
-        aria-label='Align Center'
-        onClick={() => editor.chain().focus().setTextAlign('center').run()}>
-        <AlignCenter size={16} />
-      </button>
-      <button
-        type='button'
-        className={`editor-toolbar__btn${
-          editor.isActive({ textAlign: 'right' }) ? ' editor-toolbar__btn--active' : ''
-        }`}
-        aria-label='Align Right'
-        onClick={() => editor.chain().focus().setTextAlign('right').run()}>
-        <AlignRight size={16} />
-      </button>
-      <button
-        type='button'
-        className={`editor-toolbar__btn${
-          editor.isActive({ textAlign: 'justify' }) ? ' editor-toolbar__btn--active' : ''
-        }`}
-        aria-label='Align Justify'
-        onClick={() => editor.chain().focus().setTextAlign('justify').run()}>
-        <AlignJustify size={16} />
+        aria-label='Code Block'
+        onClick={() => editor.chain().focus().toggleCodeBlock().run()}>
+        <Code2 size={16} />
       </button>
 
-      {/* Undo/Redo group */}
+      {/* Undo / Redo */}
       <button
         type='button'
         className='editor-toolbar__btn'
@@ -195,7 +150,7 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
         <Redo2 size={16} />
       </button>
 
-      {/* Actions group */}
+      {/* Actions */}
       <div className='toolbar'>
         {onSaveDraft && (
           <button

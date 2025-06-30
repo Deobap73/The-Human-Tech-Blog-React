@@ -1,0 +1,46 @@
+// ✅ Path: /src/features/post/styles/CodeBlockComponent.scss
+
+.code-block {
+  margin: var(--margin-base) 0;
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  background-color: #1e1e1e;
+  overflow: hidden;
+  font-family: 'Fira Code', monospace;
+  color: #ffffff;
+
+  &__header {
+    display: flex;
+    justify-content: flex-end;
+    background-color: #272727;
+    padding: 0.4rem 0.8rem;
+    border-bottom: 1px solid var(--primary);
+  }
+
+  &__select {
+    background-color: #3c3c3c;
+    color: #ffffff;
+    border: 1px solid var(--primary);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    padding: 0.2rem 0.6rem;
+
+    &:focus {
+      outline: none;
+      border-color: var(--primary-hover);
+    }
+  }
+
+  &__body {
+    margin: 0;
+    padding: 0.8rem 1rem;
+    overflow-x: auto;
+  }
+
+  &__content {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    white-space: pre;
+    outline: none;
+  }
+}

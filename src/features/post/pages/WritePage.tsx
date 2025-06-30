@@ -6,7 +6,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
-import { CustomCodeBlock } from '../../../shared/extensions/CustomCodeBlock'; // ✅ NEW
+import { CustomCodeBlock } from '../../../shared/extensions/CustomCodeBlock';
 import Toolbar from '../components/EditorToolbar';
 import api from '../../../shared/utils/axios';
 import { useAuth } from '../../../shared/hooks/useAuth';
@@ -21,8 +21,9 @@ import {
 } from '../../../shared/services/postService';
 import { Tag } from '../../../shared/types/Tag';
 import { Category } from '../../../shared/types/Category';
-import '../../../features/post/styles/WritePage.scss';
 import { toast } from 'react-hot-toast';
+import '../styles/WritePage.scss';
+import '../../../shared/styles/editor/code-block.scss';
 
 const LANGUAGES = ['en', 'pt', 'de', 'es'] as const;
 type Language = (typeof LANGUAGES)[number];
