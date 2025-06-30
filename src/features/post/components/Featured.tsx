@@ -13,7 +13,7 @@ interface FeaturedProps {
 }
 
 export const Featured = ({ post, lang }: FeaturedProps) => {
-  if (!post) {
+  if (!post || post.isQuickPost) {
     return null;
   }
 

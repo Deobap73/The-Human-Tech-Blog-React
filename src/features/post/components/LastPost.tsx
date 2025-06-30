@@ -13,7 +13,7 @@ interface LastPostProps {
 }
 
 export const LastPost = ({ post, lang }: LastPostProps) => {
-  if (!post) return null;
+  if (!post || post.isQuickPost) return null;
 
   const postIsValid = isValidPost(post, lang);
   if (!postIsValid) return null;

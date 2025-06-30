@@ -32,7 +32,9 @@ function getCategoryLogo(category: string | Category | undefined): string {
 
 export const RecentPosts = ({ posts, lang }: RecentPostsProps) => {
   const { t, i18n } = useTranslation();
-  const validPosts = posts.filter((post) => isValidPost(post, lang)).slice(0, 4);
+  const validPosts = posts
+    .filter((post) => isValidPost(post, lang) && !post.isQuickPost)
+    .slice(0, 4);
   if (validPosts.length === 0) return null;
 
   return (

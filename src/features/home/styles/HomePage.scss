@@ -34,6 +34,27 @@
       display: block;
       text-decoration: none;
       color: inherit;
+      // Remove QUALQUER estilo do link nativo em todos os estados
+      background: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      outline: none !important;
+      color: inherit !important;
+      text-decoration: none !important;
+      filter: none !important;
+
+      // Reforça nos estados especiais
+      &:hover,
+      &:focus,
+      &:active {
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        outline: none !important;
+        color: inherit !important;
+        text-decoration: none !important;
+        filter: none !important;
+      }
     }
 
     &-list {

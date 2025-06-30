@@ -6,6 +6,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
+import { CustomCodeBlock } from '../../../shared/extensions/CustomCodeBlock'; // ✅ NEW
 import Toolbar from '../components/EditorToolbar';
 import api from '../../../shared/utils/axios';
 import { useAuth } from '../../../shared/hooks/useAuth';
@@ -52,10 +53,14 @@ const WritePage = () => {
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
 
+  // Initialize tiptap editors for each language
   const editors = LANGUAGES.reduce((acc, lang) => {
     acc[lang] = useEditor({
       extensions: [
-        StarterKit,
+        // Disable default CodeBlock
+        StarterKit.configure({ codeBlock: false }),
+        // Add custom CodeBlock with syntax highlighting
+        CustomCodeBlock,
         Underline,
         Image,
         TextAlign.configure({
