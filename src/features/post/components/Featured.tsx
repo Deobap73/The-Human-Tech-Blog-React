@@ -1,9 +1,8 @@
-// src/features/post/components/Featured.tsx
+// /src/features/post/components/Featured.tsx
 
 import '../../post/styles/Featured.scss';
 import { Post } from '../../../shared/types/Post';
 import { Link } from 'react-router-dom';
-import { isValidPost } from '../../../shared/utils/validation';
 import { getPostTranslation, getCategoryName } from '../../../shared/utils/i18nHelpers';
 import { resolveLogoUrl } from '../../../shared/utils/mediaHelpers';
 
@@ -13,24 +12,20 @@ interface FeaturedProps {
 }
 
 export const Featured = ({ post, lang }: FeaturedProps) => {
-  if (!post || post.isQuickPost) {
-    return null;
-  }
+  if (!post || post.isQuickPost) return null;
 
-  const postIsValid = isValidPost(post, lang);
-  if (!postIsValid) {
-    return null;
-  }
+  // Try current lang or fallback to 'en'
+  const translation =
+    getPostTranslation(post.translations, lang) || getPostTranslation(post.translations, 'en');
 
-  const translation = getPostTranslation(post.translations, lang);
+  if (!translation || !translation.title?.trim()) return null;
 
-  // Safe category display (populated or not)
   let firstCategory = 'Uncategorized';
   let firstLogo = '';
   if (Array.isArray(post.categories) && post.categories.length > 0) {
     const cat = post.categories[0];
     if (cat && typeof cat === 'object' && 'translations' in cat) {
-      firstCategory = getCategoryName(cat as any, lang);
+      firstCategory = getCategoryName(cat as any, lang) || getCategoryName(cat as any, 'en');
       // @ts-ignore
       firstLogo = resolveLogoUrl((cat as any).logo);
     } else if (typeof cat === 'string') {
@@ -38,17 +33,16 @@ export const Featured = ({ post, lang }: FeaturedProps) => {
     }
   }
 
-  // Imagem: post.image > logo da categoria > default
   const imageSrc = post.image || firstLogo || '/default-image.jpg';
 
   return (
     <section className='featured'>
       <div className='featured__image-container featuredImage'>
-        <img src={imageSrc} alt={translation.title || 'No title'} className='featured__image' />
+        <img src={imageSrc} alt={translation.title} className='featured__image' />
       </div>
       <div className='featured__content featuredArticle'>
         <span className='featured__category'>{firstCategory}</span>
-        <h2 className='featured__title'>{translation.title || 'No title'}</h2>
+        <h2 className='featured__title'>{translation.title}</h2>
         <p className='featured__description'>{translation.description || ''}</p>
         <Link to={`/${lang}/posts/${post.slug}`} className='featured__link'>
           Read Full Article
