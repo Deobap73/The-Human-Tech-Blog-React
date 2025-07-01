@@ -1,4 +1,6 @@
+// /src/routes/Redirects.tsx
 import { Navigate } from 'react-router-dom';
+import i18n from 'i18next';
 
 export const RedirectToBrowserLang = ({ path = '' }: { path?: string }) => {
   const browserLang = (navigator.language || 'en').split('-')[0];
@@ -6,7 +8,12 @@ export const RedirectToBrowserLang = ({ path = '' }: { path?: string }) => {
   const lang = supported.includes(browserLang) ? browserLang : 'en';
   const location = window.location.pathname;
 
-  // Só redireciona se não estiver já na rota certa!
+  // Sincronizar com i18n
+  if (i18n.language !== lang) {
+    i18n.changeLanguage(lang);
+    localStorage.setItem('i18n_lang', lang);
+  }
+
   if (location.startsWith(`/${lang}`)) {
     return null;
   }

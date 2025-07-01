@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { EditorContent, Editor } from '@tiptap/react';
-import LanguageSelector from './LanguageSelector';
+import CodeLanguageSelector from './CodeLanguageSelector';
 
 interface EditorWrapperProps {
   editor: Editor;
@@ -52,7 +52,7 @@ const EditorWrapper = ({ editor }: EditorWrapperProps) => {
               if (node.type.name === 'codeBlock') {
                 const language = node.attrs.language || 'typescript';
                 return (
-                  <LanguageSelector
+                  <CodeLanguageSelector
                     key={index}
                     editor={editor}
                     pos={index + 1}

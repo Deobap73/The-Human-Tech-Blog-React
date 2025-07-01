@@ -1,14 +1,13 @@
 // /src/App.tsx
 
-import { ensureCsrfToken } from './shared/utils/csrf';
 import { useEffect } from 'react';
 import { useAuth } from './shared/hooks/useAuth';
 import { setAccessToken } from './shared/utils/authTokenStorage';
+import { ensureCsrfToken } from './shared/utils/csrf';
 import { Routes, Route } from 'react-router-dom';
-// REMOVED: import LoginPage from './features/auth/pages/LoginPage';
-// REMOVED: import RegisterPage from './features/auth/pages/RegisterPage';
 import PublicRoutes from './routes/PublicRoutes';
 import NotAuthorizedPage from './pages/NotAuthorizedPage';
+import { useTranslation } from 'react-i18next'; // Added
 
 /**
  * App entry point: Handles global loading state and main routes.
@@ -16,6 +15,7 @@ import NotAuthorizedPage from './pages/NotAuthorizedPage';
  */
 function App() {
   const { user, loading } = useAuth();
+  const { i18n } = useTranslation(); // Added
 
   // OAuth2 patch: On first load, check for ?token=... in the URL (after OAuth login)
   useEffect(() => {
@@ -38,14 +38,22 @@ function App() {
     ensureCsrfToken();
   }, []);
 
+  // Language detection fallback on first visit
+  useEffect(() => {
+    const storedLang = localStorage.getItem('i18n_lang');
+    const browserLang = navigator.language.split('-')[0]; // ex: 'pt', 'de', etc.
+    const supported = ['en', 'pt', 'de', 'es'];
+
+    if (!storedLang && supported.includes(browserLang)) {
+      i18n.changeLanguage(browserLang);
+      localStorage.setItem('i18n_lang', browserLang);
+    }
+  }, [i18n]);
+
   if (loading) return <div className='route-loader'>Loading...</div>;
 
-  // Public routes are always available, home is never blocked for unauthenticated users!
   return (
     <Routes>
-      {/* REMOVED: Login and Register pages */}
-      {/* <Route path='/login' element={<LoginPage />} /> */}
-      {/* <Route path='/register' element={<RegisterPage />} /> */}
       <Route path='/not-authorized' element={<NotAuthorizedPage />} />
       <Route path='/*' element={<PublicRoutes />} />
     </Routes>

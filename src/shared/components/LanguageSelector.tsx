@@ -1,4 +1,4 @@
-//src/features/shared/components/LanguageSelector.tsx
+// /src/shared/components/LanguageSelector.tsx
 
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';

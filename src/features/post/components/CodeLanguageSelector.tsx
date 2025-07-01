@@ -1,7 +1,7 @@
-// src/features/post/components/LanguageSelector.tsx
+// src/features/post/components/CodeLanguageSelector.tsx
 
 import { Editor } from '@tiptap/react';
-import './LanguageSelector.scss';
+import '../styles/CodeLanguageSelector.scss';
 
 interface LanguageSelectorProps {
   editor: Editor;
@@ -9,9 +9,9 @@ interface LanguageSelectorProps {
   language: string;
 }
 
-const SUPPORTED_LANGUAGES = ['typescript', 'javascript', 'scss', 'css', 'html', 'json'];
+const SUPPORTED_LANGUAGES = ['typescript', 'javascript', 'scss', 'css', 'html', 'json', 'python'];
 
-const LanguageSelector = ({ editor, pos, language }: LanguageSelectorProps) => {
+const CodeLanguageSelector = ({ editor, pos, language }: LanguageSelectorProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const lang = e.target.value;
     editor
@@ -47,4 +47,4 @@ const LanguageSelector = ({ editor, pos, language }: LanguageSelectorProps) => {
   );
 };
 
-export default LanguageSelector;
+export default CodeLanguageSelector;

@@ -1,6 +1,7 @@
 // src/features/home/pages/HomePage.tsx
 
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import '../styles/HomePage.scss';
 import { RecentPosts } from '../../post/components/RecentPosts';
 import { LastPost } from '../../post/components/LastPost';
@@ -14,8 +15,9 @@ import { Featured } from '../../post/components/Featured';
 import { getPostTranslation } from '../../../shared/utils/i18nHelpers';
 
 export const HomePage = () => {
+  const { lang: langParam } = useParams();
   const { i18n } = useTranslation();
-  const lang = i18n.language.split('-')[0] || 'en';
+  const lang = langParam || i18n.language.split('-')[0] || 'en';
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [isMobile, setIsMobile] = useState<boolean>(false);

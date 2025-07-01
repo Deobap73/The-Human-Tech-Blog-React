@@ -10,6 +10,7 @@ import js from 'highlight.js/lib/languages/javascript';
 import html from 'highlight.js/lib/languages/xml';
 import css from 'highlight.js/lib/languages/css';
 import json from 'highlight.js/lib/languages/json';
+import python from 'highlight.js/lib/languages/python';
 
 import CodeBlockComponent from '../../shared/components/CodeBlockComponent';
 
@@ -22,6 +23,7 @@ lowlight.register('javascript', js as LanguageFn);
 lowlight.register('html', html as LanguageFn);
 lowlight.register('css', css as LanguageFn);
 lowlight.register('json', json as LanguageFn);
+lowlight.register('python', python as LanguageFn);
 
 export const CustomCodeBlock = CodeBlockLowlight.extend({
   addAttributes() {
