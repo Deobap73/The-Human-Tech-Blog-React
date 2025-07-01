@@ -4,18 +4,33 @@ import api from '../utils/axios';
 import { Post } from '../types/Post';
 
 export interface PostData {
-  title: string;
-  description: string;
-  content: string;
+  translations: {
+    en: {
+      title: string;
+      description: string;
+      content: string;
+    };
+    pt?: {
+      title: string;
+      description: string;
+      content: string;
+    };
+    de?: {
+      title: string;
+      description: string;
+      content: string;
+    };
+    es?: {
+      title: string;
+      description: string;
+      content: string;
+    };
+  };
   tags?: string[];
   categories?: string[];
   image?: string;
   isQuickPost?: boolean;
-  translations?: {
-    pt?: Partial<PostData>;
-    de?: Partial<PostData>;
-    es?: Partial<PostData>;
-  };
+  status?: 'draft' | 'published' | 'archived';
 }
 
 /**
@@ -39,8 +54,10 @@ export async function createPost(data: PostData) {
  * Fetch a published post by ID
  */
 export async function fetchPost(id: string) {
+  console.log('[DEBUG] fetchPost(): Requesting post with ID:', id);
   const res = await api.get(`/posts/${id}`, { withCredentials: true });
-  return res.data.post;
+  console.log('[DEBUG] fetchPost(): Response:', res.data);
+  return res.data;
 }
 
 /**
@@ -50,7 +67,7 @@ export async function updatePost(id: string, data: Partial<PostData>) {
   const resToken = await api.get('/auth/csrf', { withCredentials: true });
   const csrfToken = resToken.data.csrfToken;
 
-  const res = await api.patch(`/posts/${id}`, data, {
+  const res = await api.put(`/posts/${id}`, data, {
     headers: {
       'x-csrf-token': csrfToken,
     },

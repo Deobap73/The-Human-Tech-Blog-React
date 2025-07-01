@@ -1,15 +1,14 @@
 // /src/pages/WritePage.tsx
 
-import { useEffect, useRef, useState } from 'react';
-import { EditorContent, useEditor } from '@tiptap/react';
+import { useEffect, useState } from 'react';
+import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
 import { CustomCodeBlock } from '../../../shared/extensions/CustomCodeBlock';
 import Toolbar from '../components/EditorToolbar';
-import api from '../../../shared/utils/axios';
-import { useAuth } from '../../../shared/hooks/useAuth';
+
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchTags } from '../../../shared/services/tagService';
 import { fetchCategories } from '../../../shared/services/categoryService';
@@ -23,7 +22,7 @@ import { Tag } from '../../../shared/types/Tag';
 import { Category } from '../../../shared/types/Category';
 import { toast } from 'react-hot-toast';
 import '../styles/WritePage.scss';
-import '../../../shared/styles/editor/code-block.scss';
+import '../styles/CodeBlock.scss';
 import EditorWrapper from '../components/EditorWrapper';
 
 const LANGUAGES = ['en', 'pt', 'de', 'es'] as const;
@@ -55,13 +54,10 @@ const WritePage = () => {
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
 
-  // Initialize tiptap editors for each language
   const editors = LANGUAGES.reduce((acc, lang) => {
     acc[lang] = useEditor({
       extensions: [
-        StarterKit.configure({
-          codeBlock: false, // disable default code block
-        }),
+        StarterKit.configure({ codeBlock: false }),
         Underline,
         Image,
         TextAlign.configure({
@@ -87,41 +83,28 @@ const WritePage = () => {
 
   useEffect(() => {
     if (!id) return;
-
-    const safe = (value: any): string => (typeof value === 'string' ? value : '');
-
+    console.log('[DEBUG] Loading post with ID:', id);
     fetchPost(id)
       .then((post) => {
+        console.log('[DEBUG] Post fetched successfully:', post);
         setTranslations({
-          en: {
-            title: safe(post.translations?.en?.title),
-            description: safe(post.translations?.en?.description),
-            content: safe(post.translations?.en?.content),
-          },
-          pt: {
-            title: safe(post.translations?.pt?.title),
-            description: safe(post.translations?.pt?.description),
-            content: safe(post.translations?.pt?.content),
-          },
-          de: {
-            title: safe(post.translations?.de?.title),
-            description: safe(post.translations?.de?.description),
-            content: safe(post.translations?.de?.content),
-          },
-          es: {
-            title: safe(post.translations?.es?.title),
-            description: safe(post.translations?.es?.description),
-            content: safe(post.translations?.es?.content),
-          },
+          en: post.translations?.en || { title: '', description: '', content: '' },
+          pt: post.translations?.pt || { title: '', description: '', content: '' },
+          de: post.translations?.de || { title: '', description: '', content: '' },
+          es: post.translations?.es || { title: '', description: '', content: '' },
         });
 
-        setTags(post.tags || []);
-        setCategories(post.categories || []);
+        // ✅ Map over tags and categories to extract only the IDs (string[])
+        setTags(post.tags?.map((tag: any) => tag._id || tag) || []);
+        setCategories(post.categories?.map((cat: any) => cat._id || cat) || []);
         setCoverUrl(post.image || '');
         setStatus(post.status || 'published');
         setIsQuickPost(post.isQuickPost || false);
       })
-      .catch(() => toast.error('Failed to load post'));
+      .catch((err) => {
+        console.error('[ERROR] Failed to fetch post:', err);
+        toast.error('Failed to load post');
+      });
   }, [id]);
 
   useEffect(() => {
@@ -186,14 +169,11 @@ const WritePage = () => {
     }
 
     const payload = {
-      title: translations.en.title,
-      description: translations.en.description,
-      content: translations.en.content,
+      translations,
       tags,
       categories,
       image: coverUrl,
       isQuickPost,
-      translations,
       status,
     };
 

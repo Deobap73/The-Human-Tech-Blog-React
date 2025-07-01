@@ -1,5 +1,8 @@
 // /src/features/post/pages/SinglePostPage.tsx
 
+import '../styles/CodeBlock.scss'; // Include code block styles
+import hljs from 'highlight.js'; // import highlight.js
+import 'highlight.js/styles/github-dark.css'; // add desired theme
 import '../styles/SinglePostPage.scss';
 import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -20,9 +23,7 @@ type PostUser = {
   avatar?: string;
 };
 
-// --- NOVO: helper para obter o nome da tag na língua ativa
 function getTagLabel(tag: any, lang: string) {
-  // Preferência para translations, fallback para name
   if (tag.translations && tag.translations[lang]?.name) return tag.translations[lang].name;
   if (tag.translations && tag.translations.en?.name) return tag.translations.en.name;
   return tag.name || 'Tag';
@@ -52,6 +53,11 @@ export const SinglePostPage = () => {
     fetchPost();
   }, [slug, i18n.language]);
 
+  useEffect(() => {
+    // ✅ Highlight code blocks after post content is rendered
+    hljs.highlightAll();
+  }, [post]);
+
   if (error) {
     return (
       <div className='single-post-page single-post-page--error'>
@@ -78,12 +84,10 @@ export const SinglePostPage = () => {
 
   const user: PostUser = (post as any).user || (post as any).author || {};
 
-  // NOVO: Preparar tags do post
   const tags = Array.isArray(post.tags) ? post.tags : [];
 
   return (
     <div className='single-post-page'>
-      {/* ---------- First block: Horizontal Header ---------- */}
       <section className='single-post-page__header-row'>
         <div className='single-post-page__header-info'>
           <h1 className='single-post-page__title'>{translation.title}</h1>
@@ -111,14 +115,12 @@ export const SinglePostPage = () => {
         </div>
       </section>
 
-      {/* ---------- Second block: Main + Sidebar ---------- */}
       <div className='single-post-page__body-row'>
         <main className='single-post-page__main' aria-label={translation.title}>
           <div className='single-post-page__category-bar'>
             <span className='single-post-page__category'>{category}</span>
           </div>
 
-          {/* NOVO: bloco de tags */}
           {tags.length > 0 && (
             <div className='single-post-page__tags' aria-label={t('tags', 'Tags')}>
               {tags.map((tag: any) => (
@@ -132,14 +134,15 @@ export const SinglePostPage = () => {
             </div>
           )}
 
-          {/* Render formatted HTML content safely */}
           <div
             className='single-post-page__description'
             dangerouslySetInnerHTML={{ __html: translation.content || '' }}
           />
+
           <div className='single-post-page__reactions'>
             <ReactionButtons postId={post._id} />
           </div>
+
           <section className='single-post-page__comments-section'>
             <h3 className='single-post-page__comments-title'>
               {t('postPage.comments', 'Comments')}
@@ -158,7 +161,6 @@ export const SinglePostPage = () => {
         </aside>
       </div>
 
-      {/* ---------- Third block: Back to home button ---------- */}
       <div className='single-post-page__footer'>
         <Link to='/' className='single-post-page__back-link'>
           {t('postPage.backToHome')}

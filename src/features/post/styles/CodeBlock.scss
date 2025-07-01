@@ -1,0 +1,56 @@
+// src/features/post/styles/CodeBlock.scss
+
+/* Style override for TipTap CodeBlock */
+.ProseMirror pre {
+  background: #282c34;
+  color: #ffffff;
+  padding: 1rem;
+  max-width: 48.438rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: var(--font-size-sm);
+  margin: 1.5rem 0;
+  position: relative;
+  line-height: 1.5;
+
+  code {
+    background: transparent !important;
+    padding: 0;
+    color: inherit;
+    font-size: var(--font-size-sm);
+  }
+
+  /* Optional scroll shadows */
+  &::before {
+    content: attr(data-language);
+    position: absolute;
+    top: 0.4rem;
+    right: 1rem;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #999;
+  }
+}
+
+/* Applies to published posts (rendered HTML) */
+.single-post-page pre {
+  background: #282c34;
+  color: #ffffff;
+  padding: 1rem;
+  max-width: 48.438rem;
+  border-radius: 12px;
+  overflow-x: auto;
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: var(--font-size-sm);
+  margin: 1.5rem 0;
+  line-height: 1.5;
+}
+
+.single-post-page pre code {
+  background: transparent !important;
+  padding: 0;
+  color: inherit;
+  font-size: var(--font-size-sm);
+}
