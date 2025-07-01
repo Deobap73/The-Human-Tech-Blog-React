@@ -24,6 +24,7 @@ import { Category } from '../../../shared/types/Category';
 import { toast } from 'react-hot-toast';
 import '../styles/WritePage.scss';
 import '../../../shared/styles/editor/code-block.scss';
+import EditorWrapper from '../components/EditorWrapper';
 
 const LANGUAGES = ['en', 'pt', 'de', 'es'] as const;
 type Language = (typeof LANGUAGES)[number];
@@ -58,10 +59,9 @@ const WritePage = () => {
   const editors = LANGUAGES.reduce((acc, lang) => {
     acc[lang] = useEditor({
       extensions: [
-        // Disable default CodeBlock
-        StarterKit.configure({ codeBlock: false }),
-        // Add custom CodeBlock with syntax highlighting
-        CustomCodeBlock,
+        StarterKit.configure({
+          codeBlock: false, // disable default code block
+        }),
         Underline,
         Image,
         TextAlign.configure({
@@ -69,6 +69,7 @@ const WritePage = () => {
           alignments: ['left', 'center', 'right', 'justify'],
           defaultAlignment: 'left',
         }),
+        CustomCodeBlock,
       ],
       content: translations[lang].content,
     });
@@ -232,7 +233,7 @@ const WritePage = () => {
               <Toolbar editor={editors[currentLang]!} onPublish={() => undefined} />
             </div>
             <div className='write-page__editor-content'>
-              <EditorContent editor={editors[currentLang]!} />
+              <EditorWrapper editor={editors[currentLang]!} />
             </div>
           </div>
         )}

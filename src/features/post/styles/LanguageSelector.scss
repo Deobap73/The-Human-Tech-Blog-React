@@ -1,0 +1,31 @@
+// src/features/post/styles/LanguageSelector.scss
+
+.language-selector {
+  position: absolute;
+  top: -2.5rem;
+  right: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.5rem;
+  background-color: var(--background-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  z-index: 10;
+
+  &__label {
+    font-weight: 600;
+    color: var(--text-color);
+  }
+
+  &__dropdown {
+    padding: 0.25rem 0.4rem;
+    font-size: 0.85rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--background-secondary);
+    color: var(--text-color);
+    cursor: pointer;
+  }
+}
