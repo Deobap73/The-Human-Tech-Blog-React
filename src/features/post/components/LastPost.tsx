@@ -12,25 +12,28 @@ interface LastPostProps {
 }
 
 export const LastPost = ({ post, lang }: LastPostProps) => {
-  if (!post || post.isQuickPost) return null;
+  if (!post || post.isQuickPost === true) {
+    /*  console.log('[DEBUG] LastPost skipped: isQuickPost === true'); */
+    return null;
+  }
 
   const translation =
     getPostTranslation(post.translations, lang) || getPostTranslation(post.translations, 'en');
 
-  if (!translation || !translation.title?.trim()) return null;
-
-  let firstCategory = 'Uncategorized';
-  let firstLogo = '';
-  if (Array.isArray(post.categories) && post.categories.length > 0) {
-    const cat = post.categories[0];
-    if (cat && typeof cat === 'object' && 'translations' in cat) {
-      firstCategory = getCategoryName(cat as any, lang) || getCategoryName(cat as any, 'en');
-      // @ts-ignore
-      firstLogo = resolveLogoUrl((cat as any).logo);
-    } else if (typeof cat === 'string') {
-      firstCategory = cat;
-    }
+  if (!translation?.title?.trim()) {
+    /* console.log('[DEBUG] LastPost skipped: missing title'); */
+    return null;
   }
+
+  const firstCategory =
+    Array.isArray(post.categories) && post.categories.length > 0
+      ? getCategoryName(post.categories[0] as any, lang)
+      : 'Uncategorized';
+
+  const firstLogo =
+    Array.isArray(post.categories) && post.categories.length > 0
+      ? resolveLogoUrl((post.categories[0] as any).logo)
+      : '';
 
   const imageSrc = post.image || firstLogo || '/default-image.jpg';
 
@@ -39,7 +42,7 @@ export const LastPost = ({ post, lang }: LastPostProps) => {
       <div className='lastPost__content'>
         <span className='lastPost__category'>{firstCategory}</span>
         <h2 className='lastPost__title'>{translation.title}</h2>
-        <p className='lastPost__description'>{translation.description || ''}</p>
+        <p className='lastPost__description'>{translation.description}</p>
         <Link to={`/${lang}/posts/${post.slug}`} className='lastPost__link'>
           Read More
         </Link>

@@ -52,19 +52,21 @@ export const HomePage = () => {
     })
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-  const featuredPostToShow = validPublishedPosts[0];
-  const lastPostToShow = validPublishedPosts[1];
+  const normalPosts = validPublishedPosts.filter((post) => !post.isQuickPost);
+  const featuredPostToShow = normalPosts[0];
+  const lastPostToShow = normalPosts[1];
 
   const techShorts = validPublishedPosts.filter((post) => post.isQuickPost);
   const shortsToRender = isMobile ? techShorts.slice(0, 4) : techShorts.slice(0, 5);
 
-  console.log('[DEBUG] validPublishedPosts', validPublishedPosts);
+  /*  console.log('[DEBUG] validPublishedPosts', validPublishedPosts);
   console.log('[DEBUG] featuredPostToShow', featuredPostToShow);
-  console.log('[DEBUG] lastPostToShow', lastPostToShow);
+  console.log('[DEBUG] lastPostToShow', lastPostToShow); */
 
   return (
     <div className='home'>
       <RecentPosts posts={validPublishedPosts.slice(0, 12)} lang={lang} />
+
       {shortsToRender.length > 0 && (
         <section className='home__shorts'>
           <h2 className='home__shorts-title'>Tech Shorts</h2>
@@ -77,7 +79,9 @@ export const HomePage = () => {
           </a>
         </section>
       )}
+
       <CategoryList />
+
       {featuredPostToShow && <Featured post={featuredPostToShow} lang={lang} />}
       <Sponsors />
       {lastPostToShow && <LastPost post={lastPostToShow} lang={lang} />}

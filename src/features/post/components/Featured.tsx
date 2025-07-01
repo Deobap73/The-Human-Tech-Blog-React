@@ -12,35 +12,37 @@ interface FeaturedProps {
 }
 
 export const Featured = ({ post, lang }: FeaturedProps) => {
-  if (!post || post.isQuickPost) return null;
+  if (!post || post.isQuickPost === true) {
+    /*  console.log('[DEBUG] Featured skipped: isQuickPost === true'); */
+    return null;
+  }
 
-  // Try current lang or fallback to 'en'
   const translation =
     getPostTranslation(post.translations, lang) || getPostTranslation(post.translations, 'en');
 
-  if (!translation || !translation.title?.trim()) return null;
-
-  let firstCategory = 'Uncategorized';
-  let firstLogo = '';
-  if (Array.isArray(post.categories) && post.categories.length > 0) {
-    const cat = post.categories[0];
-    if (cat && typeof cat === 'object' && 'translations' in cat) {
-      firstCategory = getCategoryName(cat as any, lang) || getCategoryName(cat as any, 'en');
-      // @ts-ignore
-      firstLogo = resolveLogoUrl((cat as any).logo);
-    } else if (typeof cat === 'string') {
-      firstCategory = cat;
-    }
+  if (!translation?.title?.trim()) {
+    /*     console.log('[DEBUG] Featured skipped: missing title'); */
+    return null;
   }
+
+  const firstCategory =
+    Array.isArray(post.categories) && post.categories.length > 0
+      ? getCategoryName(post.categories[0] as any, lang)
+      : 'Uncategorized';
+
+  const firstLogo =
+    Array.isArray(post.categories) && post.categories.length > 0
+      ? resolveLogoUrl((post.categories[0] as any).logo)
+      : '';
 
   const imageSrc = post.image || firstLogo || '/default-image.jpg';
 
   return (
     <section className='featured'>
-      <div className='featured__image-container featuredImage'>
-        <img src={imageSrc} alt={translation.title} className='featured__image' />
+      <div className='featured__image-container'>
+        <img src={imageSrc} alt={translation.title || 'No title'} className='featured__image' />
       </div>
-      <div className='featured__content featuredArticle'>
+      <div className='featured__content'>
         <span className='featured__category'>{firstCategory}</span>
         <h2 className='featured__title'>{translation.title}</h2>
         <p className='featured__description'>{translation.description || ''}</p>
