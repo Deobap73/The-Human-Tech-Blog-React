@@ -87,18 +87,34 @@ const WritePage = () => {
 
   useEffect(() => {
     if (!id) return;
+
+    const safe = (value: any): string => (typeof value === 'string' ? value : '');
+
     fetchPost(id)
       .then((post) => {
         setTranslations({
           en: {
-            title: post.title || '',
-            description: post.description || '',
-            content: post.content || '',
+            title: safe(post.translations?.en?.title),
+            description: safe(post.translations?.en?.description),
+            content: safe(post.translations?.en?.content),
           },
-          pt: post.translations?.pt || { title: '', description: '', content: '' },
-          de: post.translations?.de || { title: '', description: '', content: '' },
-          es: post.translations?.es || { title: '', description: '', content: '' },
+          pt: {
+            title: safe(post.translations?.pt?.title),
+            description: safe(post.translations?.pt?.description),
+            content: safe(post.translations?.pt?.content),
+          },
+          de: {
+            title: safe(post.translations?.de?.title),
+            description: safe(post.translations?.de?.description),
+            content: safe(post.translations?.de?.content),
+          },
+          es: {
+            title: safe(post.translations?.es?.title),
+            description: safe(post.translations?.es?.description),
+            content: safe(post.translations?.es?.content),
+          },
         });
+
         setTags(post.tags || []);
         setCategories(post.categories || []);
         setCoverUrl(post.image || '');
