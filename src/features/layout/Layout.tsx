@@ -1,22 +1,20 @@
 // /src/features/layout/Layout.tsx
 
 import './styles/Layout.scss';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useParams, Navigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import { Footer } from './Footer';
 import { useAuth } from '../../shared/hooks/useAuth';
-import { ReactNode, useEffect } from 'react'; // Importa useEffect!
+import { ReactNode, useEffect } from 'react';
 import { getNavbarConfig } from './navbarConfig';
-
-// --- Import login modal and context hook
 import { LoginModal } from '../auth/components/LoginModal';
 import { RegisterModal } from '../auth/components/RegisterModal';
 import { useLoginModal } from '../../shared/hooks/useLoginModal';
+import { useTranslation } from 'react-i18next';
+import i18n from 'i18next';
 
-/**
- * Layout component that wraps the main content, navigation bar, and footer.
- * Handles global loading state and applies consistent theming and spacing.
- */
+const supportedLangs = ['en', 'pt', 'de', 'es']; // Define supported langs
+
 type Props = {
   children?: ReactNode;
 };
@@ -25,11 +23,24 @@ const Layout = ({ children }: Props) => {
   const { loading } = useAuth();
   const location = useLocation();
   const navbarConfig = getNavbarConfig(location.pathname);
+  const { lang } = useParams(); // 🔴 Get the lang from the URL
+  const { i18n } = useTranslation();
 
-  // --- Modal context
+  // 🔴 Multilingual validation
+  useEffect(() => {
+    if (lang && supportedLangs.includes(lang) && i18n.language !== lang) {
+      i18n.changeLanguage(lang);
+      localStorage.setItem('i18n_lang', lang);
+    }
+  }, [lang, i18n]);
+
+  // 🔴 Redirect if lang is invalid
+  if (lang && !supportedLangs.includes(lang)) {
+    return <Navigate to={`/en`} replace />;
+  }
+
   const { isOpen, close, registerOpen, closeRegister, open } = useLoginModal();
 
-  // --- Listen for "auth:logout" event to open login modal ---
   useEffect(() => {
     const onLogout = () => {
       open();
@@ -47,7 +58,6 @@ const Layout = ({ children }: Props) => {
         {children || <Outlet />}
       </main>
       <Footer />
-      {/* Login/Register Modal Global */}
       {isOpen && !registerOpen && <LoginModal onClose={close} />}
       {isOpen && registerOpen && <RegisterModal onClose={closeRegister} />}
     </div>
