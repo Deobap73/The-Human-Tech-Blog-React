@@ -28,13 +28,13 @@ const CodeLanguageSelector = ({ editor, pos, language }: LanguageSelectorProps) 
   };
 
   return (
-    <div className='language-selector'>
+    <div className='code-language-selector'>
       <label htmlFor={`lang-${pos}`} className='language-selector__label'>
         Language:
       </label>
       <select
         id={`lang-${pos}`}
-        className='language-selector__dropdown'
+        className='code-language-selector__dropdown'
         value={language}
         onChange={handleChange}>
         {SUPPORTED_LANGUAGES.map((lang) => (

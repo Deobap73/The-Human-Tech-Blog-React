@@ -47,7 +47,8 @@ export const HomePage = () => {
     .filter((post) => post.status === 'published')
     .filter((post) => {
       const translation = getPostTranslation(post.translations, lang);
-      return translation.title && translation.title.trim().length > 0;
+      const cleanTitle = translation.title?.replace(/<[^>]*>/g, '').trim();
+      return !!cleanTitle;
     })
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
@@ -56,6 +57,10 @@ export const HomePage = () => {
 
   const techShorts = validPublishedPosts.filter((post) => post.isQuickPost);
   const shortsToRender = isMobile ? techShorts.slice(0, 4) : techShorts.slice(0, 5);
+
+  console.log('[DEBUG] validPublishedPosts', validPublishedPosts);
+  console.log('[DEBUG] featuredPostToShow', featuredPostToShow);
+  console.log('[DEBUG] lastPostToShow', lastPostToShow);
 
   return (
     <div className='home'>

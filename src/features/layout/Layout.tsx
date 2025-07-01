@@ -5,28 +5,22 @@ import { Outlet, useLocation, useParams, Navigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import { Footer } from './Footer';
 import { useAuth } from '../../shared/hooks/useAuth';
-import { ReactNode, useEffect } from 'react';
+import { useEffect } from 'react';
 import { getNavbarConfig } from './navbarConfig';
 import { LoginModal } from '../auth/components/LoginModal';
 import { RegisterModal } from '../auth/components/RegisterModal';
 import { useLoginModal } from '../../shared/hooks/useLoginModal';
 import { useTranslation } from 'react-i18next';
-import i18n from 'i18next';
 
-const supportedLangs = ['en', 'pt', 'de', 'es']; // Define supported langs
+const supportedLangs = ['en', 'pt', 'de', 'es'];
 
-type Props = {
-  children?: ReactNode;
-};
-
-const Layout = ({ children }: Props) => {
+const Layout = () => {
   const { loading } = useAuth();
   const location = useLocation();
   const navbarConfig = getNavbarConfig(location.pathname);
-  const { lang } = useParams(); // 🔴 Get the lang from the URL
+  const { lang } = useParams();
   const { i18n } = useTranslation();
 
-  // 🔴 Multilingual validation
   useEffect(() => {
     if (lang && supportedLangs.includes(lang) && i18n.language !== lang) {
       i18n.changeLanguage(lang);
@@ -34,7 +28,6 @@ const Layout = ({ children }: Props) => {
     }
   }, [lang, i18n]);
 
-  // 🔴 Redirect if lang is invalid
   if (lang && !supportedLangs.includes(lang)) {
     return <Navigate to={`/en`} replace />;
   }
@@ -55,7 +48,7 @@ const Layout = ({ children }: Props) => {
     <div className='layout'>
       {!navbarConfig.hideNavbar && <Navbar />}
       <main className='layout__main' role='main'>
-        {children || <Outlet />}
+        <Outlet />
       </main>
       <Footer />
       {isOpen && !registerOpen && <LoginModal onClose={close} />}
