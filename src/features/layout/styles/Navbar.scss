@@ -34,9 +34,17 @@
     height: 50vh;
     min-height: 220px;
   }
+  @media (max-width: 900px) {
+    height: 32vh;
+    min-height: 150px;
+  }
   @media (max-width: 768px) {
-    height: 35vh;
+    height: 27vh; /* estava 35vh, reduzido para mais respiro */
     min-height: 120px;
+  }
+  @media (max-width: 600px) {
+    height: 25vh;
+    min-height: 100px;
   }
 
   .navbar--compact {
@@ -65,7 +73,7 @@
     height: 100%;
     min-height: 100%;
     object-fit: cover;
-    object-position: center;
+    object-position: right center; // 👈 AJUSTE: privilegia o lado direito da imagem
     z-index: 0;
     pointer-events: none;
     aspect-ratio: 16 / 6;
@@ -73,8 +81,17 @@
     @media (max-width: 1024px) {
       aspect-ratio: 16 / 8;
     }
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
       aspect-ratio: 16 / 10;
+      object-position: 80% center; // privilegia ainda mais a direita
+    }
+    @media (max-width: 768px) {
+      aspect-ratio: 16 / 11;
+      object-position: 90% center; // em telemóveis, mostra quase só o lado direito
+    }
+    @media (max-width: 600px) {
+      aspect-ratio: 16 / 13;
+      object-position: 96% center; // foca na tua foto
     }
   }
 
