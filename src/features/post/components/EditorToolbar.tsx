@@ -16,6 +16,7 @@ import {
   AlignRight,
   AlignJustify,
   Code2,
+  Code,
 } from 'lucide-react';
 import '../styles/EditorToolbar.scss';
 
@@ -69,7 +70,7 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
       </button>
 
       {/* Headings */}
-      {[1, 2, 3, 4, 5].map((level) => (
+      {([1, 2, 3, 4, 5, 6] as const).map((level) => (
         <button
           key={level}
           type='button'
@@ -132,6 +133,17 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
         aria-label='Code Block'
         onClick={() => editor.chain().focus().toggleCodeBlock().run()}>
         <Code2 size={16} />
+      </button>
+
+      {/* Inline Code */}
+      <button
+        type='button'
+        className={`editor-toolbar__btn${
+          editor.isActive('code') ? ' editor-toolbar__btn--active' : ''
+        }`}
+        aria-label='Inline Code'
+        onClick={() => editor.chain().focus().toggleCode().run()}>
+        <Code size={16} />
       </button>
 
       {/* Undo / Redo */}

@@ -25,7 +25,9 @@
     object-fit: cover;
     aspect-ratio: 9 / 12;
   }
-
+  &__content {
+    padding: 0 var(--padding-sm);
+  }
   &__title {
     font-size: var(--font-size-sm);
     font-weight: 600;

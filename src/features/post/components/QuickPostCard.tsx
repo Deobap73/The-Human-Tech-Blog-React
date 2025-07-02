@@ -33,7 +33,7 @@ export const QuickPostCard = ({ post, lang }: Props) => {
         <div className='quick-post-card__content'>
           <h3 className='quick-post-card__title'>
             {translation.title.length > 55
-              ? `${translation.title.substring(0, 55)}...`
+              ? `${translation.title.substring(0, 50)}...`
               : translation.title}
           </h3>
           <p className='quick-post-card__description'>
