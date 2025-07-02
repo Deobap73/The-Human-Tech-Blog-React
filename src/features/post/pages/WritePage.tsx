@@ -25,6 +25,7 @@ import { toast } from 'react-hot-toast';
 import '../styles/WritePage.scss';
 import '../styles/CodeBlock.scss';
 import EditorWrapper from '../components/EditorWrapper';
+import ScrollToTop from '../../../shared/components/ScrollToTop';
 
 const LANGUAGES = ['en', 'pt', 'de', 'es'] as const;
 type Language = (typeof LANGUAGES)[number];
@@ -195,113 +196,116 @@ const WritePage = () => {
   };
 
   return (
-    <div className='write-page'>
-      <h2>{id ? 'Edit Post' : 'Create Post'}</h2>
-      <div className='write-page__tabs'>
-        {LANGUAGES.map((lang) => (
-          <button
-            key={lang}
-            className={`write-page__tab${currentLang === lang ? ' write-page__tab--active' : ''}`}
-            onClick={() => handleTabChange(lang)}
-            type='button'>
-            {lang.toUpperCase()}
-          </button>
-        ))}
-      </div>
-      <form className='write-page__form' onSubmit={handleSubmit}>
-        {error && <div className='write-page__error'>{error}</div>}
-        <input
-          type='text'
-          placeholder='Title'
-          value={translations[currentLang].title}
-          onChange={(e) => handleInput('title', e.target.value)}
-          required={currentLang === 'en'}
-          className='write-page__input'
-        />
-        <textarea
-          placeholder='Description'
-          value={translations[currentLang].description}
-          onChange={(e) => handleInput('description', e.target.value)}
-          className='write-page__textarea'
-        />
-        {editors[currentLang] && (
-          <div className='write-page__editor-block'>
-            <div className='write-page__toolbar-sticky'>
-              <Toolbar editor={editors[currentLang]!} onPublish={() => undefined} />
-            </div>
-            <div className='write-page__editor-content'>
-              <EditorWrapper editor={editors[currentLang]!} />
-            </div>
-          </div>
-        )}
-        <label htmlFor='cover-upload' className='write-page__upload-btn'>
-          Upload cover
-        </label>
-        <input
-          id='cover-upload'
-          type='file'
-          accept='image/*'
-          style={{ display: 'none' }}
-          onChange={async (e) => {
-            const file = e.target.files?.[0];
-            if (file) {
-              setCover(file);
-              await handleImageUpload(file);
-            }
-          }}
-        />
-        {coverUrl && (
-          <div className='write-page__cover-preview'>
-            <img src={coverUrl} alt='Cover Preview' className='write-page__cover-img' />
-          </div>
-        )}
-        <label className='write-page__label'>
-          Tags:
-          <select multiple value={tags} onChange={handleTags} className='write-page__select'>
-            {availableTags.map((tag) => (
-              <option key={tag._id} value={tag._id}>
-                {tag.translations?.en?.name || '[no name]'}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className='write-page__label'>
-          Categories:
-          <select
-            multiple
-            value={categories}
-            onChange={handleCategories}
-            className='write-page__select'>
-            {availableCategories.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.translation?.name || '[no name]'}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className='write-page__label'>
-          Status:
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value as PostStatus)}
-            className='write-page__select'>
-            <option value='draft'>Draft</option>
-            <option value='published'>Published</option>
-          </select>
-        </label>
-        <label className='write-page__label'>
+    <>
+      <ScrollToTop />
+      <div className='write-page'>
+        <h2>{id ? 'Edit Post' : 'Create Post'}</h2>
+        <div className='write-page__tabs'>
+          {LANGUAGES.map((lang) => (
+            <button
+              key={lang}
+              className={`write-page__tab${currentLang === lang ? ' write-page__tab--active' : ''}`}
+              onClick={() => handleTabChange(lang)}
+              type='button'>
+              {lang.toUpperCase()}
+            </button>
+          ))}
+        </div>
+        <form className='write-page__form' onSubmit={handleSubmit}>
+          {error && <div className='write-page__error'>{error}</div>}
           <input
-            type='checkbox'
-            checked={isQuickPost}
-            onChange={(e) => setIsQuickPost(e.target.checked)}
-          />{' '}
-          This is a QuickPost (Tech Short)
-        </label>
-        <button type='submit' className='write-page__btn' disabled={saving}>
-          {saving ? 'Publishing...' : id ? 'Update Post' : 'Publish Post'}
-        </button>
-      </form>
-    </div>
+            type='text'
+            placeholder='Title'
+            value={translations[currentLang].title}
+            onChange={(e) => handleInput('title', e.target.value)}
+            required={currentLang === 'en'}
+            className='write-page__input'
+          />
+          <textarea
+            placeholder='Description'
+            value={translations[currentLang].description}
+            onChange={(e) => handleInput('description', e.target.value)}
+            className='write-page__textarea'
+          />
+          {editors[currentLang] && (
+            <div className='write-page__editor-block'>
+              <div className='write-page__toolbar-sticky'>
+                <Toolbar editor={editors[currentLang]!} onPublish={() => undefined} />
+              </div>
+              <div className='write-page__editor-content'>
+                <EditorWrapper editor={editors[currentLang]!} />
+              </div>
+            </div>
+          )}
+          <label htmlFor='cover-upload' className='write-page__upload-btn'>
+            Upload cover
+          </label>
+          <input
+            id='cover-upload'
+            type='file'
+            accept='image/*'
+            style={{ display: 'none' }}
+            onChange={async (e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                setCover(file);
+                await handleImageUpload(file);
+              }
+            }}
+          />
+          {coverUrl && (
+            <div className='write-page__cover-preview'>
+              <img src={coverUrl} alt='Cover Preview' className='write-page__cover-img' />
+            </div>
+          )}
+          <label className='write-page__label'>
+            Tags:
+            <select multiple value={tags} onChange={handleTags} className='write-page__select'>
+              {availableTags.map((tag) => (
+                <option key={tag._id} value={tag._id}>
+                  {tag.translations?.en?.name || '[no name]'}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className='write-page__label'>
+            Categories:
+            <select
+              multiple
+              value={categories}
+              onChange={handleCategories}
+              className='write-page__select'>
+              {availableCategories.map((cat) => (
+                <option key={cat._id} value={cat._id}>
+                  {cat.translation?.name || '[no name]'}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className='write-page__label'>
+            Status:
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value as PostStatus)}
+              className='write-page__select'>
+              <option value='draft'>Draft</option>
+              <option value='published'>Published</option>
+            </select>
+          </label>
+          <label className='write-page__label'>
+            <input
+              type='checkbox'
+              checked={isQuickPost}
+              onChange={(e) => setIsQuickPost(e.target.checked)}
+            />{' '}
+            This is a QuickPost (Tech Short)
+          </label>
+          <button type='submit' className='write-page__btn' disabled={saving}>
+            {saving ? 'Publishing...' : id ? 'Update Post' : 'Publish Post'}
+          </button>
+        </form>
+      </div>
+    </>
   );
 };
 

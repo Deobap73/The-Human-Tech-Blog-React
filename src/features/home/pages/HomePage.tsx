@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import CategoryList from '../../post/components/CategoryList';
 import { Featured } from '../../post/components/Featured';
 import { getPostTranslation } from '../../../shared/utils/i18nHelpers';
+import ScrollToTop from '../../../shared/components/ScrollToTop';
 
 export const HomePage = () => {
   const { lang: langParam } = useParams();
@@ -64,28 +65,31 @@ export const HomePage = () => {
   console.log('[DEBUG] lastPostToShow', lastPostToShow); */
 
   return (
-    <div className='home'>
-      <RecentPosts posts={validPublishedPosts.slice(0, 12)} lang={lang} />
+    <>
+      <ScrollToTop />
+      <div className='home'>
+        <RecentPosts posts={validPublishedPosts.slice(0, 12)} lang={lang} />
 
-      {shortsToRender.length > 0 && (
-        <section className='home__shorts'>
-          <h2 className='home__shorts-title'>Tech Shorts</h2>
-          <a href={`/${lang}/shorts`} className='home__shorts-link'>
-            <div className='home__shorts-list'>
-              {shortsToRender.map((post) => (
-                <QuickPostCard key={post._id} post={post} lang={lang} />
-              ))}
-            </div>
-          </a>
-        </section>
-      )}
+        {shortsToRender.length > 0 && (
+          <section className='home__shorts'>
+            <h2 className='home__shorts-title'>Tech Shorts</h2>
+            <a href={`/${lang}/shorts`} className='home__shorts-link'>
+              <div className='home__shorts-list'>
+                {shortsToRender.map((post) => (
+                  <QuickPostCard key={post._id} post={post} lang={lang} />
+                ))}
+              </div>
+            </a>
+          </section>
+        )}
 
-      <CategoryList />
+        <CategoryList />
 
-      {featuredPostToShow && <Featured post={featuredPostToShow} lang={lang} />}
-      <Sponsors />
-      {lastPostToShow && <LastPost post={lastPostToShow} lang={lang} />}
-    </div>
+        {featuredPostToShow && <Featured post={featuredPostToShow} lang={lang} />}
+        <Sponsors />
+        {lastPostToShow && <LastPost post={lastPostToShow} lang={lang} />}
+      </div>
+    </>
   );
 };
 

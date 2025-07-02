@@ -11,6 +11,7 @@ import { Category } from '../../../shared/types/Category';
 import { resolveLogoUrl } from '../../../shared/utils/mediaHelpers'; // <-- Import helper
 import CardList from '../components/CardList';
 import '../styles/CategoryPage.scss';
+import ScrollToTop from '../../../shared/components/ScrollToTop';
 
 const CategoryPage = () => {
   const { slug } = useParams();
@@ -51,31 +52,34 @@ const CategoryPage = () => {
   if (loading) return <p className='category-page__loading'>Loading...</p>;
 
   return (
-    <div className='category-page'>
-      {category && (
-        <div className='category-page__header'>
-          {category.logo && (
-            <img
-              src={resolveLogoUrl(category.logo)}
-              alt={name}
-              className='category-page__logo'
-              style={{ height: 40, marginRight: 12 }}
-            />
-          )}
-          <h2 className='category-page__title'>{name}</h2>
-          {description && <div className='category-page__description'>{description}</div>}
-        </div>
-      )}
-      {!category && <h2 className='category-page__title'>{slug}</h2>}
-      {posts.length > 0 ? (
-        <CardList posts={posts} lang={i18n.language} />
-      ) : (
-        <p className='category-page__no-posts'>No posts found for this category.</p>
-      )}
-      <Link to='/' className='category-page__back-link'>
-        Voltar para o início
-      </Link>
-    </div>
+    <>
+      <ScrollToTop />
+      <div className='category-page'>
+        {category && (
+          <div className='category-page__header'>
+            {category.logo && (
+              <img
+                src={resolveLogoUrl(category.logo)}
+                alt={name}
+                className='category-page__logo'
+                style={{ height: 40, marginRight: 12 }}
+              />
+            )}
+            <h2 className='category-page__title'>{name}</h2>
+            {description && <div className='category-page__description'>{description}</div>}
+          </div>
+        )}
+        {!category && <h2 className='category-page__title'>{slug}</h2>}
+        {posts.length > 0 ? (
+          <CardList posts={posts} lang={i18n.language} />
+        ) : (
+          <p className='category-page__no-posts'>No posts found for this category.</p>
+        )}
+        <Link to='/' className='category-page__back-link'>
+          Voltar para o início
+        </Link>
+      </div>
+    </>
   );
 };
 

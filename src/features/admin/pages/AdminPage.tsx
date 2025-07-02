@@ -4,6 +4,7 @@ import Sidebar from '../components/Sidebar';
 import Topbar from '../components/Topbar';
 import { useAuth } from '../../../shared/hooks/useAuth';
 import '../styles/AdminPage.scss';
+import ScrollToTop from '../../../shared/components/ScrollToTop';
 
 const AdminPage = () => {
   const { user } = useAuth();
@@ -13,15 +14,18 @@ const AdminPage = () => {
   }
 
   return (
-    <div className='admin-layout'>
-      <Sidebar />
-      <div className='admin-content'>
-        <Topbar />
-        <main>
-          <Outlet />
-        </main>
+    <>
+      <ScrollToTop />
+      <div className='admin-layout'>
+        <Sidebar />
+        <div className='admin-content'>
+          <Topbar />
+          <main>
+            <Outlet />
+          </main>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -16,6 +16,7 @@ import { ReactionButtons } from '../components/ReactionButtons';
 import { getPostTranslation, getCategoryName, getTagName } from '../../../shared/utils/i18nHelpers';
 import RecentCategoryPosts from '../components/RecentCategoryPosts';
 import CategoryList from '../components/CategoryList';
+import ScrollToTop from '../../../shared/components/ScrollToTop';
 
 type PostUser = {
   _id?: string;
@@ -60,14 +61,17 @@ export const SinglePostPage = () => {
 
   if (error) {
     return (
-      <div className='single-post-page single-post-page--error'>
-        <h2 className='single-post-page__error-title'>
-          {t('postNotFound', 'Post not found or unpublished')}
-        </h2>
-        <Link to='/' className='single-post-page__back-link'>
-          <button className='single-post-page__back-button'>{t('backToHome')}</button>
-        </Link>
-      </div>
+      <>
+        <ScrollToTop />
+        <div className='single-post-page single-post-page--error'>
+          <h2 className='single-post-page__error-title'>
+            {t('postNotFound', 'Post not found or unpublished')}
+          </h2>
+          <Link to='/' className='single-post-page__back-link'>
+            <button className='single-post-page__back-button'>{t('backToHome')}</button>
+          </Link>
+        </div>
+      </>
     );
   }
 
@@ -87,86 +91,89 @@ export const SinglePostPage = () => {
   const tags = Array.isArray(post.tags) ? post.tags : [];
 
   return (
-    <div className='single-post-page'>
-      <section className='single-post-page__header-row'>
-        <div className='single-post-page__header-info'>
-          <h1 className='single-post-page__title'>{translation.title}</h1>
-          <div className='single-post-page__meta'>
-            <img
-              src={getAvatar(user || undefined)}
-              alt='User avatar'
-              className='single-post-page__avatar'
-              width={48}
-              height={48}
-            />
-            <div>
-              <div className='single-post-page__username'>{user.name || 'User'}</div>
-              <div className='single-post-page__date'>
-                {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ''}
+    <>
+      <ScrollToTop />
+      <div className='single-post-page'>
+        <section className='single-post-page__header-row'>
+          <div className='single-post-page__header-info'>
+            <h1 className='single-post-page__title'>{translation.title}</h1>
+            <div className='single-post-page__meta'>
+              <img
+                src={getAvatar(user || undefined)}
+                alt='User avatar'
+                className='single-post-page__avatar'
+                width={48}
+                height={48}
+              />
+              <div>
+                <div className='single-post-page__username'>{user.name || 'User'}</div>
+                <div className='single-post-page__date'>
+                  {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ''}
+                </div>
               </div>
             </div>
+            <BookmarkButton postId={post._id} className='single-post-page__bookmark-button' />
           </div>
-          <BookmarkButton postId={post._id} className='single-post-page__bookmark-button' />
-        </div>
-        <div className='single-post-page__header-image'>
-          {post.image && (
-            <img src={post.image} alt={translation.title} className='single-post-page__image' />
-          )}
-        </div>
-      </section>
-
-      <div className='single-post-page__body-row'>
-        <main className='single-post-page__main' aria-label={translation.title}>
-          <div className='single-post-page__category-bar'>
-            <span className='single-post-page__category'>{category}</span>
+          <div className='single-post-page__header-image'>
+            {post.image && (
+              <img src={post.image} alt={translation.title} className='single-post-page__image' />
+            )}
           </div>
+        </section>
 
-          {tags.length > 0 && (
-            <div className='single-post-page__tags' aria-label={t('tags', 'Tags')}>
-              {tags.map((tag: any) => (
-                <Link
-                  to={`/${i18n.language}/tags/${tag.slug}`}
-                  className='single-post-page__tag'
-                  key={tag._id}>
-                  #{getTagLabel(tag, i18n.language)}
-                </Link>
-              ))}
+        <div className='single-post-page__body-row'>
+          <main className='single-post-page__main' aria-label={translation.title}>
+            <div className='single-post-page__category-bar'>
+              <span className='single-post-page__category'>{category}</span>
             </div>
-          )}
 
-          <div
-            className='single-post-page__description'
-            dangerouslySetInnerHTML={{ __html: translation.content || '' }}
-          />
+            {tags.length > 0 && (
+              <div className='single-post-page__tags' aria-label={t('tags', 'Tags')}>
+                {tags.map((tag: any) => (
+                  <Link
+                    to={`/${i18n.language}/tags/${tag.slug}`}
+                    className='single-post-page__tag'
+                    key={tag._id}>
+                    #{getTagLabel(tag, i18n.language)}
+                  </Link>
+                ))}
+              </div>
+            )}
 
-          <div className='single-post-page__reactions'>
-            <ReactionButtons postId={post._id} />
-          </div>
+            <div
+              className='single-post-page__description'
+              dangerouslySetInnerHTML={{ __html: translation.content || '' }}
+            />
 
-          <section className='single-post-page__comments-section'>
-            <h3 className='single-post-page__comments-title'>
-              {t('postPage.comments', 'Comments')}
-            </h3>
-            <Comments postId={post._id} className='single-post-page__comments-list' />
-          </section>
-        </main>
+            <div className='single-post-page__reactions'>
+              <ReactionButtons postId={post._id} />
+            </div>
 
-        <aside className='single-post-page__sidebar' aria-label='Sidebar'>
-          <section className='single-post-page__sidebar-block'>
-            <RecentCategoryPosts currentPostId={post._id} lang={i18n.language} />
-          </section>
-          <section className='single-post-page__sidebar-block'>
-            <CategoryList />
-          </section>
-        </aside>
+            <section className='single-post-page__comments-section'>
+              <h3 className='single-post-page__comments-title'>
+                {t('postPage.comments', 'Comments')}
+              </h3>
+              <Comments postId={post._id} className='single-post-page__comments-list' />
+            </section>
+          </main>
+
+          <aside className='single-post-page__sidebar' aria-label='Sidebar'>
+            <section className='single-post-page__sidebar-block'>
+              <RecentCategoryPosts currentPostId={post._id} lang={i18n.language} />
+            </section>
+            <section className='single-post-page__sidebar-block'>
+              <CategoryList />
+            </section>
+          </aside>
+        </div>
+
+        <div className='single-post-page__footer'>
+          <Link to='/' className='single-post-page__back-link'>
+            {t('postPage.backToHome')}
+          </Link>
+        </div>
       </div>
-
-      <div className='single-post-page__footer'>
-        <Link to='/' className='single-post-page__back-link'>
-          {t('postPage.backToHome')}
-        </Link>
-      </div>
-    </div>
+    </>
   );
 };
 

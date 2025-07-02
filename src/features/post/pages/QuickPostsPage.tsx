@@ -6,6 +6,7 @@ import { Post } from '../../../shared/types/Post';
 import { getQuickPosts } from '../../../shared/services/postService';
 import QuickPostCard from '../components/QuickPostCard';
 import '../styles/QuickPostCard.scss';
+import ScrollToTop from '../../../shared/components/ScrollToTop';
 
 export const QuickPostsPage = () => {
   const { i18n } = useTranslation();
@@ -20,16 +21,19 @@ export const QuickPostsPage = () => {
     };
     fetch();
   }, []);
+  <h2 className='quick-posts__title'>Tech Shorts</h2>;
 
   return (
-    <main className='quick-posts'>
-      <h2 className='quick-posts__title'>Tech Shorts</h2>
-      <div className='quick-posts__list'>
-        {quickPosts.map((post) => (
-          <QuickPostCard key={post._id} post={post} lang={lang} />
-        ))}
-      </div>
-    </main>
+    <>
+      <ScrollToTop />
+      <main className='quick-posts'>
+        <div className='quick-posts__list'>
+          {quickPosts.map((post) => (
+            <QuickPostCard key={post._id} post={post} lang={lang} />
+          ))}
+        </div>
+      </main>
+    </>
   );
 };
 
