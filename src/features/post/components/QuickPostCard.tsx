@@ -40,7 +40,7 @@ export const QuickPostCard = ({ post, lang }: Props) => {
             <img
               src={getAvatar(user || undefined)}
               alt='User avatar'
-              className='single-post-page__avatar'
+              className='quick-post-card__avatar'
               width={48}
               height={48}
             />

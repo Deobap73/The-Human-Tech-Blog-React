@@ -6,6 +6,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
+import Link from '@tiptap/extension-link';
 import { CustomCodeBlock } from '../../../shared/extensions/CustomCodeBlock';
 import Toolbar from '../components/EditorToolbar';
 
@@ -66,6 +67,7 @@ const WritePage = () => {
           defaultAlignment: 'left',
         }),
         CustomCodeBlock,
+        Link,
       ],
       content: translations[lang].content,
     });
@@ -94,7 +96,6 @@ const WritePage = () => {
           es: post.translations?.es || { title: '', description: '', content: '' },
         });
 
-        // ✅ Map over tags and categories to extract only the IDs (string[])
         setTags(post.tags?.map((tag: any) => tag._id || tag) || []);
         setCategories(post.categories?.map((cat: any) => cat._id || cat) || []);
         setCoverUrl(post.image || '');

@@ -2,7 +2,7 @@
 
 .quick-post-card {
   position: relative;
-  height: 400px;
+  height: 420px;
   overflow: hidden;
   background: var(--background-secondary);
   border: 1px solid #1da1f2;
@@ -17,11 +17,12 @@
   &__link {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     height: 100%;
   }
 
   &__image {
-    height: 80%;
+    height: 74%;
     object-fit: cover;
     aspect-ratio: 9 / 12;
   }
@@ -31,15 +32,25 @@
   &__title {
     font-size: var(--font-size-sm);
     font-weight: 600;
-    margin-bottom: var(--margin-xxs);
+    margin-bottom: var(--margin-2xs);
   }
 
-  &__meta {
-    font-size: var(--font-size-xs);
-    opacity: 0.85;
+  &__description {
+    max-width: 9rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--text-color-fixed);
+  }
+
+  &__avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary);
   }
 }
-
 @media (max-width: 768px) {
   .quick-post-card {
     height: 300px;
@@ -53,6 +64,11 @@
       bottom: 0;
       left: 0;
       padding: 0 1rem;
+    }
+    &__title {
+      background: #ffffff1c;
+      border-radius: 4px;
+      color: var(--text-color-fixed);
     }
   }
 }

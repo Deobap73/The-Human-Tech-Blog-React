@@ -148,7 +148,7 @@
       font-size: var(--font-size-lg);
       font-weight: 700;
       margin-bottom: var(--margin-xs);
-      color: var(--text-color);
+      color: var(--text-color-fixed);
       line-height: 1.2;
     }
 
@@ -162,6 +162,7 @@
     &-link {
       align-self: flex-start;
       padding: var(--padding-xs) var(--padding-base);
+      color: var(--text-color-fixed);
       background: transparent;
       border: 2px solid #2995e2; // azul claro (ajusta se tua paleta for diferente)
       border-left: none;

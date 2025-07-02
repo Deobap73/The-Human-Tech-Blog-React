@@ -1,6 +1,8 @@
 // ✅ Path: /src/features/post/components/EditorToolbar.tsx
 
 import { Editor } from '@tiptap/react';
+import Link from '@tiptap/extension-link';
+
 import {
   Bold,
   Italic,
@@ -17,6 +19,8 @@ import {
   AlignJustify,
   Code2,
   Code,
+  Link as LinkIcon,
+  Unlink,
 } from 'lucide-react';
 import '../styles/EditorToolbar.scss';
 
@@ -160,6 +164,35 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
         aria-label='Redo'
         onClick={() => editor.chain().focus().redo().run()}>
         <Redo2 size={16} />
+      </button>
+
+      {/* Link */}
+      <button
+        type='button'
+        className={`editor-toolbar__btn${
+          editor.isActive('link') ? ' editor-toolbar__btn--active' : ''
+        }`}
+        aria-label='Add/Edit Link'
+        onClick={() => {
+          const previousUrl = editor.getAttributes('link').href;
+          const url = window.prompt('Enter URL', previousUrl || '');
+          if (url === null) return;
+          if (url === '') {
+            editor.chain().focus().unsetLink().run();
+            return;
+          }
+          editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
+        }}>
+        <LinkIcon size={16} />
+      </button>
+
+      {/* Remove Link */}
+      <button
+        type='button'
+        className='editor-toolbar__btn'
+        aria-label='Remove Link'
+        onClick={() => editor.chain().focus().unsetLink().run()}>
+        <Unlink size={16} />
       </button>
 
       {/* Actions */}
