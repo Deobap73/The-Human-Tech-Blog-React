@@ -248,12 +248,55 @@
   },
 
   "chat": {
-    "title": "Conversas",
-    "placeholder": "Selecione uma conversa",
-    "inputPlaceholder": "Digite sua mensagem...",
-    "send": "Enviar",
-    "loading": "Carregando mensagens...",
-    "you": "Você",
-    "noName": "Sem Nome"
+    "window": {
+      "emptyTitle": "Selecione uma conversa",
+      "emptyDesc": "Escolha um chat para começar a enviar mensagens."
+    },
+    "sidebar": {
+      "empty": "Nenhuma conversa encontrada",
+      "search": "Pesquisar",
+      "noMessage": "Nenhuma mensagem",
+      "attach": "Anexar",
+      "camera": "Câmera",
+      "settings": "Configurações",
+      "add": "Adicionar Conversa",
+      "close": "Fechar barra lateral",
+      "error": "Falha ao carregar conversas",
+      "title": "Conversas"
+    },
+    "messagelist": {
+      "empty": "Nenhuma mensagem ainda",
+      "error": "Falha ao carregar mensagens",
+      "you": "Você"
+    },
+    "input": {
+      "placeholder": "Digite sua mensagem…",
+      "send": "Enviar",
+      "mic": "Gravar áudio",
+      "attach": "Anexar"
+    }
+  },
+
+  "newsletter": {
+    "form": {
+      "placeholder": "O seu email",
+      "button": "Subscrever",
+      "loading": "A subscrever...",
+      "errorMissingEmail": "Por favor, insira o seu email.",
+      "confirmationMessage": "Verifique a sua caixa de entrada! Confirme a subscrição através do link enviado para o seu email.",
+      "errorSubscriptionFailed": "Falha na subscrição."
+    },
+    "confirm": {
+      "loading": "A confirmar a sua subscrição...",
+      "success": "Subscrição confirmada! Obrigado por se juntar à nossa newsletter.",
+      "error": "Link de confirmação inválido ou expirado. Por favor, tente subscrever novamente.",
+      "errorNoToken": "Token de confirmação não fornecido."
+    },
+    "unsubscribe": {
+      "loading": "A processar o seu pedido...",
+      "success": "Foi removido da nossa newsletter.",
+      "error": "Link de cancelamento inválido ou expirado. O seu email pode já ter sido removido.",
+      "errorNoToken": "Token de cancelamento não fornecido."
+    }
   }
 }

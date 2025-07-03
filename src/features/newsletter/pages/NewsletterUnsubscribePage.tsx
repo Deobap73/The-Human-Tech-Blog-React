@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import api from '../../../shared/utils/axios';
 import '../styles/NewsletterPages.scss';
 
@@ -10,6 +11,7 @@ import '../styles/NewsletterPages.scss';
  * Handles the unsubscription from the newsletter via token link.
  */
 const NewsletterUnsubscribePage = () => {
+  const { t } = useTranslation();
   const { token } = useParams<{ token: string }>();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState<string>('');
@@ -19,27 +21,24 @@ const NewsletterUnsubscribePage = () => {
       try {
         await api.post(`/newsletter/unsubscribe/${token}`);
         setStatus('success');
-        setMessage('You have been unsubscribed from our newsletter.');
+        setMessage(t('newsletter.unsubscribe.success'));
       } catch (err: any) {
         setStatus('error');
-        setMessage(
-          err?.response?.data?.message ||
-            'Invalid or expired unsubscribe link. Your email may already be removed.'
-        );
+        setMessage(err?.response?.data?.message || t('newsletter.unsubscribe.error'));
       }
     };
     if (token) unsubscribe();
     else {
       setStatus('error');
-      setMessage('No unsubscribe token provided.');
+      setMessage(t('newsletter.unsubscribe.errorNoToken'));
     }
-  }, [token]);
+  }, [token, t]);
 
   return (
     <div className='newsletter-page'>
       <div className='newsletter-page__container'>
         {status === 'loading' && (
-          <div className='newsletter-page__loading'>Processing your request...</div>
+          <div className='newsletter-page__loading'>{t('newsletter.unsubscribe.loading')}</div>
         )}
         {status === 'success' && <div className='newsletter-page__success'>{message}</div>}
         {status === 'error' && <div className='newsletter-page__error'>{message}</div>}

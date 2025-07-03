@@ -1,6 +1,7 @@
 // src/features/newsletter/components/NewsletterForm.tsx
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import api from '../../../shared/utils/axios';
 import { toast } from 'react-hot-toast';
 import '../styles/NewsletterForm.scss';
@@ -11,31 +12,26 @@ import '../styles/NewsletterForm.scss';
  * Submits the email to the backend which sends a confirmation email (double opt-in).
  */
 const NewsletterForm = () => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
 
   /**
    * Handles the newsletter subscription process.
-   * - Prevents default form submission.
-   * - Validates email presence.
-   * - Sends POST request to backend.
-   * - Shows user feedback with toast notifications.
    */
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) {
-      toast.error('Please enter your email.');
+      toast.error(t('newsletter.form.errorMissingEmail'));
       return;
     }
     setLoading(true);
     try {
       await api.post('/newsletter/subscribe', { email });
-      toast.success(
-        'Check your inbox! Please confirm your subscription via the link sent to your email.'
-      );
+      toast.success(t('newsletter.form.confirmationMessage'));
       setEmail('');
     } catch (err: any) {
-      toast.error(err?.response?.data?.message || 'Subscription failed.');
+      toast.error(err?.response?.data?.message || t('newsletter.form.errorSubscriptionFailed'));
     } finally {
       setLoading(false);
     }
@@ -46,7 +42,7 @@ const NewsletterForm = () => {
       <input
         className='newsletter-form__input'
         type='email'
-        placeholder='Your email'
+        placeholder={t('newsletter.form.placeholder')}
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         disabled={loading}
@@ -54,7 +50,7 @@ const NewsletterForm = () => {
         autoComplete='email'
       />
       <button className='newsletter-form__button' type='submit' disabled={loading}>
-        {loading ? 'Subscribing...' : 'Subscribe'}
+        {loading ? t('newsletter.form.loading') : t('newsletter.form.button')}
       </button>
     </form>
   );

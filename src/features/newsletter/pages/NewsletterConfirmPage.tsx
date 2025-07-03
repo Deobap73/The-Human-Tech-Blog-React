@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import api from '../../../shared/utils/axios';
 import '../styles/NewsletterPages.scss';
 
@@ -10,6 +11,7 @@ import '../styles/NewsletterPages.scss';
  * Handles the confirmation of newsletter subscription via token link.
  */
 const NewsletterConfirmPage = () => {
+  const { t } = useTranslation();
   const { token } = useParams<{ token: string }>();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState<string>('');
@@ -19,27 +21,24 @@ const NewsletterConfirmPage = () => {
       try {
         await api.get(`/newsletter/confirm/${token}`);
         setStatus('success');
-        setMessage('Subscription confirmed! Thank you for joining our newsletter.');
+        setMessage(t('newsletter.confirm.success'));
       } catch (err: any) {
         setStatus('error');
-        setMessage(
-          err?.response?.data?.message ||
-            'Invalid or expired confirmation link. Please try subscribing again.'
-        );
+        setMessage(err?.response?.data?.message || t('newsletter.confirm.error'));
       }
     };
     if (token) confirm();
     else {
       setStatus('error');
-      setMessage('No confirmation token provided.');
+      setMessage(t('newsletter.confirm.errorNoToken'));
     }
-  }, [token]);
+  }, [token, t]);
 
   return (
     <div className='newsletter-page'>
       <div className='newsletter-page__container'>
         {status === 'loading' && (
-          <div className='newsletter-page__loading'>Confirming your subscription...</div>
+          <div className='newsletter-page__loading'>{t('newsletter.confirm.loading')}</div>
         )}
         {status === 'success' && <div className='newsletter-page__success'>{message}</div>}
         {status === 'error' && <div className='newsletter-page__error'>{message}</div>}

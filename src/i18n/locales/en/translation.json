@@ -281,5 +281,28 @@
       "mic": "Record audio",
       "attach": "Attach"
     }
+  },
+
+  "newsletter": {
+    "form": {
+      "placeholder": "Your email",
+      "button": "Subscribe",
+      "loading": "Subscribing...",
+      "errorMissingEmail": "Please enter your email.",
+      "confirmationMessage": "Check your inbox! Please confirm your subscription via the link sent to your email.",
+      "errorSubscriptionFailed": "Subscription failed."
+    },
+    "confirm": {
+      "loading": "Confirming your subscription...",
+      "success": "Subscription confirmed! Thank you for joining our newsletter.",
+      "error": "Invalid or expired confirmation link. Please try subscribing again.",
+      "errorNoToken": "No confirmation token provided."
+    },
+    "unsubscribe": {
+      "loading": "Processing your request...",
+      "success": "You have been unsubscribed from our newsletter.",
+      "error": "Invalid or expired unsubscribe link. Your email may already be removed.",
+      "errorNoToken": "No unsubscribe token provided."
+    }
   }
 }

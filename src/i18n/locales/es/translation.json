@@ -244,12 +244,55 @@
     "loading": "Cargando..."
   },
   "chat": {
-    "title": "Chats",
-    "placeholder": "Seleccione una conversación",
-    "inputPlaceholder": "Escribe tu mensaje...",
-    "send": "Enviar",
-    "loading": "Cargando mensajes...",
-    "you": "Tú",
-    "noName": "Sin nombre"
+    "window": {
+      "emptyTitle": "Selecciona una conversación",
+      "emptyDesc": "Elige un chat para empezar a enviar mensajes."
+    },
+    "sidebar": {
+      "empty": "No se encontraron chats",
+      "search": "Buscar",
+      "noMessage": "Sin mensajes",
+      "attach": "Adjuntar",
+      "camera": "Cámara",
+      "settings": "Ajustes",
+      "add": "Añadir chat",
+      "close": "Cerrar barra lateral",
+      "error": "Error al cargar los chats",
+      "title": "Chats"
+    },
+    "messagelist": {
+      "empty": "Aún no hay mensajes",
+      "error": "Error al cargar los mensajes",
+      "you": "Tú"
+    },
+    "input": {
+      "placeholder": "Escribe tu mensaje…",
+      "send": "Enviar",
+      "mic": "Grabar audio",
+      "attach": "Adjuntar"
+    }
+  },
+
+  "newsletter": {
+    "form": {
+      "placeholder": "Tu correo electrónico",
+      "button": "Suscribirse",
+      "loading": "Suscribiéndose...",
+      "errorMissingEmail": "Por favor, introduce tu correo electrónico.",
+      "confirmationMessage": "¡Revisa tu bandeja de entrada! Confirma tu suscripción usando el enlace enviado a tu correo.",
+      "errorSubscriptionFailed": "Fallo en la suscripción."
+    },
+    "confirm": {
+      "loading": "Confirmando tu suscripción...",
+      "success": "¡Suscripción confirmada! Gracias por unirte a nuestra newsletter.",
+      "error": "Enlace de confirmación inválido o expirado. Por favor, intenta suscribirte de nuevo.",
+      "errorNoToken": "No se proporcionó el token de confirmación."
+    },
+    "unsubscribe": {
+      "loading": "Procesando tu solicitud...",
+      "success": "Has sido dado de baja de nuestra newsletter.",
+      "error": "Enlace de baja inválido o expirado. Puede que tu correo ya haya sido eliminado.",
+      "errorNoToken": "No se proporcionó el token de baja."
+    }
   }
 }

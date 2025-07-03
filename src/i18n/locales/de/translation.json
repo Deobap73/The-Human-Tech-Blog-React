@@ -244,12 +244,55 @@
     "loading": "Wird geladen..."
   },
   "chat": {
-    "title": "Chats",
-    "placeholder": "Wählen Sie eine Konversation aus",
-    "inputPlaceholder": "Geben Sie Ihre Nachricht ein...",
-    "send": "Senden",
-    "loading": "Nachrichten werden geladen...",
-    "you": "Du",
-    "noName": "Kein Name"
+    "window": {
+      "emptyTitle": "Wählen Sie eine Konversation",
+      "emptyDesc": "Wählen Sie einen Chat aus, um mit dem Versenden von Nachrichten zu beginnen."
+    },
+    "sidebar": {
+      "empty": "Keine Chats gefunden",
+      "search": "Suchen",
+      "noMessage": "Keine Nachrichten",
+      "attach": "Anhängen",
+      "camera": "Kamera",
+      "settings": "Einstellungen",
+      "add": "Chat hinzufügen",
+      "close": "Seitenleiste schließen",
+      "error": "Chats konnten nicht geladen werden",
+      "title": "Chats"
+    },
+    "messagelist": {
+      "empty": "Noch keine Nachrichten",
+      "error": "Nachrichten konnten nicht geladen werden",
+      "you": "Du"
+    },
+    "input": {
+      "placeholder": "Geben Sie Ihre Nachricht ein…",
+      "send": "Senden",
+      "mic": "Audio aufnehmen",
+      "attach": "Anhängen"
+    }
+  },
+
+  "newsletter": {
+    "form": {
+      "placeholder": "Ihre E-Mail",
+      "button": "Abonnieren",
+      "loading": "Wird abonniert...",
+      "errorMissingEmail": "Bitte geben Sie Ihre E-Mail-Adresse ein.",
+      "confirmationMessage": "Bitte überprüfen Sie Ihr Postfach! Bestätigen Sie das Abonnement über den Link in Ihrer E-Mail.",
+      "errorSubscriptionFailed": "Abonnement fehlgeschlagen."
+    },
+    "confirm": {
+      "loading": "Bestätige Ihr Abonnement...",
+      "success": "Abonnement bestätigt! Vielen Dank für Ihre Anmeldung zu unserem Newsletter.",
+      "error": "Ungültiger oder abgelaufener Bestätigungslink. Bitte versuchen Sie, sich erneut anzumelden.",
+      "errorNoToken": "Bestätigungstoken wurde nicht bereitgestellt."
+    },
+    "unsubscribe": {
+      "loading": "Ihre Anfrage wird bearbeitet...",
+      "success": "Sie wurden von unserem Newsletter abgemeldet.",
+      "error": "Ungültiger oder abgelaufener Abmeldelink. Ihre E-Mail-Adresse wurde möglicherweise bereits entfernt.",
+      "errorNoToken": "Abmeldetoken wurde nicht bereitgestellt."
+    }
   }
 }
