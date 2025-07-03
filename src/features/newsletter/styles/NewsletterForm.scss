@@ -39,6 +39,7 @@
   &__button {
     display: flex;
     align-items: center;
+    justify-content: center;
     height: 2rem;
     gap: var(--gap-xs);
     padding: 0.45rem 1.3rem 0.45rem 0.95rem;
