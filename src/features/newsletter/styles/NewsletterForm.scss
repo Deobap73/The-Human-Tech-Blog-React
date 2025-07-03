@@ -1,17 +1,24 @@
+// src/features/newsletter/styles/NewsletterForm.scss
+
 .newsletter-form {
   display: flex;
   gap: 0.5rem;
   margin-top: 2rem;
 
-  input[type='email'] {
+  &__input {
     flex: 1;
     padding: 0.5rem 1rem;
     border-radius: 6px;
     border: 1px solid #ccc;
     font-size: 1rem;
+    transition: border 0.2s;
+    &:focus {
+      border: 1.5px solid #007bff;
+      outline: none;
+    }
   }
 
-  button {
+  &__button {
     padding: 0.5rem 1.5rem;
     border: none;
     border-radius: 6px;
@@ -20,7 +27,7 @@
     font-weight: 600;
     cursor: pointer;
     transition: background 0.2s;
-    &:hover {
+    &:hover:not(:disabled) {
       background: #0056b3;
     }
     &:disabled {
