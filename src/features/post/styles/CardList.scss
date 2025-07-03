@@ -4,6 +4,7 @@
   grid-template-columns: 1fr; // Mobile: 1 coluna
   gap: 2rem 1.5rem;
   width: 100%;
+  height: 25rem;
 
   // Tablet ≥ 600px: 2 colunas
   @media (min-width: 600px) {

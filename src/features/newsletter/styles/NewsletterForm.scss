@@ -2,8 +2,10 @@
 
 .newsletter-form {
   display: flex;
+  flex-direction: column;
   gap: var(--gap-sm);
   margin-top: var(--spacing-md);
+  min-height: 5rem;
 
   &__input {
     flex: 1;
@@ -35,27 +37,32 @@
   }
 
   &__button {
-    padding: var(--padding-sm) var(--padding-lg);
-    border: none;
-    border-radius: var(--border-radius-md);
-    background: var(--primary);
-    color: var(--text-color-inverse);
-    font-weight: 600;
-    font-size: var(--font-size-base);
+    display: flex;
+    align-items: center;
+    height: 2rem;
+    gap: var(--gap-xs);
+    padding: 0.45rem 1.3rem 0.45rem 0.95rem;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    border: 2px solid #2995e2; // azul claro (ajusta se tua paleta for diferente)
+    border-left: none;
+    border-right: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
+    backdrop-filter: blur(2.5px); // Glass effect!
+    transition: border 0.2s, box-shadow 0.2s, background 0.25s;
+    outline: none;
+    text-decoration: none;
+    color: inherit;
+
     cursor: pointer;
-    box-shadow: var(--shadow-card);
-    transition: background 0.18s, box-shadow 0.15s;
 
-    &:hover:not(:disabled) {
-      background: var(--primary-hover);
-      box-shadow: var(--shadow-card-strong);
+    &:hover,
+    &:focus {
+      background: rgba(0, 48, 104, 0.388);
     }
-
-    &:disabled {
-      background: var(--background-secondary);
-      color: var(--text-color-secondary);
-      cursor: not-allowed;
-      opacity: 0.5;
+    &:active {
+      background: none !important;
     }
   }
 

@@ -36,11 +36,7 @@
   &__logo {
     width: 54px;
     height: 54px;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px #29292923;
-    background: #fff;
     object-fit: cover;
-    border: 1.5px solid var(--primary);
   }
 
   &__brand-text {
@@ -74,18 +70,31 @@
   }
 
   &__nav-list li a {
-    color: var(--text-color-inverse, #fff);
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    padding: 0.45rem 1.3rem 0.45rem 0.95rem;
+    font-size: var(--font-size-sm);
     font-weight: 500;
-    padding: 0.12em 0.4em;
-    border-radius: 8px;
-    transition: background 0.18s, color 0.18s;
+    border: 2px solid #2995e2; // azul claro (ajusta se tua paleta for diferente)
+    border-left: none;
+    border-right: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
+    backdrop-filter: blur(2.5px); // Glass effect!
+    transition: border 0.2s, box-shadow 0.2s, background 0.25s;
+    outline: none;
     text-decoration: none;
+    color: inherit;
+
+    cursor: pointer;
 
     &:hover,
-    &:focus-visible {
-      background: var(--primary);
-      color: #fff;
-      text-decoration: none;
+    &:focus {
+      background: rgba(0, 48, 104, 0.388);
+    }
+    &:active {
+      background: none !important;
     }
   }
 
