@@ -284,13 +284,19 @@
   },
 
   "newsletter": {
+    "modal": {
+      "title": "Join our newsletter",
+      "description": "Get fresh tech reflections and exclusive content straight to your inbox. No spam, ever."
+    },
+
     "form": {
       "placeholder": "Your email",
       "button": "Subscribe",
       "loading": "Subscribing...",
       "errorMissingEmail": "Please enter your email.",
       "confirmationMessage": "Check your inbox! Please confirm your subscription via the link sent to your email.",
-      "errorSubscriptionFailed": "Subscription failed."
+      "errorSubscriptionFailed": "Subscription failed.",
+      "close": "Close"
     },
     "confirm": {
       "loading": "Confirming your subscription...",

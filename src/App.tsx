@@ -7,7 +7,8 @@ import { ensureCsrfToken } from './shared/utils/csrf';
 import { Routes, Route } from 'react-router-dom';
 import PublicRoutes from './routes/PublicRoutes';
 import NotAuthorizedPage from './pages/NotAuthorizedPage';
-import { useTranslation } from 'react-i18next'; // Added
+import { useTranslation } from 'react-i18next';
+import NewsletterModal from './features/newsletter/components/NewsletterModal';
 
 /**
  * App entry point: Handles global loading state and main routes.
@@ -15,7 +16,10 @@ import { useTranslation } from 'react-i18next'; // Added
  */
 function App() {
   const { user, loading } = useAuth();
-  const { i18n } = useTranslation(); // Added
+  const { i18n } = useTranslation();
+
+  // open NewsletterModal
+  if (loading) return <div className='route-loader'>Loading...</div>;
 
   // OAuth2 patch: On first load, check for ?token=... in the URL (after OAuth login)
   useEffect(() => {
@@ -53,10 +57,13 @@ function App() {
   if (loading) return <div className='route-loader'>Loading...</div>;
 
   return (
-    <Routes>
-      <Route path='/not-authorized' element={<NotAuthorizedPage />} />
-      <Route path='/*' element={<PublicRoutes />} />
-    </Routes>
+    <>
+      <NewsletterModal />
+      <Routes>
+        <Route path='/not-authorized' element={<NotAuthorizedPage />} />
+        <Route path='/*' element={<PublicRoutes />} />
+      </Routes>
+    </>
   );
 }
 
