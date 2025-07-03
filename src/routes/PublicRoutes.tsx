@@ -1,3 +1,5 @@
+// src/routes/PublicRoutes.tsx
+
 import { Routes, Route } from 'react-router-dom';
 import Layout from '../features/layout/Layout';
 import HomePage from '../features/home/pages/HomePage';
@@ -58,8 +60,11 @@ const PublicRoutes = () => (
       <Route path='user' element={<UserPage />} />
       <Route path='admin/*' element={<AdminRoutes />} />
       <Route path='not-authorized' element={<NotAuthorizedPage />} />
-      <Route path='/newsletter/confirm/:token' element={<NewsletterConfirmPage />} />
-      <Route path='/newsletter/unsubscribe/:token' element={<NewsletterUnsubscribePage />} />
+
+      {/* newsletter */}
+      <Route path='newsletter/confirm/:token' element={<NewsletterConfirmPage />} />
+      <Route path='newsletter/unsubscribe/:token' element={<NewsletterUnsubscribePage />} />
+
       <Route
         path='chat/*'
         element={
