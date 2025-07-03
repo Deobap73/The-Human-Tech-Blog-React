@@ -5,31 +5,40 @@ import { useTranslation } from 'react-i18next';
 import NewsletterForm from './NewsletterForm';
 import '../styles/NewsletterModal.scss';
 
-/**
- * NewsletterModal
- * Renders a modal to subscribe to the newsletter.
- * Appears automatically after a short delay or on exit intent.
- */
+const MODAL_DELAY_MS = 60000; // 60 segundos
+const LOCALSTORAGE_KEY = 'newsletterModalDismissed';
+
 const NewsletterModal = () => {
   const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
 
-  // Trigger modal after 15 seconds OR on exit intent (mouse leaves window)
+  // Só mostra o modal se não tiver sido descartado
   useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), 15000);
+    // Se já foi fechado, não mostra
+    if (localStorage.getItem(LOCALSTORAGE_KEY) === '1') return;
 
+    const timer = setTimeout(() => setVisible(true), MODAL_DELAY_MS);
+
+    // Exit intent: mostra só se ainda não mostrou/modal não está aberto
     const handleMouseLeave = (e: MouseEvent) => {
-      if (e.clientY < 30) setVisible(true);
+      if (e.clientY < 30 && !visible) {
+        setVisible(true);
+        clearTimeout(timer);
+      }
     };
 
     window.addEventListener('mouseout', handleMouseLeave);
+
     return () => {
       clearTimeout(timer);
       window.removeEventListener('mouseout', handleMouseLeave);
     };
-  }, []);
+  }, [visible]);
 
-  const handleClose = () => setVisible(false);
+  const handleClose = () => {
+    setVisible(false);
+    localStorage.setItem(LOCALSTORAGE_KEY, '1');
+  };
 
   if (!visible) return null;
 

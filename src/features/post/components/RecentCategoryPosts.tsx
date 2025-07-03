@@ -10,7 +10,7 @@ import { resolveLogoUrl } from '../../../shared/utils/mediaHelpers';
 import '../styles/RecentCategoryPosts.scss';
 
 interface Props {
-  currentPostId: string;
+  currentPostId?: string;
   lang: string;
 }
 

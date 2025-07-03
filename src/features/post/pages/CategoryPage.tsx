@@ -13,6 +13,9 @@ import CardList from '../components/CardList';
 import '../styles/CategoryPage.scss';
 import ScrollToTop from '../../../shared/components/ScrollToTop';
 import PostsSidebar from '../components/PostsSidebar';
+import NewsletterSidebarBox from '../../newsletter/components/NewsletterSidebarBox';
+import RecentCategoryPosts from '../components/RecentCategoryPosts';
+import CategoryList from '../components/CategoryList';
 
 const CategoryPage = () => {
   const { slug } = useParams();
@@ -82,7 +85,7 @@ const CategoryPage = () => {
             <NewsletterSidebarBox />
           </div>
           <div className='sidebar__block'>
-            <RecentCategoryPosts currentPostId={post._id} lang={i18n.language} />
+            <RecentCategoryPosts lang={i18n.language} />
           </div>
           <div className='sidebar__block'>
             <CategoryList />

@@ -18,9 +18,6 @@ function App() {
   const { user, loading } = useAuth();
   const { i18n } = useTranslation();
 
-  // open NewsletterModal
-  if (loading) return <div className='route-loader'>Loading...</div>;
-
   // OAuth2 patch: On first load, check for ?token=... in the URL (after OAuth login)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -54,6 +51,7 @@ function App() {
     }
   }, [i18n]);
 
+  // open NewsletterModal
   if (loading) return <div className='route-loader'>Loading...</div>;
 
   return (
