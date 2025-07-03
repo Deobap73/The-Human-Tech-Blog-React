@@ -4,7 +4,21 @@ import React, { useCallback } from 'react';
 import { NodeViewContent, NodeViewWrapper } from '@tiptap/react';
 import '../../features/post/styles/CodeBlockComponent.scss';
 
-const LANGUAGES = ['typescript', 'javascript', 'html', 'css', 'json', 'scss'];
+const LANGUAGES = [
+  'bash',
+  'html',
+  'css',
+  'scss',
+  'javascript', // Manter 'javascript' para realce consistente
+  'typescript',
+  'python',
+  'java',
+  'go',
+  'rust',
+  'csharp', // Ou 'c#' dependendo de como sua biblioteca de realce a reconhece
+  'sql',
+  'json',
+];
 
 const CodeBlockComponent = ({ node, updateAttributes }: any) => {
   const language = node.attrs.language || 'typescript';

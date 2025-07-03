@@ -9,7 +9,21 @@ interface LanguageSelectorProps {
   language: string;
 }
 
-const SUPPORTED_LANGUAGES = ['typescript', 'javascript', 'scss', 'css', 'html', 'json', 'python'];
+const SUPPORTED_LANGUAGES = [
+  'bash',
+  'html',
+  'css',
+  'scss',
+  'javascript', // Manter 'javascript' para realce consistente
+  'typescript',
+  'python',
+  'java',
+  'go',
+  'rust',
+  'csharp', // Ou 'c#' dependendo de como sua biblioteca de realce a reconhece
+  'sql',
+  'json',
+];
 
 const CodeLanguageSelector = ({ editor, pos, language }: LanguageSelectorProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
