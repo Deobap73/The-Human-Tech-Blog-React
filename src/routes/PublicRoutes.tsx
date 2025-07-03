@@ -17,6 +17,8 @@ import ContactPage from '../features/contact/pages/ContactPage';
 import PrivateRoute from './PrivateRoute';
 import ChatRoutes from '../features/chat/pages/ChatRoutes';
 import NotAuthorizedPage from '../pages/NotAuthorizedPage';
+import NewsletterConfirmPage from '../features/newsletter/pages/NewsletterConfirmPage';
+import NewsletterUnsubscribePage from '../features/newsletter/pages/NewsletterUnsubscribePage';
 
 const NotFoundPage = () => (
   <div style={{ padding: '2rem', textAlign: 'center' }}>
@@ -56,6 +58,8 @@ const PublicRoutes = () => (
       <Route path='user' element={<UserPage />} />
       <Route path='admin/*' element={<AdminRoutes />} />
       <Route path='not-authorized' element={<NotAuthorizedPage />} />
+      <Route path='/newsletter/confirm/:token' element={<NewsletterConfirmPage />} />
+      <Route path='/newsletter/unsubscribe/:token' element={<NewsletterUnsubscribePage />} />
       <Route
         path='chat/*'
         element={

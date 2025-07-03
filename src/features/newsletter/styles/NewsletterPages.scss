@@ -1,0 +1,39 @@
+// src/features/newsletter/styles/NewsletterPages.scss
+
+.newsletter-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+
+  &__container {
+    max-width: 450px;
+    width: 100%;
+    padding: 2rem 1.5rem;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 4px 28px rgba(0, 0, 0, 0.09), 0 1.5px 8px rgba(0, 0, 0, 0.06);
+    text-align: center;
+  }
+
+  &__loading {
+    font-size: 1.125rem;
+    color: #007bff;
+    font-weight: 500;
+    margin: 1.5rem 0;
+  }
+
+  &__success {
+    font-size: 1.2rem;
+    color: #28a745;
+    font-weight: 600;
+    margin: 1.5rem 0;
+  }
+
+  &__error {
+    font-size: 1.1rem;
+    color: #dc3545;
+    font-weight: 500;
+    margin: 1.5rem 0;
+  }
+}
