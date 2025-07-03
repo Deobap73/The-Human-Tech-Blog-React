@@ -85,17 +85,18 @@
   /* Color palette (light/dark is set below) */
   --background: #fff;
   --background-secondary: linear-gradient(140deg, #262a32 18%, #191f27 70%, #141822 94%);
-  --background-tertiary: #161c29; /* NEW: For input fields (afundado) */
-  --background-chatbubble: #232b36; /* NEW: For received chat bubbles */
-  --background-chatself: #1da1f2; /* NEW: For self chat bubbles */
-  --background-glass: rgba(22, 28, 41, 0.97); /* NEW: Glassmorphism cards */
+  --background-tertiary: #161c29; /* For input fields (afundado) */
+  --background-chatbubble: #232b36; /* For received chat bubbles */
+  --background-chatself: #1da1f2; /* For self chat bubbles */
+  --background-glass: rgba(22, 28, 41, 0.97); /* Glassmorphism cards */
 
   --text-color: #23262f;
   --text-color-secondary: #393c43;
   --text-color-tertiary: #1da1f2;
-  --text-color-fixed: #fff; /* NEW: For text on colored backgrounds */
-  --text-color-inverse: #fff; /* NEW: For text on colored backgrounds */
-  --text-color-placeholder: #8da3c7; /* NEW: For input placeholder */
+  --text-color-fixed: #fff; /* For text on colored backgrounds */
+  --text-color-inverse: #fff; /* For text on colored backgrounds */
+  --text-color-placeholder: #8da3c7; /* For input placeholder */
+  --text-muted: gray; /*  For inline code c */
 
   --primary: #1da1f2;
   --primary-hover: #1769aa;
@@ -149,6 +150,7 @@
   --text-color-secondary: #a1a1a3;
   --text-color-tertiary: #003a5f;
   --text-color-inverse: #fff;
+  --text-muted: gray;
   --primary: #1da1f2;
   --primary-hover: #2995e2;
 }
@@ -165,6 +167,7 @@
   --text-color-secondary: #a2a2b5;
   --text-color-tertiary: #1da1f2;
   --text-color-inverse: #fff;
+  --text-muted: gray;
   --primary: #1da1f2;
   --primary-hover: #2995e2;
   --neon-shadow: 0 0 12px #1da1f2, 0 6px 30px #1da1f2;

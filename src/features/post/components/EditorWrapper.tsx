@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { EditorContent, Editor } from '@tiptap/react';
 import CodeLanguageSelector from './CodeLanguageSelector';
+import '../styles/EditorWrapper.scss';
 
 interface EditorWrapperProps {
   editor: Editor;

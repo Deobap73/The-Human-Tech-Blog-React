@@ -11,6 +11,7 @@ const LANGUAGES = [
   'scss',
   'javascript', // Manter 'javascript' para realce consistente
   'typescript',
+  'react',
   'python',
   'java',
   'go',
