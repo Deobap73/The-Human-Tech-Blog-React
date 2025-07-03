@@ -304,5 +304,16 @@
       "error": "Ungültiger oder abgelaufener Abmeldelink. Ihre E-Mail-Adresse wurde möglicherweise bereits entfernt.",
       "errorNoToken": "Kein Abmeldetoken angegeben."
     }
+  },
+
+  "footer": {
+    "home": "Startseite",
+    "about": "Über",
+    "shorts": "Tech Shorts",
+    "contact": "Kontakt",
+    "navigation": "Fußzeilen-Navigation",
+    "description": "Erkundung der menschlichen Seite der Technologie durch Geschichten, Reflexionen und Einblicke aus der Tech-Welt.",
+    "rights": "Alle Rechte vorbehalten.",
+    "by": "von Deolindo Baptista"
   }
 }

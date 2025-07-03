@@ -304,5 +304,16 @@
       "error": "Enlace de baja inválido o caducado. Tu correo electrónico puede haber sido eliminado ya.",
       "errorNoToken": "No se proporcionó ningún token de baja."
     }
+  },
+
+  "footer": {
+    "home": "Inicio",
+    "about": "Acerca de",
+    "shorts": "Tech Shorts",
+    "contact": "Contacto",
+    "navigation": "Navegación del pie de página",
+    "description": "Explorando el lado humano de la tecnología a través de historias, reflexiones e ideas del mundo tecnológico.",
+    "rights": "Todos los derechos reservados.",
+    "by": "por Deolindo Baptista"
   }
 }

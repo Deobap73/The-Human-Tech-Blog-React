@@ -52,6 +52,7 @@
     "moderateComments": "Moderate Comments",
     "settings": "Settings"
   },
+
   "adminCategoryForm": {
     "title": "Manage Categories",
     "name": "Name",
@@ -69,6 +70,7 @@
     "deleteConfirm": "Delete this category? Categories used by posts cannot be deleted.",
     "noCategories": "No categories found."
   },
+
   "adminTagForm": {
     "title": "Manage Tags",
     "name": "Name",
@@ -84,6 +86,7 @@
     "deleteConfirm": "Delete this tag? Tags used by posts cannot be deleted.",
     "noTags": "No tags found."
   },
+
   "adminNotificationForm": {
     "title": "Manage Notifications",
     "notificationTitle": "Title",
@@ -98,6 +101,7 @@
     "deleteConfirm": "Delete this notification?",
     "noNotifications": "No notifications found."
   },
+
   "adminPostForm": {
     "title": "Title",
     "titlePlaceholder": "Post title",
@@ -119,20 +123,24 @@
     "createSuccess": "Category created successfully!",
     "updateSuccess": "Category updated successfully!"
   },
+
   "notAuthorized": {
     "title": "Access Denied",
     "message": "You don't have permission to access this page.",
     "goHome": "Go to Home"
   },
+
   "route": {
     "loading": "Loading..."
   },
+
   "recentPosts": {
     "title": "Human Tech in Focus: The Latest Reflections and Insights!",
     "desc": "Dive into the intersections between the digital universe and the human experience. Here, you will find the four most recent posts, with insights on project management, frontend, UI/UX, Scrum, and how technology shapes our lives.",
     "readMore": "Read More",
     "noTitle": "No title"
   },
+
   "about": {
     "intro": {
       "years": "36",
@@ -160,6 +168,7 @@
       },
       "viewProjects": "VIEW MORE PROJECT"
     },
+
     "experience": {
       "titleBase": "My",
       "titleHighlight": "Experience",
@@ -200,6 +209,7 @@
       "addressLabel": "Address",
       "addressValue": "Passau, Germany"
     },
+
     "form": {
       "title": "You Have Question?",
       "desc": "Let’s talk, share your ideas or meet me.",
@@ -229,6 +239,7 @@
       "noAccount": "Don't have an account?",
       "createAccount": "Create one"
     },
+
     "register": {
       "title": "Register",
       "sentence": "Create your free account to join the Human Tech Blog community.",
@@ -253,11 +264,13 @@
     "noPopularPosts": "No other posts available.",
     "loading": "Loading..."
   },
+
   "chat": {
     "window": {
       "emptyTitle": "Select a conversation",
       "emptyDesc": "Choose a chat to start messaging."
     },
+
     "sidebar": {
       "empty": "No chats found",
       "search": "Search",
@@ -270,11 +283,13 @@
       "error": "Failed to load chats",
       "title": "Chats"
     },
+
     "messagelist": {
       "empty": "No messages yet",
       "error": "Failed to load messages",
       "you": "You"
     },
+
     "input": {
       "placeholder": "Type your message…",
       "send": "Send",
@@ -304,17 +319,30 @@
       "errorSubscriptionFailed": "Subscription failed.",
       "close": "Close"
     },
+
     "confirm": {
       "loading": "Confirming your subscription...",
       "success": "Subscription confirmed! Thank you for joining our newsletter.",
       "error": "Invalid or expired confirmation link. Please try subscribing again.",
       "errorNoToken": "No confirmation token provided."
     },
+
     "unsubscribe": {
       "loading": "Processing your request...",
       "success": "You have been unsubscribed from our newsletter.",
       "error": "Invalid or expired unsubscribe link. Your email may already be removed.",
       "errorNoToken": "No unsubscribe token provided."
     }
+  },
+
+  "footer": {
+    "home": "Home",
+    "about": "About",
+    "shorts": "Tech Shorts",
+    "contact": "Contact",
+    "navigation": "Footer navigation",
+    "description": "Exploring the human side of technology through stories, reflections, and insights from the tech world.",
+    "rights": "All rights reserved.",
+    "by": "by Deolindo Baptista"
   }
 }

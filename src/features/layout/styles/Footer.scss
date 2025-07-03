@@ -1,118 +1,215 @@
-/* The-Human-Tech-Blog-React/src/components/footer/Footer.scss */
+// src\features\layout\styles\Footer.scss
 
 .footer {
-  background-color: var(--dark-bg);
-  color: var(--dark-primaryTextColor);
-  padding: var(--padding-xl) 0 var(--padding-m);
+  width: 100%;
+  background: var(--background-secondary, #191f27);
+  color: var(--text-color-inverse, #fff);
+  box-shadow: 0 1px 24px #04080f25;
+  padding: 0;
+  font-size: var(--font-size-base);
 
   &__container {
     max-width: var(--layout-max-width);
     margin: 0 auto;
-    padding: 0 var(--padding-xl);
-
-    @media (max-width: 768px) {
-      padding: 0 var(--padding-m);
-    }
-  }
-
-  &__content {
+    padding: 2.5rem var(--layout-padding-x) 1.2rem var(--layout-padding-x);
     display: flex;
-    justify-content: space-between;
-    margin-bottom: var(--margin-xl);
-    gap: var(--gap-l);
-
-    @media (max-width: 768px) {
-      flex-direction: column;
-      gap: var(--gap-xl);
-    }
+    flex-direction: column;
+    gap: 1.7rem;
   }
 
-  &__left {
-    flex: 1;
+  &__top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 2rem;
+    align-items: center;
+    border-bottom: 1px solid rgba(140, 180, 255, 0.08);
+    padding-bottom: 1.6rem;
+  }
+
+  &__branding {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
   }
 
   &__logo {
+    width: 54px;
+    height: 54px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px #29292923;
+    background: #fff;
+    object-fit: cover;
+    border: 1.5px solid var(--primary);
+  }
+
+  &__brand-text {
+    font-size: var(--font-size-lg);
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--primary, #1da1f2);
+  }
+
+  &__links {
+    display: flex;
+    flex-direction: row;
+    gap: 2.7rem;
+    align-items: flex-end;
+  }
+
+  &__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 1.08rem;
+  }
+
+  &__nav-list {
+    display: flex;
+    flex-direction: row;
+    gap: 1.4rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__nav-list li a {
+    color: var(--text-color-inverse, #fff);
+    font-weight: 500;
+    padding: 0.12em 0.4em;
+    border-radius: 8px;
+    transition: background 0.18s, color 0.18s;
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+      background: var(--primary);
+      color: #fff;
+      text-decoration: none;
+    }
+  }
+
+  &__social {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1.1rem;
+    margin-left: 1.4rem;
+  }
+
+  &__social-link {
     display: flex;
     align-items: center;
-    gap: var(--gap-m);
-    margin-bottom: var(--margin-m);
+    justify-content: center;
+    background: #fff1;
+    color: var(--primary, #1da1f2);
+    border-radius: 50%;
+    width: 2.4rem;
+    height: 2.4rem;
+    transition: background 0.18s, box-shadow 0.18s, color 0.18s;
+    font-size: 1.35rem;
 
-    &-image {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-    }
-
-    &-text {
-      font-size: var(--font-size-1b);
-      font-weight: bold;
+    &:hover,
+    &:focus {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 2px 18px #1da1f288;
+      outline: none;
     }
   }
 
-  &__description {
-    font-size: var(--font-size-1s);
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.7);
+  &__sr-only {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
   }
 
-  &__right {
-    flex: 1;
+  &__bottom {
     display: flex;
-    justify-content: space-around;
-    gap: var(--gap-xl);
-
-    @media (max-width: 480px) {
-      flex-direction: column;
-      gap: var(--gap-l);
-    }
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding-top: 1.2rem;
   }
 
-  &__links,
-  &__social {
-    .footer__title {
-      font-size: var(--font-size-1b);
-      margin-bottom: var(--margin-m);
-      color: white;
-    }
-
-    .footer__list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: var(--gap-m);
-    }
-
-    .footer__item a {
-      color: rgba(255, 255, 255, 0.7);
-      transition: color 0.3s ease;
-
-      &:hover {
-        color: white;
-      }
-    }
-
-    .footer__icons {
-      display: flex;
-      gap: var(--gap-m);
-    }
-
-    .footer__icon {
-      color: rgba(255, 255, 255, 0.7);
-      transition: color 0.3s ease;
-
-      &:hover {
-        color: white;
-      }
-    }
+  &__desc {
+    font-size: var(--font-size-sm);
+    color: var(--text-color-secondary, #b0bacb);
+    text-align: center;
+    margin-bottom: 0.2rem;
   }
 
   &__copyright {
+    font-size: 0.96rem;
+    color: var(--text-color-secondary, #b0bacb);
     text-align: center;
-    font-size: var(--font-size-s);
-    color: rgba(255, 255, 255, 0.5);
-    padding-top: var(--padding-m);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    letter-spacing: 0.1px;
+  }
+
+  &__author {
+    color: var(--primary, #1da1f2);
+    font-weight: 700;
+    margin-left: 0.2rem;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+      color: #0077b5;
+    }
+  }
+
+  // Responsive
+  @media (max-width: 1024px) {
+    &__container {
+      padding-left: var(--padding-base);
+      padding-right: var(--padding-base);
+    }
+    &__top {
+      flex-direction: column;
+      gap: 2rem;
+      align-items: flex-start;
+      padding-bottom: 1.2rem;
+    }
+    &__links {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.4rem;
+      margin-left: 0;
+    }
+    &__nav-list {
+      gap: 1.1rem;
+    }
+    &__social {
+      margin-left: 0;
+      gap: 1rem;
+    }
+  }
+
+  @media (max-width: 700px) {
+    &__container {
+      padding: 1.3rem var(--padding-xs) 0.8rem var(--padding-xs);
+      gap: 1rem;
+    }
+    &__top {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.3rem;
+      padding-bottom: 0.8rem;
+    }
+    &__logo {
+      width: 40px;
+      height: 40px;
+    }
+    &__brand-text {
+      font-size: var(--font-size-base);
+    }
+    &__nav-list {
+      gap: 0.7rem;
+    }
+    &__bottom {
+      padding-top: 0.7rem;
+    }
   }
 }

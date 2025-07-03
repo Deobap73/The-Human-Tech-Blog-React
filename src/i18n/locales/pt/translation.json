@@ -308,5 +308,16 @@
       "error": "Link de cancelamento de inscrição inválido ou expirado. Seu email já pode ter sido removido.",
       "errorNoToken": "Nenhum token de cancelamento de inscrição fornecido."
     }
+  },
+
+  "footer": {
+    "home": "Início",
+    "about": "Sobre",
+    "shorts": "Tech Shorts",
+    "contact": "Contato",
+    "navigation": "Navegação do rodapé",
+    "description": "Explorando o lado humano da tecnologia através de histórias, reflexões e insights do mundo tech.",
+    "rights": "Todos os direitos reservados.",
+    "by": "por Deolindo Baptista"
   }
 }
