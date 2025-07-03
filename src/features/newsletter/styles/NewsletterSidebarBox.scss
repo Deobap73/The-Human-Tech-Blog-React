@@ -1,0 +1,44 @@
+// src/features/newsletter/styles/NewsletterSidebarBox.scss
+
+.newsletter-sidebar-box {
+  background: var(--background-tertiary);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--padding-md) var(--padding-base);
+  margin-bottom: var(--margin-md);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: left;
+  border: 1.5px solid var(--background);
+
+  &__title {
+    font-size: var(--font-size-md);
+    color: var(--primary);
+    font-weight: 700;
+    margin-bottom: var(--spacing-xs);
+    letter-spacing: var(--letter-spacing-small);
+  }
+
+  &__desc {
+    color: var(--text-color-secondary);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .newsletter-form {
+    margin-top: 0;
+    input[type='email'] {
+      background: var(--background);
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .newsletter-sidebar-box {
+    padding: var(--padding-base) var(--padding-xs);
+    &__title {
+      font-size: var(--font-size-base);
+    }
+  }
+}

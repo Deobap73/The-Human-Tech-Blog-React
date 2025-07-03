@@ -289,6 +289,12 @@
       "description": "Get fresh tech reflections and exclusive content straight to your inbox. No spam, ever."
     },
 
+    "sidebar": {
+      "ariaLabel": "Subscribe to newsletter",
+      "title": "Never miss a story!",
+      "description": "Get our best tech reflections and news — no spam, just value."
+    },
+
     "form": {
       "placeholder": "Your email",
       "button": "Subscribe",

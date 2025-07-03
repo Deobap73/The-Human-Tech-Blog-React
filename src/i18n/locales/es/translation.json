@@ -274,25 +274,35 @@
   },
 
   "newsletter": {
+    "modal": {
+      "title": "Suscríbete a nuestro boletín",
+      "description": "Recibe nuevas reflexiones tecnológicas y contenido exclusivo directamente en tu bandeja de entrada. Sin spam, nunca."
+    },
+    "sidebar": {
+      "ariaLabel": "Suscribirse al boletín",
+      "title": "¡No te pierdas ninguna historia!",
+      "description": "Recibe nuestras mejores reflexiones tecnológicas y noticias — sin spam, solo valor."
+    },
     "form": {
       "placeholder": "Tu correo electrónico",
       "button": "Suscribirse",
-      "loading": "Suscribiéndose...",
+      "loading": "Suscribiendo...",
       "errorMissingEmail": "Por favor, introduce tu correo electrónico.",
-      "confirmationMessage": "¡Revisa tu bandeja de entrada! Confirma tu suscripción usando el enlace enviado a tu correo.",
-      "errorSubscriptionFailed": "Fallo en la suscripción."
+      "confirmationMessage": "¡Revisa tu bandeja de entrada! Por favor, confirma tu suscripción a través del enlace enviado a tu correo electrónico.",
+      "errorSubscriptionFailed": "Error en la suscripción.",
+      "close": "Cerrar"
     },
     "confirm": {
       "loading": "Confirmando tu suscripción...",
-      "success": "¡Suscripción confirmada! Gracias por unirte a nuestra newsletter.",
-      "error": "Enlace de confirmación inválido o expirado. Por favor, intenta suscribirte de nuevo.",
-      "errorNoToken": "No se proporcionó el token de confirmación."
+      "success": "¡Suscripción confirmada! Gracias por unirte a nuestro boletín.",
+      "error": "Enlace de confirmación inválido o caducado. Por favor, intenta suscribirte de nuevo.",
+      "errorNoToken": "No se proporcionó ningún token de confirmación."
     },
     "unsubscribe": {
       "loading": "Procesando tu solicitud...",
-      "success": "Has sido dado de baja de nuestra newsletter.",
-      "error": "Enlace de baja inválido o expirado. Puede que tu correo ya haya sido eliminado.",
-      "errorNoToken": "No se proporcionó el token de baja."
+      "success": "Te has dado de baja de nuestro boletín.",
+      "error": "Enlace de baja inválido o caducado. Tu correo electrónico puede haber sido eliminado ya.",
+      "errorNoToken": "No se proporcionó ningún token de baja."
     }
   }
 }

@@ -1,14 +1,19 @@
-/* The-Human-Tech-Blog-React/src/features/category/styles/CategoryPage.scss */
+// /src/features/category/styles/CategoryPage.scss
 
 .category-page {
   padding: 2rem;
   max-width: 1024px;
   margin: 0 auto;
 
+  display: grid;
+  grid-template-columns: 2.1fr 1fr;
+  gap: 2.7rem;
+
   &__header {
+    grid-column: 1 / -1;
     display: flex;
     align-items: center;
-    margin-bottom: 1.5rem; /* Adicionado um pouco de espaço abaixo do cabeçalho */
+    margin-bottom: 1.5rem;
   }
 
   &__logo {
@@ -18,14 +23,20 @@
 
   &__title {
     font-size: 2rem;
-    margin-bottom: 0; /* Removido margin-bottom para alinhar com logo */
+    margin-bottom: 0;
     color: var(--text-color);
   }
 
   &__description {
     font-size: 1.1rem;
-    color: var(--text-color-secondary); // Ou uma cor apropriada
-    margin-top: 0.5rem; // Espaço acima da descrição, se ela aparecer abaixo do título
+    color: var(--text-color-secondary);
+    margin-top: 0.5rem;
+  }
+
+  &__main {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
   }
 
   &__loading,
@@ -36,9 +47,10 @@
   }
 
   &__back-link {
-    display: flex; // Changed to flex for centering content easily
-    justify-content: center; // Centers text horizontally
-    align-items: center; // Centers text vertically
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 20rem;
     min-width: 48px;
     min-height: 48px;
@@ -51,15 +63,60 @@
     box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
     backdrop-filter: blur(2.5px);
     transition: border 0.2s, box-shadow 0.2s, background 0.25s;
-    margin: var(--margin-xl) auto 0; // Center the link and add top margin
-    text-decoration: none; // Remove default link underline
-    color: inherit; // Ensure text color is inherited or set explicitly
+    margin: var(--margin-xl) auto 0;
+    text-decoration: none;
+    color: inherit;
 
     &:hover {
       background: rgba(0, 48, 104, 0.388);
     }
     &:active {
       background: none !important;
+    }
+  }
+
+  @media (max-width: 1100px) {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    padding: 1.5rem 0.6rem;
+  }
+
+  @media (max-width: 700px) {
+    padding: 0 var(--padding-xs) var(--margin-xl) var(--padding-xs);
+    gap: 0.5rem;
+    &__title {
+      font-size: 1.4rem;
+    }
+    &__main {
+      gap: 0.7rem;
+    }
+    &__header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.7rem;
+      margin-bottom: 1rem;
+    }
+    &__logo {
+      height: 30px;
+      margin-right: 8px;
+    }
+    &__description {
+      font-size: 0.98rem;
+    }
+    &__back-link {
+      font-size: 0.98rem;
+      min-height: 40px;
+      border-radius: 8px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 0 var(--padding-xs) var(--margin-lg) var(--padding-xs);
+    &__logo {
+      height: 22px;
+    }
+    &__back-link {
+      width: 100%;
     }
   }
 }

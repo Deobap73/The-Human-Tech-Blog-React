@@ -278,25 +278,35 @@
   },
 
   "newsletter": {
+    "modal": {
+      "title": "Assine nossa newsletter",
+      "description": "Receba novas reflexões sobre tecnologia e conteúdo exclusivo diretamente na sua caixa de entrada. Sem spam, nunca."
+    },
+    "sidebar": {
+      "ariaLabel": "Assinar newsletter",
+      "title": "Nunca perca uma história!",
+      "description": "Receba nossas melhores reflexões e notícias de tecnologia — sem spam, apenas valor."
+    },
     "form": {
-      "placeholder": "O seu email",
-      "button": "Subscrever",
-      "loading": "A subscrever...",
-      "errorMissingEmail": "Por favor, insira o seu email.",
-      "confirmationMessage": "Verifique a sua caixa de entrada! Confirme a subscrição através do link enviado para o seu email.",
-      "errorSubscriptionFailed": "Falha na subscrição."
+      "placeholder": "Seu email",
+      "button": "Assinar",
+      "loading": "Assinando...",
+      "errorMissingEmail": "Por favor, insira seu email.",
+      "confirmationMessage": "Verifique sua caixa de entrada! Por favor, confirme sua assinatura através do link enviado para seu email.",
+      "errorSubscriptionFailed": "Falha na assinatura.",
+      "close": "Fechar"
     },
     "confirm": {
-      "loading": "A confirmar a sua subscrição...",
-      "success": "Subscrição confirmada! Obrigado por se juntar à nossa newsletter.",
-      "error": "Link de confirmação inválido ou expirado. Por favor, tente subscrever novamente.",
-      "errorNoToken": "Token de confirmação não fornecido."
+      "loading": "Confirmando sua assinatura...",
+      "success": "Assinatura confirmada! Obrigado por assinar nossa newsletter.",
+      "error": "Link de confirmação inválido ou expirado. Por favor, tente assinar novamente.",
+      "errorNoToken": "Nenhum token de confirmação fornecido."
     },
     "unsubscribe": {
-      "loading": "A processar o seu pedido...",
-      "success": "Foi removido da nossa newsletter.",
-      "error": "Link de cancelamento inválido ou expirado. O seu email pode já ter sido removido.",
-      "errorNoToken": "Token de cancelamento não fornecido."
+      "loading": "Processando sua solicitação...",
+      "success": "Você foi desinscrito da nossa newsletter.",
+      "error": "Link de cancelamento de inscrição inválido ou expirado. Seu email já pode ter sido removido.",
+      "errorNoToken": "Nenhum token de cancelamento de inscrição fornecido."
     }
   }
 }

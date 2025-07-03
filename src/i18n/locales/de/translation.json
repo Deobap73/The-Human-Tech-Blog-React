@@ -274,25 +274,35 @@
   },
 
   "newsletter": {
+    "modal": {
+      "title": "Abonnieren Sie unseren Newsletter",
+      "description": "Erhalten Sie frische Tech-Reflexionen und exklusive Inhalte direkt in Ihren Posteingang. Niemals Spam."
+    },
+    "sidebar": {
+      "ariaLabel": "Newsletter abonnieren",
+      "title": "Verpassen Sie keine Geschichte!",
+      "description": "Erhalten Sie unsere besten Tech-Reflexionen und Neuigkeiten — kein Spam, nur Mehrwert."
+    },
     "form": {
       "placeholder": "Ihre E-Mail",
       "button": "Abonnieren",
-      "loading": "Wird abonniert...",
+      "loading": "Abonniert...",
       "errorMissingEmail": "Bitte geben Sie Ihre E-Mail-Adresse ein.",
-      "confirmationMessage": "Bitte überprüfen Sie Ihr Postfach! Bestätigen Sie das Abonnement über den Link in Ihrer E-Mail.",
-      "errorSubscriptionFailed": "Abonnement fehlgeschlagen."
+      "confirmationMessage": "Überprüfen Sie Ihren Posteingang! Bitte bestätigen Sie Ihr Abonnement über den Link, der an Ihre E-Mail gesendet wurde.",
+      "errorSubscriptionFailed": "Abonnement fehlgeschlagen.",
+      "close": "Schließen"
     },
     "confirm": {
-      "loading": "Bestätige Ihr Abonnement...",
-      "success": "Abonnement bestätigt! Vielen Dank für Ihre Anmeldung zu unserem Newsletter.",
+      "loading": "Ihr Abonnement wird bestätigt...",
+      "success": "Abonnement bestätigt! Vielen Dank, dass Sie unseren Newsletter abonniert haben.",
       "error": "Ungültiger oder abgelaufener Bestätigungslink. Bitte versuchen Sie, sich erneut anzumelden.",
-      "errorNoToken": "Bestätigungstoken wurde nicht bereitgestellt."
+      "errorNoToken": "Kein Bestätigungstoken angegeben."
     },
     "unsubscribe": {
       "loading": "Ihre Anfrage wird bearbeitet...",
       "success": "Sie wurden von unserem Newsletter abgemeldet.",
       "error": "Ungültiger oder abgelaufener Abmeldelink. Ihre E-Mail-Adresse wurde möglicherweise bereits entfernt.",
-      "errorNoToken": "Abmeldetoken wurde nicht bereitgestellt."
+      "errorNoToken": "Kein Abmeldetoken angegeben."
     }
   }
 }

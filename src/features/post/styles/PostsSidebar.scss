@@ -1,0 +1,50 @@
+// /src/shared/components/Sidebar.scss
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 2.2rem;
+  min-width: 250px;
+  max-width: 350px;
+  align-items: flex-start;
+  position: sticky;
+  top: 2.1rem;
+  height: fit-content;
+  z-index: 10;
+
+  &__block {
+    width: 100%;
+    background: rgba(17, 24, 39, 0.97);
+    border-radius: 18px;
+    padding: 1.4rem 1.2rem;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.12);
+    border: 1.7px solid rgba(41, 149, 226, 0.12);
+    margin-bottom: 0.8rem;
+  }
+
+  @media (max-width: 1100px) {
+    position: static;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 0.5rem;
+    top: unset;
+
+    &__block {
+      border-radius: 12px;
+      padding: 1rem 0.7rem;
+    }
+  }
+
+  @media (max-width: 700px) {
+    &__block {
+      padding: 0.6rem 0.3rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    &__block {
+      border-radius: 7px;
+      padding: 0.3rem 0.12rem;
+    }
+  }
+}

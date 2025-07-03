@@ -12,6 +12,7 @@ import { resolveLogoUrl } from '../../../shared/utils/mediaHelpers'; // <-- Impo
 import CardList from '../components/CardList';
 import '../styles/CategoryPage.scss';
 import ScrollToTop from '../../../shared/components/ScrollToTop';
+import PostsSidebar from '../components/PostsSidebar';
 
 const CategoryPage = () => {
   const { slug } = useParams();
@@ -75,6 +76,18 @@ const CategoryPage = () => {
         ) : (
           <p className='category-page__no-posts'>No posts found for this category.</p>
         )}
+
+        <PostsSidebar>
+          <div className='sidebar__block'>
+            <NewsletterSidebarBox />
+          </div>
+          <div className='sidebar__block'>
+            <RecentCategoryPosts currentPostId={post._id} lang={i18n.language} />
+          </div>
+          <div className='sidebar__block'>
+            <CategoryList />
+          </div>
+        </PostsSidebar>
         <Link to='/' className='category-page__back-link'>
           Voltar para o início
         </Link>

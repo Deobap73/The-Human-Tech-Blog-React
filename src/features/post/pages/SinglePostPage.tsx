@@ -17,6 +17,8 @@ import { getPostTranslation, getCategoryName, getTagName } from '../../../shared
 import RecentCategoryPosts from '../components/RecentCategoryPosts';
 import CategoryList from '../components/CategoryList';
 import ScrollToTop from '../../../shared/components/ScrollToTop';
+import NewsletterSidebarBox from '../../newsletter/components/NewsletterSidebarBox';
+import PostsSidebar from '../components/PostsSidebar';
 
 type PostUser = {
   _id?: string;
@@ -157,14 +159,17 @@ export const SinglePostPage = () => {
             </section>
           </main>
 
-          <aside className='single-post-page__sidebar' aria-label='Sidebar'>
-            <section className='single-post-page__sidebar-block'>
+          <PostsSidebar>
+            <div className='sidebar__block'>
+              <NewsletterSidebarBox />
+            </div>
+            <div className='sidebar__block'>
               <RecentCategoryPosts currentPostId={post._id} lang={i18n.language} />
-            </section>
-            <section className='single-post-page__sidebar-block'>
+            </div>
+            <div className='sidebar__block'>
               <CategoryList />
-            </section>
-          </aside>
+            </div>
+          </PostsSidebar>
         </div>
 
         <div className='single-post-page__footer'>

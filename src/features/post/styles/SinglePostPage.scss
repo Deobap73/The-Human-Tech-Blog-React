@@ -81,7 +81,6 @@
     height: 100%;
     object-fit: cover;
     border-radius: 16px;
-
     border: 1px solid #222c;
     box-shadow: 0 6px 26px rgba(0, 0, 0, 0.13);
   }
@@ -102,6 +101,7 @@
     background: transparent;
     padding: 0;
   }
+
   &__category-bar {
     padding: 0.6rem 0 0.2rem 0;
     margin-bottom: 0.2rem;
@@ -126,7 +126,7 @@
   &__tag {
     display: inline-flex;
     align-items: center;
-    background: rgba(41, 149, 226, 0.1); // leve azul, em harmonia com o tema
+    background: rgba(41, 149, 226, 0.1);
     color: var(--primary);
     font-size: 1rem;
     font-weight: 600;
@@ -180,27 +180,6 @@
   }
   &__comments-list {
     width: 100%;
-  }
-  &__sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: 2.2rem;
-    min-width: 250px;
-    max-width: 350px;
-    align-items: flex-start;
-    position: sticky;
-    top: 2.1rem;
-    height: fit-content;
-    z-index: 10;
-  }
-  &__sidebar-block {
-    width: 100%;
-    background: rgba(17, 24, 39, 0.97);
-    border-radius: 18px;
-    padding: 1.4rem 1.2rem;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.12);
-    border: 1.7px solid rgba(41, 149, 226, 0.12);
-    margin-bottom: 0.8rem;
   }
 
   // ---------- Terceiro bloco: botão ----------
@@ -262,34 +241,8 @@
       grid-template-columns: 1fr;
       gap: 1.2rem;
     }
-    &__sidebar {
-      position: static;
-      width: 100%;
-      max-width: 100%;
-      margin-top: 0.5rem;
-      top: unset;
-    }
-    &__sidebar-block {
-      border-radius: 12px;
-      padding: 1rem 0.7rem;
-    }
-    &__header-row {
-      margin-top: var(--margin-lg);
-      margin-bottom: var(--margin-lg);
-    }
-    &__header-image {
-      padding-top: 56.25%;
-    }
-    &__image {
-      position: relative;
-      width: 100%;
-      height: auto; // Ajuste de altura automática para manter a proporção 16:9
-    }
     &__main {
       padding: 0;
-    }
-    &__footer {
-      padding-bottom: var(--margin-lg);
     }
   }
   @media (max-width: 700px) {
@@ -308,9 +261,6 @@
       font-size: var(--font-size-base);
       margin: 5% 5% 1.2rem 5%;
     }
-    &__sidebar-block {
-      padding: 0.6rem 0.3rem;
-    }
     &__main {
       gap: 0.6rem;
     }
@@ -325,17 +275,6 @@
     }
   }
   @media (max-width: 480px) {
-    /*  &__header-image {
-        min-width: 48px;
-        max-width: 110px;
-      }
-      &__image {
-        max-width: 85px;
-        height: 42px;
-      } */
-    &__sidebar-block {
-      border-radius: 7px;
-      padding: 0.3rem 0.12rem;
-    }
+    // Ajustes mínimos extras (sidebar já é responsiva via Sidebar.scss)
   }
 }
