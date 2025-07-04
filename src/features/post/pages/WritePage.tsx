@@ -1,3 +1,5 @@
+// src/features/post/pages/WritePage.tsx
+
 import { useEffect, useState } from 'react';
 import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -36,6 +38,21 @@ const emptyTranslations = {
   es: { title: '', description: '', content: '' },
 };
 
+/**
+ * Utility function to remove translations that are completely empty.
+ * Only includes languages that have at least title, description, or content filled in.
+ */
+function getValidTranslations(translations: typeof emptyTranslations) {
+  const result: Partial<typeof emptyTranslations> = {};
+  for (const lang of LANGUAGES) {
+    const t = translations[lang];
+    if (t.title.trim() || t.content.trim() || t.description.trim()) {
+      result[lang] = t;
+    }
+  }
+  return result;
+}
+
 const WritePage = () => {
   const { id, lang } = useParams<{ id?: string; lang?: string }>();
   const navigate = useNavigate();
@@ -55,6 +72,7 @@ const WritePage = () => {
   const [saving, setSaving] = useState(false);
   const [postLoaded, setPostLoaded] = useState(false);
 
+  // Initialize a TipTap editor instance for each supported language
   const editors = LANGUAGES.reduce((acc, lang) => {
     acc[lang] = useEditor({
       extensions: [
@@ -74,6 +92,7 @@ const WritePage = () => {
     return acc;
   }, {} as Record<Language, ReturnType<typeof useEditor>>);
 
+  // Fetch available tags and categories on mount
   useEffect(() => {
     fetchTags()
       .then(setAvailableTags)
@@ -83,14 +102,12 @@ const WritePage = () => {
       .catch(() => toast.error('Failed to load categories'));
   }, []);
 
+  // Fetch post data for editing when an ID is present
   useEffect(() => {
     if (!id) return;
 
-    console.log('[DEBUG] Loading post with ID:', id);
     fetchPost(id)
       .then((post) => {
-        console.log('[DEBUG] Post fetched successfully:', post);
-
         setTranslations({
           en: post.translations?.en || { title: '', description: '', content: '' },
           pt: post.translations?.pt || { title: '', description: '', content: '' },
@@ -105,18 +122,20 @@ const WritePage = () => {
         setIsQuickPost(post.isQuickPost || false);
         setPostLoaded(true);
       })
-      .catch((err) => {
-        console.error('[ERROR] Failed to fetch post:', err);
+      .catch(() => {
         toast.error('Failed to load post');
       });
   }, [id]);
 
+  // Keep editors' content in sync with translations
   useEffect(() => {
     LANGUAGES.forEach((lang) => {
       editors[lang]?.commands.setContent(translations[lang].content || '');
     });
+    // eslint-disable-next-line
   }, [translations]);
 
+  // Handle language tab change: save current editor content before switching
   const handleTabChange = (lang: Language) => {
     const editor = editors[currentLang];
     if (editor) {
@@ -131,6 +150,7 @@ const WritePage = () => {
     setCurrentLang(lang);
   };
 
+  // Handle input for title or description in the current language
   const handleInput = (field: 'title' | 'description', value: string) => {
     setTranslations((prev) => ({
       ...prev,
@@ -141,16 +161,19 @@ const WritePage = () => {
     }));
   };
 
+  // Handle selection of tags
   const handleTags = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = Array.from(e.target.selectedOptions).map((o) => o.value);
     setTags(selected);
   };
 
+  // Handle selection of categories
   const handleCategories = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = Array.from(e.target.selectedOptions).map((o) => o.value);
     setCategories(selected);
   };
 
+  // Handle uploading of cover image
   const handleImageUpload = async (file: File) => {
     try {
       const res = await uploadPostImage(file);
@@ -161,19 +184,43 @@ const WritePage = () => {
     }
   };
 
+  /**
+   * Handles form submission for creating or updating a post.
+   * Always synchronizes the current editor content before submit.
+   * Sends only translations with filled fields to backend.
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
     setError('');
 
+    // Basic validation (EN required)
     if (!translations.en.title || !translations.en.description || !translations.en.content) {
       setError('Title, Description, and Content (EN) are required!');
       setSaving(false);
       return;
     }
 
+    // Sync the content of the current editor tab before submit
+    const editor = editors[currentLang];
+    if (editor) {
+      setTranslations((prev) => ({
+        ...prev,
+        [currentLang]: {
+          ...prev[currentLang],
+          content: editor.getHTML(),
+        },
+      }));
+    }
+
+    // Wait briefly to ensure state is updated (due to React state batching)
+    await new Promise((resolve) => setTimeout(resolve, 10));
+
+    // Prepare payload with only valid translations
+    const cleanTranslations = getValidTranslations(translations);
+
     const payload = {
-      translations,
+      translations: cleanTranslations,
       tags,
       categories,
       image: coverUrl,
