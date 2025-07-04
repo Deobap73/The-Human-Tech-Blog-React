@@ -39,15 +39,30 @@ const emptyTranslations = {
 };
 
 /**
- * Utility function to remove translations that are completely empty.
- * Only includes languages that have at least title, description, or content filled in.
+ * Utility to guarantee EN translation is always present and valid for TypeScript strict.
+ * Returns object with en (required) and other languages (optional, only if filled).
  */
-function getValidTranslations(translations: typeof emptyTranslations) {
-  const result: Partial<typeof emptyTranslations> = {};
+function getValidTranslationsForUpdate(
+  current: typeof emptyTranslations,
+  original: typeof emptyTranslations
+): { en: { title: string; description: string; content: string } } & Partial<
+  typeof emptyTranslations
+> {
+  // EN is always required and validated before calling this function.
+  const result: any = {};
+  result['en'] = current.en;
+
   for (const lang of LANGUAGES) {
-    const t = translations[lang];
-    if (t.title.trim() || t.content.trim() || t.description.trim()) {
-      result[lang] = t;
+    if (lang === 'en') continue;
+    const cur = current[lang];
+    if (cur.title.trim() || cur.content.trim() || cur.description.trim()) {
+      result[lang] = cur;
+    } else if (
+      original &&
+      original[lang] &&
+      (original[lang].title || original[lang].content || original[lang].description)
+    ) {
+      result[lang] = original[lang];
     }
   }
   return result;
@@ -60,6 +75,7 @@ const WritePage = () => {
 
   const [currentLang, setCurrentLang] = useState<Language>(activeLang);
   const [translations, setTranslations] = useState({ ...emptyTranslations });
+  const [originalTranslations, setOriginalTranslations] = useState({ ...emptyTranslations }); // Track original state
   const [status, setStatus] = useState<PostStatus>('published');
   const [tags, setTags] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
@@ -72,7 +88,7 @@ const WritePage = () => {
   const [saving, setSaving] = useState(false);
   const [postLoaded, setPostLoaded] = useState(false);
 
-  // Initialize a TipTap editor instance for each supported language
+  // Editor instances per language
   const editors = LANGUAGES.reduce((acc, lang) => {
     acc[lang] = useEditor({
       extensions: [
@@ -92,7 +108,7 @@ const WritePage = () => {
     return acc;
   }, {} as Record<Language, ReturnType<typeof useEditor>>);
 
-  // Fetch available tags and categories on mount
+  // Load tags and categories on mount
   useEffect(() => {
     fetchTags()
       .then(setAvailableTags)
@@ -102,13 +118,19 @@ const WritePage = () => {
       .catch(() => toast.error('Failed to load categories'));
   }, []);
 
-  // Fetch post data for editing when an ID is present
+  // Load post for editing, save original state
   useEffect(() => {
     if (!id) return;
 
     fetchPost(id)
       .then((post) => {
         setTranslations({
+          en: post.translations?.en || { title: '', description: '', content: '' },
+          pt: post.translations?.pt || { title: '', description: '', content: '' },
+          de: post.translations?.de || { title: '', description: '', content: '' },
+          es: post.translations?.es || { title: '', description: '', content: '' },
+        });
+        setOriginalTranslations({
           en: post.translations?.en || { title: '', description: '', content: '' },
           pt: post.translations?.pt || { title: '', description: '', content: '' },
           de: post.translations?.de || { title: '', description: '', content: '' },
@@ -127,7 +149,7 @@ const WritePage = () => {
       });
   }, [id]);
 
-  // Keep editors' content in sync with translations
+  // Sync editor content with translations
   useEffect(() => {
     LANGUAGES.forEach((lang) => {
       editors[lang]?.commands.setContent(translations[lang].content || '');
@@ -135,7 +157,7 @@ const WritePage = () => {
     // eslint-disable-next-line
   }, [translations]);
 
-  // Handle language tab change: save current editor content before switching
+  // Save editor state before tab change
   const handleTabChange = (lang: Language) => {
     const editor = editors[currentLang];
     if (editor) {
@@ -150,7 +172,7 @@ const WritePage = () => {
     setCurrentLang(lang);
   };
 
-  // Handle input for title or description in the current language
+  // Input handlers for title/description
   const handleInput = (field: 'title' | 'description', value: string) => {
     setTranslations((prev) => ({
       ...prev,
@@ -161,19 +183,17 @@ const WritePage = () => {
     }));
   };
 
-  // Handle selection of tags
+  // Tag and category selection handlers
   const handleTags = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = Array.from(e.target.selectedOptions).map((o) => o.value);
     setTags(selected);
   };
-
-  // Handle selection of categories
   const handleCategories = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = Array.from(e.target.selectedOptions).map((o) => o.value);
     setCategories(selected);
   };
 
-  // Handle uploading of cover image
+  // Upload cover image
   const handleImageUpload = async (file: File) => {
     try {
       const res = await uploadPostImage(file);
@@ -185,23 +205,26 @@ const WritePage = () => {
   };
 
   /**
-   * Handles form submission for creating or updating a post.
-   * Always synchronizes the current editor content before submit.
-   * Sends only translations with filled fields to backend.
+   * Submit handler: syncs editor, validates EN, builds valid translation object
+   * with strict types for backend, and never deletes non-empty translations.
    */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
     setError('');
 
-    // Basic validation (EN required)
-    if (!translations.en.title || !translations.en.description || !translations.en.content) {
+    // EN is always required for valid post
+    if (
+      !translations.en.title.trim() ||
+      !translations.en.description.trim() ||
+      !translations.en.content.trim()
+    ) {
       setError('Title, Description, and Content (EN) are required!');
       setSaving(false);
       return;
     }
 
-    // Sync the content of the current editor tab before submit
+    // Sync current editor tab content before submit
     const editor = editors[currentLang];
     if (editor) {
       setTranslations((prev) => ({
@@ -213,11 +236,11 @@ const WritePage = () => {
       }));
     }
 
-    // Wait briefly to ensure state is updated (due to React state batching)
+    // Wait for React state update
     await new Promise((resolve) => setTimeout(resolve, 10));
 
-    // Prepare payload with only valid translations
-    const cleanTranslations = getValidTranslations(translations);
+    // Only send filled translations, preserve others
+    const cleanTranslations = getValidTranslationsForUpdate(translations, originalTranslations);
 
     const payload = {
       translations: cleanTranslations,
@@ -236,6 +259,7 @@ const WritePage = () => {
         await createPost(payload);
         toast.success('Post created!');
       }
+      // Redirect to post list in current lang
       navigate(`/${activeLang}/admin/posts`);
     } catch (err: any) {
       setError('Failed to submit post');
