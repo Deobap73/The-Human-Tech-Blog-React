@@ -39,6 +39,7 @@
     font-family: monospace;
     font-size: 0.95em;
     color: var(--text-muted);
+    white-space: pre-wrap;
   }
 
   pre {
@@ -47,5 +48,98 @@
     padding: var(--padding-sm);
     border-radius: var(--border-radius-sm);
     overflow-x: auto;
+
+    code {
+      background: transparent !important;
+      padding: 0;
+      color: inherit;
+      font-size: var(--font-size-sm);
+      font-family: inherit;
+      white-space: pre;
+      word-break: normal;
+      display: block;
+      line-height: 1.5;
+    }
   }
+}
+
+/* Fallback: ensure inline code looks acceptable even outside .single-post-page */
+code {
+  background: rgba(128, 128, 128, 0.15);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.95em;
+  color: var(--text-muted);
+  white-space: pre-wrap;
+}
+
+/* -------- Inline code styling for BEM (.single-post-page) -------- */
+.single-post-page p code,
+.single-post-page li code,
+.single-post-page h1 code,
+.single-post-page h2 code,
+.single-post-page h3 code,
+.single-post-page h4 code,
+.single-post-page h5 code,
+.single-post-page h6 code {
+  background-color: #2f2f2f;
+  color: #e0e0e0;
+  padding: 0.2em 0.5em;
+  border-radius: 6px;
+  font-family: 'Fira Code', monospace;
+  font-size: var(--font-size-sm);
+  white-space: pre-wrap;
+  line-height: 1.4;
+  display: inline;
+  max-width: 100%;
+  overflow-x: auto;
+  word-break: break-word;
+}
+
+/* -------- Responsiveness -------- */
+@media (max-width: 1100px) {
+  .single-post-page pre {
+    font-size: 0.98rem;
+    padding: 0.7rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+  }
+}
+@media (max-width: 768px) {
+  .single-post-page pre {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+    border-radius: 6px;
+    margin: 0.8rem 0;
+  }
+  .single-post-page p code,
+  .single-post-page li code,
+  .single-post-page h1 code,
+  .single-post-page h2 code,
+  .single-post-page h3 code,
+  .single-post-page h4 code,
+  .single-post-page h5 code,
+  .single-post-page h6 code {
+    font-size: 0.87rem;
+    padding: 0.14em 0.3em;
+  }
+}
+@media (max-width: 500px) {
+  .single-post-page pre {
+    font-size: 0.86rem;
+    padding: 0.35rem;
+    margin: 0.6rem 0;
+    border-radius: 5px;
+    max-width: 100vw;
+    word-break: break-all;
+  }
+}
+
+/* Guarantee code blocks never overflow the container */
+.single-post-page__description pre,
+.single-post-page__description code {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
 }

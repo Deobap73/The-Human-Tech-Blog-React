@@ -9,6 +9,10 @@ interface SinglePostContentProps {
   className?: string;
 }
 
+/**
+ * Renders the post content with syntax highlighting and ensures
+ * BEM class 'single-post-page' is always present for correct styling.
+ */
 const SinglePostContent = ({ content, className }: SinglePostContentProps) => {
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -18,8 +22,15 @@ const SinglePostContent = ({ content, className }: SinglePostContentProps) => {
     }
   }, [content]);
 
+  // Ensures 'single-post-page' is always present
+  const combinedClassName = className ? `single-post-page ${className}` : 'single-post-page';
+
   return (
-    <div ref={contentRef} className={className} dangerouslySetInnerHTML={{ __html: content }} />
+    <div
+      ref={contentRef}
+      className={combinedClassName}
+      dangerouslySetInnerHTML={{ __html: content }}
+    />
   );
 };
 
