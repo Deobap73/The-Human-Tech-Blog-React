@@ -1,5 +1,3 @@
-// /src/pages/WritePage.tsx
-
 import { useEffect, useState } from 'react';
 import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -55,6 +53,7 @@ const WritePage = () => {
   const [isQuickPost, setIsQuickPost] = useState<boolean>(false);
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
+  const [postLoaded, setPostLoaded] = useState(false);
 
   const editors = LANGUAGES.reduce((acc, lang) => {
     acc[lang] = useEditor({
@@ -86,10 +85,12 @@ const WritePage = () => {
 
   useEffect(() => {
     if (!id) return;
+
     console.log('[DEBUG] Loading post with ID:', id);
     fetchPost(id)
       .then((post) => {
         console.log('[DEBUG] Post fetched successfully:', post);
+
         setTranslations({
           en: post.translations?.en || { title: '', description: '', content: '' },
           pt: post.translations?.pt || { title: '', description: '', content: '' },
@@ -102,6 +103,7 @@ const WritePage = () => {
         setCoverUrl(post.image || '');
         setStatus(post.status || 'published');
         setIsQuickPost(post.isQuickPost || false);
+        setPostLoaded(true);
       })
       .catch((err) => {
         console.error('[ERROR] Failed to fetch post:', err);
@@ -260,7 +262,11 @@ const WritePage = () => {
           )}
           <label className='write-page__label'>
             Tags:
-            <select multiple value={tags} onChange={handleTags} className='write-page__select'>
+            <select
+              multiple
+              value={postLoaded ? tags : []}
+              onChange={handleTags}
+              className='write-page__select'>
               {availableTags.map((tag) => (
                 <option key={tag._id} value={tag._id}>
                   {tag.translations?.en?.name || '[no name]'}
@@ -272,7 +278,7 @@ const WritePage = () => {
             Categories:
             <select
               multiple
-              value={categories}
+              value={postLoaded ? categories : []}
               onChange={handleCategories}
               className='write-page__select'>
               {availableCategories.map((cat) => (

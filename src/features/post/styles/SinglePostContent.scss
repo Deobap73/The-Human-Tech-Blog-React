@@ -1,0 +1,51 @@
+// src/features/post/styles/SinglePostContent.scss
+
+/* BEM methodology - Single Post Content */
+.post-content {
+  font-size: var(--font-size-base);
+  color: var(--text-color);
+  line-height: 1.6;
+  word-wrap: break-word;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 700;
+    margin: var(--margin-md) 0 var(--margin-sm);
+  }
+
+  p {
+    margin-bottom: var(--spacing-sm);
+    max-width: 100%;
+  }
+
+  a {
+    color: var(--primary);
+    font-weight: 500;
+    text-decoration: underline;
+
+    &:hover {
+      color: var(--primary-hover);
+    }
+  }
+
+  code {
+    background: rgba(128, 128, 128, 0.15);
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.95em;
+    color: var(--text-muted);
+  }
+
+  pre {
+    background: #111;
+    color: #eee;
+    padding: var(--padding-sm);
+    border-radius: var(--border-radius-sm);
+    overflow-x: auto;
+  }
+}

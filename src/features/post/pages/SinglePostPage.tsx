@@ -19,6 +19,7 @@ import CategoryList from '../components/CategoryList';
 import ScrollToTop from '../../../shared/components/ScrollToTop';
 import NewsletterSidebarBox from '../../newsletter/components/NewsletterSidebarBox';
 import PostsSidebar from '../components/PostsSidebar';
+import SinglePostContent from '../components/SinglePostContent';
 
 type PostUser = {
   _id?: string;
@@ -142,9 +143,9 @@ export const SinglePostPage = () => {
               </div>
             )}
 
-            <div
+            <SinglePostContent
+              content={translation.content || ''}
               className='single-post-page__description'
-              dangerouslySetInnerHTML={{ __html: translation.content || '' }}
             />
 
             <div className='single-post-page__reactions'>
