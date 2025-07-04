@@ -288,6 +288,13 @@ a {
   }
 }
 
+.single-post-page__description a,
+.post-content a {
+  display: inline;
+  align-items: unset;
+  justify-content: unset;
+}
+
 /* ========== Lists ========== */
 ul,
 ol {
