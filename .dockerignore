@@ -1,0 +1,19 @@
+# Node dependencies and logs
+node_modules
+npm-debug.log
+
+# Build output
+dist/
+
+# Local environment files
+.env
+.env.local
+.env.production
+
+# Git metadata
+.git
+.gitignore
+
+# Lock files
+pnpm-lock.yaml
+yarn.lock
