@@ -213,34 +213,39 @@ const WritePage = () => {
     setSaving(true);
     setError('');
 
-    // EN is always required for valid post
+    // 1) Sincroniza o HTML do editor atual no state antes de validar
+    const editor = editors[currentLang];
+    let updatedTranslations = translations;
+    if (editor) {
+      const html = editor.getHTML();
+      updatedTranslations = {
+        ...translations,
+        [currentLang]: {
+          ...translations[currentLang],
+          content: html,
+        },
+      };
+      setTranslations(updatedTranslations);
+      // Garante que o React já aplicou o setState
+      await new Promise((resolve) => setTimeout(resolve, 10));
+    }
+
+    // 2) Validação obrigatória de EN
     if (
-      !translations.en.title.trim() ||
-      !translations.en.description.trim() ||
-      !translations.en.content.trim()
+      !updatedTranslations.en.title.trim() ||
+      !updatedTranslations.en.description.trim() ||
+      !updatedTranslations.en.content.trim()
     ) {
       setError('Title, Description, and Content (EN) are required!');
       setSaving(false);
       return;
     }
 
-    // Sync current editor tab content before submit
-    const editor = editors[currentLang];
-    if (editor) {
-      setTranslations((prev) => ({
-        ...prev,
-        [currentLang]: {
-          ...prev[currentLang],
-          content: editor.getHTML(),
-        },
-      }));
-    }
-
-    // Wait for React state update
-    await new Promise((resolve) => setTimeout(resolve, 10));
-
-    // Only send filled translations, preserve others
-    const cleanTranslations = getValidTranslationsForUpdate(translations, originalTranslations);
+    // 3) Prepara objeto de traduções, preservando outras línguas não-vazias
+    const cleanTranslations = getValidTranslationsForUpdate(
+      updatedTranslations,
+      originalTranslations
+    );
 
     const payload = {
       translations: cleanTranslations,
@@ -251,6 +256,7 @@ const WritePage = () => {
       status,
     };
 
+    // 4) Chama API de create ou update
     try {
       if (id) {
         await updatePost(id, payload);
@@ -259,12 +265,12 @@ const WritePage = () => {
         await createPost(payload);
         toast.success('Post created!');
       }
-      // Redirect to post list in current lang
       navigate(`/${activeLang}/admin/posts`);
     } catch (err: any) {
       setError('Failed to submit post');
       toast.error('Failed to submit post');
     }
+
     setSaving(false);
   };
 

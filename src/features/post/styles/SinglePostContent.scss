@@ -22,34 +22,6 @@
     max-width: 100%;
   }
 
-  .single-post-page__description a,
-  .post-content a {
-    color: var(--primary);
-    font-weight: 500;
-    text-decoration: none;
-    border-bottom: 2px solid #2995e2;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
-    transition: border 0.2s, box-shadow 0.2s, background 0.25s;
-    padding: 0 0.12em;
-    background: transparent;
-
-    &:hover,
-    &:focus {
-      color: var(--primary-hover);
-      background: rgba(41, 149, 226, 0.1);
-      outline: none;
-      border-bottom: 2px solid var(--primary-hover);
-      box-shadow: 0 4px 20px #1da1f233;
-    }
-    &:active {
-      background: none !important;
-      box-shadow: none !important;
-      border-bottom: 2px solid var(--primary);
-      color: var(--primary);
-    }
-  }
-
   code {
     background: rgba(128, 128, 128, 0.15);
     padding: 0.2em 0.4em;

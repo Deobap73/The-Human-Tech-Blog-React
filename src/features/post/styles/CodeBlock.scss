@@ -1,38 +1,29 @@
-// src\features\post\styles\CodeBlock.scss
+/* src/features/post/styles/CodeBlock.scss */
 
-/* -------- TipTap & Highlight.js code block styling -------- */
-
-// BEM: Code block for TipTap and published posts
 .ProseMirror pre,
 .single-post-page pre {
   background: #282c34;
   color: #ffffff;
   padding: 1rem;
   border-radius: 12px;
-  overflow-x: auto;
   font-family: 'Fira Code', 'Consolas', monospace;
   font-size: var(--font-size-sm);
   margin: 1.5rem 0;
-  position: relative;
   line-height: 1.5;
+
+  /* 1) Ajusta largura para caber no container pai */
   width: 100%;
-  max-width: 100%; // Prevent overflow on mobile
+  max-width: 100%;
   box-sizing: border-box;
-  word-break: normal;
 
-  code {
-    background: transparent !important;
-    padding: 0;
-    color: inherit;
-    font-size: var(--font-size-sm);
-    font-family: inherit;
-    white-space: pre; // NEVER wrap inside code blocks
-    word-break: normal;
-    display: block;
-    line-height: 1.5;
-  }
+  /* 2) Quebra linhas e palavras longas */
+  white-space: pre-wrap !important;
+  overflow-wrap: break-word;
+  word-break: break-word;
 
-  // Optional: display language label (TipTap only)
+  /* 3) Scroll interno só quando absolutamente necessário */
+  overflow-x: auto;
+
   &::before {
     content: attr(data-language);
     position: absolute;
@@ -44,23 +35,22 @@
     color: #999;
     pointer-events: none;
   }
+
+  code {
+    display: block;
+    background: transparent !important;
+    padding: 0;
+    color: inherit;
+    font-size: var(--font-size-sm);
+    font-family: inherit;
+    white-space: pre-wrap !important;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    line-height: 1.5;
+  }
 }
 
-/* Published posts (rendered HTML) — specificity to override highlight.js */
-.single-post-page pre code {
-  background: transparent !important;
-  padding: 0;
-  color: inherit;
-  font-size: var(--font-size-sm);
-  font-family: inherit;
-  white-space: pre;
-  word-break: normal;
-  display: block;
-  line-height: 1.5;
-}
-
-/* -------- Inline code styling -------- */
-// Only applies inline code styles to code inside p, li, headings
+/* Inline code — mantém wrap e scroll interno */
 .single-post-page p code,
 .single-post-page li code,
 .single-post-page h1 code,
@@ -76,23 +66,20 @@
   font-family: 'Fira Code', monospace;
   font-size: var(--font-size-sm);
   white-space: pre-wrap;
-  line-height: 1.4;
+  overflow-wrap: break-word;
+  word-break: break-word;
   display: inline;
   max-width: 100%;
   overflow-x: auto;
-  word-break: break-word;
+  line-height: 1.4;
 }
 
-/* -------- Responsiveness -------- */
-@media (max-width: 1100px) {
-  .ProseMirror pre,
-  .single-post-page pre {
-    font-size: 0.98rem;
-    padding: 0.7rem;
-    border-radius: 8px;
-    margin: 1rem 0;
-  }
+/* Se quiseres, também garantimos que o container de descrição não permita overflow */
+.single-post-page__description {
+  overflow-x: hidden;
 }
+
+/* Responsividade */
 @media (max-width: 768px) {
   .ProseMirror pre,
   .single-post-page pre {
@@ -101,18 +88,12 @@
     border-radius: 6px;
     margin: 0.8rem 0;
   }
-  .single-post-page p code,
-  .single-post-page li code,
-  .single-post-page h1 code,
-  .single-post-page h2 code,
-  .single-post-page h3 code,
-  .single-post-page h4 code,
-  .single-post-page h5 code,
-  .single-post-page h6 code {
+  .single-post-page p code {
     font-size: 0.87rem;
     padding: 0.14em 0.3em;
   }
 }
+
 @media (max-width: 500px) {
   .ProseMirror pre,
   .single-post-page pre {
@@ -120,15 +101,5 @@
     padding: 0.35rem;
     margin: 0.6rem 0;
     border-radius: 5px;
-    max-width: 100vw;
-    word-break: break-all;
   }
-}
-
-/* Garante que blocos de código nunca explodem o container */
-.single-post-page__description pre,
-.single-post-page__description code {
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 100%;
 }
