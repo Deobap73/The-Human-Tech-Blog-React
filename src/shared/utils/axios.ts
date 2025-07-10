@@ -2,9 +2,11 @@
 
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { setAccessToken, getAccessToken, removeAccessToken } from './authTokenStorage';
-import { useLoginModal } from '../hooks/useLoginModal'; // Só para tipos – NÃO usar hook aqui
 
-// Utility to read cookies (browser)
+/**
+ * Utility to read cookies in the browser.
+ * Returns the value of a cookie by name.
+ */
 const getCookie = (name: string): string | undefined => {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
@@ -12,21 +14,37 @@ const getCookie = (name: string): string | undefined => {
   return undefined;
 };
 
-const ensureCsrfToken = async (): Promise<void> => {
-  if (!getCookie('XSRF-TOKEN')) {
-    try {
-      await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'}/auth/csrf`,
-        { withCredentials: true }
-      );
-    } catch (err) {
-      if (import.meta.env.DEV) {
-        console.error('[Axios] Failed to refresh CSRF token:', err);
-      }
-    }
+/**
+ * Ensures that the CSRF token cookie (XSRF-TOKEN) is present before any mutating request.
+ * This function will poll for the cookie for up to 1 second (10 tries, 100ms each)
+ * to guarantee it is set in the browser before any POST/PUT/DELETE request is sent.
+ * Throws an error if the token is still not found after 1 second.
+ */
+export const ensureCsrfToken = async (): Promise<void> => {
+  let attempts = 0;
+  let xsrfToken = getCookie('XSRF-TOKEN');
+  if (xsrfToken) return;
+
+  // Request the CSRF token from the backend.
+  await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'}/auth/csrf`, {
+    withCredentials: true,
+  });
+
+  // Wait until the XSRF-TOKEN cookie is available (poll up to 1s).
+  while (!getCookie('XSRF-TOKEN') && attempts < 10) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    attempts++;
+  }
+
+  xsrfToken = getCookie('XSRF-TOKEN');
+  if (!xsrfToken) {
+    throw new Error('[CSRF] XSRF-TOKEN cookie not found after requesting /auth/csrf');
   }
 };
 
+/**
+ * Custom Axios instance with interceptors for Auth and CSRF.
+ */
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
   withCredentials: true,
@@ -46,7 +64,7 @@ const processQueue = (error: any, token: string | null = null) => {
   failedQueue = [];
 };
 
-// --- Axios Request Interceptor ---
+// Axios Request Interceptor: Adds Authorization & CSRF token (guaranteed by ensureCsrfToken)
 api.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     const token = getAccessToken();
@@ -54,10 +72,9 @@ api.interceptors.request.use(
       config.headers = config.headers || {};
       config.headers['Authorization'] = `Bearer ${token}`;
     }
-    // CSRF token para requests mutáveis
+    // For mutating requests, CSRF token must exist (ensureCsrfToken will handle before usage)
     const method = config.method?.toLowerCase();
     if (['post', 'put', 'patch', 'delete'].includes(method || '')) {
-      await ensureCsrfToken();
       const xsrfToken = getCookie('XSRF-TOKEN');
       if (xsrfToken) {
         config.headers = config.headers || {};
@@ -83,16 +100,16 @@ api.interceptors.request.use(
   }
 );
 
-// --- Axios Response Interceptor COM REFRESH AUTOMÁTICO ---
+// Axios Response Interceptor: Handles 401 errors and refreshes access token
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
-    // Se der 401 e ainda não tentámos refresh...
+    // If 401 Unauthorized and not already retried, try refresh
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
-        // Já está a refrescar, adiciona request à fila e espera
+        // Queue requests while refreshing
         return new Promise<string>((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         })
@@ -108,7 +125,7 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        // Faz refresh token: o refresh token DEVE estar no cookie HttpOnly!
+        // Try refresh token: expects refresh token in HttpOnly cookie!
         const res = await axios.post(
           `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'}/auth/refresh-token`,
           {},
@@ -124,7 +141,7 @@ api.interceptors.response.use(
         } else {
           processQueue(new Error('No access token in refresh response'), null);
           removeAccessToken();
-          window.dispatchEvent(new CustomEvent('auth:logout')); // Podes escutar isto para abrir modal
+          window.dispatchEvent(new CustomEvent('auth:logout'));
           return Promise.reject(error);
         }
       } catch (err) {
@@ -137,7 +154,7 @@ api.interceptors.response.use(
       }
     }
 
-    // Outro erro: devolve normalmente
+    // Other errors: just propagate
     return Promise.reject(error);
   }
 );
