@@ -127,7 +127,7 @@ api.interceptors.response.use(
       try {
         // Try refresh token: expects refresh token in HttpOnly cookie!
         const res = await axios.post(
-          `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'}/auth/refresh-token`,
+          `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'}/auth/refresh`,
           {},
           { withCredentials: true }
         );
