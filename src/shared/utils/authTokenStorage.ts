@@ -8,7 +8,7 @@ export const setAccessToken = (token: string): void => {
 
 export const getAccessToken = (): string | null => {
   if (!accessToken) {
-    accessToken = localStorage.getItem('access_token'); // ✅ garante persistência real
+    accessToken = localStorage.getItem('access_token'); // garante persistência real
   }
   return accessToken;
 };
