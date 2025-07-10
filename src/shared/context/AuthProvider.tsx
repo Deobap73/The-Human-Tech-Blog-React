@@ -1,4 +1,4 @@
-// src/shared/context/AuthProvider.tsx
+// /src/shared/context/AuthProvider.tsx
 
 import { useState, useEffect, useRef } from 'react';
 import * as authService from '../services/authService';
@@ -35,7 +35,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
    * Supports optional Google reCAPTCHA v3 token.
    */
   const login = async (email: string, password: string, captcha?: string): Promise<void> => {
-    // Envia captcha se existir
     const res = await api.post('/auth/login', { email, password, ...(captcha ? { captcha } : {}) });
     const { accessToken } = res.data;
     setAccessToken(accessToken);
@@ -52,16 +51,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       await authService.logout();
     } catch (error) {
       console.error('[AuthProvider] Logout failed:', error);
-      setAccessToken('');
-      localStorage.removeItem('access_token');
-      delete api.defaults.headers.common['Authorization'];
-      setUser(null);
-      window.location.href = '/login';
     } finally {
       setAccessToken('');
       localStorage.removeItem('access_token');
       delete api.defaults.headers.common['Authorization'];
       setUser(null);
+      window.location.href = '/login'; // Always redirect to login for full context reset
     }
   };
 
