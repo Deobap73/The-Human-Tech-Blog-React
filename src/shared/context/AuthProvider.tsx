@@ -27,15 +27,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.error('[AuthProvider] Error refetching user:', err);
       setUser(null);
       localStorage.removeItem('access_token');
-      // The refresh token is httpOnly and will be cleared by the server on /refresh 401.
     }
   };
 
   /**
    * Login function using API. Sets access token and fetches user.
+   * Supports optional Google reCAPTCHA v3 token.
    */
-  const login = async (email: string, password: string): Promise<void> => {
-    const res = await api.post('/auth/login', { email, password });
+  const login = async (email: string, password: string, captcha?: string): Promise<void> => {
+    // Envia captcha se existir
+    const res = await api.post('/auth/login', { email, password, ...(captcha ? { captcha } : {}) });
     const { accessToken } = res.data;
     setAccessToken(accessToken);
     api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
@@ -44,8 +45,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   /**
    * Secure logout function using authService.logout.
-   * Always refreshes CSRF token before POST logout.
-   * Guarantees local cleanup to prevent any refresh loop.
    */
   const logout = async (): Promise<void> => {
     try {
@@ -90,16 +89,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       localStorage.removeItem('access_token');
       delete api.defaults.headers.common['Authorization'];
       setUser(null);
-      // No throw (avoids refresh loop)
     }
   };
 
   useEffect(() => {
     let cancelled = false;
 
-    /**
-     * Releases the loading state if not already released.
-     */
     const releaseLoading = () => {
       if (!loadingReleased.current && !cancelled) {
         setLoading(false);
@@ -108,25 +103,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
     };
 
-    /**
-     * Auth initialization logic:
-     * 1. Try access token: fetch user.
-     * 2. If fails, try refresh token and fetch user again.
-     * 3. If both fail, set user as null.
-     */
     const init = async () => {
       setLoading(true);
       loadingReleased.current = false;
       try {
         const currentAccessToken = getAccessToken();
         if (currentAccessToken) {
-          // Try to fetch user with current token
           try {
             const res = await api.get('/auth/me');
             setUser(res.data.user);
             return;
           } catch (err) {
-            // Access token invalid, try refresh
             console.log('[AuthProvider] Existing access token invalid, attempting to refresh...');
             await refreshAccessToken();
             const refreshedToken = getAccessToken();
@@ -143,7 +130,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
           }
         } else {
-          // No access token, try refresh token
           console.log('[AuthProvider] No access token found, attempting initial refresh...');
           await refreshAccessToken();
           const refreshedToken = getAccessToken();
@@ -177,7 +163,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, []);
 
-  // Fallback: ensures loading is released even if something stalls
   useEffect(() => {
     if (!loading) return;
     const t = setTimeout(() => {

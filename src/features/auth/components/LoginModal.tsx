@@ -1,4 +1,4 @@
-// /src/features/auth/components/LoginModal.tsx
+// src/features/auth/components/LoginModal.tsx
 
 import '../styles/LoginModal.scss';
 import { useState } from 'react';
@@ -8,7 +8,10 @@ import logo from '../../../assets/Logo.webp';
 import { IoMdCloseCircle } from 'react-icons/io';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
-import { RecaptchaV3 } from '../../../shared/components/RecaptchaV3';
+import { getRecaptchaToken } from '../../../shared/utils/recaptcha'; // Importa helper
+
+// >>> INSERE A TUA CHAVE SITE KEY v3 AQUI <<<
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string;
 
 export const LoginModal = ({ onClose }: { onClose: () => void }) => {
   const { t } = useTranslation();
@@ -19,28 +22,21 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const [captcha, setCaptcha] = useState('');
-  const [captchaReady, setCaptchaReady] = useState(false);
-
-  // IMPORTANT: Set your site key from .env
-  const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '';
-
-  const handleRecaptcha = (token: string) => {
-    setCaptcha(token);
-    setCaptchaReady(true);
-  };
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!captcha) {
-      setError('Captcha not ready, please wait.');
-      return;
-    }
+    setLoading(true);
+    setError('');
     try {
-      await login(email, password, captcha);
+      // reCAPTCHA v3: obtém token
+      const captcha = await getRecaptchaToken(RECAPTCHA_SITE_KEY, 'login');
+      await login(email, password, captcha); // Ajusta useAuth/login para receber o token!
       onClose();
-    } catch {
-      setError(t('auth.login.error'));
+    } catch (err: any) {
+      setError(err?.response?.data?.message || t('auth.login.error') || 'Login failed. Try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,6 +62,7 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            autoComplete='username'
           />
           <div className='modal__password-wrapper'>
             <input
@@ -88,16 +85,14 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
               {showPassword ? <FiEyeOff /> : <FiEye />}
             </button>
           </div>
-          <button className='modal__submit' type='submit' disabled={!captchaReady}>
-            {t('auth.login.button')}
+          <button className='modal__submit' type='submit' disabled={loading}>
+            {loading ? t('auth.login.loading') || 'Logging in...' : t('auth.login.button')}
           </button>
           {error && (
             <span className='modal__error' role='alert' aria-live='assertive'>
               {error}
             </span>
           )}
-          {/* Add RecaptchaV3 as a hidden component */}
-          <RecaptchaV3 siteKey={siteKey} action='login' onToken={handleRecaptcha} />
         </form>
         <div className='modal__oauth'>
           <p className='modal__oauth-label'>{t('auth.login.orWith')}</p>

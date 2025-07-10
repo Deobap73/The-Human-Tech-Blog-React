@@ -1,12 +1,6 @@
-// /src/shared/components/RecaptchaV3.tsx
+// src/shared/components/RecaptchaV3.tsx
 
 import { useEffect } from 'react';
-
-declare global {
-  interface Window {
-    grecaptcha: any;
-  }
-}
 
 interface RecaptchaV3Props {
   siteKey: string;
@@ -14,30 +8,35 @@ interface RecaptchaV3Props {
   onToken: (token: string) => void;
 }
 
-/**
- * Google reCAPTCHA v3 integration (headless).
- * Calls onToken with generated token.
- */
-export const RecaptchaV3 = ({ siteKey, action, onToken }: RecaptchaV3Props) => {
-  useEffect(() => {
-    const loadAndRun = () => {
-      if (window.grecaptcha) {
-        window.grecaptcha.ready(() => {
-          window.grecaptcha.execute(siteKey, { action }).then(onToken);
-        });
-      }
-    };
+declare global {
+  interface Window {
+    grecaptcha: any;
+  }
+}
 
+/**
+ * Invisible Google reCAPTCHA v3 component.
+ * Calls onToken(token) when complete.
+ */
+export const RecaptchaV3: React.FC<RecaptchaV3Props> = ({ siteKey, action, onToken }) => {
+  useEffect(() => {
+    // Load reCAPTCHA script if not present
     if (!window.grecaptcha) {
       const script = document.createElement('script');
       script.src = `https://www.google.com/recaptcha/api.js?render=${siteKey}`;
       script.async = true;
-      script.onload = loadAndRun;
+      script.onload = () => {
+        window.grecaptcha.ready(() => {
+          window.grecaptcha.execute(siteKey, { action }).then(onToken);
+        });
+      };
       document.body.appendChild(script);
     } else {
-      loadAndRun();
+      window.grecaptcha.ready(() => {
+        window.grecaptcha.execute(siteKey, { action }).then(onToken);
+      });
     }
   }, [siteKey, action, onToken]);
 
-  return null;
+  return null; // No UI rendered
 };
