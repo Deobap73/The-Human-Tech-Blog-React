@@ -41,8 +41,11 @@ export const logout = async (): Promise<void> => {
  * @param email
  * @param password
  */
-export const login = (email: string, password: string) =>
-  safeApiPost('/auth/login', { email, password });
+export async function login(email: string, password: string, captcha: string) {
+  // Agora envia o token captcha
+  const res = await api.post('/auth/login', { email, password, captcha });
+  return res.data;
+}
 
 /**
  * Secure register function.

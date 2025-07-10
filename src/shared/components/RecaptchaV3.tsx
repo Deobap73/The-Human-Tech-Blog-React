@@ -1,12 +1,12 @@
 // src/shared/components/RecaptchaV3.tsx
-
 import { useEffect } from 'react';
+import './styles/RecaptchaV3.scss';
 
-interface RecaptchaV3Props {
+type RecaptchaV3Props = {
   siteKey: string;
   action: string;
   onToken: (token: string) => void;
-}
+};
 
 declare global {
   interface Window {
@@ -15,28 +15,44 @@ declare global {
 }
 
 /**
- * Invisible Google reCAPTCHA v3 component.
- * Calls onToken(token) when complete.
+ * RecaptchaV3 component loads Google reCAPTCHA v3 and executes an action,
+ * returning the generated token via the onToken callback.
+ * Usage: <RecaptchaV3 siteKey="..." action="login" onToken={handleToken} />
  */
-export const RecaptchaV3: React.FC<RecaptchaV3Props> = ({ siteKey, action, onToken }) => {
+const RecaptchaV3: React.FC<RecaptchaV3Props> = ({ siteKey, action, onToken }) => {
   useEffect(() => {
-    // Load reCAPTCHA script if not present
-    if (!window.grecaptcha) {
+    const injectScript = () => {
+      if (document.getElementById('recaptcha-v3-script')) return;
       const script = document.createElement('script');
+      script.id = 'recaptcha-v3-script';
       script.src = `https://www.google.com/recaptcha/api.js?render=${siteKey}`;
       script.async = true;
-      script.onload = () => {
-        window.grecaptcha.ready(() => {
-          window.grecaptcha.execute(siteKey, { action }).then(onToken);
-        });
-      };
       document.body.appendChild(script);
-    } else {
-      window.grecaptcha.ready(() => {
-        window.grecaptcha.execute(siteKey, { action }).then(onToken);
-      });
-    }
+    };
+
+    injectScript();
+
+    const executeRecaptcha = () => {
+      if (window.grecaptcha) {
+        window.grecaptcha.ready(() => {
+          window.grecaptcha.execute(siteKey, { action }).then((token: string) => {
+            onToken(token);
+          });
+        });
+      }
+    };
+
+    const interval = setInterval(() => {
+      if (window.grecaptcha && window.grecaptcha.execute) {
+        clearInterval(interval);
+        executeRecaptcha();
+      }
+    }, 300);
+
+    return () => clearInterval(interval);
   }, [siteKey, action, onToken]);
 
-  return null; // No UI rendered
+  return null; // Invisible
 };
+
+export default RecaptchaV3;
