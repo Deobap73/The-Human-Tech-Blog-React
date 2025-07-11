@@ -190,7 +190,7 @@ The **Chat module** in The Human Tech Blog provides a modern, secure, and seamle
 
   ---
 <br> <br>
-<img src="https://github.com/Deobap73/The-Human-Tech-Blog-React/blob/main/public/images/ContactPage.webp">
+<img src="https://github.com/Deobap73/The-Human-Tech-Blog-React/blob/main/public/images/ChatPage.webp">
 <br> <br>
 
 ---
