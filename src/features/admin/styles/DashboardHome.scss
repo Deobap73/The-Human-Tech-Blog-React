@@ -47,6 +47,8 @@
   &__user-item {
     display: flex;
     justify-content: space-between;
+    min-width: 18.75rem;
+    width: 100%;
     padding: 0.6rem 1rem;
     background: #f8f9fa;
     border-radius: 8px;
@@ -82,7 +84,8 @@
   &__category-item {
     display: flex;
     align-items: center;
-    max-width: 32.5rem;
+    min-width: 18.75rem;
+    width: 100%;
     margin-bottom: 0.8rem;
     background: #f6f6f8;
     padding: 0.7rem 1rem;
