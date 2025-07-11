@@ -1,8 +1,9 @@
-// /src/shared/hooks/useAuth.ts
+// src/shared/hooks/useAuth.ts
 
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import api, { ensureCsrfToken } from '../utils/axios';
+import api from '../utils/axios';
+import { ensureCsrfToken } from '../utils/csrf';
 
 /**
  * Custom Auth hook for authentication actions.
