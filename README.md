@@ -1,8 +1,10 @@
-# The Human Tech Blog — by Deolindo Baptista
+# [_The Human Tech Blog_](https://thehumantechblog.com) — by Deolindo Baptista
 
 **The Human Tech Blog** is a professional, scalable and multilingual blog platform with a modern, modular architecture and a full-featured admin panel.
 It’s designed for tech writers and editorial teams, providing secure content management, rich formatting, real-time notifications, and seamless integration with a robust backend.
-
+<br> <br>
+<img src="https://github.com/Deobap73/The-Human-Tech-Blog-React/blob/main/public/images/HomePage.webp">
+<br> <br>
 **Backend repo:** [The Human Tech Blog Server](https://github.com/Deobap73/The-Human-Tech-Blog-Server)
 
 ---
@@ -98,7 +100,11 @@ The-Human-Tech-Blog-React/
 ```
 
 ---
+<br> <br>
+<img src="https://github.com/Deobap73/The-Human-Tech-Blog-React/blob/main/public/images/TechShortsPage.webp">
+<br> <br>
 
+---
 ## 🌍 Internationalization
 
 - Full multilanguage: All public and admin resources in EN, PT, DE, ES
@@ -182,6 +188,13 @@ The **Chat module** in The Human Tech Blog provides a modern, secure, and seamle
 - **Real-time Messaging:**  
   Instant send/receive of messages using WebSocket (Socket.IO) for true real-time updates.
 
+  ---
+<br> <br>
+<img src="https://github.com/Deobap73/The-Human-Tech-Blog-React/blob/main/public/images/ContactPage.webp">
+<br> <br>
+
+---
+
 - **Chat Sidebar (Conversation List):**
 
   - Displays all conversations with avatars, usernames, preview of the latest message, and unread message badges.
@@ -225,6 +238,11 @@ The **Chat module** in The Human Tech Blog provides a modern, secure, and seamle
   - Group chats
   - Message search
   - Voice/video calls (extensible architecture)
+
+---
+<br> <br>
+<img src="https://github.com/Deobap73/The-Human-Tech-Blog-React/blob/main/public/images/ContactPage.webp">
+<br> <br>
 
 ---
 
