@@ -1,6 +1,9 @@
 /* The-Human-Tech-Blog-React/src/features/admin/styles/DashboardHome.scss */
 
 .dashboard-home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   &__charts-row {
     display: flex;
     gap: 2rem;
@@ -79,6 +82,7 @@
   &__category-item {
     display: flex;
     align-items: center;
+    max-width: 32.5rem;
     margin-bottom: 0.8rem;
     background: #f6f6f8;
     padding: 0.7rem 1rem;
