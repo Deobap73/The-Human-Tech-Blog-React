@@ -35,7 +35,7 @@
       margin-bottom: 1.2rem;
       font-size: 1.25rem;
       font-weight: 600;
-      color: #22223b;
+      color: var(--primary);
     }
 
     ul {
@@ -62,7 +62,7 @@
   }
 
   &__user-posts {
-    color: #999;
+    color: var(--primary);
   }
 
   &__top-categories {
@@ -72,7 +72,7 @@
       margin-bottom: 1.2rem;
       font-size: 1.25rem;
       font-weight: 600;
-      color: #22223b;
+      color: var(--primary);
     }
 
     ul {
@@ -101,13 +101,13 @@
 
   &__category-name {
     font-weight: 500;
-    color: #22223b;
+    color: var(--primary);
     flex: 1;
   }
 
   &__category-count {
     font-size: 1rem;
-    color: #999;
+    color: var(--primary);
   }
 
   &__loading,
