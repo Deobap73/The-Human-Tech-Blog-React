@@ -232,6 +232,7 @@
       "placeholderEmail": "Email",
       "placeholderPassword": "Password",
       "button": "Login",
+      "loading": "Logging in...",
       "error": "Invalid credentials",
       "orWith": "Or login with",
       "google": "Google",

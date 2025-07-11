@@ -216,6 +216,7 @@
       "placeholderEmail": "E-mail",
       "placeholderPassword": "Senha",
       "button": "Entrar",
+      "loading": "Efetuando login...",
       "error": "Credenciais inválidas",
       "orWith": "Ou entre com",
       "google": "Google",

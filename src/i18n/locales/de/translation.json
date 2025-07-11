@@ -213,6 +213,7 @@
       "placeholderEmail": "E-Mail",
       "placeholderPassword": "Passwort",
       "button": "Anmelden",
+      "loading": "Logging in...",
       "error": "Ungültige Anmeldeinformationen",
       "orWith": "Oder anmelden mit",
       "google": "Google",

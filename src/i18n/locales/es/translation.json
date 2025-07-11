@@ -213,6 +213,7 @@
       "placeholderEmail": "Correo electrónico",
       "placeholderPassword": "Contraseña",
       "button": "Iniciar sesión",
+      "loading": "Iniciando sesión...",
       "error": "Credenciales inválidas",
       "orWith": "O inicia sesión con",
       "google": "Google",
