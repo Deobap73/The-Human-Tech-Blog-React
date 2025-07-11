@@ -84,7 +84,7 @@ const MessageInput = ({ conversationId, setMessages }: MessageInputProps) => {
       )}
       <textarea
         ref={textareaRef}
-        className='chat-input__textarea'
+        className='chat-input__field'
         placeholder={t('chat.input.placeholder', 'Type a message...')}
         value={text}
         onChange={(e) => setText(e.target.value)}
@@ -95,7 +95,7 @@ const MessageInput = ({ conversationId, setMessages }: MessageInputProps) => {
         maxLength={1200}
       />
       <button
-        className='chat-input__send-btn'
+        className='chat-input__send'
         onClick={handleSend}
         disabled={sending || (!text.trim() && !file)}
         title={t('chat.input.send', 'Send')}>
