@@ -190,7 +190,7 @@ The **Chat module** in The Human Tech Blog provides a modern, secure, and seamle
 
   ---
 <br> <br>
-<img src="https://github.com/Deobap73/The-Human-Tech-Blog-React/blob/main/public/images/ContactPage.webp">
+<img src="https://github.com/Deobap73/The-Human-Tech-Blog-React/blob/main/public/images/ChatPage.webp">
 <br> <br>
 
 ---
@@ -287,3 +287,11 @@ This project is audit-reviewed, extensible, and ready for real-world use in prof
 For backend details and full DevOps setup, see: The Human Tech Blog Server.
 
 Happy building & writing! 🚀
+
+  <br> <br>
+
+[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=Deobap73)](https://github.com/anuraghazra/github-readme-stats)
+
+![GitHub streak stats](https://streak-stats.demolab.com/?user=Deobap73) &nbsp;&nbsp;&nbsp;&nbsp; ![GitHub stats](https://github-readme-stats.vercel.app/api?username=Deobap73&show_icons=true&count_private=true)
+
+[![trophy](https://github-profile-trophy.vercel.app/?username=Deobap73)](https://github.com/ryo-ma/github-profile-trophy)
