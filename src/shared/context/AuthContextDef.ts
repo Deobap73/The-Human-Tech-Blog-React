@@ -1,6 +1,4 @@
-//  The-Human-Tech-Blog-React/src/context/AuthContextDef.ts
-
-import { RegisterPayload } from '../services/authService';
+// The-Human-Tech-Blog-React/src/shared/context/AuthContextDef.ts
 
 export interface User {
   _id: string;
@@ -14,9 +12,9 @@ export interface AuthContextType {
   user: User | null;
   loading: boolean;
   setUser: (user: User | null) => void;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string, captcha?: string) => Promise<void>;
   logout: () => Promise<void>;
-  register: (payload: RegisterPayload) => Promise<any>;
+  register: (payload: Record<string, any>) => Promise<any>;
   refetchUser: () => Promise<void>;
   getAccessTokenSecurely: () => Promise<void>;
 }
