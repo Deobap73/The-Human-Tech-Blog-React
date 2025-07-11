@@ -18,6 +18,7 @@ import {
 } from 'recharts';
 import AdminLogTable from '../components/AdminLogTable';
 import NewsletterSubscribersTable from '../components/NewsletterSubscribersTable';
+import { resolveLogoUrl } from '../../../shared/utils/mediaHelpers';
 import '../styles/DashboardHome.scss';
 
 const COLORS = ['#457b9d', '#a8dadc', '#f1faee', '#e63946', '#2d3142'];
@@ -141,7 +142,7 @@ const DashboardHome = () => {
             <li key={cat.slug} className='dashboard-home__category-item'>
               {cat.logo && (
                 <img
-                  src={cat.logo}
+                  src={resolveLogoUrl(cat.logo)}
                   alt={cat.name}
                   className='dashboard-home__category-logo'
                   height={22}
