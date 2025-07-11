@@ -1,8 +1,10 @@
-# [_The Human Tech Blog_](https://thehumantechblog.com) — ## by Deolindo Baptista
+# [_The Human Tech Blog_](https://thehumantechblog.com) — by Deolindo Baptista
 
 **The Human Tech Blog** is a professional, scalable and multilingual blog platform with a modern, modular architecture and a full-featured admin panel.
 It’s designed for tech writers and editorial teams, providing secure content management, rich formatting, real-time notifications, and seamless integration with a robust backend.
-
+<br> <br>
+<img src="https://github.com/Deobap73/The-Human-Tech-Blog-React/blob/main/public/images/HomePage.webp">
+<br> <br>
 **Backend repo:** [The Human Tech Blog Server](https://github.com/Deobap73/The-Human-Tech-Blog-Server)
 
 ---
