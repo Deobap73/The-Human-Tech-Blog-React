@@ -63,9 +63,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   /**
    * Registration function.
    */
-  const register = async (payload: authService.RegisterPayload) => {
-    return await authService.register(payload);
-  };
+  const register = authService.register;
 
   /**
    * Refreshes the access token using the refresh token (if present).
