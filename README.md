@@ -1,4 +1,4 @@
-# [_The Human Tech Blog_](https://thehumantechblog.com) — by Deolindo Baptista
+# [_The Human Tech Blog_](https://thehumantechblog.com) — ## by Deolindo Baptista
 
 **The Human Tech Blog** is a professional, scalable and multilingual blog platform with a modern, modular architecture and a full-featured admin panel.
 It’s designed for tech writers and editorial teams, providing secure content management, rich formatting, real-time notifications, and seamless integration with a robust backend.
