@@ -1,6 +1,7 @@
 // /src/shared/context/AuthProvider.tsx
 
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as authService from '../services/authService';
 import { AuthContext } from './AuthContext';
 import api from '../utils/axios';
@@ -12,6 +13,7 @@ import { User } from './AuthContextDef';
  * Handles loading state, login, logout, registration, token refresh, and user fetching logic.
  */
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const loadingReleased = useRef(false);
@@ -35,7 +37,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
    * Supports optional Google reCAPTCHA v3 token.
    */
   const login = async (email: string, password: string, captcha?: string): Promise<void> => {
-    const res = await api.post('/auth/login', { email, password, ...(captcha ? { captcha } : {}) });
+    const res = await api.post('/auth/login', {
+      email,
+      password,
+      ...(captcha ? { captcha } : {}),
+    });
     const { accessToken } = res.data;
     setAccessToken(accessToken);
     api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
@@ -56,7 +62,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       localStorage.removeItem('access_token');
       delete api.defaults.headers.common['Authorization'];
       setUser(null);
-      window.location.href = '/login'; // Always redirect to login for full context reset
+      navigate('/login', { replace: true });
     }
   };
 
