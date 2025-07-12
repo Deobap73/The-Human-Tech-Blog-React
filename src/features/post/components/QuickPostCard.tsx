@@ -1,9 +1,10 @@
-// src/features/post/components/QuickPostCard.tsx
+// /src/features/post/components/QuickPostCard.tsx
 
 import { Link } from 'react-router-dom';
 import { Post } from '../../../shared/types/Post';
 import { getAvatar } from '../../../shared/utils/getAvatar';
-import { getPostTranslation } from '../../../shared/utils/i18nHelpers';
+import { getPostTranslation, getCategoryName } from '../../../shared/utils/i18nHelpers';
+import { resolveLogoUrl } from '../../../shared/utils/mediaHelpers';
 import '../styles/QuickPostCard.scss';
 
 interface Props {
@@ -11,41 +12,62 @@ interface Props {
   lang: string;
 }
 
-type PostUser = {
-  _id?: string;
-  name?: string;
-  avatar?: string;
-};
-/**
- * Renders a compact Tech Shorts post preview.
- */
 export const QuickPostCard = ({ post, lang }: Props) => {
   const translation = getPostTranslation(post.translations, lang);
   if (!translation.title || !translation.description) return null;
 
-  const user: PostUser = (post as any).user || (post as any).author || {};
+  const user = (post as any).user || (post as any).author || {};
+  // Assume categories é um array de Category
+  const category = post.categories?.[0];
+  const categoryName = getCategoryName(category, lang);
+  const categoryLogo = category?.logo ? resolveLogoUrl(category.logo) : '/default-logo.png';
+
   return (
     <div className='quick-post-card'>
       <Link to={`/${lang}/posts/${post.slug}`} className='quick-post-card__link'>
-        {post.image && (
-          <img src={post.image} alt={translation.title} className='quick-post-card__image' />
-        )}
+        <div className='quick-post-card__img-wrap'>
+          <img
+            src={post.image || '/no-image.webp'}
+            alt={translation.title}
+            className='quick-post-card__image'
+          />
+          <div className='quick-post-card__overlay' />
+          <div className='quick-post-card__category'>
+            {categoryLogo && (
+              <img
+                src={categoryLogo}
+                alt={categoryName}
+                className='quick-post-card__category-logo'
+                height={28}
+                width={28}
+              />
+            )}
+            <span className='quick-post-card__category-label'>{categoryName}</span>
+          </div>
+        </div>
         <div className='quick-post-card__content'>
           <h3 className='quick-post-card__title'>
-            {translation.title.length > 55
-              ? `${translation.title.substring(0, 50)}...`
+            {translation.title.length > 80
+              ? `${translation.title.substring(0, 76)}...`
               : translation.title}
           </h3>
-          <p className='quick-post-card__description'>
+          <p className='quick-post-card__desc'>
+            {translation.description.length > 120
+              ? translation.description.slice(0, 120) + '...'
+              : translation.description}
+          </p>
+          <div className='quick-post-card__meta'>
             <img
-              src={getAvatar(user || undefined)}
+              src={getAvatar(user)}
               alt='User avatar'
               className='quick-post-card__avatar'
-              width={48}
-              height={48}
+              width={38}
+              height={38}
             />
-            {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ''}
-          </p>
+            <span className='quick-post-card__date'>
+              {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ''}
+            </span>
+          </div>
         </div>
       </Link>
     </div>

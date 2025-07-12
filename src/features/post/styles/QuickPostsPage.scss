@@ -1,0 +1,46 @@
+/* /src/features/post/styles/QuickPostsPage.scss */
+
+.quick-posts {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  padding: var(--padding-md) var(--layout-padding-x);
+
+  &__header {
+    text-align: center;
+    margin-bottom: var(--margin-xl);
+  }
+
+  &__title {
+    font-size: var(--heading-h2);
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: 0.5px;
+    margin-bottom: var(--margin-xs);
+    text-transform: uppercase;
+  }
+
+  &__subtitle {
+    font-size: var(--font-size-md);
+    color: var(--text-color-secondary);
+    font-weight: 400;
+    margin-bottom: var(--margin-base);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--gap-lg);
+    width: 100%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .quick-posts__list {
+    grid-template-columns: 1fr;
+    gap: var(--gap-md);
+  }
+}
