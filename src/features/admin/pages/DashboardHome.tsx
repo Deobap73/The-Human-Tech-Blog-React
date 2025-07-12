@@ -1,4 +1,4 @@
-// The-Human-Tech-Blog-React/src/features/admin/pages/DashboardHome.tsx
+// /src/features/admin/pages/DashboardHome.tsx
 
 import { useEffect, useState } from 'react';
 import api from '../../../shared/utils/axios';
@@ -19,13 +19,21 @@ import {
 import AdminLogTable from '../components/AdminLogTable';
 import NewsletterSubscribersTable from '../components/NewsletterSubscribersTable';
 import { resolveLogoUrl } from '../../../shared/utils/mediaHelpers';
+import { getCategoryName } from '../../../shared/utils/i18nHelpers';
+import { useTranslation } from 'react-i18next';
 import '../styles/DashboardHome.scss';
+import { Category } from '../../../shared/types/Category';
 
 const COLORS = ['#457b9d', '#a8dadc', '#f1faee', '#e63946', '#2d3142'];
 
 const DashboardHome = () => {
   const [data, setData] = useState<any>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+  const { i18n } = useTranslation();
+  const lang = i18n.language.split('-')[0] || 'en';
 
+  // Fetch main dashboard analytics
   useEffect(() => {
     api
       .get('/analytics/kpis')
@@ -33,8 +41,23 @@ const DashboardHome = () => {
       .catch(() => setData(null));
   }, []);
 
-  if (!data) return <p className='dashboard-home__loading'>Loading dashboard...</p>;
+  // Fetch all categories for translation support
+  useEffect(() => {
+    api
+      .get<Category[]>('/categories')
+      .then((res) => setCategories(res.data))
+      .catch(() => setCategories([]))
+      .finally(() => setLoadingCategories(false));
+  }, []);
 
+  if (!data || loadingCategories) {
+    return <p className='dashboard-home__loading'>Loading dashboard...</p>;
+  }
+
+  // Find category object by slug (or fallback)
+  const findCategoryBySlug = (slug: string) => categories.find((cat) => cat.slug === slug) || null;
+
+  // KPIs
   const chartData = [
     { name: 'Users', count: data.totalUsers },
     { name: 'Posts', count: data.totalPosts },
@@ -55,14 +78,34 @@ const DashboardHome = () => {
     users: count,
   }));
 
+  // Pie data: add translations and logos to each entry
+  const postsPerCategoryPie = (data.postsPerCategory || []).map((cat: any) => {
+    const found = findCategoryBySlug(cat.slug);
+    return {
+      ...cat,
+      name: found ? getCategoryName(found, lang) : cat.name,
+      logo: found && found.logo ? resolveLogoUrl(found.logo) : undefined,
+    };
+  });
+
+  // Top categories for list (with translated name and logo)
+  const topCategories = (data.topCategories || []).map((cat: any) => {
+    const found = findCategoryBySlug(cat.slug);
+    return {
+      ...cat,
+      name: found ? getCategoryName(found, lang) : cat.name,
+      logo: found && found.logo ? resolveLogoUrl(found.logo) : undefined,
+    };
+  });
+
   return (
     <div className='dashboard-home'>
       <h2 className='dashboard-home__title'>📊 Admin Dashboard</h2>
 
       {/* KPIs */}
-      <div className='dashboard-home__kpis'>{/* ...como antes */}</div>
+      <div className='dashboard-home__kpis'>{/* ...as before... */}</div>
 
-      {/* Gráfico de barras principais */}
+      {/* Main bar chart */}
       <ResponsiveContainer width='100%' height={220}>
         <BarChart data={chartData} margin={{ top: 10, left: 10, right: 10, bottom: 5 }}>
           <XAxis dataKey='name' />
@@ -73,7 +116,7 @@ const DashboardHome = () => {
       </ResponsiveContainer>
 
       <div className='dashboard-home__charts-row'>
-        {/* Gráfico de posts por semana */}
+        {/* Posts per week */}
         <div className='dashboard-home__chart'>
           <h4 className='dashboard-home__chart-title'>Posts / Semana</h4>
           <ResponsiveContainer width='100%' height={160}>
@@ -85,7 +128,7 @@ const DashboardHome = () => {
             </LineChart>
           </ResponsiveContainer>
         </div>
-        {/* Gráfico de registos de utilizadores por semana */}
+        {/* Users registered per week */}
         <div className='dashboard-home__chart'>
           <h4 className='dashboard-home__chart-title'>Utilizadores / Semana</h4>
           <ResponsiveContainer width='100%' height={160}>
@@ -97,20 +140,20 @@ const DashboardHome = () => {
             </LineChart>
           </ResponsiveContainer>
         </div>
-        {/* Gráfico de pizza: posts por categoria */}
+        {/* Pie chart: posts per category */}
         <div className='dashboard-home__chart'>
           <h4 className='dashboard-home__chart-title'>Distribuição Posts/Categoria</h4>
           <ResponsiveContainer width='100%' height={180}>
             <PieChart>
               <Pie
-                data={data.postsPerCategory}
+                data={postsPerCategoryPie}
                 dataKey='value'
                 nameKey='name'
                 cx='50%'
                 cy='50%'
                 outerRadius={60}
-                label>
-                {data.postsPerCategory.map((entry: any, idx: number) => (
+                label={({ name }) => name}>
+                {postsPerCategoryPie.map((entry, idx) => (
                   <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
                 ))}
               </Pie>
@@ -121,7 +164,7 @@ const DashboardHome = () => {
         </div>
       </div>
 
-      {/* Top users ativos */}
+      {/* Top users by posts */}
       <div className='dashboard-home__top-users'>
         <h3>Top Users (Posts)</h3>
         <ul>
@@ -134,15 +177,15 @@ const DashboardHome = () => {
         </ul>
       </div>
 
-      {/* Categorias principais */}
+      {/* Top categories with logo and translated name */}
       <div className='dashboard-home__top-categories'>
         <h3>Top Categories</h3>
         <ul>
-          {data.topCategories.map((cat: any) => (
+          {topCategories.map((cat: any) => (
             <li key={cat.slug} className='dashboard-home__category-item'>
               {cat.logo && (
                 <img
-                  src={resolveLogoUrl(cat.logo)}
+                  src={cat.logo}
                   alt={cat.name}
                   className='dashboard-home__category-logo'
                   height={22}
