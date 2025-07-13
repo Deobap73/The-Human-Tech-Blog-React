@@ -12,12 +12,14 @@ interface Props {
   lang: string;
 }
 
-export const QuickPostCard = ({ post, lang }: Props) => {
+/**
+ * Renders a Tech Short (QuickPost) card with category, image, title, and meta.
+ */
+const QuickPostCard = ({ post, lang }: Props) => {
   const translation = getPostTranslation(post.translations, lang);
   if (!translation.title || !translation.description) return null;
 
   const user = (post as any).user || (post as any).author || {};
-  // Assume categories é um array de Category
   const category = post.categories?.[0];
   const categoryName = getCategoryName(category, lang);
   const categoryLogo = category?.logo ? resolveLogoUrl(category.logo) : '/default-logo.png';
@@ -33,40 +35,41 @@ export const QuickPostCard = ({ post, lang }: Props) => {
           />
           <div className='quick-post-card__overlay' />
           <div className='quick-post-card__category'>
-            {categoryLogo && (
-              <img
-                src={categoryLogo}
-                alt={categoryName}
-                className='quick-post-card__category-logo'
-                height={28}
-                width={28}
-              />
-            )}
+            <img
+              src={categoryLogo}
+              alt={categoryName}
+              className='quick-post-card__category-logo'
+              height={28}
+              width={28}
+            />
             <span className='quick-post-card__category-label'>{categoryName}</span>
           </div>
         </div>
         <div className='quick-post-card__content'>
           <h3 className='quick-post-card__title'>
-            {translation.title.length > 80
-              ? `${translation.title.substring(0, 76)}...`
+            {translation.title.length > 50
+              ? /* ? `${translation.title.substring(0, 76)}...` */
+                translation.title.slice(0, 50) + '...'
               : translation.title}
           </h3>
-          <p className='quick-post-card__desc'>
-            {translation.description.length > 120
-              ? translation.description.slice(0, 120) + '...'
-              : translation.description}
-          </p>
-          <div className='quick-post-card__meta'>
-            <img
-              src={getAvatar(user)}
-              alt='User avatar'
-              className='quick-post-card__avatar'
-              width={38}
-              height={38}
-            />
-            <span className='quick-post-card__date'>
-              {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ''}
-            </span>
+          <div>
+            <p className='quick-post-card__desc'>
+              {translation.description.length > 120
+                ? translation.description.slice(0, 120) + '...'
+                : translation.description}
+            </p>
+            <div className='quick-post-card__meta'>
+              <img
+                src={getAvatar(user)}
+                alt='User avatar'
+                className='quick-post-card__avatar'
+                width={38}
+                height={38}
+              />
+              <span className='quick-post-card__date'>
+                {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ''}
+              </span>
+            </div>
           </div>
         </div>
       </Link>

@@ -182,7 +182,7 @@
     "info": {
       "subtitle": "Contáctenos",
       "title": "Ponte en Contacto",
-      "desc": "¿Curioso sobre la gestión de proyectos, frontend o UI/UX? <br /> ¿O quizás te gustaría explorar reflexiones sobre la vida a través del lente de la tecnología? <br /> Sea cual sea el tema, me encantaría escuchar tu perspectiva. ¡Ponte en contacto!",
+      "desc": "¿Curioso sobre la gestión de proyectos, frontend o UI/UX?  ¿O quizás te gustaría explorar reflexiones sobre la vida a través del lente de la tecnología? Sea cual sea el tema, me encantaría escuchar tu perspectiva. ¡Ponte en contacto!",
       "phoneLabel": "Número de Teléfono",
       "phoneValue": "(+49) 176 34644129",
       "emailLabel": "Dirección de Correo Electrónico",
@@ -316,5 +316,12 @@
     "description": "Explorando el lado humano de la tecnología a través de historias, reflexiones e ideas del mundo tecnológico.",
     "rights": "Todos los derechos reservados.",
     "by": "por Deolindo Baptista"
+  },
+  "shorts": {
+    "shorts": "Tech Shorts"
+  },
+  "quickPostsPage": {
+    "title": "Tech Shorts",
+    "intro": "Consejos, ideas y descubrimientos tecnológicos cortos para desarrolladores ocupados."
   }
 }

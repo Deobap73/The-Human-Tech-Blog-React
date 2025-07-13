@@ -182,7 +182,7 @@
     "info": {
       "subtitle": "Kontaktieren Sie uns",
       "title": "Melden Sie sich",
-      "desc": "Neugierig auf Projektmanagement, Frontend oder UI/UX? <br /> Oder möchten Sie vielleicht Reflexionen über das Leben aus technologischer Sicht erkunden? <br /> Egal, um welches Thema es sich handelt, ich würde gerne Ihre Perspektive hören. Nehmen Sie Kontakt auf!",
+      "desc": "Neugierig auf Projektmanagement, Frontend oder UI/UX?  Oder möchten Sie vielleicht Reflexionen über das Leben aus technologischer Sicht erkunden?  Egal, um welches Thema es sich handelt, ich würde gerne Ihre Perspektive hören. Nehmen Sie Kontakt auf!",
       "phoneLabel": "Telefonnummer",
       "phoneValue": "(+49) 176 34644129",
       "emailLabel": "E-Mail-Adresse",
@@ -316,5 +316,12 @@
     "description": "Erkundung der menschlichen Seite der Technologie durch Geschichten, Reflexionen und Einblicke aus der Tech-Welt.",
     "rights": "Alle Rechte vorbehalten.",
     "by": "von Deolindo Baptista"
+  },
+  "shorts": {
+    "shorts": "Tech Shorts"
+  },
+  "quickPostsPage": {
+    "title": "Tech Shorts",
+    "intro": "Kurze Tech-Tipps, Ideen und Entdeckungen für beschäftigte Entwickler."
   }
 }

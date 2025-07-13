@@ -28,6 +28,24 @@
     &-title {
       font-size: var(--heading-h3);
       color: var(--text-color);
+      width: 20rem;
+      align-self: flex-start;
+      padding: var(--padding-xs) var(--padding-base);
+      color: var(--text-color-fixed);
+      background: transparent;
+      border: 2px solid #2995e2; // azul claro (ajusta se tua paleta for diferente)
+      border-left: none;
+      border-right: none;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
+      backdrop-filter: blur(2.5px); // Glass effect!
+      transition: border 0.2s, box-shadow 0.2s, background 0.25s;
+      &:hover {
+        background: rgba(0, 48, 104, 0.388);
+      }
+      &:active {
+        background: none !important;
+      }
     }
 
     &-link {

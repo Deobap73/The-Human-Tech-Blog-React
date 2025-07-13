@@ -184,7 +184,7 @@
     "info": {
       "subtitle": "Entre em Contato",
       "title": "Fale Comigo",
-      "desc": "Curioso sobre gestão de projetos, frontend ou UI/UX? <br /> Ou talvez queira explorar reflexões sobre a vida através da lente da tecnologia? <br /> Seja qual for o tópico, adoraria ouvir sua perspectiva. Entre em contato!",
+      "desc": "Curioso sobre gestão de projetos, frontend ou UI/UX? Ou talvez queira explorar reflexões sobre a vida através da lente da tecnologia? Seja qual for o tópico, adoraria ouvir sua perspectiva. Entre em contato!",
       "phoneLabel": "Número de Telefone",
       "phoneValue": "(+49) 176 34644129",
       "emailLabel": "Endereço de E-mail",
@@ -320,5 +320,12 @@
     "description": "Explorando o lado humano da tecnologia através de histórias, reflexões e insights do mundo tech.",
     "rights": "Todos os direitos reservados.",
     "by": "por Deolindo Baptista"
+  },
+  "shorts": {
+    "shorts": "Tech Shorts"
+  },
+  "quickPostsPage": {
+    "title": "Tech Shorts",
+    "intro": "Dicas, ideias e descobertas rápidas de tecnologia para programadores ocupados."
   }
 }

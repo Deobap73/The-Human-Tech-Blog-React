@@ -199,7 +199,7 @@
     "info": {
       "subtitle": "Contact Us",
       "title": "Get In Touch",
-      "desc": "Curious about project management, frontend, or UI/UX? <br /> Or perhaps you’d like to explore reflections on life through the lens of technology? <br /> Whatever the topic, I’d love to hear your perspective. Get in touch!",
+      "desc": "Curious about project management, frontend, or UI/UX? Or perhaps you’d like to explore reflections on life through the lens of technology? Whatever the topic, I’d love to hear your perspective. Get in touch!",
       "phoneLabel": "Phone Number",
       "phoneValue": "(+49) 176 34644129",
       "emailLabel": "Email Address",
@@ -345,5 +345,12 @@
     "description": "Exploring the human side of technology through stories, reflections, and insights from the tech world.",
     "rights": "All rights reserved.",
     "by": "by Deolindo Baptista"
+  },
+  "shorts": {
+    "shorts": "Tech Shorts"
+  },
+  "quickPostsPage": {
+    "title": "Tech Shorts",
+    "intro": "Short tech tips, ideas and discoveries for busy devs."
   }
 }

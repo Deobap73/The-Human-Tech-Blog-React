@@ -1,7 +1,7 @@
 // src/features/home/pages/HomePage.tsx
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import '../styles/HomePage.scss';
 import { RecentPosts } from '../../post/components/RecentPosts';
 import { LastPost } from '../../post/components/LastPost';
@@ -17,7 +17,7 @@ import ScrollToTop from '../../../shared/components/ScrollToTop';
 
 export const HomePage = () => {
   const { lang: langParam } = useParams();
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const lang = langParam || i18n.language.split('-')[0] || 'en';
 
   const [posts, setPosts] = useState<Post[]>([]);
@@ -60,10 +60,6 @@ export const HomePage = () => {
   const techShorts = validPublishedPosts.filter((post) => post.isQuickPost);
   const shortsToRender = isMobile ? techShorts.slice(0, 4) : techShorts.slice(0, 5);
 
-  /*  console.log('[DEBUG] validPublishedPosts', validPublishedPosts);
-  console.log('[DEBUG] featuredPostToShow', featuredPostToShow);
-  console.log('[DEBUG] lastPostToShow', lastPostToShow); */
-
   return (
     <>
       <ScrollToTop />
@@ -72,7 +68,10 @@ export const HomePage = () => {
 
         {shortsToRender.length > 0 && (
           <section className='home__shorts'>
-            <h2 className='home__shorts-title'>Tech Shorts</h2>
+            <Link className='home__shorts-title' to={`/${langParam}/shorts`}>
+              {t('shorts.shorts', 'Tech Shorts')}
+            </Link>
+
             <a href={`/${lang}/shorts`} className='home__shorts-link'>
               <div className='home__shorts-list'>
                 {shortsToRender.map((post) => (
