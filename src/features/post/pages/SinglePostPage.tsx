@@ -11,6 +11,7 @@ import axios from '../../../shared/utils/axios';
 import { Post, PostTranslation } from '../../../shared/types/Post';
 import { getAvatar } from '../../../shared/utils/getAvatar';
 import { BookmarkButton } from '../components/BookmarkButton';
+import { ShareButton } from '../components/ShareButton';
 import Comments from '../components/Comments';
 import { ReactionButtons } from '../components/ReactionButtons';
 import { getPostTranslation, getCategoryName, getTagName } from '../../../shared/utils/i18nHelpers';
@@ -116,6 +117,7 @@ export const SinglePostPage = () => {
               </div>
             </div>
             <BookmarkButton postId={post._id} className='single-post-page__bookmark-button' />
+            <ShareButton url={window.location.href} className='single-post-page__share-button' />
           </div>
           <div className='single-post-page__header-image'>
             {post.image && (

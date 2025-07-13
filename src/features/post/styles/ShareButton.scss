@@ -1,0 +1,17 @@
+// File: src/features/post/components/ShareButton.scss
+
+.single-post-page__share-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem;
+  padding: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
