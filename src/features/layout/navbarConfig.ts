@@ -5,6 +5,7 @@ import { TFunction } from 'i18next';
 import homePageBg from '../../assets/homePage.webp';
 import aboutPageBg from '../../assets/aboutPage.webp';
 import contactPageBg from '../../assets/contactPage.webp';
+import techShortsPage from '../../assets/techShortsPage.webp';
 
 export interface NavbarConfig {
   background?: string; // Path to the image, or undefined to hide
@@ -32,6 +33,10 @@ export const navbarConfigs: Record<string, NavbarConfig> = {
     showTile: true,
     tileTitle: (t) => t('navbar.title.contact'),
     tileDescription: (t) => t('navbar.description.contact'),
+  },
+  '/shorts': {
+    background: techShortsPage,
+    showTile: false,
   },
   '/admin': {
     showTile: false,

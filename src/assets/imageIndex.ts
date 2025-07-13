@@ -14,6 +14,7 @@ import plus from './plus.png';
 import scrum from './scrum.webp';
 import sun from './sun.png';
 import teckCareer from './teckCareer.webp';
+import techShortsPage from './techShortsPage.webp';
 import teckTools from './teckTools.webp';
 import theHumanTechBlogLogo from './theHumanTechBlogLogo.webp';
 import videoDownload from './videoDownload.png';
@@ -35,6 +36,7 @@ const images: {
   scrum: string;
   sun: string;
   teckCareer: string;
+  techShortsPage: string;
   teckTools: string;
   theHumanTechBlogLogo: string;
   videoDownload: string;
@@ -56,6 +58,7 @@ const images: {
   scrum,
   sun,
   teckCareer,
+  techShortsPage,
   teckTools,
   theHumanTechBlogLogo,
   videoDownload,
