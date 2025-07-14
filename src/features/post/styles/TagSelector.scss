@@ -1,0 +1,114 @@
+/* src/features/post/styles/TagSelector.scss */
+
+.tag-selector {
+  &__label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  &__suggestions {
+    margin-top: 0.5rem;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    max-height: 150px;
+    overflow-y: auto;
+  }
+
+  &__suggestion {
+    padding: 0.5rem;
+    cursor: pointer;
+    &:hover {
+      background: #eee;
+    }
+  }
+
+  &__create-option {
+    padding: 0.5rem;
+    color: #007acc;
+    cursor: pointer;
+    &:hover {
+      background: #e6f7ff;
+    }
+  }
+
+  &__selected {
+    margin-top: 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  &__tag {
+    background: #007acc;
+    color: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+
+    button {
+      background: none;
+      border: none;
+      color: white;
+      margin-left: 0.5rem;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+  }
+
+  &__modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  &__modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 400px;
+    text-align: center;
+  }
+
+  &__modal-actions {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  &__btn {
+    flex: 1;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+
+    &--cancel {
+      background: #ccc;
+    }
+
+    &:not(&--cancel) {
+      background: #007acc;
+      color: white;
+    }
+  }
+}

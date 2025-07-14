@@ -26,6 +26,7 @@ import '../styles/WritePage.scss';
 import '../styles/CodeBlock.scss';
 import EditorWrapper from '../components/EditorWrapper';
 import ScrollToTop from '../../../shared/components/ScrollToTop';
+import TagSelector from '../components/TagSelector';
 
 const LANGUAGES = ['en', 'pt', 'de', 'es'] as const;
 type Language = (typeof LANGUAGES)[number];
@@ -337,20 +338,8 @@ const WritePage = () => {
               <img src={coverUrl} alt='Cover Preview' className='write-page__cover-img' />
             </div>
           )}
-          <label className='write-page__label'>
-            Tags:
-            <select
-              multiple
-              value={postLoaded ? tags : []}
-              onChange={handleTags}
-              className='write-page__select'>
-              {availableTags.map((tag) => (
-                <option key={tag._id} value={tag._id}>
-                  {tag.translations?.en?.name || '[no name]'}
-                </option>
-              ))}
-            </select>
-          </label>
+          <TagSelector selectedTags={tags} setSelectedTags={setTags} />
+
           <label className='write-page__label'>
             Categories:
             <select
