@@ -61,14 +61,14 @@
   }
   &__bookmark-button {
     position: absolute;
-    top: 0.4rem;
+    top: 0;
     right: 0;
     z-index: 2;
   }
   &__share-button {
     position: absolute;
-    top: 0;
-    right: 2rem;
+    top: 2rem;
+    right: -0.4rem;
     z-index: 2;
   }
   &__header-image {

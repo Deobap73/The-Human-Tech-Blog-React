@@ -1,9 +1,10 @@
-// src/routes/PublicRoutes.tsx
+// File: src/routes/PublicRoutes.tsx
 
 import { Routes, Route } from 'react-router-dom';
 import Layout from '../features/layout/Layout';
 import HomePage from '../features/home/pages/HomePage';
 import AboutPage from '../features/about/pages/AboutPage';
+import ContactPage from '../features/contact/pages/ContactPage';
 import SinglePostPage from '../features/post/pages/SinglePostPage';
 import WritePage from '../features/post/pages/WritePage';
 import DraftsList from '../features/post/components/DraftsList';
@@ -15,7 +16,6 @@ import TagPage from '../features/tag/pages/TagPage';
 import CategoryPage from '../features/post/pages/CategoryPage';
 import SearchResultsPage from '../features/search/pages/SearchResultsPage';
 import { RedirectToBrowserLang } from './Redirects';
-import ContactPage from '../features/contact/pages/ContactPage';
 import PrivateRoute from './PrivateRoute';
 import ChatRoutes from '../features/chat/pages/ChatRoutes';
 import NotAuthorizedPage from '../pages/NotAuthorizedPage';
@@ -28,28 +28,24 @@ const NotFoundPage = () => (
   </div>
 );
 
-const SupportedLangs = ['en', 'pt', 'de', 'es'];
-
 const PublicRoutes = () => (
   <Routes>
-    {/* Root: Redirect to browser language */}
+    {/* Redirect root and other top-level to browser lang */}
     <Route path='/' element={<RedirectToBrowserLang />} />
-    <Route path='/not-authorized' element={<RedirectToBrowserLang path='not-authorized' />} />
-    <Route path='/admin/*' element={<RedirectToBrowserLang path='admin' />} />
+    <Route path='/not-authorized' element={<RedirectToBrowserLang />} />
+    <Route path='/admin/*' element={<RedirectToBrowserLang />} />
+
+    {/* Catch share URL without lang prefix for posts */}
+    <Route path='/posts/:slug' element={<RedirectToBrowserLang />} />
 
     {/* All multilanguage content inside /:lang */}
     <Route path='/:lang' element={<Layout />}>
       <Route index element={<HomePage />} />
       <Route path='about' element={<AboutPage />} />
       <Route path='contact' element={<ContactPage />} />
-
-      {/* Drafts: always use /:lang/drafts */}
       <Route path='drafts' element={<DraftsList />} />
-
-      {/* Create & Edit: /:lang/write ou /:lang/write/:id */}
       <Route path='write' element={<WritePage />} />
       <Route path='write/:id' element={<WritePage />} />
-
       <Route path='posts/create' element={<WritePage />} />
       <Route path='posts/:slug' element={<SinglePostPage />} />
       <Route path='shorts' element={<QuickPostsPage />} />
@@ -60,11 +56,8 @@ const PublicRoutes = () => (
       <Route path='user' element={<UserPage />} />
       <Route path='admin/*' element={<AdminRoutes />} />
       <Route path='not-authorized' element={<NotAuthorizedPage />} />
-
-      {/* newsletter */}
       <Route path='newsletter/confirm/:token' element={<NewsletterConfirmPage />} />
       <Route path='newsletter/unsubscribe/:token' element={<NewsletterUnsubscribePage />} />
-
       <Route
         path='chat/*'
         element={
@@ -76,7 +69,7 @@ const PublicRoutes = () => (
       <Route path='*' element={<NotFoundPage />} />
     </Route>
 
-    {/* Fallback for unknown routes OUTSIDE /:lang */}
+    {/* Fallback for unknown routes outside /:lang */}
     <Route path='*' element={<NotFoundPage />} />
   </Routes>
 );

@@ -6,22 +6,26 @@ import { useTranslation } from 'react-i18next';
 import '../styles/ShareButton.scss';
 
 interface ShareButtonProps {
-  url: string;
   className?: string;
 }
 
-export const ShareButton: React.FC<ShareButtonProps> = ({ url, className = '' }) => {
+export const ShareButton: React.FC<ShareButtonProps> = ({ className = '' }) => {
   const { t } = useTranslation();
 
   const handleShare = async () => {
     try {
+      // Remove locale prefix from pathname
+      const { origin, pathname, search } = window.location;
+      const pathNoLocale = pathname.replace(/^\/[a-z]{2}(?=(\/|$))/, '');
+      const shareUrl = `${origin}${pathNoLocale}${search}`;
+
       if (navigator.share) {
         await navigator.share({
           title: document.title,
-          url,
+          url: shareUrl,
         });
       } else {
-        await navigator.clipboard.writeText(url);
+        await navigator.clipboard.writeText(shareUrl);
         alert(t('post.share.copied', 'Link copied to clipboard'));
       }
     } catch (err) {
@@ -33,7 +37,7 @@ export const ShareButton: React.FC<ShareButtonProps> = ({ url, className = '' })
   return (
     <button
       type='button'
-      className={`${className}`}
+      className={className}
       onClick={handleShare}
       aria-label={t('post.share.buttonAria', 'Share this article')}>
       <FiShare2 />
