@@ -3,21 +3,25 @@
 .tag-selector {
   &__label {
     display: block;
-    margin-bottom: 0.5rem;
+    margin-top: var(--margin-base);
+    margin-bottom: var(--margin-xs);
     font-weight: 600;
+    color: var(--text-color-secondary);
+    font-size: var(--font-size-base);
+    letter-spacing: 0.3px;
   }
 
   &__input {
     width: 100%;
     padding: 0.5rem;
-    border: 1px solid #ccc;
+    border: 1px solid #007acc;
     border-radius: 4px;
   }
 
   &__suggestions {
     margin-top: 0.5rem;
-    background: #f9f9f9;
-    border: 1px solid #ddd;
+    background: var(--background-secondary);
+    border: 1px solid #007acc;
     border-radius: 4px;
     max-height: 150px;
     overflow-y: auto;
@@ -27,7 +31,7 @@
     padding: 0.5rem;
     cursor: pointer;
     &:hover {
-      background: #eee;
+      background: var(--background-secondary);
     }
   }
 
@@ -36,7 +40,7 @@
     color: #007acc;
     cursor: pointer;
     &:hover {
-      background: #e6f7ff;
+      background: var(--background-secondary);
     }
   }
 
@@ -80,7 +84,7 @@
   }
 
   &__modal-content {
-    background: white;
+    background: var(--background-secondary);
     padding: 2rem;
     border-radius: 8px;
     max-width: 400px;
@@ -103,12 +107,12 @@
     cursor: pointer;
 
     &--cancel {
-      background: #ccc;
+      background: var(--background-secondary);
     }
 
     &:not(&--cancel) {
       background: #007acc;
-      color: white;
+      color: rgb(255, 0, 0);
     }
   }
 }
