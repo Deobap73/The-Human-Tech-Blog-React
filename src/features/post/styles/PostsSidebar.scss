@@ -1,4 +1,4 @@
-// /src/shared/components/Sidebar.scss
+// /src/shared/components/PostsSidebar.scss
 
 .sidebar {
   display: flex;
@@ -8,9 +8,10 @@
   max-width: 350px;
   align-items: flex-start;
   position: sticky;
-  top: 2.1rem;
+  top: 2rem; /* Distância do topo quando fixo */
   height: fit-content;
-  z-index: 10;
+  z-index: 5;
+  align-self: flex-start;
 
   &__block {
     width: 100%;
@@ -23,11 +24,11 @@
   }
 
   @media (max-width: 1100px) {
-    position: static;
+    position: sticky;
     width: 100%;
     max-width: 100%;
     margin-top: 0.5rem;
-    top: unset;
+    top: 2rem; /* Mantém fixo mesmo em tablets */
 
     &__block {
       border-radius: 12px;
@@ -35,23 +36,11 @@
     }
   }
 
-  @media (min-width: 700px) {
-    position: sticky;
-    top: 2rem; /* adjust as needed to clear header */
-    z-index: 10;
-  }
-
   @media (max-width: 700px) {
-    position: static;
+    position: static; /* Em mobile, volta ao fluxo normal */
+
     &__block {
       padding: 0.6rem 0.3rem;
-    }
-  }
-
-  @media (max-width: 480px) {
-    &__block {
-      border-radius: 7px;
-      padding: 0.3rem 0.12rem;
     }
   }
 }

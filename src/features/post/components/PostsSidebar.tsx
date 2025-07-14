@@ -1,3 +1,5 @@
+// src\features\post\components\PostsSidebar.tsx
+
 import { ReactNode } from 'react';
 import '../styles/PostsSidebar.scss';
 
