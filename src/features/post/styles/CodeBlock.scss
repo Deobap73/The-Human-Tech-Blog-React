@@ -24,7 +24,7 @@
   /* 3) Scroll interno só quando absolutamente necessário */
   overflow-x: auto;
 
-  &::before {
+  /*  &::before {
     content: attr(data-language);
     position: absolute;
     top: 0.4rem;
@@ -34,7 +34,7 @@
     text-transform: uppercase;
     color: #999;
     pointer-events: none;
-  }
+  } */
 
   code {
     display: block;
