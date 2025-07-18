@@ -25,10 +25,12 @@
     padding-right: var(--layout-padding-x);
 
     @media (max-width: 1024px) {
+      margin: 8% auto;
       padding-left: var(--layout-padding-x);
       padding-right: var(--layout-padding-x);
     }
     @media (max-width: 640px) {
+      margin: 10% auto;
       padding-left: var(--layout-padding-x);
       padding-right: var(--layout-padding-x);
     }

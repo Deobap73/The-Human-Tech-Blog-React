@@ -66,6 +66,8 @@ export const HomePage = () => {
       <div className='home'>
         <RecentPosts posts={validPublishedPosts.slice(0, 12)} lang={lang} />
 
+        <CategoryList />
+
         {shortsToRender.length > 0 && (
           <section className='home__shorts'>
             <Link className='home__shorts-title' to={`/${langParam}/shorts`}>
@@ -81,8 +83,6 @@ export const HomePage = () => {
             </a>
           </section>
         )}
-
-        <CategoryList />
 
         {featuredPostToShow && <Featured post={featuredPostToShow} lang={lang} />}
         <Sponsors />

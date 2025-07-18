@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import slugify from 'slugify';
 import { fetchTags, createTag, updateTag, deleteTag } from '../../../shared/services/tagService';
 import { Tag, TagTranslation } from '../../../shared/types/Tag';
 import { useToast } from '../../../shared/hooks/useToast';
@@ -34,18 +35,15 @@ const AdminTagsPage = () => {
   const [fieldErrors, setFieldErrors] = useState<{ name?: string }>({});
   const [loading, setLoading] = useState(false);
 
-  // Filtro e paginação
+  // Filter and pagination
   const [filter, setFilter] = useState('');
   const [page, setPage] = useState(1);
 
-  // Filtered tags
   const filteredTags = useMemo(() => {
     const query = filter.trim().toLowerCase();
     if (!query) return tags;
     return tags.filter((tag) => {
-      // Defensive: translations must be object
       if (!tag.translations) return false;
-      // Search in any language, but prefer active
       for (const lang of LANGUAGES) {
         const name = tag.translations?.[lang]?.name?.toLowerCase() || '';
         const desc = tag.translations?.[lang]?.description?.toLowerCase() || '';
@@ -55,7 +53,6 @@ const AdminTagsPage = () => {
     });
   }, [filter, tags]);
 
-  // Pagination
   const totalPages = Math.max(1, Math.ceil(filteredTags.length / PAGE_SIZE));
   const pagedTags = useMemo(
     () => filteredTags.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
@@ -64,11 +61,10 @@ const AdminTagsPage = () => {
 
   useEffect(() => {
     loadTags();
-    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    setPage(1); // Volta à página 1 quando muda o filtro
+    setPage(1);
   }, [filter]);
 
   const loadTags = async () => {
@@ -114,8 +110,11 @@ const AdminTagsPage = () => {
 
   const validateFields = (): boolean => {
     const errors: { name?: string } = {};
-    if (!(form.en?.name ?? '').trim()) {
+    const name = form.en?.name?.trim() || '';
+    if (!name) {
       errors.name = t('adminTagForm.requiredName', 'Name (EN) is required');
+    } else if (name.length < 2) {
+      errors.name = t('adminTagForm.minLength', 'Name (EN) must have at least 2 characters');
     }
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;
@@ -127,22 +126,26 @@ const AdminTagsPage = () => {
     if (!validateFields()) return;
     setLoading(true);
     try {
+      const payload = {
+        translations: form,
+        color,
+        slug: slugify(form.en.name, { lower: true, strict: true }),
+      };
+
+      // Debug payload before sending
+      console.log('[AdminTagsPage] Creating tag with payload:', payload);
+
       if (editing) {
-        await updateTag(editing._id, {
-          translations: form,
-          color,
-        });
+        await updateTag(editing._id, payload);
         success(t('adminTagForm.updateSuccess', 'Tag updated successfully!'));
       } else {
-        await createTag({
-          translations: form,
-          color,
-        });
+        await createTag(payload);
         success(t('adminTagForm.createSuccess', 'Tag created successfully!'));
       }
       await loadTags();
       clearForm();
     } catch (err: any) {
+      console.error('[AdminTagsPage] Tag save error:', err);
       errorToast(t('adminTagForm.error', 'Failed to save tag'));
     }
     setLoading(false);
@@ -164,7 +167,7 @@ const AdminTagsPage = () => {
   return (
     <div className='admin-tags-page'>
       <h2>{t('adminTagForm.title')}</h2>
-      {/* Filtro */}
+
       <AdminTableFilter
         value={filter}
         onChange={setFilter}
@@ -175,7 +178,6 @@ const AdminTagsPage = () => {
         <Loader />
       ) : (
         <form className='admin-tags-page__form' onSubmit={handleSubmit}>
-          {/* Multilingual Tabs */}
           <div className='admin-tags-page__tabs'>
             {LANGUAGES.map((lang) => (
               <button
@@ -242,10 +244,8 @@ const AdminTagsPage = () => {
         </form>
       )}
 
-      {/* Tabela/Paginação */}
       <ul className='admin-tags-page__list'>
         {pagedTags.map((tag) => {
-          // Defensive: tag.translations pode ser undefined
           const translations = tag.translations || {};
           const tr = translations[i18n.language as Lang] ||
             translations[i18n.language?.split('-')[0] as Lang] ||
@@ -281,7 +281,6 @@ const AdminTagsPage = () => {
         {pagedTags.length === 0 && <li>{t('adminTagForm.noTags')}</li>}
       </ul>
 
-      {/* Paginação */}
       <AdminTablePagination page={page} totalPages={totalPages} onPageChange={setPage} />
     </div>
   );

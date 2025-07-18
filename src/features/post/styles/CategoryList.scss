@@ -4,6 +4,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); // 170px mínimo por categoria
   gap: var(--gap-base) var(--gap-m);
+  margin: var(--margin-md) 0;
   list-style: none;
   padding: 0;
 
