@@ -6,6 +6,7 @@ import '../styles/HomePage.scss';
 import { RecentPosts } from '../../post/components/RecentPosts';
 import { LastPost } from '../../post/components/LastPost';
 import QuickPostCard from '../../post/components/QuickPostCard';
+import AiPromptCard from '../../../features/aiPrompts/components/AiPromptCard'; // NEW
 import { Sponsors } from '../../sponsors/components/Sponsors';
 import { Post } from '../../../shared/types/Post';
 import axios from '../../../shared/utils/axios';
@@ -53,12 +54,15 @@ export const HomePage = () => {
     })
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-  const normalPosts = validPublishedPosts.filter((post) => !post.isQuickPost);
+  const normalPosts = validPublishedPosts.filter((post) => !post.isQuickPost && !post.isAiPrompt);
   const featuredPostToShow = normalPosts[0];
   const lastPostToShow = normalPosts[1];
 
   const techShorts = validPublishedPosts.filter((post) => post.isQuickPost);
   const shortsToRender = isMobile ? techShorts.slice(0, 4) : techShorts.slice(0, 5);
+
+  const aiPrompts = validPublishedPosts.filter((post) => post.isAiPrompt);
+  const promptsToRender = isMobile ? aiPrompts.slice(0, 4) : aiPrompts.slice(0, 5);
 
   return (
     <>
@@ -85,6 +89,23 @@ export const HomePage = () => {
         )}
 
         {featuredPostToShow && <Featured post={featuredPostToShow} lang={lang} />}
+
+        {promptsToRender.length > 0 && (
+          <section className='home__aiPrompts'>
+            <Link className='home__aiPrompts-title' to={`/${langParam}/ai-prompts`}>
+              {t('aiPrompts.title', 'AI Prompts')}
+            </Link>
+
+            <a href={`/${lang}/ai-prompts`} className='home__aiPrompts-link'>
+              <div className='home__aiPrompts-list'>
+                {promptsToRender.map((post) => (
+                  <AiPromptCard key={post._id} prompt={post} lang={lang} />
+                ))}
+              </div>
+            </a>
+          </section>
+        )}
+
         <Sponsors />
         {lastPostToShow && <LastPost post={lastPostToShow} lang={lang} />}
       </div>

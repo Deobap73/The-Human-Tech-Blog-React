@@ -8,7 +8,7 @@ import { Routes, Route } from 'react-router-dom';
 import PublicRoutes from './routes/PublicRoutes';
 import NotAuthorizedPage from './pages/NotAuthorizedPage';
 import { useTranslation } from 'react-i18next';
-import NewsletterModal from './features/newsletter/components/NewsletterModal';
+import NewsletterModal from './features/notification/newsletter/components/NewsletterModal';
 
 /**
  * App entry point: Handles global loading state and main routes.

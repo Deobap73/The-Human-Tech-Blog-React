@@ -18,7 +18,7 @@ import { getPostTranslation, getCategoryName, getTagName } from '../../../shared
 import RecentCategoryPosts from '../components/RecentCategoryPosts';
 import CategoryList from '../components/CategoryList';
 import ScrollToTop from '../../../shared/components/ScrollToTop';
-import NewsletterSidebarBox from '../../newsletter/components/NewsletterSidebarBox';
+import NewsletterSidebarBox from '../../notification/newsletter/components/NewsletterSidebarBox';
 import PostsSidebar from '../components/PostsSidebar';
 import SinglePostContent from '../components/SinglePostContent';
 

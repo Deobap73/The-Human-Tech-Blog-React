@@ -12,8 +12,7 @@ interface LastPostProps {
 }
 
 export const LastPost = ({ post, lang }: LastPostProps) => {
-  if (!post || post.isQuickPost === true) {
-    /*  console.log('[DEBUG] LastPost skipped: isQuickPost === true'); */
+  if (!post || post.isQuickPost === true || post.isAiPrompt === true) {
     return null;
   }
 

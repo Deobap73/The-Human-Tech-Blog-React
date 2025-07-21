@@ -12,8 +12,7 @@ interface FeaturedProps {
 }
 
 export const Featured = ({ post, lang }: FeaturedProps) => {
-  if (!post || post.isQuickPost === true) {
-    /*  console.log('[DEBUG] Featured skipped: isQuickPost === true'); */
+  if (!post || post.isQuickPost === true || post.isAiPrompt === true) {
     return null;
   }
 

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import api from '../../../shared/utils/axios';
+import api from '../../../../shared/utils/axios';
 import { toast } from 'react-hot-toast';
 import '../styles/NewsletterForm.scss';
 

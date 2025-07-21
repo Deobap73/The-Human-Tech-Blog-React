@@ -1,3 +1,5 @@
+// src\features\home\styles\HomePage.scss
+
 .home {
   display: flex;
   flex-direction: column;
@@ -88,6 +90,60 @@
         grid-template-columns: repeat(3, 1fr);
       }
 
+      @media (max-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--gap-sm);
+      }
+    }
+  }
+
+  .home__aiPrompts {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-md);
+    padding: var(--padding-base) 0;
+
+    &-title {
+      font-size: var(--heading-h3);
+      color: var(--text-color-fixed);
+      padding: var(--padding-xs) var(--padding-base);
+      border: 2px solid #2995e2;
+      border-left: none;
+      border-right: none;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
+      backdrop-filter: blur(2.5px);
+      text-decoration: none;
+      &:hover {
+        background: rgba(0, 48, 104, 0.388);
+      }
+    }
+
+    &-link {
+      display: block;
+      background: none !important;
+      text-decoration: none !important;
+      color: inherit !important;
+      &:hover,
+      &:focus,
+      &:active {
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        outline: none !important;
+        color: inherit !important;
+        text-decoration: none !important;
+        filter: none !important;
+      }
+    }
+
+    &-list {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--gap-md);
+      @media (max-width: 1024px) {
+        grid-template-columns: repeat(3, 1fr);
+      }
       @media (max-width: 768px) {
         grid-template-columns: repeat(2, 1fr);
         gap: var(--gap-sm);

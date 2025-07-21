@@ -1,12 +1,11 @@
-// src/features/post/pages/WritePage.tsx
-
+// File: src/features/post/pages/WritePage.tsx
 import { useEffect, useState } from 'react';
 import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
-import Link from '@tiptap/extension-link';
+import LinkExtension from '@tiptap/extension-link';
 import { CustomCodeBlock } from '../../../shared/extensions/CustomCodeBlock';
 import Toolbar from '../components/EditorToolbar';
 
@@ -40,8 +39,7 @@ const emptyTranslations = {
 };
 
 /**
- * Utility to guarantee EN translation is always present and valid for TypeScript strict.
- * Returns object with en (required) and other languages (optional, only if filled).
+ * Gather only non-empty translations beyond EN, preserving originals.
  */
 function getValidTranslationsForUpdate(
   current: typeof emptyTranslations,
@@ -49,9 +47,8 @@ function getValidTranslationsForUpdate(
 ): { en: { title: string; description: string; content: string } } & Partial<
   typeof emptyTranslations
 > {
-  // EN is always required and validated before calling this function.
   const result: any = {};
-  result['en'] = current.en;
+  result.en = current.en;
 
   for (const lang of LANGUAGES) {
     if (lang === 'en') continue;
@@ -59,7 +56,6 @@ function getValidTranslationsForUpdate(
     if (cur.title.trim() || cur.content.trim() || cur.description.trim()) {
       result[lang] = cur;
     } else if (
-      original &&
       original[lang] &&
       (original[lang].title || original[lang].content || original[lang].description)
     ) {
@@ -76,7 +72,7 @@ const WritePage = () => {
 
   const [currentLang, setCurrentLang] = useState<Language>(activeLang);
   const [translations, setTranslations] = useState({ ...emptyTranslations });
-  const [originalTranslations, setOriginalTranslations] = useState({ ...emptyTranslations }); // Track original state
+  const [originalTranslations, setOriginalTranslations] = useState({ ...emptyTranslations });
   const [status, setStatus] = useState<PostStatus>('published');
   const [tags, setTags] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
@@ -85,11 +81,12 @@ const WritePage = () => {
   const [cover, setCover] = useState<File | null>(null);
   const [coverUrl, setCoverUrl] = useState<string>('');
   const [isQuickPost, setIsQuickPost] = useState<boolean>(false);
+  const [isAiPrompt, setIsAiPrompt] = useState<boolean>(false); // ← AI Prompt toggle state
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
   const [postLoaded, setPostLoaded] = useState(false);
 
-  // Editor instances per language
+  // Initialize Tiptap editors for each language
   const editors = LANGUAGES.reduce((acc, lang) => {
     acc[lang] = useEditor({
       extensions: [
@@ -102,7 +99,7 @@ const WritePage = () => {
           defaultAlignment: 'left',
         }),
         CustomCodeBlock,
-        Link,
+        LinkExtension,
       ],
       content: translations[lang].content,
     });
@@ -119,38 +116,35 @@ const WritePage = () => {
       .catch(() => toast.error('Failed to load categories'));
   }, []);
 
-  // Load post for editing, save original state
+  // Load existing post if editing
   useEffect(() => {
     if (!id) return;
-
     fetchPost(id)
       .then((post) => {
         setTranslations({
-          en: post.translations?.en || { title: '', description: '', content: '' },
-          pt: post.translations?.pt || { title: '', description: '', content: '' },
-          de: post.translations?.de || { title: '', description: '', content: '' },
-          es: post.translations?.es || { title: '', description: '', content: '' },
+          en: post.translations.en,
+          pt: post.translations.pt || emptyTranslations.pt,
+          de: post.translations.de || emptyTranslations.de,
+          es: post.translations.es || emptyTranslations.es,
         });
         setOriginalTranslations({
-          en: post.translations?.en || { title: '', description: '', content: '' },
-          pt: post.translations?.pt || { title: '', description: '', content: '' },
-          de: post.translations?.de || { title: '', description: '', content: '' },
-          es: post.translations?.es || { title: '', description: '', content: '' },
+          en: post.translations.en,
+          pt: post.translations.pt || emptyTranslations.pt,
+          de: post.translations.de || emptyTranslations.de,
+          es: post.translations.es || emptyTranslations.es,
         });
-
-        setTags(post.tags?.map((tag: any) => tag._id || tag) || []);
-        setCategories(post.categories?.map((cat: any) => cat._id || cat) || []);
+        setTags(post.tags || []);
+        setCategories(post.categories || []);
         setCoverUrl(post.image || '');
-        setStatus(post.status || 'published');
+        setStatus(post.status);
         setIsQuickPost(post.isQuickPost || false);
+        setIsAiPrompt(post.isAiPrompt || false); // ← load existing flag
         setPostLoaded(true);
       })
-      .catch(() => {
-        toast.error('Failed to load post');
-      });
+      .catch(() => toast.error('Failed to load post'));
   }, [id]);
 
-  // Sync editor content with translations
+  // Sync editor content into translations state
   useEffect(() => {
     LANGUAGES.forEach((lang) => {
       editors[lang]?.commands.setContent(translations[lang].content || '');
@@ -158,40 +152,30 @@ const WritePage = () => {
     // eslint-disable-next-line
   }, [translations]);
 
-  // Save editor state before tab change
+  // Switch language tab and capture current editor HTML
   const handleTabChange = (lang: Language) => {
     const editor = editors[currentLang];
     if (editor) {
       setTranslations((prev) => ({
         ...prev,
-        [currentLang]: {
-          ...prev[currentLang],
-          content: editor.getHTML(),
-        },
+        [currentLang]: { ...prev[currentLang], content: editor.getHTML() },
       }));
     }
     setCurrentLang(lang);
   };
 
-  // Input handlers for title/description
   const handleInput = (field: 'title' | 'description', value: string) => {
     setTranslations((prev) => ({
       ...prev,
-      [currentLang]: {
-        ...prev[currentLang],
-        [field]: value,
-      },
+      [currentLang]: { ...prev[currentLang], [field]: value },
     }));
   };
 
-  // Tag and category selection handlers
   const handleTags = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selected = Array.from(e.target.selectedOptions).map((o) => o.value);
-    setTags(selected);
+    setTags(Array.from(e.target.selectedOptions).map((o) => o.value));
   };
   const handleCategories = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selected = Array.from(e.target.selectedOptions).map((o) => o.value);
-    setCategories(selected);
+    setCategories(Array.from(e.target.selectedOptions).map((o) => o.value));
   };
 
   // Upload cover image
@@ -200,38 +184,31 @@ const WritePage = () => {
       const res = await uploadPostImage(file);
       setCoverUrl(res.imageUrl);
       toast.success('Image uploaded!');
-    } catch (err: any) {
+    } catch {
       toast.error('Failed to upload image');
     }
   };
 
-  /**
-   * Submit handler: syncs editor, validates EN, builds valid translation object
-   * with strict types for backend, and never deletes non-empty translations.
-   */
+  // Form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
     setError('');
 
-    // 1) Sincroniza o HTML do editor atual no state antes de validar
+    // Sync current editor content
     const editor = editors[currentLang];
     let updatedTranslations = translations;
     if (editor) {
       const html = editor.getHTML();
       updatedTranslations = {
         ...translations,
-        [currentLang]: {
-          ...translations[currentLang],
-          content: html,
-        },
+        [currentLang]: { ...translations[currentLang], content: html },
       };
       setTranslations(updatedTranslations);
-      // Garante que o React já aplicou o setState
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await new Promise((r) => setTimeout(r, 10));
     }
 
-    // 2) Validação obrigatória de EN
+    // Validate English fields
     if (
       !updatedTranslations.en.title.trim() ||
       !updatedTranslations.en.description.trim() ||
@@ -242,7 +219,7 @@ const WritePage = () => {
       return;
     }
 
-    // 3) Prepara objeto de traduções, preservando outras línguas não-vazias
+    // Prepare clean translations
     const cleanTranslations = getValidTranslationsForUpdate(
       updatedTranslations,
       originalTranslations
@@ -254,10 +231,10 @@ const WritePage = () => {
       categories,
       image: coverUrl,
       isQuickPost,
+      isAiPrompt, // ← include flag in payload
       status,
     };
 
-    // 4) Chama API de create ou update
     try {
       if (id) {
         await updatePost(id, payload);
@@ -267,12 +244,12 @@ const WritePage = () => {
         toast.success('Post created!');
       }
       navigate(`/${activeLang}/admin/posts`);
-    } catch (err: any) {
+    } catch {
       setError('Failed to submit post');
       toast.error('Failed to submit post');
+    } finally {
+      setSaving(false);
     }
-
-    setSaving(false);
   };
 
   return (
@@ -284,15 +261,19 @@ const WritePage = () => {
           {LANGUAGES.map((lang) => (
             <button
               key={lang}
-              className={`write-page__tab${currentLang === lang ? ' write-page__tab--active' : ''}`}
-              onClick={() => handleTabChange(lang)}
-              type='button'>
+              type='button'
+              className={
+                'write-page__tab' + (currentLang === lang ? ' write-page__tab--active' : '')
+              }
+              onClick={() => handleTabChange(lang)}>
               {lang.toUpperCase()}
             </button>
           ))}
         </div>
+
         <form className='write-page__form' onSubmit={handleSubmit}>
           {error && <div className='write-page__error'>{error}</div>}
+
           <input
             type='text'
             placeholder='Title'
@@ -301,12 +282,14 @@ const WritePage = () => {
             required={currentLang === 'en'}
             className='write-page__input'
           />
+
           <textarea
             placeholder='Description'
             value={translations[currentLang].description}
             onChange={(e) => handleInput('description', e.target.value)}
             className='write-page__textarea'
           />
+
           {editors[currentLang] && (
             <div className='write-page__editor-block'>
               <div className='write-page__toolbar-sticky'>
@@ -317,6 +300,7 @@ const WritePage = () => {
               </div>
             </div>
           )}
+
           <label htmlFor='cover-upload' className='write-page__upload-btn'>
             Upload cover
           </label>
@@ -338,6 +322,7 @@ const WritePage = () => {
               <img src={coverUrl} alt='Cover Preview' className='write-page__cover-img' />
             </div>
           )}
+
           <TagSelector selectedTags={tags} setSelectedTags={setTags} />
 
           <label className='write-page__label'>
@@ -354,6 +339,7 @@ const WritePage = () => {
               ))}
             </select>
           </label>
+
           <label className='write-page__label'>
             Status:
             <select
@@ -364,6 +350,7 @@ const WritePage = () => {
               <option value='published'>Published</option>
             </select>
           </label>
+
           <label className='write-page__label'>
             <input
               type='checkbox'
@@ -372,6 +359,16 @@ const WritePage = () => {
             />{' '}
             This is a QuickPost (Tech Short)
           </label>
+
+          <label className='write-page__label'>
+            <input
+              type='checkbox'
+              checked={isAiPrompt}
+              onChange={(e) => setIsAiPrompt(e.target.checked)}
+            />{' '}
+            This is an AI Prompt
+          </label>
+
           <button type='submit' className='write-page__btn' disabled={saving}>
             {saving ? 'Publishing...' : id ? 'Update Post' : 'Publish Post'}
           </button>

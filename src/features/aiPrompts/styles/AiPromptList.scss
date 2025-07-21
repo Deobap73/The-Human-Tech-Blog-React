@@ -1,0 +1,8 @@
+// File: src/features/aiPrompts/styles/AiPromptList.scss
+.ai-prompt-list {
+  list-style: none;
+  padding: 0;
+  &__item + &__item {
+    margin-top: 0.5rem;
+  }
+}

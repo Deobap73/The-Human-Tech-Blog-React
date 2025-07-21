@@ -23,6 +23,7 @@ export interface Post {
   tags?: string[];
   status: 'draft' | 'published' | 'archived';
   isQuickPost?: boolean;
+  isAiPrompt?: boolean;
   author?: {
     _id: string;
     name: string;
@@ -53,4 +54,5 @@ export interface PostPayload {
   categories: string[];
   tags?: string[];
   status: 'draft' | 'published' | 'archived';
+  isAiPrompt?: boolean;
 }

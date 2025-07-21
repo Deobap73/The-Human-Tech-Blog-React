@@ -13,7 +13,7 @@ import CardList from '../components/CardList';
 import '../styles/CategoryPage.scss';
 import ScrollToTop from '../../../shared/components/ScrollToTop';
 import PostsSidebar from '../components/PostsSidebar';
-import NewsletterSidebarBox from '../../newsletter/components/NewsletterSidebarBox';
+import NewsletterSidebarBox from '../../notification/newsletter/components/NewsletterSidebarBox';
 import RecentCategoryPosts from '../components/RecentCategoryPosts';
 import CategoryList from '../components/CategoryList';
 

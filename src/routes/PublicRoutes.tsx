@@ -19,8 +19,10 @@ import { RedirectToBrowserLang } from './Redirects';
 import PrivateRoute from './PrivateRoute';
 import ChatRoutes from '../features/chat/pages/ChatRoutes';
 import NotAuthorizedPage from '../pages/NotAuthorizedPage';
-import NewsletterConfirmPage from '../features/newsletter/pages/NewsletterConfirmPage';
-import NewsletterUnsubscribePage from '../features/newsletter/pages/NewsletterUnsubscribePage';
+import NewsletterConfirmPage from '../features/notification/newsletter/pages/NewsletterConfirmPage';
+import NewsletterUnsubscribePage from '../features/notification/newsletter/pages/NewsletterUnsubscribePage';
+import AiPromptsPage from '../features/aiPrompts/pages/AiPromptsPage';
+import SingleAiPromptPage from '../features/aiPrompts/pages/SingleAiPromptPage';
 
 const NotFoundPage = () => (
   <div style={{ padding: '2rem', textAlign: 'center' }}>
@@ -49,6 +51,8 @@ const PublicRoutes = () => (
       <Route path='posts/create' element={<WritePage />} />
       <Route path='posts/:slug' element={<SinglePostPage />} />
       <Route path='shorts' element={<QuickPostsPage />} />
+      <Route path='ai-prompts' element={<AiPromptsPage />} />
+      <Route path='ai-prompts/:slug' element={<SingleAiPromptPage />} />
       <Route path='tags/:slug' element={<TagPage />} />
       <Route path='tags' element={<AdminTagsPage />} />
       <Route path='categories/:slug' element={<CategoryPage />} />
