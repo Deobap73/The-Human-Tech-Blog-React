@@ -1,4 +1,4 @@
-// src/features/home/pages/HomePage.tsx
+// File: src/features/home/pages/HomePage.tsx
 
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -6,7 +6,6 @@ import '../styles/HomePage.scss';
 import { RecentPosts } from '../../post/components/RecentPosts';
 import { LastPost } from '../../post/components/LastPost';
 import QuickPostCard from '../../post/components/QuickPostCard';
-import AiPromptCard from '../../../features/aiPrompts/components/AiPromptCard'; // NEW
 import { Sponsors } from '../../sponsors/components/Sponsors';
 import { Post } from '../../../shared/types/Post';
 import axios from '../../../shared/utils/axios';
@@ -17,7 +16,7 @@ import { getPostTranslation } from '../../../shared/utils/i18nHelpers';
 import ScrollToTop from '../../../shared/components/ScrollToTop';
 
 export const HomePage = () => {
-  const { lang: langParam } = useParams();
+  const { lang: langParam } = useParams<{ lang?: string }>();
   const { t, i18n } = useTranslation();
   const lang = langParam || i18n.language.split('-')[0] || 'en';
 
@@ -30,7 +29,7 @@ export const HomePage = () => {
         const res = await axios.get('/posts');
         setPosts(res.data);
       } catch {
-        // Optionally handle error
+        // optionally handle error
       }
     };
     fetchPosts();
@@ -54,13 +53,16 @@ export const HomePage = () => {
     })
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
+  // Exclude both QuickPosts and AI Prompts from the "normal" feed
   const normalPosts = validPublishedPosts.filter((post) => !post.isQuickPost && !post.isAiPrompt);
   const featuredPostToShow = normalPosts[0];
   const lastPostToShow = normalPosts[1];
 
+  // Quick Posts (Tech Shorts)
   const techShorts = validPublishedPosts.filter((post) => post.isQuickPost);
   const shortsToRender = isMobile ? techShorts.slice(0, 4) : techShorts.slice(0, 5);
 
+  // AI Prompts (reuse same card component)
   const aiPrompts = validPublishedPosts.filter((post) => post.isAiPrompt);
   const promptsToRender = isMobile ? aiPrompts.slice(0, 4) : aiPrompts.slice(0, 5);
 
@@ -68,16 +70,18 @@ export const HomePage = () => {
     <>
       <ScrollToTop />
       <div className='home'>
+        {/* Recent regular posts */}
         <RecentPosts posts={validPublishedPosts.slice(0, 12)} lang={lang} />
 
+        {/* Category navigation */}
         <CategoryList />
 
+        {/* Tech Shorts section */}
         {shortsToRender.length > 0 && (
           <section className='home__shorts'>
             <Link className='home__shorts-title' to={`/${langParam}/shorts`}>
               {t('shorts.shorts', 'Tech Shorts')}
             </Link>
-
             <a href={`/${lang}/shorts`} className='home__shorts-link'>
               <div className='home__shorts-list'>
                 {shortsToRender.map((post) => (
@@ -88,25 +92,29 @@ export const HomePage = () => {
           </section>
         )}
 
+        {/* Featured Article */}
         {featuredPostToShow && <Featured post={featuredPostToShow} lang={lang} />}
 
+        {/* AI Prompts section (reusing QuickPostCard) */}
         {promptsToRender.length > 0 && (
-          <section className='home__aiPrompts'>
-            <Link className='home__aiPrompts-title' to={`/${langParam}/ai-prompts`}>
+          <section className='home__shorts'>
+            <Link className='home__shorts-title' to={`/${langParam}/shorts?filter=ai`}>
               {t('aiPrompts.title', 'AI Prompts')}
             </Link>
-
-            <a href={`/${lang}/ai-prompts`} className='home__aiPrompts-link'>
-              <div className='home__aiPrompts-list'>
+            <a href={`/${lang}/shorts?filter=ai`} className='home__shorts-link'>
+              <div className='home__shorts-list'>
                 {promptsToRender.map((post) => (
-                  <AiPromptCard key={post._id} prompt={post} lang={lang} />
+                  <QuickPostCard key={post._id} post={post} lang={lang} />
                 ))}
               </div>
             </a>
           </section>
         )}
 
+        {/* Sponsors */}
         <Sponsors />
+
+        {/* Last regular post */}
         {lastPostToShow && <LastPost post={lastPostToShow} lang={lang} />}
       </div>
     </>
