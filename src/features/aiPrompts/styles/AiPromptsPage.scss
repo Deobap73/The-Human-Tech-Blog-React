@@ -1,0 +1,71 @@
+/* File: src/features/aiPrompts/styles/AiPromptsPage.scss */
+
+.ai-prompts-page {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  padding: var(--padding-md) var(--layout-padding-x);
+
+  &__header {
+    text-align: center;
+    margin-bottom: var(--margin-xl);
+  }
+
+  &__title {
+    font-size: var(--heading-h2);
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    margin-bottom: var(--margin-xs);
+  }
+
+  &__intro {
+    font-size: var(--font-size-md);
+    color: var(--text-color-secondary);
+    margin-bottom: var(--margin-base);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--gap-lg);
+
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr;
+      gap: var(--gap-md);
+    }
+  }
+
+  &__empty {
+    text-align: center;
+    color: var(--text-color-secondary);
+    padding: var(--padding-md);
+  }
+
+  &__more {
+    text-align: center;
+    margin-top: var(--margin-lg);
+  }
+
+  &__more-link {
+    text-decoration: none;
+    font-weight: 600;
+    color: var(--primary);
+  }
+}
+
+@media (max-width: 1024px) {
+  .ai-prompts-page {
+    max-width: 96vw;
+  }
+}
+
+@media (max-width: 768px) {
+  .ai-prompts-page {
+    max-width: 99vw;
+    padding: var(--padding-sm);
+  }
+}

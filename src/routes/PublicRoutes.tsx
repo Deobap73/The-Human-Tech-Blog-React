@@ -21,6 +21,7 @@ import ChatRoutes from '../features/chat/pages/ChatRoutes';
 import NotAuthorizedPage from '../pages/NotAuthorizedPage';
 import NewsletterConfirmPage from '../features/notification/newsletter/pages/NewsletterConfirmPage';
 import NewsletterUnsubscribePage from '../features/notification/newsletter/pages/NewsletterUnsubscribePage';
+import AiPromptsPage from '../features/aiPrompts/pages/AiPromptsPage';
 
 const NotFoundPage = () => (
   <div style={{ padding: '2rem', textAlign: 'center' }}>
@@ -47,6 +48,7 @@ const PublicRoutes = () => (
       <Route path='write' element={<WritePage />} />
       <Route path='write/:id' element={<WritePage />} />
       <Route path='posts/create' element={<WritePage />} />
+      <Route path='aiprompts' element={<AiPromptsPage />} />
       <Route path='posts/:slug' element={<SinglePostPage />} />
       <Route path='shorts' element={<QuickPostsPage />} />
       <Route path='tags/:slug' element={<TagPage />} />

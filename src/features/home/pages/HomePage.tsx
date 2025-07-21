@@ -98,7 +98,7 @@ export const HomePage = () => {
         {/* AI Prompts section (reusing QuickPostCard) */}
         {promptsToRender.length > 0 && (
           <section className='home__shorts'>
-            <Link className='home__shorts-title' to={`/${langParam}/shorts?filter=ai`}>
+            <Link className='home__shorts-title' to={`/${langParam}/aiprompts`}>
               {t('aiPrompts.title', 'AI Prompts')}
             </Link>
             <a href={`/${lang}/shorts?filter=ai`} className='home__shorts-link'>

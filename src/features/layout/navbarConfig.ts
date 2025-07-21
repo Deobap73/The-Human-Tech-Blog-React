@@ -6,6 +6,7 @@ import homePageBg from '../../assets/homePage.webp';
 import aboutPageBg from '../../assets/aboutPage.webp';
 import contactPageBg from '../../assets/contactPage.webp';
 import techShortsPage from '../../assets/techShortsPage.webp';
+import aiPromptPage from '../../assets/aiPromptPage.webp';
 
 export interface NavbarConfig {
   background?: string; // Path to the image, or undefined to hide
@@ -36,6 +37,10 @@ export const navbarConfigs: Record<string, NavbarConfig> = {
   },
   '/shorts': {
     background: techShortsPage,
+    showTile: false,
+  },
+  '/aiprompts': {
+    background: aiPromptPage,
     showTile: false,
   },
   '/admin': {
