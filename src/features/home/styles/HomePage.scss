@@ -100,30 +100,47 @@
   .home__aiPrompts {
     display: flex;
     flex-direction: column;
+
     gap: var(--gap-md);
     padding: var(--padding-base) 0;
 
     &-title {
       font-size: var(--heading-h3);
-      color: var(--text-color-fixed);
+      color: var(--text-color);
+      width: 20rem;
+
       padding: var(--padding-xs) var(--padding-base);
-      border: 2px solid #2995e2;
+      color: var(--text-color-fixed);
+      background: transparent;
+      border: 2px solid #2995e2; // azul claro (ajusta se tua paleta for diferente)
       border-left: none;
       border-right: none;
       border-radius: 12px;
       box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
-      backdrop-filter: blur(2.5px);
-      text-decoration: none;
+      backdrop-filter: blur(2.5px); // Glass effect!
+      transition: border 0.2s, box-shadow 0.2s, background 0.25s;
       &:hover {
         background: rgba(0, 48, 104, 0.388);
+      }
+      &:active {
+        background: none !important;
       }
     }
 
     &-link {
       display: block;
+      text-decoration: none;
+      color: inherit;
+      // Remove QUALQUER estilo do link nativo em todos os estados
       background: none !important;
-      text-decoration: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      outline: none !important;
       color: inherit !important;
+      text-decoration: none !important;
+      filter: none !important;
+
+      // Reforça nos estados especiais
       &:hover,
       &:focus,
       &:active {
@@ -141,9 +158,11 @@
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: var(--gap-md);
+
       @media (max-width: 1024px) {
         grid-template-columns: repeat(3, 1fr);
       }
+
       @media (max-width: 768px) {
         grid-template-columns: repeat(2, 1fr);
         gap: var(--gap-sm);
