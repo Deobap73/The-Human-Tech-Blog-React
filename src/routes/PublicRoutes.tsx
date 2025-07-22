@@ -1,4 +1,4 @@
-// File: src/routes/PublicRoutes.tsx
+// File: /src/routes/PublicRoutes.tsx
 
 import { Routes, Route } from 'react-router-dom';
 import Layout from '../features/layout/Layout';
@@ -31,13 +31,18 @@ const NotFoundPage = () => (
 
 const PublicRoutes = () => (
   <Routes>
-    {/* Redirect root and other top-level to browser lang */}
+    {/* Redirect root and top-level routes without lang prefix */}
     <Route path='/' element={<RedirectToBrowserLang />} />
     <Route path='/not-authorized' element={<RedirectToBrowserLang />} />
     <Route path='/admin/*' element={<RedirectToBrowserLang />} />
-
-    {/* Catch share URL without lang prefix for posts */}
     <Route path='/posts/:slug' element={<RedirectToBrowserLang />} />
+
+    {/* NEW: Support short URLs without lang prefix */}
+    <Route path='about' element={<RedirectToBrowserLang />} />
+    <Route path='contact' element={<RedirectToBrowserLang />} />
+    <Route path='posts/:slug' element={<RedirectToBrowserLang />} />
+    <Route path='/shorts' element={<RedirectToBrowserLang />} />
+    <Route path='/aiprompts' element={<RedirectToBrowserLang />} />
 
     {/* All multilanguage content inside /:lang */}
     <Route path='/:lang' element={<Layout />}>

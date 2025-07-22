@@ -21,5 +21,7 @@ export const RedirectToBrowserLang = () => {
   }
 
   // Redirect preserving full path and query
-  return <Navigate to={`/${lang}${pathname}${search}`} replace />;
+  return (
+    <Navigate to={`/${lang}${pathname.startsWith('/') ? '' : '/'}${pathname}${search}`} replace />
+  );
 };
