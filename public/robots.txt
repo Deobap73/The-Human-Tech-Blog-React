@@ -1,0 +1,6 @@
+# File: /The-Human-Tech-Blog-React/public/robots.txt
+
+User-agent: *
+Disallow:
+
+Sitemap: https://thehumantechblog.com/sitemap.xml

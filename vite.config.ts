@@ -6,10 +6,8 @@ import { fileURLToPath, URL } from 'node:url';
 
 export default defineConfig({
   plugins: [react()],
-  // Defina o base URL corretamente para seu ambiente de produção
   base: process.env.NODE_ENV === 'production' ? '/' : '/',
 
-  // Adicione resolução de caminhos (recomendado mesmo se não usar aliases)
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -30,14 +28,24 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
+      // ✅ NEW: Proxy para Sitemap dinâmico
+      '/sitemap.xml': {
+        target: 'https://api.thehumantechblog.com',
+        changeOrigin: true,
+        secure: true,
+      },
+      '/sitemap.xml.gz': {
+        target: 'https://api.thehumantechblog.com',
+        changeOrigin: true,
+        secure: true,
+      },
     },
   },
 
   build: {
     outDir: 'dist',
     emptyOutDir: true,
-    // Configuração adicional para assets
-    assetsInlineLimit: 4096, // Arquivos menores que 4kb serão inline base64
+    assetsInlineLimit: 4096,
     rollupOptions: {
       output: {
         assetFileNames: 'assets/[name]-[hash][extname]',
