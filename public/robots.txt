@@ -1,6 +1,9 @@
-# File: /The-Human-Tech-Blog-React/public/robots.txt
+# robots.txt for The Human Tech Blog
 
 User-agent: *
-Disallow:
+Disallow: /api/
+Disallow: /admin/
+Disallow: /drafts/
+Allow: /
 
-Sitemap: https://thehumantechblog.com/sitemap.xml
+Sitemap: https://thehumantechblog.com/sitemap-index.xml
