@@ -1,5 +1,6 @@
 // /src/features/post/pages/SinglePostPage.tsx
 
+import { Helmet } from 'react-helmet-async';
 import '../styles/CodeBlock.scss'; // Include code block styles
 import hljs from 'highlight.js'; // import highlight.js
 import 'highlight.js/styles/github-dark.css'; // add desired theme
@@ -96,6 +97,46 @@ export const SinglePostPage = () => {
 
   return (
     <>
+      <Helmet>
+        {/* Hreflang alternates */}
+        {post.translations &&
+          Object.entries(post.translations).map(([langCode, t]) => {
+            if (!t?.title?.trim()) return null;
+            const href = `https://thehumantechblog.com/${langCode}/posts/${post.slug}`;
+            return <link key={langCode} rel='alternate' hrefLang={langCode} href={href} />;
+          })}
+        <link
+          rel='alternate'
+          hrefLang='x-default'
+          href={`https://thehumantechblog.com/en/posts/${post.slug}`}
+        />
+
+        {/* Canonical URL */}
+        <link
+          rel='canonical'
+          href={`https://thehumantechblog.com/${i18n.language}/posts/${post.slug}`}
+        />
+
+        {/* Meta title & description */}
+        <title>{translation.title}</title>
+        <meta name='description' content={translation.description || translation.title} />
+
+        {/* Open Graph (Facebook, LinkedIn, etc.) */}
+        <meta property='og:title' content={translation.title} />
+        <meta property='og:description' content={translation.description || translation.title} />
+        <meta property='og:type' content='article' />
+        <meta
+          property='og:url'
+          content={`https://thehumantechblog.com/${i18n.language}/posts/${post.slug}`}
+        />
+        {post.image && <meta property='og:image' content={post.image} />}
+
+        {/* Twitter Card */}
+        <meta name='twitter:card' content='summary_large_image' />
+        <meta name='twitter:title' content={translation.title} />
+        <meta name='twitter:description' content={translation.description || translation.title} />
+        {post.image && <meta name='twitter:image' content={post.image} />}
+      </Helmet>
       <ScrollToTop />
       <div className='single-post-page'>
         <section className='single-post-page__header-row'>

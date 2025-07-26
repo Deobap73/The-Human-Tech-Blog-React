@@ -1,5 +1,7 @@
 // src/features/admin/pages/AdminCategoriesPage.tsx
 
+import { Helmet } from 'react-helmet-async';
+
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -133,141 +135,147 @@ const AdminCategoriesPage = () => {
   };
 
   return (
-    <div className='admin-categories-page'>
-      <h2>{t('adminCategoryForm.title', 'Manage Categories')}</h2>
-      {loading ? (
-        <Loader />
-      ) : (
-        <form className='admin-categories-page__form' onSubmit={handleSubmit} autoComplete='off'>
-          {/* Multilanguage Tabs */}
-          <div className='admin-categories-page__tabs'>
-            {LANGUAGES.map((lang) => (
-              <button
-                key={lang}
-                type='button'
-                className={`admin-categories-page__tab${activeLang === lang ? ' active' : ''}`}
-                onClick={() => setActiveLang(lang)}>
-                {lang.toUpperCase()}
-                {lang === 'en' && <span className='admin-categories-page__tab-required'>*</span>}
-              </button>
-            ))}
-          </div>
-          <div className='admin-categories-page__fields'>
-            <label className='admin-categories-page__label'>
-              {t('adminCategoryForm.name')}
-              {activeLang === 'en' && <span className='admin-categories-page__asterisk'>*</span>}
+    <>
+      <Helmet>
+        <meta name='robots' content='noindex, nofollow' />
+      </Helmet>
+
+      <div className='admin-categories-page'>
+        <h2>{t('adminCategoryForm.title', 'Manage Categories')}</h2>
+        {loading ? (
+          <Loader />
+        ) : (
+          <form className='admin-categories-page__form' onSubmit={handleSubmit} autoComplete='off'>
+            {/* Multilanguage Tabs */}
+            <div className='admin-categories-page__tabs'>
+              {LANGUAGES.map((lang) => (
+                <button
+                  key={lang}
+                  type='button'
+                  className={`admin-categories-page__tab${activeLang === lang ? ' active' : ''}`}
+                  onClick={() => setActiveLang(lang)}>
+                  {lang.toUpperCase()}
+                  {lang === 'en' && <span className='admin-categories-page__tab-required'>*</span>}
+                </button>
+              ))}
+            </div>
+            <div className='admin-categories-page__fields'>
+              <label className='admin-categories-page__label'>
+                {t('adminCategoryForm.name')}
+                {activeLang === 'en' && <span className='admin-categories-page__asterisk'>*</span>}
+                <input
+                  type='text'
+                  placeholder={t('adminCategoryForm.namePlaceholder')}
+                  value={form[activeLang].name}
+                  required={activeLang === 'en'}
+                  className={
+                    activeLang === 'en' && fieldErrors.name
+                      ? 'admin-categories-page__input-error'
+                      : ''
+                  }
+                  onChange={(e) => handleInput('name', e.target.value)}
+                  autoComplete='off'
+                />
+                {activeLang === 'en' && fieldErrors.name && (
+                  <span className='admin-categories-page__field-error'>{fieldErrors.name}</span>
+                )}
+              </label>
+              <label className='admin-categories-page__label'>
+                {t('adminCategoryForm.description')}
+                {activeLang === 'en' && <span className='admin-categories-page__asterisk'>*</span>}
+                <textarea
+                  placeholder={t('adminCategoryForm.descriptionPlaceholder')}
+                  value={form[activeLang].description}
+                  required={activeLang === 'en'}
+                  className={
+                    activeLang === 'en' && fieldErrors.description
+                      ? 'admin-categories-page__input-error'
+                      : ''
+                  }
+                  onChange={(e) => handleInput('description', e.target.value)}
+                  rows={2}
+                  autoComplete='off'
+                />
+                {activeLang === 'en' && fieldErrors.description && (
+                  <span className='admin-categories-page__field-error'>
+                    {fieldErrors.description}
+                  </span>
+                )}
+              </label>
+            </div>
+            <label className='admin-categories-page__label' style={{ marginTop: 16 }}>
+              {t('adminCategoryForm.logo')}
               <input
                 type='text'
-                placeholder={t('adminCategoryForm.namePlaceholder')}
-                value={form[activeLang].name}
-                required={activeLang === 'en'}
-                className={
-                  activeLang === 'en' && fieldErrors.name
-                    ? 'admin-categories-page__input-error'
-                    : ''
-                }
-                onChange={(e) => handleInput('name', e.target.value)}
+                value={logo}
+                onChange={(e) => setLogo(e.target.value)}
+                placeholder={t('adminCategoryForm.logoPlaceholder')}
                 autoComplete='off'
               />
-              {activeLang === 'en' && fieldErrors.name && (
-                <span className='admin-categories-page__field-error'>{fieldErrors.name}</span>
-              )}
-            </label>
-            <label className='admin-categories-page__label'>
-              {t('adminCategoryForm.description')}
-              {activeLang === 'en' && <span className='admin-categories-page__asterisk'>*</span>}
-              <textarea
-                placeholder={t('adminCategoryForm.descriptionPlaceholder')}
-                value={form[activeLang].description}
-                required={activeLang === 'en'}
-                className={
-                  activeLang === 'en' && fieldErrors.description
-                    ? 'admin-categories-page__input-error'
-                    : ''
-                }
-                onChange={(e) => handleInput('description', e.target.value)}
-                rows={2}
-                autoComplete='off'
-              />
-              {activeLang === 'en' && fieldErrors.description && (
-                <span className='admin-categories-page__field-error'>
-                  {fieldErrors.description}
-                </span>
-              )}
-            </label>
-          </div>
-          <label className='admin-categories-page__label' style={{ marginTop: 16 }}>
-            {t('adminCategoryForm.logo')}
-            <input
-              type='text'
-              value={logo}
-              onChange={(e) => setLogo(e.target.value)}
-              placeholder={t('adminCategoryForm.logoPlaceholder')}
-              autoComplete='off'
-            />
-            {logo && (
-              <img
-                src={resolveLogoUrl(logo)}
-                alt='logo preview'
-                className='admin-categories-page__logo-preview'
-                style={{
-                  height: 32,
-                  marginLeft: 14,
-                  borderRadius: 4,
-                  border: '1px solid #eee',
-                  background: '#fff',
-                }}
-              />
-            )}
-          </label>
-          <div className='admin-categories-page__form-actions'>
-            <button type='submit' className='admin-categories-page__btn'>
-              {editing ? t('adminCategoryForm.update') : t('adminCategoryForm.create')}
-            </button>
-            {editing && (
-              <button
-                type='button'
-                onClick={clearForm}
-                className='admin-categories-page__btn admin-categories-page__btn--cancel'>
-                {t('adminCategoryForm.cancel')}
-              </button>
-            )}
-          </div>
-          {error && <div className='admin-categories-page__error'>{error}</div>}
-        </form>
-      )}
-      <ul className='admin-categories-page__list'>
-        {categories.map((cat) => {
-          const tr =
-            cat.translations?.[i18n.language as Lang] ||
-            cat.translations?.[i18n.language.split('-')[0] as Lang] ||
-            cat.translations?.en;
-          return (
-            <li key={cat._id} className='admin-categories-page__item'>
-              {cat.logo && (
+              {logo && (
                 <img
-                  src={resolveLogoUrl(cat.logo)}
-                  alt={tr?.name}
-                  className='admin-categories-page__cat-logo'
-                  style={{ height: 26, marginRight: 8 }}
+                  src={resolveLogoUrl(logo)}
+                  alt='logo preview'
+                  className='admin-categories-page__logo-preview'
+                  style={{
+                    height: 32,
+                    marginLeft: 14,
+                    borderRadius: 4,
+                    border: '1px solid #eee',
+                    background: '#fff',
+                  }}
                 />
               )}
-              <b>{tr?.name || '[untitled]'}</b>
-              <span className='admin-categories-page__desc'>{tr?.description || ''}</span>
-              <button className='admin-categories-page__edit' onClick={() => startEdit(cat)}>
-                {t('admin.edit')}
+            </label>
+            <div className='admin-categories-page__form-actions'>
+              <button type='submit' className='admin-categories-page__btn'>
+                {editing ? t('adminCategoryForm.update') : t('adminCategoryForm.create')}
               </button>
-              <button
-                className='admin-categories-page__delete'
-                onClick={() => handleDelete(cat._id)}>
-                {t('admin.delete')}
-              </button>
-            </li>
-          );
-        })}
-        {categories.length === 0 && <li>{t('adminCategoryForm.noCategories')}</li>}
-      </ul>
-    </div>
+              {editing && (
+                <button
+                  type='button'
+                  onClick={clearForm}
+                  className='admin-categories-page__btn admin-categories-page__btn--cancel'>
+                  {t('adminCategoryForm.cancel')}
+                </button>
+              )}
+            </div>
+            {error && <div className='admin-categories-page__error'>{error}</div>}
+          </form>
+        )}
+        <ul className='admin-categories-page__list'>
+          {categories.map((cat) => {
+            const tr =
+              cat.translations?.[i18n.language as Lang] ||
+              cat.translations?.[i18n.language.split('-')[0] as Lang] ||
+              cat.translations?.en;
+            return (
+              <li key={cat._id} className='admin-categories-page__item'>
+                {cat.logo && (
+                  <img
+                    src={resolveLogoUrl(cat.logo)}
+                    alt={tr?.name}
+                    className='admin-categories-page__cat-logo'
+                    style={{ height: 26, marginRight: 8 }}
+                  />
+                )}
+                <b>{tr?.name || '[untitled]'}</b>
+                <span className='admin-categories-page__desc'>{tr?.description || ''}</span>
+                <button className='admin-categories-page__edit' onClick={() => startEdit(cat)}>
+                  {t('admin.edit')}
+                </button>
+                <button
+                  className='admin-categories-page__delete'
+                  onClick={() => handleDelete(cat._id)}>
+                  {t('admin.delete')}
+                </button>
+              </li>
+            );
+          })}
+          {categories.length === 0 && <li>{t('adminCategoryForm.noCategories')}</li>}
+        </ul>
+      </div>
+    </>
   );
 };
 

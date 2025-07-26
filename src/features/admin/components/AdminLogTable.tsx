@@ -1,5 +1,7 @@
 //  The-Human-Tech-Blog-React/src/features/admin/components/AdminLogTable.tsx
 
+import { Helmet } from 'react-helmet-async';
+
 import { useEffect, useState } from 'react';
 import api from '../../../shared/utils/axios';
 import { formatDistanceToNow } from 'date-fns';
@@ -40,35 +42,41 @@ const AdminLogTable = () => {
   if (loading) return <p>Loading logs...</p>;
 
   return (
-    <div className='admin-log-table'>
-      <h3>Admin Action Logs</h3>
-      {logs.length === 0 ? (
-        <p>No logs found.</p>
-      ) : (
-        <table>
-          <thead>
-            <tr>
-              <th>Admin</th>
-              <th>Action</th>
-              <th>Description</th>
-              <th>Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            {logs.map((log) => (
-              <tr key={log._id}>
-                <td>
-                  {log.user.name} ({log.user.email})
-                </td>
-                <td>{log.action}</td>
-                <td>{log.description || '-'}</td>
-                <td>{formatDistanceToNow(new Date(log.createdAt), { addSuffix: true })}</td>
+    <>
+      <Helmet>
+        <meta name='robots' content='noindex, nofollow' />
+      </Helmet>
+
+      <div className='admin-log-table'>
+        <h3>Admin Action Logs</h3>
+        {logs.length === 0 ? (
+          <p>No logs found.</p>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th>Admin</th>
+                <th>Action</th>
+                <th>Description</th>
+                <th>Time</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </div>
+            </thead>
+            <tbody>
+              {logs.map((log) => (
+                <tr key={log._id}>
+                  <td>
+                    {log.user.name} ({log.user.email})
+                  </td>
+                  <td>{log.action}</td>
+                  <td>{log.description || '-'}</td>
+                  <td>{formatDistanceToNow(new Date(log.createdAt), { addSuffix: true })}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </>
   );
 };
 

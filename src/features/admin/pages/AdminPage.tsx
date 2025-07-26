@@ -1,4 +1,7 @@
 // src/features/admin/pages/AdminPage.tsx
+
+import { Helmet } from 'react-helmet-async';
+
 import { Outlet } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Topbar from '../components/Topbar';
@@ -15,6 +18,10 @@ const AdminPage = () => {
 
   return (
     <>
+      <Helmet>
+        <meta name='robots' content='noindex, nofollow' />
+      </Helmet>
+
       <ScrollToTop />
       <div className='admin-layout'>
         <Sidebar />

@@ -1,5 +1,6 @@
 // src/features/admin/pages/AdminTagsPage.tsx
 
+import { Helmet } from 'react-helmet-async';
 import { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import slugify from 'slugify';
@@ -165,124 +166,130 @@ const AdminTagsPage = () => {
   };
 
   return (
-    <div className='admin-tags-page'>
-      <h2>{t('adminTagForm.title')}</h2>
+    <>
+      <Helmet>
+        <meta name='robots' content='noindex, nofollow' />
+      </Helmet>
 
-      <AdminTableFilter
-        value={filter}
-        onChange={setFilter}
-        placeholder={t('adminTagForm.filterPlaceholder', 'Filter tags...')}
-      />
+      <div className='admin-tags-page'>
+        <h2>{t('adminTagForm.title')}</h2>
 
-      {loading ? (
-        <Loader />
-      ) : (
-        <form className='admin-tags-page__form' onSubmit={handleSubmit}>
-          <div className='admin-tags-page__tabs'>
-            {LANGUAGES.map((lang) => (
-              <button
-                key={lang}
-                type='button'
-                className={`admin-tags-page__tab${activeLang === lang ? ' active' : ''}`}
-                onClick={() => setActiveLang(lang)}>
-                {lang.toUpperCase()}
-                {lang === 'en' && <span className='admin-tags-page__tab-required'>*</span>}
-              </button>
-            ))}
-          </div>
-          <div className='admin-tags-page__fields'>
-            <label className='admin-tags-page__label'>
-              {t('adminTagForm.name')}
-              {activeLang === 'en' && <span className='admin-tags-page__asterisk'>*</span>}
+        <AdminTableFilter
+          value={filter}
+          onChange={setFilter}
+          placeholder={t('adminTagForm.filterPlaceholder', 'Filter tags...')}
+        />
+
+        {loading ? (
+          <Loader />
+        ) : (
+          <form className='admin-tags-page__form' onSubmit={handleSubmit}>
+            <div className='admin-tags-page__tabs'>
+              {LANGUAGES.map((lang) => (
+                <button
+                  key={lang}
+                  type='button'
+                  className={`admin-tags-page__tab${activeLang === lang ? ' active' : ''}`}
+                  onClick={() => setActiveLang(lang)}>
+                  {lang.toUpperCase()}
+                  {lang === 'en' && <span className='admin-tags-page__tab-required'>*</span>}
+                </button>
+              ))}
+            </div>
+            <div className='admin-tags-page__fields'>
+              <label className='admin-tags-page__label'>
+                {t('adminTagForm.name')}
+                {activeLang === 'en' && <span className='admin-tags-page__asterisk'>*</span>}
+                <input
+                  type='text'
+                  placeholder={t('adminTagForm.namePlaceholder')}
+                  value={form[activeLang].name}
+                  required={activeLang === 'en'}
+                  className={
+                    activeLang === 'en' && fieldErrors.name ? 'admin-tags-page__input-error' : ''
+                  }
+                  onChange={(e) => handleInput('name', e.target.value)}
+                />
+                {activeLang === 'en' && fieldErrors.name && (
+                  <span className='admin-tags-page__field-error'>{fieldErrors.name}</span>
+                )}
+              </label>
+              <label className='admin-tags-page__label'>
+                {t('adminTagForm.description')}
+                <textarea
+                  placeholder={t('adminTagForm.descriptionPlaceholder')}
+                  value={form[activeLang].description}
+                  onChange={(e) => handleInput('description', e.target.value)}
+                  rows={2}
+                />
+              </label>
+            </div>
+            <label className='admin-tags-page__label' style={{ marginTop: 16 }}>
+              {t('adminTagForm.color')}
               <input
-                type='text'
-                placeholder={t('adminTagForm.namePlaceholder')}
-                value={form[activeLang].name}
-                required={activeLang === 'en'}
-                className={
-                  activeLang === 'en' && fieldErrors.name ? 'admin-tags-page__input-error' : ''
-                }
-                onChange={(e) => handleInput('name', e.target.value)}
-              />
-              {activeLang === 'en' && fieldErrors.name && (
-                <span className='admin-tags-page__field-error'>{fieldErrors.name}</span>
-              )}
-            </label>
-            <label className='admin-tags-page__label'>
-              {t('adminTagForm.description')}
-              <textarea
-                placeholder={t('adminTagForm.descriptionPlaceholder')}
-                value={form[activeLang].description}
-                onChange={(e) => handleInput('description', e.target.value)}
-                rows={2}
+                type='color'
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+                style={{ marginLeft: 8, width: 40, height: 40, border: 0 }}
               />
             </label>
-          </div>
-          <label className='admin-tags-page__label' style={{ marginTop: 16 }}>
-            {t('adminTagForm.color')}
-            <input
-              type='color'
-              value={color}
-              onChange={(e) => setColor(e.target.value)}
-              style={{ marginLeft: 8, width: 40, height: 40, border: 0 }}
-            />
-          </label>
-          <div className='admin-tags-page__form-actions'>
-            <button type='submit' className='admin-tags-page__btn'>
-              {editing ? t('adminTagForm.update') : t('adminTagForm.create')}
-            </button>
-            {editing && (
-              <button
-                type='button'
-                onClick={clearForm}
-                className='admin-tags-page__btn admin-tags-page__btn--cancel'>
-                {t('adminTagForm.cancel')}
+            <div className='admin-tags-page__form-actions'>
+              <button type='submit' className='admin-tags-page__btn'>
+                {editing ? t('adminTagForm.update') : t('adminTagForm.create')}
               </button>
-            )}
-          </div>
-          {error && <div className='admin-tags-page__error'>{error}</div>}
-        </form>
-      )}
-
-      <ul className='admin-tags-page__list'>
-        {pagedTags.map((tag) => {
-          const translations = tag.translations || {};
-          const tr = translations[i18n.language as Lang] ||
-            translations[i18n.language?.split('-')[0] as Lang] ||
-            translations.en || { name: '', description: '' };
-          return (
-            <li key={tag._id} className='admin-tags-page__item'>
-              <span
-                className='admin-tags-page__tag-color'
-                style={{
-                  background: tag.color || '#eee',
-                  marginRight: 8,
-                  display: 'inline-block',
-                  width: 18,
-                  height: 18,
-                  borderRadius: 4,
-                  border: '1px solid #ccc',
-                }}
-                title={tr.name}
-              />
-              <b>{tr.name || '[untitled]'}</b>
-              <span className='admin-tags-page__desc'>{tr.description || ''}</span>
-              <div>
-                <button className='admin-tags-page__edit' onClick={() => startEdit(tag)}>
-                  {t('admin.edit')}
+              {editing && (
+                <button
+                  type='button'
+                  onClick={clearForm}
+                  className='admin-tags-page__btn admin-tags-page__btn--cancel'>
+                  {t('adminTagForm.cancel')}
                 </button>
-                <button className='admin-tags-page__delete' onClick={() => handleDelete(tag._id)}>
-                  {t('admin.delete')}
-                </button>
-              </div>
-            </li>
-          );
-        })}
-        {pagedTags.length === 0 && <li>{t('adminTagForm.noTags')}</li>}
-      </ul>
+              )}
+            </div>
+            {error && <div className='admin-tags-page__error'>{error}</div>}
+          </form>
+        )}
 
-      <AdminTablePagination page={page} totalPages={totalPages} onPageChange={setPage} />
-    </div>
+        <ul className='admin-tags-page__list'>
+          {pagedTags.map((tag) => {
+            const translations = tag.translations || {};
+            const tr = translations[i18n.language as Lang] ||
+              translations[i18n.language?.split('-')[0] as Lang] ||
+              translations.en || { name: '', description: '' };
+            return (
+              <li key={tag._id} className='admin-tags-page__item'>
+                <span
+                  className='admin-tags-page__tag-color'
+                  style={{
+                    background: tag.color || '#eee',
+                    marginRight: 8,
+                    display: 'inline-block',
+                    width: 18,
+                    height: 18,
+                    borderRadius: 4,
+                    border: '1px solid #ccc',
+                  }}
+                  title={tr.name}
+                />
+                <b>{tr.name || '[untitled]'}</b>
+                <span className='admin-tags-page__desc'>{tr.description || ''}</span>
+                <div>
+                  <button className='admin-tags-page__edit' onClick={() => startEdit(tag)}>
+                    {t('admin.edit')}
+                  </button>
+                  <button className='admin-tags-page__delete' onClick={() => handleDelete(tag._id)}>
+                    {t('admin.delete')}
+                  </button>
+                </div>
+              </li>
+            );
+          })}
+          {pagedTags.length === 0 && <li>{t('adminTagForm.noTags')}</li>}
+        </ul>
+
+        <AdminTablePagination page={page} totalPages={totalPages} onPageChange={setPage} />
+      </div>
+    </>
   );
 };
 

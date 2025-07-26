@@ -1,5 +1,7 @@
 // src/features/admin/components/AdminPostForm.tsx
 
+import { Helmet } from 'react-helmet-async';
+
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchTags } from '../../../shared/services/tagService';
@@ -150,131 +152,139 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className='admin-post-form' autoComplete='off'>
-      {loading && <Loader />}
-      {error && <div className='admin-post-form__error'>{error}</div>}
+    <>
+      <Helmet>
+        <meta name='robots' content='noindex, nofollow' />
+      </Helmet>
 
-      {/* Multilingual tabs */}
-      <div className='admin-post-form__tabs'>
-        {LANGUAGES.map((lang) => (
-          <button
-            key={lang}
-            type='button'
-            className={`admin-post-form__tab${activeLang === lang ? ' active' : ''}`}
-            onClick={() => setActiveLang(lang)}>
-            {lang.toUpperCase()}
-            {lang === 'en' && <span className='admin-post-form__tab-required'>*</span>}
-          </button>
-        ))}
-      </div>
+      <form onSubmit={handleSubmit} className='admin-post-form' autoComplete='off'>
+        {loading && <Loader />}
+        {error && <div className='admin-post-form__error'>{error}</div>}
 
-      {/* Multilingual fields */}
-      <div className={`admin-post-form__fields admin-post-form__fields--${activeLang}`}>
-        <label className='admin-post-form__label'>
-          {t('adminPostForm.title', 'Title')}
-          {activeLang === 'en' && <span className='admin-post-form__asterisk'>*</span>}
+        {/* Multilingual tabs */}
+        <div className='admin-post-form__tabs'>
+          {LANGUAGES.map((lang) => (
+            <button
+              key={lang}
+              type='button'
+              className={`admin-post-form__tab${activeLang === lang ? ' active' : ''}`}
+              onClick={() => setActiveLang(lang)}>
+              {lang.toUpperCase()}
+              {lang === 'en' && <span className='admin-post-form__tab-required'>*</span>}
+            </button>
+          ))}
+        </div>
+
+        {/* Multilingual fields */}
+        <div className={`admin-post-form__fields admin-post-form__fields--${activeLang}`}>
+          <label className='admin-post-form__label'>
+            {t('adminPostForm.title', 'Title')}
+            {activeLang === 'en' && <span className='admin-post-form__asterisk'>*</span>}
+            <input
+              type='text'
+              placeholder={t('adminPostForm.titlePlaceholder', 'Post title')}
+              value={translations[activeLang]?.title || ''}
+              required={activeLang === 'en'}
+              className={
+                activeLang === 'en' && fieldErrors.title ? 'admin-post-form__input-error' : ''
+              }
+              onChange={(e) => handleTranslationChange('title', e.target.value)}
+              autoComplete='off'
+            />
+            {activeLang === 'en' && fieldErrors.title && (
+              <span className='admin-post-form__field-error'>{fieldErrors.title}</span>
+            )}
+          </label>
+          <label className='admin-post-form__label'>
+            {t('adminPostForm.description', 'Description')}
+            {activeLang === 'en' && <span className='admin-post-form__asterisk'>*</span>}
+            <textarea
+              placeholder={t('adminPostForm.descriptionPlaceholder', 'Short description')}
+              value={translations[activeLang]?.description || ''}
+              required={activeLang === 'en'}
+              className={
+                activeLang === 'en' && fieldErrors.description ? 'admin-post-form__input-error' : ''
+              }
+              onChange={(e) => handleTranslationChange('description', e.target.value)}
+              rows={3}
+              autoComplete='off'
+            />
+            {activeLang === 'en' && fieldErrors.description && (
+              <span className='admin-post-form__field-error'>{fieldErrors.description}</span>
+            )}
+          </label>
+          <label className='admin-post-form__label'>
+            {t('adminPostForm.content', 'Content')}
+            {activeLang === 'en' && <span className='admin-post-form__asterisk'>*</span>}
+            <textarea
+              placeholder={t('adminPostForm.contentPlaceholder', 'Full content')}
+              value={translations[activeLang]?.content || ''}
+              required={activeLang === 'en'}
+              className={
+                activeLang === 'en' && fieldErrors.content ? 'admin-post-form__input-error' : ''
+              }
+              onChange={(e) => handleTranslationChange('content', e.target.value)}
+              rows={6}
+              autoComplete='off'
+            />
+            {activeLang === 'en' && fieldErrors.content && (
+              <span className='admin-post-form__field-error'>{fieldErrors.content}</span>
+            )}
+          </label>
+        </div>
+
+        {/* Image upload */}
+        <div className='admin-post-form__img'>
+          <label>{t('adminPostForm.image', 'Post Image:')}</label>
           <input
-            type='text'
-            placeholder={t('adminPostForm.titlePlaceholder', 'Post title')}
-            value={translations[activeLang]?.title || ''}
-            required={activeLang === 'en'}
-            className={
-              activeLang === 'en' && fieldErrors.title ? 'admin-post-form__input-error' : ''
-            }
-            onChange={(e) => handleTranslationChange('title', e.target.value)}
-            autoComplete='off'
+            type='file'
+            accept='image/*'
+            onChange={(e) => {
+              const file = e.target.files?.[0] || null;
+              setImage(file);
+              if (file) setImageUrl(URL.createObjectURL(file));
+            }}
           />
-          {activeLang === 'en' && fieldErrors.title && (
-            <span className='admin-post-form__field-error'>{fieldErrors.title}</span>
-          )}
-        </label>
-        <label className='admin-post-form__label'>
-          {t('adminPostForm.description', 'Description')}
-          {activeLang === 'en' && <span className='admin-post-form__asterisk'>*</span>}
-          <textarea
-            placeholder={t('adminPostForm.descriptionPlaceholder', 'Short description')}
-            value={translations[activeLang]?.description || ''}
-            required={activeLang === 'en'}
-            className={
-              activeLang === 'en' && fieldErrors.description ? 'admin-post-form__input-error' : ''
-            }
-            onChange={(e) => handleTranslationChange('description', e.target.value)}
-            rows={3}
-            autoComplete='off'
-          />
-          {activeLang === 'en' && fieldErrors.description && (
-            <span className='admin-post-form__field-error'>{fieldErrors.description}</span>
-          )}
-        </label>
-        <label className='admin-post-form__label'>
-          {t('adminPostForm.content', 'Content')}
-          {activeLang === 'en' && <span className='admin-post-form__asterisk'>*</span>}
-          <textarea
-            placeholder={t('adminPostForm.contentPlaceholder', 'Full content')}
-            value={translations[activeLang]?.content || ''}
-            required={activeLang === 'en'}
-            className={
-              activeLang === 'en' && fieldErrors.content ? 'admin-post-form__input-error' : ''
-            }
-            onChange={(e) => handleTranslationChange('content', e.target.value)}
-            rows={6}
-            autoComplete='off'
-          />
-          {activeLang === 'en' && fieldErrors.content && (
-            <span className='admin-post-form__field-error'>{fieldErrors.content}</span>
-          )}
-        </label>
-      </div>
+          {imageUrl && <img src={imageUrl} alt='Post Cover' style={{ height: 100, margin: 8 }} />}
+        </div>
 
-      {/* Image upload */}
-      <div className='admin-post-form__img'>
-        <label>{t('adminPostForm.image', 'Post Image:')}</label>
-        <input
-          type='file'
-          accept='image/*'
-          onChange={(e) => {
-            const file = e.target.files?.[0] || null;
-            setImage(file);
-            if (file) setImageUrl(URL.createObjectURL(file));
-          }}
-        />
-        {imageUrl && <img src={imageUrl} alt='Post Cover' style={{ height: 100, margin: 8 }} />}
-      </div>
+        {/* Tags and Categories */}
+        <label>
+          {t('adminPostForm.tags', 'Tags:')}
+          <select multiple value={tags} onChange={handleTagChange}>
+            {availableTags.map((tag) => (
+              <option value={tag._id} key={tag._id}>
+                {tag.translations?.en?.name || ''}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          {t('adminPostForm.categories', 'Categories:')}
+          <select multiple value={categories} onChange={handleCategoryChange}>
+            {availableCategories.map((cat) => (
+              <option value={cat._id} key={cat._id}>
+                {cat.translations?.en?.name || ''}
+              </option>
+            ))}
+          </select>
+        </label>
 
-      {/* Tags and Categories */}
-      <label>
-        {t('adminPostForm.tags', 'Tags:')}
-        <select multiple value={tags} onChange={handleTagChange}>
-          {availableTags.map((tag) => (
-            <option value={tag._id} key={tag._id}>
-              {tag.translations?.en?.name || ''}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label>
-        {t('adminPostForm.categories', 'Categories:')}
-        <select multiple value={categories} onChange={handleCategoryChange}>
-          {availableCategories.map((cat) => (
-            <option value={cat._id} key={cat._id}>
-              {cat.translations?.en?.name || ''}
-            </option>
-          ))}
-        </select>
-      </label>
-
-      {/* Status */}
-      <label>
-        {t('adminPostForm.status', 'Status:')}
-        <select value={status} onChange={(e) => setStatus(e.target.value as 'draft' | 'published')}>
-          <option value='draft'>{t('adminPostForm.draft', 'Draft')}</option>
-          <option value='published'>{t('adminPostForm.published', 'Published')}</option>
-        </select>
-      </label>
-      <button type='submit' className='admin-post-form__submit'>
-        {t('adminPostForm.save', 'Save')}
-      </button>
-    </form>
+        {/* Status */}
+        <label>
+          {t('adminPostForm.status', 'Status:')}
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value as 'draft' | 'published')}>
+            <option value='draft'>{t('adminPostForm.draft', 'Draft')}</option>
+            <option value='published'>{t('adminPostForm.published', 'Published')}</option>
+          </select>
+        </label>
+        <button type='submit' className='admin-post-form__submit'>
+          {t('adminPostForm.save', 'Save')}
+        </button>
+      </form>
+    </>
   );
 };
 

@@ -1,5 +1,7 @@
 // /src/features/admin/components/AdminTableFilter.tsx
 
+import { Helmet } from 'react-helmet-async';
+
 import React, { useState, useEffect } from 'react';
 import '../../admin/styles/AdminTableFilter.scss';
 
@@ -37,28 +39,34 @@ const AdminTableFilter: React.FC<AdminTableFilterProps> = ({
   }, [localValue]);
 
   return (
-    <div className='admin-table-filter'>
-      <input
-        type='text'
-        className='admin-table-filter__input'
-        value={localValue}
-        onChange={(e) => setLocalValue(e.target.value)}
-        placeholder={placeholder}
-        autoFocus={autoFocus}
-      />
-      {localValue && (
-        <button
-          type='button'
-          className='admin-table-filter__clear'
-          onClick={() => {
-            setLocalValue('');
-            onChange('');
-          }}
-          aria-label='Clear search'>
-          ×
-        </button>
-      )}
-    </div>
+    <>
+      <Helmet>
+        <meta name='robots' content='noindex, nofollow' />
+      </Helmet>
+
+      <div className='admin-table-filter'>
+        <input
+          type='text'
+          className='admin-table-filter__input'
+          value={localValue}
+          onChange={(e) => setLocalValue(e.target.value)}
+          placeholder={placeholder}
+          autoFocus={autoFocus}
+        />
+        {localValue && (
+          <button
+            type='button'
+            className='admin-table-filter__clear'
+            onClick={() => {
+              setLocalValue('');
+              onChange('');
+            }}
+            aria-label='Clear search'>
+            ×
+          </button>
+        )}
+      </div>
+    </>
   );
 };
 

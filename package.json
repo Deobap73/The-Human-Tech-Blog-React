@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prepare": "cross-env sh -c \"if [ -f pnpm-lock.yaml ]; then echo '🚫 PNPM is not allowed in this project. Use NPM only.' && exit 1; fi\""
+    "prepare": "cross-env sh -c \"if [ -f pnpm-lock.yaml ]; then echo '🚫 PNPM is not allowed in this project. Use NPM only.' && exit 1; fi\"",
+    "seo-check": "ts-node scripts/checkSitemap.mts --loader ts-node/esm"
   },
   "engines": {
     "node": ">=20.18",
@@ -23,9 +24,10 @@
     "@tiptap/extension-underline": "^2.12.0",
     "@tiptap/react": "2.22.3",
     "@tiptap/starter-kit": "^2.11.7",
-    "axios": "^1.8.4",
+    "axios": "1.11.0",
     "date-fns": "4.1.0",
     "dompurify": "^3.2.5",
+    "fast-xml-parser": "5.2.5",
     "fs-extra": "^11.3.0",
     "i18next": "25.2.1",
     "i18next-browser-languagedetector": "8.1.0",
@@ -39,6 +41,7 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-google-recaptcha": "^3.1.0",
+    "react-helmet-async": "2.0.5",
     "react-hook-form": "^7.56.4",
     "react-hot-toast": "2.5.2",
     "react-i18next": "15.5.2",
@@ -48,6 +51,7 @@
     "slugify": "1.6.6",
     "socket.io-client": "^4.8.1",
     "ts-morph": "^25.0.1",
+    "xml2js": "0.6.2",
     "zod": "^3.24.4"
   },
   "devDependencies": {

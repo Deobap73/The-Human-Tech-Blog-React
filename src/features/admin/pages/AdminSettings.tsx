@@ -1,4 +1,6 @@
 // src/features/admin/pages/AdminSettings.tsx
+
+import { Helmet } from 'react-helmet-async';
 import { useEffect, useState } from 'react';
 import api from '../../../shared/utils/axios';
 import { AdminSettings } from '../../../shared/types/AdminSettings';
@@ -43,29 +45,44 @@ const AdminSettingsPage = () => {
   if (error || !settings) return <p>{error || 'No settings available.'}</p>;
 
   return (
-    <div className='admin-settings'>
-      <h2>Edit Admin Settings</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Site Title:
-          <input type='text' name='siteTitle' value={settings.siteTitle} onChange={handleChange} />
-        </label>
-        <label>
-          Enable Chat:
-          <input
-            type='checkbox'
-            name='enableChat'
-            checked={settings.enableChat}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Max Users:
-          <input type='number' name='maxUsers' value={settings.maxUsers} onChange={handleChange} />
-        </label>
-        <button type='submit'>Save</button>
-      </form>
-    </div>
+    <>
+      <Helmet>
+        <meta name='robots' content='noindex, nofollow' />
+      </Helmet>
+      <div className='admin-settings'>
+        <h2>Edit Admin Settings</h2>
+        <form onSubmit={handleSubmit}>
+          <label>
+            Site Title:
+            <input
+              type='text'
+              name='siteTitle'
+              value={settings.siteTitle}
+              onChange={handleChange}
+            />
+          </label>
+          <label>
+            Enable Chat:
+            <input
+              type='checkbox'
+              name='enableChat'
+              checked={settings.enableChat}
+              onChange={handleChange}
+            />
+          </label>
+          <label>
+            Max Users:
+            <input
+              type='number'
+              name='maxUsers'
+              value={settings.maxUsers}
+              onChange={handleChange}
+            />
+          </label>
+          <button type='submit'>Save</button>
+        </form>
+      </div>
+    </>
   );
 };
 

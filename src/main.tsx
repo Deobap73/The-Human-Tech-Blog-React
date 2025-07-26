@@ -2,6 +2,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { HelmetProvider } from 'react-helmet-async';
 // Internationalization setup
 import './i18n';
 // Import global SCSS (must be first for variables and resets)
@@ -25,20 +26,22 @@ if (token) {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <LoginModalProvider>
-      <BrowserRouter>
-        <AuthProvider>
-          <ThemeProvider>
-            <SocketProvider>
-              <RecaptchaProvider>
-                <ToastProvider>
-                  <App />
-                </ToastProvider>
-              </RecaptchaProvider>
-            </SocketProvider>
-          </ThemeProvider>
-        </AuthProvider>
-      </BrowserRouter>
-    </LoginModalProvider>
+    <HelmetProvider>
+      <LoginModalProvider>
+        <BrowserRouter>
+          <AuthProvider>
+            <ThemeProvider>
+              <SocketProvider>
+                <RecaptchaProvider>
+                  <ToastProvider>
+                    <App />
+                  </ToastProvider>
+                </RecaptchaProvider>
+              </SocketProvider>
+            </ThemeProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      </LoginModalProvider>
+    </HelmetProvider>
   </React.StrictMode>
 );
