@@ -1,6 +1,8 @@
 // File: /src/routes/PublicRoutes.tsx
 
 import { Routes, Route } from 'react-router-dom';
+import SitemapProxyRoutes from './SitemapProxyRoutes';
+
 import Layout from '../features/layout/Layout';
 import HomePage from '../features/home/pages/HomePage';
 import AboutPage from '../features/about/pages/AboutPage';
@@ -31,6 +33,13 @@ const NotFoundPage = () => (
 
 const PublicRoutes = () => (
   <Routes>
+    {/* forward the route request to the backend to be read by Google Search Console */}
+    <Route path='/sitemap-posts.xml' element={<SitemapProxyRoutes />} />
+    <Route path='/sitemap-quickposts.xml' element={<SitemapProxyRoutes />} />
+    <Route path='/sitemap-prompts.xml' element={<SitemapProxyRoutes />} />
+    <Route path='/sitemap-categories.xml' element={<SitemapProxyRoutes />} />
+    <Route path='/sitemap-static.xml' element={<SitemapProxyRoutes />} />
+
     {/* Redirect root and top-level routes without lang prefix */}
     <Route path='/' element={<RedirectToBrowserLang />} />
     <Route path='/not-authorized' element={<RedirectToBrowserLang />} />
