@@ -100,11 +100,13 @@ The-Human-Tech-Blog-React/
 ```
 
 ---
+
 <br> <br>
 <img src="https://github.com/Deobap73/The-Human-Tech-Blog-React/blob/main/public/images/TechShortsPage.webp">
 <br> <br>
 
 ---
+
 ## 🌍 Internationalization
 
 - Full multilanguage: All public and admin resources in EN, PT, DE, ES
@@ -186,12 +188,13 @@ The **Chat module** in The Human Tech Blog provides a modern, secure, and seamle
 ### Key Features
 
 - **Real-time Messaging:**  
-  Instant send/receive of messages using WebSocket (Socket.IO) for true real-time updates.
+   Instant send/receive of messages using WebSocket (Socket.IO) for true real-time updates.
 
-  ---
-<br> <br>
-<img src="https://github.com/Deobap73/The-Human-Tech-Blog-React/blob/main/public/images/ChatPage.webp">
-<br> <br>
+  ***
+
+  <br> <br>
+  <img src="https://github.com/Deobap73/The-Human-Tech-Blog-React/blob/main/public/images/ChatPage.webp">
+  <br> <br>
 
 ---
 
@@ -240,6 +243,7 @@ The **Chat module** in The Human Tech Blog provides a modern, secure, and seamle
   - Voice/video calls (extensible architecture)
 
 ---
+
 <br> <br>
 <img src="https://github.com/Deobap73/The-Human-Tech-Blog-React/blob/main/public/images/ContactPage.webp">
 <br> <br>
@@ -262,6 +266,84 @@ The Chat module offers a professional, modern, and accessible messaging experien
 - Receive and read notifications
 - Search/filter posts
 - Login/logout, session persistence
+
+---
+
+## 📦 New Feature: Advanced SEO with Sitemap Indexing
+
+In July 2025, I implemented a fully dynamic sitemap architecture for enhanced SEO performance, discoverability and multilingual support. The sitemap system is now structured and served through a gzip-compressed index file, listing multiple content-specific sitemaps.
+<br> <br>
+![SEO Optimized](https://img.shields.io/badge/SEO-Optimized-brightgreen?style=flat-square&logo=google)
+![Gzip Sitemap](https://img.shields.io/badge/Sitemap-Gzip%20Compressed-blue?style=flat-square&logo=xml)
+![i18n Ready](https://img.shields.io/badge/Multilingual-EN%2C%20PT%2C%20DE%2C%20ES-orange?style=flat-square&logo=translate)
+![Dynamic Sitemap](https://img.shields.io/badge/Sitemap-Dynamic%20%2B%20Multitype-success?style=flat-square&logo=sitemap)
+![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA-lightgrey?style=flat-square&logo=accessibility)
+
+<br>
+
+### 🔧 What I Did
+
+Created a dynamic sitemap-index.xml served at:
+
+https://thehumantechblog.com/sitemap-index.xml
+
+This index links to 5 compressed sitemaps:
+
+/sitemap-posts.xml
+
+/sitemap-quickposts.xml
+
+/sitemap-prompts.xml
+
+/sitemap-categories.xml
+
+/sitemap-static.xml
+
+### Ensured each sitemap is:
+
+- Served with correct Content-Type: application/xml
+
+- Gzipped with correct Content-Encoding: gzip
+
+- Tagged with <lastmod> to indicate freshness
+
+- Redirected all sitemap requests through the main frontend domain (thehumantechblog.com) for canonical consistency.
+
+- Fully integrated with Google Search Console for indexation tracking.
+
+### 🌍 SEO Improvements
+
+✅ Multilingual content URLs with hreflang support
+
+✅ Clean separation of content types by sitemap
+
+✅ Fast indexing of new posts (including AI Prompts and QuickPosts)
+
+✅ Dynamic generation from live database entries
+
+### 🧪 Manual Tests Performed
+
+- curl/gunzip inspection of .gz files (verifying format and content)
+
+- Submission and crawling verification via Google Search Console
+
+- Live check of each child sitemap and their entries
+
+- Error logging in backend for failed generation or empty responses
+
+📄 Sample curl result:
+
+```txt
+$ curl -L https://thehumantechblog.com/sitemap.xml.gz | gunzip
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://thehumantechblog.com/sitemap-posts.xml</loc>
+    <lastmod>2025-07-26</lastmod>
+  </sitemap>
+  ...
+</sitemapindex>
+```
 
 ---
 
@@ -288,7 +370,7 @@ For backend details and full DevOps setup, see: The Human Tech Blog Server.
 
 Happy building & writing! 🚀
 
-  <br> <br>
+<br> <br>
 
 [![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=Deobap73)](https://github.com/anuraghazra/github-readme-stats)
 
