@@ -69,12 +69,14 @@ const Navbar = () => {
       <div className='navbar__row'>
         <div className='navbar__topbar'>
           <div className='navbar__logo'>
-            <img
-              src={logo}
-              alt={t('navbar.logoAlt')}
-              className='navbar__logo-image'
-              draggable={false}
-            />
+            <Link to={buildUrl('', activeLang)}>
+              <img
+                src={logo}
+                alt={t('navbar.logoAlt')}
+                className='navbar__logo-image'
+                draggable={false}
+              />
+            </Link>
           </div>
           <button
             className={`navbar__burger${sidebarOpen ? ' navbar__burger--open' : ''}`}
