@@ -40,15 +40,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const login = async (email: string, password: string, captcha?: string): Promise<void> => {
     // Always use the safeApiPost-based flow for CSRF protection!
     const res = await authService.login(email, password, captcha ?? '');
-    // Debug: Log the login response
     console.log('[AuthProvider] login response:', res);
 
-    // Unified handling for both Axios and fetch API (res vs res.data)
     const data = res.data || res;
     const { accessToken } = data;
 
     if (!accessToken) {
-      // This throws and will be caught in the modal, showing real error.
       throw new Error('No accessToken returned by API. Check login credentials or backend logic.');
     }
     setAccessToken(accessToken);

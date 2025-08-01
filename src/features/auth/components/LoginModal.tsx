@@ -1,7 +1,7 @@
 // src/features/auth/components/LoginModal.tsx
 
 import '../styles/LoginModal.scss';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useAuth } from '../../../shared/hooks/useAuth';
 import { useLoginModal } from '../../../shared/hooks/useLoginModal';
 import logo from '../../../assets/Logo.webp';
@@ -12,6 +12,10 @@ import RecaptchaV3 from '../../../shared/components/RecaptchaV3';
 
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string;
 
+/**
+ * LoginModal component for user authentication.
+ * Uses Google reCAPTCHA v3 and prevents infinite recaptcha loops.
+ */
 export const LoginModal = ({ onClose }: { onClose: () => void }) => {
   const { t } = useTranslation();
   const { login } = useAuth();
@@ -24,9 +28,24 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Função chamada quando o token reCAPTCHA está pronto
-  const handleCaptcha = (token: string) => setCaptchaToken(token);
+  // Prevent recaptcha from looping: only set once per modal opening
+  const captchaSet = useRef(false);
 
+  /**
+   * Callback for reCAPTCHA token.
+   * Sets the token only once per modal session.
+   */
+  const handleCaptcha = (token: string) => {
+    if (!captchaSet.current) {
+      setCaptchaToken(token);
+      captchaSet.current = true;
+    }
+  };
+
+  /**
+   * Handles form submission for login.
+   * Only submits if a valid captchaToken is present.
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -40,12 +59,16 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
       await login(email, password, captchaToken);
       onClose();
     } catch {
+      // Do NOT reset captchaToken here to avoid infinite loop!
       setError(t('auth.login.error'));
     } finally {
       setLoading(false);
     }
   };
 
+  /**
+   * Handles OAuth login via Google or GitHub.
+   */
   const handleOAuthLogin = (provider: 'google' | 'github') => {
     window.open(`${import.meta.env.VITE_API_BASE_URL}/auth/${provider}`, '_self');
   };
@@ -90,9 +113,11 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
               {showPassword ? <FiEyeOff /> : <FiEye />}
             </button>
           </div>
-          {/* reCAPTCHA v3 */}
-          <RecaptchaV3 siteKey={RECAPTCHA_SITE_KEY} action='login' onToken={handleCaptcha} />
-          <button className='modal__submit' type='submit' disabled={loading}>
+          {/* reCAPTCHA v3: Only render if not already set */}
+          {!captchaSet.current && (
+            <RecaptchaV3 siteKey={RECAPTCHA_SITE_KEY} action='login' onToken={handleCaptcha} />
+          )}
+          <button className='modal__submit' type='submit' disabled={loading || !captchaToken}>
             {loading ? t('auth.login.loading') : t('auth.login.button')}
           </button>
           {error && (

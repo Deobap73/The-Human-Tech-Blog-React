@@ -2,21 +2,10 @@
 
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { setAccessToken, getAccessToken, removeAccessToken } from './authTokenStorage';
-import { ensureCsrfToken } from './csrf';
 
 /**
- * Utility to read cookies in the browser.
- * Returns the value of a cookie by name.
- */
-const getCookie = (name: string): string | undefined => {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(';').shift();
-  return undefined;
-};
-
-/**
- * Custom Axios instance with interceptors for Auth and CSRF.
+ * Custom Axios instance with interceptors for Auth.
+ * CSRF is handled only via helpers, not here!
  */
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
@@ -37,36 +26,14 @@ const processQueue = (error: any, token: string | null = null) => {
   failedQueue = [];
 };
 
-// Axios Request Interceptor: Adds Authorization & CSRF token
+// Axios Request Interceptor: Adds Authorization only!
 api.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
-    // Ensure Authorization header
     const token = getAccessToken();
     if (token) {
       config.headers = config.headers || {};
       config.headers['Authorization'] = `Bearer ${token}`;
     }
-
-    // For mutating requests, ensure CSRF token before proceeding
-    const method = config.method?.toLowerCase();
-    if (['post', 'put', 'patch', 'delete'].includes(method || '')) {
-      await ensureCsrfToken();
-      const xsrfToken = getCookie('XSRF-TOKEN');
-      if (xsrfToken) {
-        config.headers = config.headers || {};
-        config.headers['x-csrf-token'] = xsrfToken;
-      }
-      if (import.meta.env.DEV) {
-        console.log('[Axios] Mutating request:', {
-          method,
-          url: config.url,
-          xsrfToken,
-          headers: config.headers,
-          cookies: document.cookie,
-        });
-      }
-    }
-
     return config;
   },
   (requestError) => Promise.reject(requestError)
