@@ -33,15 +33,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   /**
-   * Login function using API. Sets access token and fetches user.
+   * Login function using authService.login to guarantee CSRF protection.
+   * Sets access token and fetches user.
    * Supports optional Google reCAPTCHA v3 token.
    */
   const login = async (email: string, password: string, captcha?: string): Promise<void> => {
-    const res = await api.post('/auth/login', {
-      email,
-      password,
-      ...(captcha ? { captcha } : {}),
-    });
+    // Always use the safeApiPost-based flow for CSRF protection!
+    const res = await authService.login(email, password, captcha ?? '');
     const { accessToken } = res.data;
     setAccessToken(accessToken);
     api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
