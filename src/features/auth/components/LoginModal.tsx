@@ -1,7 +1,7 @@
-// src/features/auth/components/LoginModal.tsx
+// /src/features/auth/components/LoginModal.tsx
 
 import '../styles/LoginModal.scss';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../../../shared/hooks/useAuth';
 import { useLoginModal } from '../../../shared/hooks/useLoginModal';
 import logo from '../../../assets/Logo.webp';
@@ -9,12 +9,13 @@ import { IoMdCloseCircle } from 'react-icons/io';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import RecaptchaV3 from '../../../shared/components/RecaptchaV3';
+import { ensureCsrfToken } from '../../../shared/utils/csrf';
 
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string;
 
 /**
  * LoginModal component for user authentication.
- * Uses Google reCAPTCHA v3 and prevents infinite recaptcha loops.
+ * Uses Google reCAPTCHA v3 and robust CSRF protection.
  */
 export const LoginModal = ({ onClose }: { onClose: () => void }) => {
   const { t } = useTranslation();
@@ -28,8 +29,20 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Prevent recaptcha from looping: only set once per modal opening
+  // Prevents multiple recaptcha executions in the same modal session
   const captchaSet = useRef(false);
+
+  // On mount, fetch CSRF token before allowing login
+  useEffect(() => {
+    ensureCsrfToken().catch((e) => {
+      // Optional: handle error
+      console.error('[LoginModal] Failed to fetch CSRF token:', e);
+      setError('CSRF error: please try again or refresh.');
+    });
+    // Reset captcha for every new modal open
+    setCaptchaToken(null);
+    captchaSet.current = false;
+  }, []);
 
   /**
    * Callback for reCAPTCHA token.
@@ -59,7 +72,6 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
       await login(email, password, captchaToken);
       onClose();
     } catch {
-      // Do NOT reset captchaToken here to avoid infinite loop!
       setError(t('auth.login.error'));
     } finally {
       setLoading(false);
@@ -113,7 +125,7 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
               {showPassword ? <FiEyeOff /> : <FiEye />}
             </button>
           </div>
-          {/* reCAPTCHA v3: Only render if not already set */}
+          {/* Only render reCAPTCHA if not already set */}
           {!captchaSet.current && (
             <RecaptchaV3 siteKey={RECAPTCHA_SITE_KEY} action='login' onToken={handleCaptcha} />
           )}
