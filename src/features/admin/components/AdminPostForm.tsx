@@ -245,7 +245,14 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
               if (file) setImageUrl(URL.createObjectURL(file));
             }}
           />
-          {imageUrl && <img src={imageUrl} alt='Post Cover' style={{ height: 100, margin: 8 }} />}
+          {imageUrl && (
+            <img
+              src={imageUrl}
+              alt='Post Cover'
+              style={{ height: 100, margin: 8 }}
+              loading='lazy'
+            />
+          )}
         </div>
 
         {/* Tags and Categories */}

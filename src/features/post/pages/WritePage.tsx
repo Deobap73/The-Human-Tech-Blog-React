@@ -319,7 +319,12 @@ const WritePage = () => {
           />
           {coverUrl && (
             <div className='write-page__cover-preview'>
-              <img src={coverUrl} alt='Cover Preview' className='write-page__cover-img' />
+              <img
+                src={coverUrl}
+                alt='Cover Preview'
+                className='write-page__cover-img'
+                loading='lazy'
+              />
             </div>
           )}
 

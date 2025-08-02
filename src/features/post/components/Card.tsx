@@ -37,7 +37,12 @@ export const Card = ({ post, lang }: CardProps) => {
 
   return (
     <div className='card-post'>
-      <img src={post.image} alt={translation.title || 'No title'} className='card-post__image' />
+      <img
+        src={post.image}
+        alt={translation.title || 'No title'}
+        className='card-post__image'
+        loading='lazy'
+      />
 
       <div className='card-post__description-container'>
         <span className='card-post__category'>{category}</span>

@@ -13,7 +13,12 @@ export const AboutMe = () => {
       <div className='aboutMe__container'>
         {/* Profile Image with decorative frame */}
         <div className='aboutMe__image-wrapper'>
-          <img src={IdImage} alt={t('about.me.profileAlt')} className='aboutMe__image' />
+          <img
+            src={IdImage}
+            alt={t('about.me.profileAlt')}
+            className='aboutMe__image'
+            loading='lazy'
+          />
           <span className='aboutMe__frame aboutMe__frame--top' />
           <span className='aboutMe__frame aboutMe__frame--bottom' />
         </div>

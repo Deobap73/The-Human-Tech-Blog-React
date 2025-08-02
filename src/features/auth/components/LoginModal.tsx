@@ -92,7 +92,13 @@ export const LoginModal = ({ onClose }: { onClose: () => void }) => {
           <IoMdCloseCircle className='modal__close' onClick={onClose} />
         </div>
         <div className='modal__logo'>
-          <img src={logo} alt={t('auth.logoAlt')} className='modal__logo-image' draggable={false} />
+          <img
+            src={logo}
+            alt={t('auth.logoAlt')}
+            className='modal__logo-image'
+            draggable={false}
+            loading='lazy'
+          />
         </div>
         <h2 className='modal__title'>{t('auth.login.title')}</h2>
         <form className='modal__form' onSubmit={handleSubmit}>

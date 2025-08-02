@@ -75,6 +75,7 @@ export const RecentCategoryPosts = ({ currentPostId, lang }: Props) => {
                       post.translations?.[lang]?.title || post.translations?.en?.title || post.slug
                     }
                     className='recent-category-posts__image'
+                    loading='lazy'
                   />
                 </div>
                 <div className='recent-category-posts__content'>
@@ -97,6 +98,7 @@ export const RecentCategoryPosts = ({ currentPostId, lang }: Props) => {
                         post.author?._id || 'guest'
                       }`}
                       alt={post.author?.name || 'User'}
+                      loading='lazy'
                     />
                     <span className='recent-category-posts__author-name'>
                       {post.author?.name || 'User'}

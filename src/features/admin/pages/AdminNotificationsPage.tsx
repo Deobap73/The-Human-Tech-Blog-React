@@ -261,6 +261,7 @@ const AdminCategoriesPage = () => {
                       border: '1px solid #eee',
                       background: '#fff',
                     }}
+                    loading='lazy'
                   />
                 )}
               </label>

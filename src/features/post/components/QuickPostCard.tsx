@@ -1,5 +1,6 @@
-// /src/features/post/components/QuickPostCard.tsx
+// src/features/post/components/QuickPostCard.tsx
 
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Post } from '../../../shared/types/Post';
 import { getAvatar } from '../../../shared/utils/getAvatar';
@@ -15,14 +16,16 @@ interface Props {
 /**
  * Renders a Tech Short (QuickPost) card with category, image, title, and meta.
  */
-const QuickPostCard = ({ post, lang }: Props) => {
+const QuickPostCard: React.FC<Props> = ({ post, lang }) => {
   const translation = getPostTranslation(post.translations, lang);
   if (!translation.title || !translation.description) return null;
 
   const user = (post as any).user || (post as any).author || {};
-  const category = post.categories?.[0];
-  const categoryName = getCategoryName(category, lang);
-  const categoryLogo = category?.logo ? resolveLogoUrl(category.logo) : '/default-logo.png';
+
+  // Category is a string ID; resolve logo URL from that ID
+  const categoryId = post.categories?.[0];
+  const categoryName = getCategoryName(categoryId, lang);
+  const categoryLogo = categoryId ? resolveLogoUrl(categoryId) : '/default-logo.png';
 
   return (
     <div className='quick-post-card'>
@@ -32,6 +35,7 @@ const QuickPostCard = ({ post, lang }: Props) => {
             src={post.image || '/no-image.webp'}
             alt={translation.title}
             className='quick-post-card__image'
+            loading='lazy'
           />
           <div className='quick-post-card__overlay' />
           <div className='quick-post-card__category'>
@@ -41,6 +45,7 @@ const QuickPostCard = ({ post, lang }: Props) => {
               className='quick-post-card__category-logo'
               height={28}
               width={28}
+              loading='lazy'
             />
             <span className='quick-post-card__category-label'>{categoryName}</span>
           </div>
@@ -48,8 +53,7 @@ const QuickPostCard = ({ post, lang }: Props) => {
         <div className='quick-post-card__content'>
           <h3 className='quick-post-card__title'>
             {translation.title.length > 50
-              ? /* ? `${translation.title.substring(0, 76)}...` */
-                translation.title.slice(0, 50) + '...'
+              ? translation.title.slice(0, 50) + '...'
               : translation.title}
           </h3>
           <div>
@@ -65,6 +69,7 @@ const QuickPostCard = ({ post, lang }: Props) => {
                 className='quick-post-card__avatar'
                 width={38}
                 height={38}
+                loading='lazy'
               />
               <span className='quick-post-card__date'>
                 {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ''}

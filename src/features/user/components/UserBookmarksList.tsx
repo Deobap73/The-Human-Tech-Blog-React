@@ -44,6 +44,7 @@ const UserBookmarksList = () => {
                   className='user-bookmarks__thumb'
                   width={44}
                   height={44}
+                  loading='lazy'
                 />
               )}
               <a href={`/posts/${bm.postId.slug}`} className='user-bookmarks__link'>

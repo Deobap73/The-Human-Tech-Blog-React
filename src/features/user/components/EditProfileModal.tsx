@@ -107,6 +107,7 @@ const EditProfileModal = ({ isOpen, onClose, onUpdate }: Props) => {
                   className='edit-profile-modal__avatar-preview'
                   width={72}
                   height={72}
+                  loading='lazy'
                 />
               )}
               <input

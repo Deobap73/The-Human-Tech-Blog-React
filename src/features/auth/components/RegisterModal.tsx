@@ -43,6 +43,7 @@ export const RegisterModal = ({ onClose }: { onClose: () => void }) => {
             alt={t('auth.logoAlt')}
             className='register__logo-image'
             draggable={false}
+            loading='lazy'
           />
         </div>
         <h2 className='register__title'>{t('auth.register.title')}</h2>

@@ -15,7 +15,7 @@ const UserProfileInfo = () => {
   return (
     <div className='user-profile'>
       <div className='user-profile__avatar'>
-        <img src={getAvatar(user)} alt={user.name} width={88} height={88} />
+        <img src={getAvatar(user)} alt={user.name} width={88} height={88} loading='lazy' />
       </div>
       <div className='user-profile__info'>
         <h2 className='user-profile__name'>{user.name}</h2>

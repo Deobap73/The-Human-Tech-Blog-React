@@ -47,7 +47,12 @@ export const Sponsors = () => {
               rel='noopener noreferrer'
               className='sponsors__item'
               tabIndex={0}>
-              <img src={sponsor.logoUrl} alt={sponsor.name} className='sponsors__logo' />
+              <img
+                src={sponsor.logoUrl}
+                alt={sponsor.name}
+                className='sponsors__logo'
+                loading='lazy'
+              />
               <span className='sponsors__name'>{sponsor.name}</span>
             </a>
           ) : (

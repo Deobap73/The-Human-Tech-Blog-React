@@ -67,7 +67,7 @@ const ChatWindow = ({ conversationId }: { conversationId: string }) => {
       {/* Pencil overlay (hide on tablet/mobile) */}
       {!isTablet && (
         <div className='chat-window__pencil'>
-          <img src={pencilImg} alt='Black pencil decorative' draggable='false' />
+          <img src={pencilImg} alt='Black pencil decorative' draggable='false' loading='lazy' />
         </div>
       )}
       {showBack && (

@@ -149,6 +149,7 @@ export const SinglePostPage = () => {
                 className='single-post-page__avatar'
                 width={48}
                 height={48}
+                loading='lazy'
               />
               <div>
                 <div className='single-post-page__username'>{user.name || 'User'}</div>
@@ -158,11 +159,16 @@ export const SinglePostPage = () => {
               </div>
             </div>
             <BookmarkButton postId={post._id} className='single-post-page__bookmark-button' />
-            <ShareButton url={window.location.href} className='single-post-page__share-button' />
+            <ShareButton className='single-post-page__share-button' />
           </div>
           <div className='single-post-page__header-image'>
             {post.image && (
-              <img src={post.image} alt={translation.title} className='single-post-page__image' />
+              <img
+                src={post.image}
+                alt={translation.title}
+                className='single-post-page__image'
+                loading='lazy'
+              />
             )}
           </div>
         </section>

@@ -92,7 +92,7 @@ const ChatSidebar = ({ onSelect }: ChatSidebarProps) => {
       {/* Sidebar Header */}
       <div className='chat-sidebar__header'>
         <span className='chat-sidebar__avatar'>
-          <img src={getAvatar(user || undefined)} alt='User avatar' />
+          <img src={getAvatar(user || undefined)} alt='User avatar' loading='lazy' />
         </span>
         <span className='chat-sidebar__title'>{t('chat.sidebar.title', 'Chats')}</span>
         {canStartChat && (

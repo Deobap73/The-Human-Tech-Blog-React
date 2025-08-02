@@ -47,7 +47,7 @@ export const LastPost = ({ post, lang }: LastPostProps) => {
         </Link>
       </div>
       <div className='lastPost__image-container'>
-        <img src={imageSrc} alt={translation.title} className='lastPost__image' />
+        <img src={imageSrc} alt={translation.title} className='lastPost__image' loading='lazy' />
       </div>
     </section>
   );

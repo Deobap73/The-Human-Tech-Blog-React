@@ -50,6 +50,7 @@ export const MyFavoritePost = ({ post, lang }: MyFavoritePostProps) => {
         className='myFavoritePost__image'
         src={post.image}
         alt={translation.title || 'No Title Available'}
+        loading='lazy'
       />
       {(() => {
         console.log(`[MyFavoritePost] Image source: ${post.image || 'N/A'}`);

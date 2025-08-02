@@ -13,7 +13,14 @@ const ThemeToggle = () => {
       className='theme-toggle'
       onClick={toggleTheme}
       aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}>
-      <img src={images.moon} alt='Moon' width={14} height={14} className='theme-toggle__icon' />
+      <img
+        src={images.moon}
+        alt='Moon'
+        width={14}
+        height={14}
+        className='theme-toggle__icon'
+        loading='lazy'
+      />
       <div
         className={`theme-toggle__ball ${
           theme === 'dark' ? 'theme-toggle__ball--dark' : 'theme-toggle__ball--light'

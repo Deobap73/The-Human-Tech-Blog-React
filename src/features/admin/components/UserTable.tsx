@@ -45,6 +45,7 @@ const UserTable = ({ users, onUpdated }: Props) => {
                   width={36}
                   height={36}
                   style={{ borderRadius: '50%' }}
+                  loading='lazy'
                 />
               </td>
               <td>{u.name}</td>

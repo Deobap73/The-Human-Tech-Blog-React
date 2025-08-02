@@ -134,7 +134,12 @@ const SelectUserModal = ({
                 aria-disabled={!!loadingSelect}
                 onClick={() => !loadingSelect && handleSelect(user)}
                 onKeyDown={(e) => !loadingSelect && e.key === 'Enter' && handleSelect(user)}>
-                <img src={getAvatar(user)} alt={user.name} className='select-user-modal__avatar' />
+                <img
+                  src={getAvatar(user)}
+                  alt={user.name}
+                  className='select-user-modal__avatar'
+                  loading='lazy'
+                />
                 <span className='select-user-modal__name'>{user.name}</span>
                 <span className='select-user-modal__role'>{user.role}</span>
                 <button

@@ -64,6 +64,7 @@ const Navbar = () => {
           alt='Navbar background'
           className='navbar__background'
           aria-hidden='true'
+          loading='lazy'
         />
       )}
       <div className='navbar__row'>
@@ -75,6 +76,7 @@ const Navbar = () => {
                 alt={t('navbar.logoAlt')}
                 className='navbar__logo-image'
                 draggable={false}
+                loading='lazy'
               />
             </Link>
           </div>
@@ -151,6 +153,7 @@ const Navbar = () => {
                         alt={user.name}
                         className='navbar__user-avatar'
                         draggable={false}
+                        loading='lazy'
                       />
                     ) : (
                       <IoPersonSharp size={28} style={{ verticalAlign: 'middle' }} />

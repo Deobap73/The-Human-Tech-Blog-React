@@ -75,7 +75,11 @@ const MessageViewer = ({ conversationId, messages, setMessages, loading }: Messa
                   }
                   type='button'
                   aria-label={t('chat.attachment.openImg', 'Open image')}>
-                  <img src={(msg as any).fileUrl} alt={(msg as any).fileName || 'attachment'} />
+                  <img
+                    src={(msg as any).fileUrl}
+                    alt={(msg as any).fileName || 'attachment'}
+                    loading='lazy'
+                  />
                   <RiImage2Line size={18} className='chat-message__imgicon' />
                 </button>
               </div>
@@ -127,7 +131,12 @@ const MessageViewer = ({ conversationId, messages, setMessages, loading }: Messa
       {/* Lightbox para imagem */}
       {lightbox && (
         <div className='chat-lightbox' onClick={() => setLightbox(null)} tabIndex={-1}>
-          <img src={lightbox.url} alt={lightbox.alt} className='chat-lightbox__img' />
+          <img
+            src={lightbox.url}
+            alt={lightbox.alt}
+            className='chat-lightbox__img'
+            loading='lazy'
+          />
         </div>
       )}
       <div ref={bottomRef} />

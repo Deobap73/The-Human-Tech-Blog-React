@@ -39,7 +39,12 @@ export const Featured = ({ post, lang }: FeaturedProps) => {
   return (
     <section className='featured'>
       <div className='featured__image-container'>
-        <img src={imageSrc} alt={translation.title || 'No title'} className='featured__image' />
+        <img
+          src={imageSrc}
+          alt={translation.title || 'No title'}
+          className='featured__image'
+          loading='lazy'
+        />
       </div>
       <div className='featured__content'>
         <span className='featured__category'>{firstCategory}</span>

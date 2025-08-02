@@ -1,4 +1,4 @@
-// File: src/features/post/components/ShareButton.tsx
+// src/features/post/components/ShareButton.tsx
 
 import React from 'react';
 import { FiShare2 } from 'react-icons/fi';

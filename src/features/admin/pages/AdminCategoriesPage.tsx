@@ -224,6 +224,7 @@ const AdminCategoriesPage = () => {
                     border: '1px solid #eee',
                     background: '#fff',
                   }}
+                  loading='lazy'
                 />
               )}
             </label>
@@ -257,6 +258,7 @@ const AdminCategoriesPage = () => {
                     alt={tr?.name}
                     className='admin-categories-page__cat-logo'
                     style={{ height: 26, marginRight: 8 }}
+                    loading='lazy'
                   />
                 )}
                 <b>{tr?.name || '[untitled]'}</b>

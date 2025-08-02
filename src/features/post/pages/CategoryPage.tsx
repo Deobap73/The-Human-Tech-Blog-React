@@ -67,6 +67,7 @@ const CategoryPage = () => {
                 alt={name}
                 className='category-page__logo'
                 style={{ height: 40, marginRight: 12 }}
+                loading='lazy'
               />
             )}
             <h2 className='category-page__title'>{name}</h2>

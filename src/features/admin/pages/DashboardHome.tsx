@@ -190,6 +190,7 @@ const DashboardHome = () => {
                   className='dashboard-home__category-logo'
                   height={22}
                   width={22}
+                  loading='lazy'
                 />
               )}
               <span className='dashboard-home__category-name'>{cat.name}</span>
