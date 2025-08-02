@@ -16,9 +16,8 @@ import { NotificationBell } from '../notification/components/NotificationBell';
 import { getNavbarConfig } from './navbarConfig';
 import './styles/Navbar.scss';
 
-// Helper to build language-aware URLs
 const buildUrl = (path: string, lang: string) => {
-  const normalized = path.startsWith('/') ? path.slice(1) : path;
+  const normalized = typeof path === 'string' && path.startsWith('/') ? path.slice(1) : path;
   return `/${lang}/${normalized}`;
 };
 
@@ -34,7 +33,6 @@ const Navbar = () => {
 
   const activeLang = lang || i18n.language.split('-')[0] || 'en';
 
-  // Set compact mode for admin/user pages (height 80px)
   const config = getNavbarConfig(location.pathname);
   const isCompact = !config.background && !config.showTile;
   const navbarClasses = `navbar ${theme === 'dark' ? 'navbar--dark' : 'navbar--light'}${
@@ -52,12 +50,10 @@ const Navbar = () => {
     return location.pathname === route;
   };
 
-  // Close sidebar on navigation
   const handleNavClick = () => setSidebarOpen(false);
 
   return (
     <header className={navbarClasses}>
-      {/* Only render background image if available and not in compact mode */}
       {config.background && !isCompact && (
         <img
           src={config.background}
@@ -159,7 +155,6 @@ const Navbar = () => {
                       <IoPersonSharp size={28} style={{ verticalAlign: 'middle' }} />
                     )}
                   </Link>
-                  {/* Chat icon for logged-in users only */}
                   <Link
                     to={buildUrl('chat', activeLang)}
                     className='navbar__user-chat'
@@ -199,7 +194,6 @@ const Navbar = () => {
           </div>
         </nav>
       </div>
-      {/* Only render tile if present and not in compact mode */}
       {config.showTile && !isCompact && (
         <div className='navbar__tile'>
           <h1 className='navbar__tile-title'>{config.tileTitle ? config.tileTitle(t) : ''}</h1>

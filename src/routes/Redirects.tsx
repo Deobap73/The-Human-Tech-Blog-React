@@ -1,4 +1,4 @@
-// File: src/routes/Redirects.tsx
+// /src/routes/Redirects.tsx
 
 import { Navigate, useLocation } from 'react-router-dom';
 import i18n from 'i18next';
@@ -15,12 +15,11 @@ export const RedirectToBrowserLang = () => {
     localStorage.setItem('i18n_lang', lang);
   }
 
-  // If already prefixed, do nothing
-  if (pathname.startsWith(`/${lang}/`)) {
+  // If already prefixed, do nothing (protect against non-string)
+  if (typeof pathname === 'string' && pathname.startsWith(`/${lang}/`)) {
     return null;
   }
 
-  // Redirect preserving full path and query
   return (
     <Navigate to={`/${lang}${pathname.startsWith('/') ? '' : '/'}${pathname}${search}`} replace />
   );

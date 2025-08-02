@@ -1,6 +1,7 @@
-// src/shared/utils/mediaHelpers.ts
+// /src/shared/utils/mediaHelpers.ts
+
 export function resolveLogoUrl(logo?: string): string {
   if (!logo) return '';
-  if (logo.startsWith('http') || logo.startsWith('/')) return logo;
+  if (typeof logo === 'string' && (logo.startsWith('http') || logo.startsWith('/'))) return logo;
   return `/images/${logo}`;
 }

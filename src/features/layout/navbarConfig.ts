@@ -1,4 +1,5 @@
 // /src/features/layout/navbarConfig.ts
+
 import { TFunction } from 'i18next';
 
 // Import backgrounds using ES modules — this is more robust in Vite/React
@@ -9,31 +10,42 @@ import techShortsPage from '../../assets/techShortsPage.webp';
 import aiPromptPage from '../../assets/aiPromptPage.webp';
 
 export interface NavbarConfig {
-  background?: string; // Path to the image, or undefined to hide
+  background?: string;
   showTile?: boolean;
   tileTitle?: (t: TFunction) => string;
   tileDescription?: (t: TFunction) => string;
-  hideNavbar?: boolean; // <--- Add this new property
+  hideNavbar?: boolean;
+}
+
+// Helper to guarantee t() always returns a string
+function safeT(t: TFunction, key: string, defaultValue?: string): string {
+  let value: string | object;
+  if (defaultValue !== undefined) {
+    value = t(key, { defaultValue });
+  } else {
+    value = t(key);
+  }
+  return typeof value === 'string' ? value : defaultValue ?? '';
 }
 
 export const navbarConfigs: Record<string, NavbarConfig> = {
   '/': {
     background: homePageBg,
     showTile: true,
-    tileTitle: (t) => t('navbar.title.home'),
-    tileDescription: (t) => t('navbar.description.home'),
+    tileTitle: (t) => safeT(t, 'navbar.title.home', 'Home'),
+    tileDescription: (t) => safeT(t, 'navbar.description.home', ''),
   },
   '/about': {
     background: aboutPageBg,
     showTile: true,
-    tileTitle: (t) => t('navbar.title.about'),
-    tileDescription: (t) => t('navbar.description.about'),
+    tileTitle: (t) => safeT(t, 'navbar.title.about', 'About'),
+    tileDescription: (t) => safeT(t, 'navbar.description.about', ''),
   },
   '/contact': {
     background: contactPageBg,
     showTile: true,
-    tileTitle: (t) => t('navbar.title.contact'),
-    tileDescription: (t) => t('navbar.description.contact'),
+    tileTitle: (t) => safeT(t, 'navbar.title.contact', 'Contact'),
+    tileDescription: (t) => safeT(t, 'navbar.description.contact', ''),
   },
   '/shorts': {
     background: techShortsPage,
@@ -59,27 +71,29 @@ export const navbarConfigs: Record<string, NavbarConfig> = {
   '/chat': {
     showTile: false,
     background: undefined,
-    hideNavbar: true, // <--- Set this to true for the chat page
+    hideNavbar: true,
   },
   // Add more routes as needed
 };
 
 export function getNavbarConfig(pathname: string): NavbarConfig {
   // Remove language prefix, e.g., /en/about → /about
-  const path = pathname.replace(/^\/[a-z]{2}(\/|$)/, '/');
+  const path = typeof pathname === 'string' ? pathname.replace(/^\/[a-z]{2}(\/|$)/, '/') : '/';
 
   // 1. Exact match
-  if (navbarConfigs[path]) {
+  if (typeof path === 'string' && navbarConfigs[path]) {
     return navbarConfigs[path];
   }
 
-  // 2. Verifica se está em SinglePostPage: /posts/:slug
-  if (/^\/posts\/[^/]+/.test(path)) {
+  // 2. Single post page: /posts/:slug
+  if (typeof path === 'string' && /^\/posts\/[^/]+/.test(path)) {
     return navbarConfigs['/posts/'];
   }
 
-  // 3. Starts with route
-  const match = Object.keys(navbarConfigs).find((route) => route !== '/' && path.startsWith(route));
+  // 3. Starts with route (protect against non-string)
+  const match = Object.keys(navbarConfigs).find(
+    (route) => route !== '/' && typeof path === 'string' && path.startsWith(route)
+  );
   if (match) {
     return navbarConfigs[match];
   }

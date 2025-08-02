@@ -1,22 +1,21 @@
-// The-Human-Tech-Blog-React/src/shared/context/SocketProvider.tsx
+// File: src/shared/context/SocketProvider.tsx
 
-import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useRef, useState, useMemo, ReactNode } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { io, Socket } from 'socket.io-client';
 import { getAccessToken } from '../utils/authTokenStorage';
-import { SocketContext } from './SocketContext';
-import type { ReactNode } from 'react';
+import { SocketContext, type SocketContextValue } from './SocketContext';
 
 interface SocketProviderProps {
   children: ReactNode;
 }
 
-export const SocketProvider = ({ children }: SocketProviderProps) => {
+export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
+  const { user } = useAuth();
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
   const [reactionUpdates, setReactionUpdates] = useState<any>(null);
-  const { user } = useAuth();
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
@@ -31,9 +30,14 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
       return;
     }
 
-    // Só cria nova conexão se não existir ou se desconectou
     if (!socketRef.current || socketRef.current.disconnected) {
-      const newSocket = io(import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL, {
+      const baseUrl = import.meta.env.VITE_SOCKET_URL
+        ? import.meta.env.VITE_SOCKET_URL
+        : import.meta.env.VITE_API_BASE_URL
+        ? import.meta.env.VITE_API_BASE_URL.replace(/\/api$/, '')
+        : window.location.origin;
+
+      const newSocket: Socket = io(baseUrl, {
         auth: { token },
         withCredentials: true,
         transports: ['websocket', 'polling'],
@@ -70,12 +74,11 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     }
 
     return () => {
-      // Não desconecta o socket global aqui - mantém a conexão ativa
-      // Apenas limpa os listeners específicos se necessário
+      // keep connection alive
     };
   }, [user]);
 
-  const value = useMemo(
+  const value: SocketContextValue = useMemo(
     () => ({
       socket,
       isConnected,
@@ -91,10 +94,13 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
         socket?.emit('chat:leave', conversationId);
       },
       markAsRead: async (id: string) => {
-        // Implementação existente
+        socket?.emit('notification:read', id);
       },
       deleteNotification: async (id: string) => {
-        // Implementação existente
+        socket?.emit('notification:delete', id);
+      },
+      markNotificationAsRead: async (id: string) => {
+        socket?.emit('notification:read', id);
       },
     }),
     [socket, isConnected, notifications, reactionUpdates]
@@ -102,3 +108,5 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
 
   return <SocketContext.Provider value={value}>{children}</SocketContext.Provider>;
 };
+
+export default SocketProvider;

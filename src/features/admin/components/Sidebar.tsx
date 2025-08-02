@@ -1,4 +1,4 @@
-// src/features/admin/components/Sidebar.tsx
+// /src/features/admin/components/Sidebar.tsx
 
 import { useEffect, useState } from 'react';
 import { NavLink, useParams } from 'react-router-dom';
@@ -8,7 +8,7 @@ import api from '../../../shared/utils/axios';
 import { useTranslation } from 'react-i18next';
 
 const buildAdminUrl = (path: string, lang: string) => {
-  const normalized = path.startsWith('/') ? path.slice(1) : path;
+  const normalized = typeof path === 'string' && path.startsWith('/') ? path.slice(1) : path;
   return `/${lang}/admin${normalized ? '/' + normalized : ''}`;
 };
 
