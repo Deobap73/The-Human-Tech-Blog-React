@@ -1,0 +1,79 @@
+//  /src/features/post/styles/InsertTableModal.scss
+.insert-table-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 15, 25, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 1000;
+
+  &__dialog {
+    background: var(--background);
+    color: var(--text);
+    width: 100%;
+    max-width: 420px;
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    outline: none;
+  }
+
+  &__title {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+
+  &__row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 0.75rem;
+
+    &--inline {
+      flex-direction: row;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+
+  &__label {
+    font-weight: 600;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 0.5rem 0.6rem;
+    border: 1px solid var(--border, #357abd);
+    border-radius: 8px;
+    background: var(--background-secondary);
+    color: inherit;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+  }
+
+  &__btn {
+    padding: 0.6rem 0.9rem;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-weight: 600;
+
+    &--cancel {
+      background: transparent;
+      border-color: var(--border, #357abd);
+    }
+
+    &--insert {
+      background: var(--primary, #2995e2);
+      color: #fff;
+    }
+  }
+}

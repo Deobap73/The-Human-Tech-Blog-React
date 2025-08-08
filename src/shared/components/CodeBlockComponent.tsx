@@ -1,25 +1,9 @@
-// src/shared/components/CodeBlockComponent.tsx
+// /src/shared/components/CodeBlockComponent.tsx
 
 import React, { useCallback } from 'react';
 import { NodeViewContent, NodeViewWrapper } from '@tiptap/react';
 import '../../features/post/styles/CodeBlockComponent.scss';
-
-const LANGUAGES = [
-  'bash',
-  'html',
-  'css',
-  'scss',
-  'javascript', // Manter 'javascript' para realce consistente
-  'typescript',
-  'react',
-  'python',
-  'java',
-  'go',
-  'rust',
-  'csharp', // Ou 'c#' dependendo de como sua biblioteca de realce a reconhece
-  'sql',
-  'json',
-];
+import { SUPPORTED_LANGUAGES } from '../../shared/constants/supportedLanguages';
 
 const CodeBlockComponent = ({ node, updateAttributes }: any) => {
   const language = node.attrs.language || 'typescript';
@@ -35,7 +19,7 @@ const CodeBlockComponent = ({ node, updateAttributes }: any) => {
     <NodeViewWrapper className='code-block'>
       <div className='code-block__header'>
         <select className='code-block__select' value={language} onChange={handleChange}>
-          {LANGUAGES.map((lang) => (
+          {SUPPORTED_LANGUAGES.map((lang) => (
             <option key={lang} value={lang}>
               {lang}
             </option>

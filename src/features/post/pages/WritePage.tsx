@@ -1,4 +1,5 @@
-// File: src/features/post/pages/WritePage.tsx
+//  /src/features/post/pages/WritePage.tsx
+
 import { useEffect, useState } from 'react';
 import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -6,6 +7,11 @@ import Image from '@tiptap/extension-image';
 import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
 import LinkExtension from '@tiptap/extension-link';
+import Table from '@tiptap/extension-table';
+import TableRow from '@tiptap/extension-table-row';
+import TableCell from '@tiptap/extension-table-cell';
+import TableHeader from '@tiptap/extension-table-header';
+
 import { CustomCodeBlock } from '../../../shared/extensions/CustomCodeBlock';
 import Toolbar from '../components/EditorToolbar';
 
@@ -23,6 +29,7 @@ import { Category } from '../../../shared/types/Category';
 import { toast } from 'react-hot-toast';
 import '../styles/WritePage.scss';
 import '../styles/CodeBlock.scss';
+import '../styles/EditorTables.scss';
 import EditorWrapper from '../components/EditorWrapper';
 import ScrollToTop from '../../../shared/components/ScrollToTop';
 import TagSelector from '../components/TagSelector';
@@ -40,6 +47,7 @@ const emptyTranslations = {
 
 /**
  * Gather only non-empty translations beyond EN, preserving originals.
+ * Ensures strict typing for the payload.
  */
 function getValidTranslationsForUpdate(
   current: typeof emptyTranslations,
@@ -47,22 +55,24 @@ function getValidTranslationsForUpdate(
 ): { en: { title: string; description: string; content: string } } & Partial<
   typeof emptyTranslations
 > {
-  const result: any = {};
+  const result: Record<string, unknown> = {};
   result.en = current.en;
 
-  for (const lang of LANGUAGES) {
-    if (lang === 'en') continue;
-    const cur = current[lang];
+  for (const lng of LANGUAGES) {
+    if (lng === 'en') continue;
+    const cur = current[lng];
     if (cur.title.trim() || cur.content.trim() || cur.description.trim()) {
-      result[lang] = cur;
+      // keep user-provided non-empty values
+      (result as any)[lng] = cur;
     } else if (
-      original[lang] &&
-      (original[lang].title || original[lang].content || original[lang].description)
+      original[lng] &&
+      (original[lng].title || original[lng].content || original[lng].description)
     ) {
-      result[lang] = original[lang];
+      // fallback to original persisted values if any
+      (result as any)[lng] = original[lng];
     }
   }
-  return result;
+  return result as any;
 }
 
 const WritePage = () => {
@@ -81,14 +91,21 @@ const WritePage = () => {
   const [cover, setCover] = useState<File | null>(null);
   const [coverUrl, setCoverUrl] = useState<string>('');
   const [isQuickPost, setIsQuickPost] = useState<boolean>(false);
-  const [isAiPrompt, setIsAiPrompt] = useState<boolean>(false); // ← AI Prompt toggle state
-  const [error, setError] = useState('');
-  const [saving, setSaving] = useState(false);
-  const [postLoaded, setPostLoaded] = useState(false);
+  const [isAiPrompt, setIsAiPrompt] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  const [saving, setSaving] = useState<boolean>(false);
+  const [postLoaded, setPostLoaded] = useState<boolean>(false);
 
   // Initialize Tiptap editors for each language
-  const editors = LANGUAGES.reduce((acc, lang) => {
-    acc[lang] = useEditor({
+  const editors = LANGUAGES.reduce((acc, lng) => {
+    acc[lng] = useEditor({
+      /**
+       * IMPORTANT:
+       * Table support is registered here via Tiptap official table extensions.
+       * - resizable columns
+       * - BEM classes via HTMLAttributes for consistent theming
+       * - Default Tab/Shift+Tab navigation across cells (provided by ProseMirror-tables)
+       */
       extensions: [
         StarterKit.configure({ codeBlock: false }),
         Underline,
@@ -99,9 +116,30 @@ const WritePage = () => {
           defaultAlignment: 'left',
         }),
         CustomCodeBlock,
-        LinkExtension,
+        LinkExtension.configure({
+          openOnClick: false,
+          autolink: true,
+          protocols: ['http', 'https', 'mailto'],
+        }),
+        Table.configure({
+          resizable: true,
+          /**
+           * Add a BEM class to the <table> node.
+           * This allows us to style it responsively with our SCSS.
+           */
+          HTMLAttributes: { class: 'thtb-table' },
+        }),
+        TableRow.configure({
+          HTMLAttributes: { class: 'thtb-table__row' },
+        }),
+        TableHeader.configure({
+          HTMLAttributes: { class: 'thtb-table__header' },
+        }),
+        TableCell.configure({
+          HTMLAttributes: { class: 'thtb-table__cell' },
+        }),
       ],
-      content: translations[lang].content,
+      content: translations[lng].content,
     });
     return acc;
   }, {} as Record<Language, ReturnType<typeof useEditor>>);
@@ -138,7 +176,7 @@ const WritePage = () => {
         setCoverUrl(post.image || '');
         setStatus(post.status);
         setIsQuickPost(post.isQuickPost || false);
-        setIsAiPrompt(post.isAiPrompt || false); // ← load existing flag
+        setIsAiPrompt(post.isAiPrompt || false);
         setPostLoaded(true);
       })
       .catch(() => toast.error('Failed to load post'));
@@ -146,14 +184,14 @@ const WritePage = () => {
 
   // Sync editor content into translations state
   useEffect(() => {
-    LANGUAGES.forEach((lang) => {
-      editors[lang]?.commands.setContent(translations[lang].content || '');
+    LANGUAGES.forEach((lng) => {
+      editors[lng]?.commands.setContent(translations[lng].content || '');
     });
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [translations]);
 
   // Switch language tab and capture current editor HTML
-  const handleTabChange = (lang: Language) => {
+  const handleTabChange = (lng: Language) => {
     const editor = editors[currentLang];
     if (editor) {
       setTranslations((prev) => ({
@@ -161,7 +199,7 @@ const WritePage = () => {
         [currentLang]: { ...prev[currentLang], content: editor.getHTML() },
       }));
     }
-    setCurrentLang(lang);
+    setCurrentLang(lng);
   };
 
   const handleInput = (field: 'title' | 'description', value: string) => {
@@ -184,13 +222,14 @@ const WritePage = () => {
       const res = await uploadPostImage(file);
       setCoverUrl(res.imageUrl);
       toast.success('Image uploaded!');
-    } catch {
+    } catch (err) {
+      console.error(err);
       toast.error('Failed to upload image');
     }
   };
 
   // Form submission
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSaving(true);
     setError('');
@@ -231,7 +270,7 @@ const WritePage = () => {
       categories,
       image: coverUrl,
       isQuickPost,
-      isAiPrompt, // ← include flag in payload
+      isAiPrompt,
       status,
     };
 
@@ -244,7 +283,8 @@ const WritePage = () => {
         toast.success('Post created!');
       }
       navigate(`/${activeLang}/admin/posts`);
-    } catch {
+    } catch (err) {
+      console.error(err);
       setError('Failed to submit post');
       toast.error('Failed to submit post');
     } finally {
@@ -258,15 +298,15 @@ const WritePage = () => {
       <div className='write-page'>
         <h2>{id ? 'Edit Post' : 'Create Post'}</h2>
         <div className='write-page__tabs'>
-          {LANGUAGES.map((lang) => (
+          {LANGUAGES.map((lng) => (
             <button
-              key={lang}
+              key={lng}
               type='button'
               className={
-                'write-page__tab' + (currentLang === lang ? ' write-page__tab--active' : '')
+                'write-page__tab' + (currentLang === lng ? ' write-page__tab--active' : '')
               }
-              onClick={() => handleTabChange(lang)}>
-              {lang.toUpperCase()}
+              onClick={() => handleTabChange(lng)}>
+              {lng.toUpperCase()}
             </button>
           ))}
         </div>
@@ -310,7 +350,7 @@ const WritePage = () => {
             accept='image/*'
             style={{ display: 'none' }}
             onChange={async (e) => {
-              const file = e.target.files?.[0];
+              const file = e.target.files?.[0] ?? null;
               if (file) {
                 setCover(file);
                 await handleImageUpload(file);

@@ -1,11 +1,11 @@
-// src/features/post/styles/EditorToolbar.scss
-
+// Path: /src/features/post/styles/EditorToolbar.scss
 .toolbar {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   width: 100%;
   gap: var(--gap-sm);
+
   .editor-toolbar__btn {
     display: flex;
     align-items: center;
@@ -48,10 +48,28 @@
       opacity: 0.7;
       transform: none;
     }
+
+    &--active {
+      outline: 2px solid var(--primary, #2995e2);
+      outline-offset: 2px;
+    }
   }
 
   .editor-toolbar__action--draft,
   .editor-toolbar__action--publish {
     width: 10rem;
+  }
+
+  /* Table group container for semantic grouping and future layout tweaks */
+  .editor-toolbar__group {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+
+    &--table {
+      padding-left: 0.25rem;
+      margin-left: 0.25rem;
+      border-left: 1px dashed rgba(41, 149, 226, 0.35);
+    }
   }
 }
