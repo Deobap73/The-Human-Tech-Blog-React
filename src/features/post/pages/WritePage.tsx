@@ -1,5 +1,4 @@
-//  /src/features/post/pages/WritePage.tsx
-
+// Path: /src/features/post/pages/WritePage.tsx
 import { useEffect, useState } from 'react';
 import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -62,13 +61,11 @@ function getValidTranslationsForUpdate(
     if (lng === 'en') continue;
     const cur = current[lng];
     if (cur.title.trim() || cur.content.trim() || cur.description.trim()) {
-      // keep user-provided non-empty values
       (result as any)[lng] = cur;
     } else if (
       original[lng] &&
       (original[lng].title || original[lng].content || original[lng].description)
     ) {
-      // fallback to original persisted values if any
       (result as any)[lng] = original[lng];
     }
   }
@@ -99,13 +96,6 @@ const WritePage = () => {
   // Initialize Tiptap editors for each language
   const editors = LANGUAGES.reduce((acc, lng) => {
     acc[lng] = useEditor({
-      /**
-       * IMPORTANT:
-       * Table support is registered here via Tiptap official table extensions.
-       * - resizable columns
-       * - BEM classes via HTMLAttributes for consistent theming
-       * - Default Tab/Shift+Tab navigation across cells (provided by ProseMirror-tables)
-       */
       extensions: [
         StarterKit.configure({ codeBlock: false }),
         Underline,
@@ -123,10 +113,6 @@ const WritePage = () => {
         }),
         Table.configure({
           resizable: true,
-          /**
-           * Add a BEM class to the <table> node.
-           * This allows us to style it responsively with our SCSS.
-           */
           HTMLAttributes: { class: 'thtb-table' },
         }),
         TableRow.configure({
@@ -172,7 +158,7 @@ const WritePage = () => {
           es: post.translations.es || emptyTranslations.es,
         });
         setTags(post.tags || []);
-        setCategories(post.categories || []);
+        setCategories(post.categories || []); // prefill selection
         setCoverUrl(post.image || '');
         setStatus(post.status);
         setIsQuickPost(post.isQuickPost || false);
@@ -212,6 +198,7 @@ const WritePage = () => {
   const handleTags = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setTags(Array.from(e.target.selectedOptions).map((o) => o.value));
   };
+
   const handleCategories = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCategories(Array.from(e.target.selectedOptions).map((o) => o.value));
   };
@@ -341,7 +328,7 @@ const WritePage = () => {
             </div>
           )}
 
-          <label htmlFor='cover-upload' className='write-page__upload-btn'>
+          <label className='write-page__label' htmlFor='cover-upload'>
             Upload cover
           </label>
           <input
@@ -374,10 +361,10 @@ const WritePage = () => {
             Categories:
             <select
               multiple
-              value={postLoaded ? categories : []}
+              value={categories}
               onChange={handleCategories}
               className='write-page__select'>
-              {availableCategories.map((cat) => (
+              {availableCategories.map((cat: Category) => (
                 <option key={cat._id} value={cat._id}>
                   {cat.translation?.name || '[no name]'}
                 </option>
