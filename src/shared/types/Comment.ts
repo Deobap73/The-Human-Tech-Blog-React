@@ -5,14 +5,12 @@ export interface ModerationComment {
   text: string;
   status: 'pending' | 'approved' | 'rejected';
   createdAt: string;
-  userId: {
-    _id: string;
-    name: string;
-    email: string;
-  } | null;
-  postId: {
-    _id: string;
-    title: string;
-    slug?: string;
-  } | null;
+  userId: { _id: string; name: string; email: string } | null;
+  userName?: string | null;
+
+  guestName?: string | null;
+  guestEmail?: string | null;
+  guestWebsite?: string | null;
+
+  postId: { _id: string; title: string; slug?: string } | null;
 }
