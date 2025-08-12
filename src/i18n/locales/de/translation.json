@@ -323,5 +323,30 @@
   "quickPostsPage": {
     "title": "Tech Shorts",
     "intro": "Kurze Tech-Tipps, Ideen und Entdeckungen für beschäftigte Entwickler."
+  },
+
+  "comments": {
+    "title": "Kommentare",
+    "fetchError": "Kommentare konnten nicht geladen werden",
+    "deleteConfirm": "Diesen Kommentar löschen?",
+    "deleteSuccess": "Kommentar gelöscht",
+    "deleteError": "Kommentar konnte nicht gelöscht werden",
+    "deleteButton": "Löschen",
+    "empty": "Noch keine Kommentare.",
+    "guest": {
+      "namePlaceholder": "Name",
+      "emailPlaceholder": "Optionale E-Mail",
+      "websitePlaceholder": "Optionale Website",
+      "consentLabel": "Ich stimme der Speicherung dieser Daten zur Moderation zu"
+    },
+    "form": {
+      "textareaPlaceholder": "Schreibe deinen Kommentar",
+      "submit": "Senden",
+      "submitting": "Wird gesendet...",
+      "waitingCaptchaTitle": "Verifizierung wird abgerufen…",
+      "hint": "Gäste-Kommentare bleiben bis zur Freigabe ausstehend.",
+      "submitSuccess": "Kommentar gesendet. Bitte auf die Moderation warten.",
+      "sendErrorFallback": "Kommentar konnte nicht gesendet werden"
+    }
   }
 }

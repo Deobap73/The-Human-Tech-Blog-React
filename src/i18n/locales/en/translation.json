@@ -352,5 +352,30 @@
   "quickPostsPage": {
     "title": "Tech Shorts",
     "intro": "Short tech tips, ideas and discoveries for busy devs."
+  },
+
+  "comments": {
+    "title": "Comments",
+    "fetchError": "Failed to fetch comments",
+    "deleteConfirm": "Delete this comment?",
+    "deleteSuccess": "Comment deleted",
+    "deleteError": "Failed to delete comment",
+    "deleteButton": "Delete",
+    "empty": "No comments yet.",
+    "guest": {
+      "namePlaceholder": "Name",
+      "emailPlaceholder": "Optional email",
+      "websitePlaceholder": "Optional website",
+      "consentLabel": "I accept to store this data for moderation"
+    },
+    "form": {
+      "textareaPlaceholder": "Write your comment",
+      "submit": "Send",
+      "submitting": "Sending...",
+      "waitingCaptchaTitle": "Getting verification…",
+      "hint": "Guest comments are pending until approval.",
+      "submitSuccess": "Comment sent. Please wait for moderation.",
+      "sendErrorFallback": "Failed to send comment"
+    }
   }
 }

@@ -323,5 +323,30 @@
   "quickPostsPage": {
     "title": "Tech Shorts",
     "intro": "Consejos, ideas y descubrimientos tecnológicos cortos para desarrolladores ocupados."
+  },
+
+  "comments": {
+    "title": "Comentarios",
+    "fetchError": "Error al obtener comentarios",
+    "deleteConfirm": "¿Eliminar este comentario?",
+    "deleteSuccess": "Comentario eliminado",
+    "deleteError": "Error al eliminar el comentario",
+    "deleteButton": "Eliminar",
+    "empty": "Todavía no hay comentarios.",
+    "guest": {
+      "namePlaceholder": "Nombre",
+      "emailPlaceholder": "Email opcional",
+      "websitePlaceholder": "Web opcional",
+      "consentLabel": "Acepto guardar estos datos para moderación"
+    },
+    "form": {
+      "textareaPlaceholder": "Escribe tu comentario",
+      "submit": "Enviar",
+      "submitting": "Enviando...",
+      "waitingCaptchaTitle": "Obteniendo verificación…",
+      "hint": "Los comentarios de invitados quedan pendientes hasta su aprobación.",
+      "submitSuccess": "Comentario enviado. Espera la moderación.",
+      "sendErrorFallback": "Error al enviar el comentario"
+    }
   }
 }
