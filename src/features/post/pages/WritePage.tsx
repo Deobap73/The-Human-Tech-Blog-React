@@ -328,7 +328,7 @@ const WritePage = () => {
             </div>
           )}
 
-          <label className='write-page__label' htmlFor='cover-upload'>
+          <label className='write-page__upload-btn' htmlFor='cover-upload'>
             Upload cover
           </label>
           <input
