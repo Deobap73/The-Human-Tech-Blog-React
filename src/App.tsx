@@ -1,3 +1,4 @@
+// src/App.tsx
 import { useEffect } from 'react';
 import { useAuth } from './shared/hooks/useAuth';
 import { setAccessToken } from './shared/utils/authTokenStorage';
@@ -8,16 +9,27 @@ import NotAuthorizedPage from './pages/NotAuthorizedPage';
 import { useTranslation } from 'react-i18next';
 import NewsletterModal from './features/notification/newsletter/components/NewsletterModal';
 
-// ✅ adiciona isto
+// Google Analytics helpers
 import { useAnalytics } from './hooks/useAnalytics';
+import { initGA } from './utils/analytics';
 
+/**
+ * App entry point: Handles global loading state and main routes.
+ * Note: Home and public pages are always accessible (not blocked by auth).
+ */
 function App() {
   const { user, loading } = useAuth();
   const { i18n } = useTranslation();
 
-  // ✅ ativa o hook de GA (tem de estar dentro de um Router; no Vite, o BrowserRouter costuma estar em main.tsx)
+  // Fire the first GA4 config on initial mount
+  useEffect(() => {
+    initGA();
+  }, []);
+
+  // Track pageviews on SPA navigation
   useAnalytics();
 
+  // OAuth2 patch: On first load, check for ?token=... in the URL (after OAuth login)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get('token');
@@ -33,13 +45,15 @@ function App() {
     }
   }, []);
 
+  // Guarantee CSRF token on app start
   useEffect(() => {
     ensureCsrfToken();
   }, []);
 
+  // Language detection fallback on first visit
   useEffect(() => {
     const storedLang = localStorage.getItem('i18n_lang');
-    const browserLang = navigator.language.split('-')[0];
+    const browserLang = navigator.language.split('-')[0]; // ex: 'pt', 'de', etc.
     const supported = ['en', 'pt', 'de', 'es'];
 
     if (!storedLang && supported.includes(browserLang)) {
