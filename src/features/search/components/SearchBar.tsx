@@ -1,70 +1,100 @@
-// The-Human-Tech-Blog-React/src/features/search/components/SearchBar.tsx
+// src/features/search/components/SearchBar.tsx
+'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { GoSearch } from 'react-icons/go';
 import { useTranslation } from 'react-i18next';
 import '../styles/SearchBar.scss';
 
 const SearchBar = () => {
-  const [query, setQuery] = useState('');
-  const [isInputOpen, setIsInputOpen] = useState(false);
+  // Local UI state
+  const [query, setQuery] = useState<string>('');
+  const [isInputOpen, setIsInputOpen] = useState<boolean>(false);
+
+  // Router + i18n
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const params = useParams<{ lang?: string }>();
+  const { t, i18n } = useTranslation();
 
-  const searchBarRef = useRef<HTMLDivElement>(null); // Ref for the main search bar div
+  // Derive current lang from URL param (preferred), otherwise from i18n, fallback 'en'
+  const currentLang: string = (params.lang || i18n.language || 'en').split('-')[0];
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault(); // Prevent default form submission behavior
+  // Ref for the main search bar container
+  const searchBarRef = useRef<HTMLDivElement>(null);
 
-    if (query.trim()) {
-      // Only navigate if there's a valid query
-      navigate(`/search?q=${encodeURIComponent(query)}`);
+  /**
+   * Handles submit of the search form.
+   * Always closes the input and clears query after submit click,
+   * regardless of whether a search was performed.
+   */
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+
+    const trimmed = query.trim();
+    if (trimmed.length > 0) {
+      // IMPORTANT: respect multilanguage routes -> '/:lang/search?q=...'
+      navigate(`/${encodeURIComponent(currentLang)}/search?q=${encodeURIComponent(trimmed)}`);
     }
 
-    // ALWAYS close the input and clear the query after the submit button is clicked,
-    // regardless of whether a search was performed or if the input was empty.
+    // Reset UI state after handling submit
     setQuery('');
     setIsInputOpen(false);
   };
 
-  const toggleInput = () => {
-    setIsInputOpen((prev) => !prev);
-    if (isInputOpen) {
-      // If it was open and is now closing
-      setQuery(''); // Clear the query when explicitly closing
-    }
+  /**
+   * Toggles the visibility of the input.
+   * When explicitly closing, we clear the current query.
+   */
+  const toggleInput = (): void => {
+    setIsInputOpen((prev) => {
+      if (prev === true) {
+        setQuery('');
+      }
+      return !prev;
+    });
   };
 
-  // Effect to handle clicks outside the search bar
+  /**
+   * Close the input if user clicks outside of the searchBar container.
+   * Excludes clicks on the main GoSearch icon.
+   */
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      // If the search bar is open AND the click is outside the searchBarRef element
-      // AND the click target is NOT the initial GoSearch icon
-      if (
-        isInputOpen &&
-        searchBarRef.current &&
-        !searchBarRef.current.contains(event.target as Node) &&
-        !(event.target instanceof SVGElement && event.target.closest('.search-bar__icon')) // Exclude the main icon click itself
-      ) {
-        setIsInputOpen(false); // Close the input
-        setQuery(''); // Clear the query
+    const handleClickOutside = (event: MouseEvent): void => {
+      if (!isInputOpen) return;
+
+      const container = searchBarRef.current;
+      const target = event.target as Node | null;
+
+      const clickedMainIcon = target instanceof SVGElement && !!target.closest('.search-bar__icon');
+
+      if (container && target && !container.contains(target) && !clickedMainIcon) {
+        setIsInputOpen(false);
+        setQuery('');
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isInputOpen]); // Re-run effect when isInputOpen changes
+  }, [isInputOpen]);
 
   return (
-    <div className={`search-bar ${isInputOpen ? 'search-bar--open' : ''}`} ref={searchBarRef}>
-      {/* Ícone de lupa que alterna a visibilidade do input */}
-      <GoSearch className='search-bar__icon' onClick={toggleInput} size={20} />
+    <div
+      className={`search-bar ${isInputOpen ? 'search-bar--open' : ''}`}
+      ref={searchBarRef}
+      role='search'
+      aria-label={t('searchBar.ariaLabel', { defaultValue: 'Site search' })}>
+      {/* Magnifier icon toggles input visibility */}
+      <GoSearch
+        className='search-bar__icon'
+        onClick={toggleInput}
+        size={20}
+        aria-label={t('searchBar.open', { defaultValue: 'Open search' })}
+      />
 
-      {/* Formulário com input e botão que aparece/desaparece */}
+      {/* Collapsible search form */}
       <form className='search-bar__form' onSubmit={handleSubmit}>
         <input
           className='search-bar__input'
@@ -72,10 +102,13 @@ const SearchBar = () => {
           placeholder={t('searchBar.placeholder')}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          autoFocus={isInputOpen} // Auto-focus when it opens
+          autoFocus={isInputOpen}
+          aria-label={t('searchBar.input', { defaultValue: 'Search query' })}
         />
-        {/* Submit button with GoSearch icon */}
-        <button className='search-bar__icon' type='submit'>
+        <button
+          className='search-bar__icon'
+          type='submit'
+          aria-label={t('searchBar.submit', { defaultValue: 'Search' })}>
           <GoSearch size={20} />
         </button>
       </form>

@@ -1,4 +1,4 @@
-/* The-Human-Tech-Blog-React/src/features/search/styles/SearchResultsPage.scss */
+/* src/features/search/styles/SearchResultsPage.scss */
 
 .search-results {
   margin-top: 2rem;
@@ -8,11 +8,21 @@
     font-size: 1.5rem;
     color: #222;
   }
+
+  // Neutral states
   &__empty,
   &__loading,
   &__no-results {
     color: #888;
     text-align: center;
     margin-top: 2rem;
+  }
+
+  // Error state: higher contrast for accessibility and quick visual feedback
+  &__error {
+    color: #d93025; // accessible red tone
+    text-align: center;
+    margin-top: 2rem;
+    font-weight: 600;
   }
 }
