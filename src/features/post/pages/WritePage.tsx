@@ -1,4 +1,4 @@
-// Path: /src/features/post/pages/WritePage.tsx
+// src/features/post/pages/WritePage.tsx
 import { useEffect, useState } from 'react';
 import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -10,6 +10,9 @@ import Table from '@tiptap/extension-table';
 import TableRow from '@tiptap/extension-table-row';
 import TableCell from '@tiptap/extension-table-cell';
 import TableHeader from '@tiptap/extension-table-header';
+// NEW: color tooling
+import TextStyle from '@tiptap/extension-text-style';
+import Color from '@tiptap/extension-color';
 
 import { CustomCodeBlock } from '../../../shared/extensions/CustomCodeBlock';
 import Toolbar from '../components/EditorToolbar';
@@ -93,7 +96,10 @@ const WritePage = () => {
   const [saving, setSaving] = useState<boolean>(false);
   const [postLoaded, setPostLoaded] = useState<boolean>(false);
 
-  // Initialize Tiptap editors for each language
+  /**
+   * Initialize a TipTap editor per language.
+   * NEW: Add TextStyle + Color to support text color formatting.
+   */
   const editors = LANGUAGES.reduce((acc, lng) => {
     acc[lng] = useEditor({
       extensions: [
@@ -105,6 +111,9 @@ const WritePage = () => {
           alignments: ['left', 'center', 'right', 'justify'],
           defaultAlignment: 'left',
         }),
+        // Color requires TextStyle mark
+        TextStyle,
+        Color,
         CustomCodeBlock,
         LinkExtension.configure({
           openOnClick: false,
@@ -177,7 +186,7 @@ const WritePage = () => {
   }, [translations]);
 
   // Switch language tab and capture current editor HTML
-  const handleTabChange = (lng: Language) => {
+  const handleTabChange = (lng: Language): void => {
     const editor = editors[currentLang];
     if (editor) {
       setTranslations((prev) => ({
@@ -188,23 +197,23 @@ const WritePage = () => {
     setCurrentLang(lng);
   };
 
-  const handleInput = (field: 'title' | 'description', value: string) => {
+  const handleInput = (field: 'title' | 'description', value: string): void => {
     setTranslations((prev) => ({
       ...prev,
       [currentLang]: { ...prev[currentLang], [field]: value },
     }));
   };
 
-  const handleTags = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleTags = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     setTags(Array.from(e.target.selectedOptions).map((o) => o.value));
   };
 
-  const handleCategories = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleCategories = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     setCategories(Array.from(e.target.selectedOptions).map((o) => o.value));
   };
 
   // Upload cover image
-  const handleImageUpload = async (file: File) => {
+  const handleImageUpload = async (file: File): Promise<void> => {
     try {
       const res = await uploadPostImage(file);
       setCoverUrl(res.imageUrl);
@@ -216,7 +225,7 @@ const WritePage = () => {
   };
 
   // Form submission
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setSaving(true);
     setError('');

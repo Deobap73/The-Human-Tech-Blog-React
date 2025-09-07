@@ -1,12 +1,11 @@
-// /src/features/post/components/EditorToolbar.tsx
+// Path: /src/features/post/components/EditorToolbar.tsx
 import { useState } from 'react';
 import { Editor } from '@tiptap/react';
 import {
   Bold,
   Italic,
-  Underline,
+  Underline as UnderlineIcon,
   Strikethrough,
-  Heading,
   List,
   ListOrdered,
   Undo2,
@@ -28,6 +27,7 @@ import {
   PlusSquare,
 } from 'lucide-react';
 import InsertTableModal from './InsertTableModal';
+import ColorPicker from './ColorPicker';
 import '../styles/EditorToolbar.scss';
 
 interface EditorToolbarProps {
@@ -37,7 +37,7 @@ interface EditorToolbarProps {
 }
 
 /**
- * Editor toolbar with table actions.
+ * Editor toolbar with formatting, color, and table actions.
  * All actions are wrapped in chain().focus() to ensure correct editor state handling.
  */
 const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
@@ -45,7 +45,7 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
 
   if (!editor) return null;
 
-  const openLinkDialog = () => {
+  const openLinkDialog = (): void => {
     const previousUrl = editor.getAttributes('link').href as string | undefined;
     const url = window.prompt('Enter URL', previousUrl || '');
     if (url === null) return;
@@ -58,7 +58,7 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
 
   return (
     <div className='toolbar'>
-      {/* Formatting */}
+      {/* --- INLINE FORMATTING ------------------------------------------- */}
       <button
         type='button'
         className={`editor-toolbar__btn${
@@ -84,7 +84,7 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
         }`}
         aria-label='Underline'
         onClick={() => editor.chain().focus().toggleUnderline().run()}>
-        <Underline size={16} />
+        <UnderlineIcon size={16} />
       </button>
       <button
         type='button'
@@ -96,7 +96,10 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
         <Strikethrough size={16} />
       </button>
 
-      {/* Headings */}
+      {/* --- COLOR PICKER (uniform button) ------------------------------- */}
+      <ColorPicker editor={editor} />
+
+      {/* --- HEADINGS (H1..H6 textual buttons) --------------------------- */}
       {([1, 2, 3, 4, 5, 6] as const).map((level) => (
         <button
           key={level}
@@ -110,7 +113,7 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
         </button>
       ))}
 
-      {/* Lists */}
+      {/* --- LISTS -------------------------------------------------------- */}
       <button
         type='button'
         className={`editor-toolbar__btn${
@@ -130,7 +133,7 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
         <ListOrdered size={16} />
       </button>
 
-      {/* Alignment */}
+      {/* --- ALIGNMENT ---------------------------------------------------- */}
       {(['left', 'center', 'right', 'justify'] as const).map((align) => (
         <button
           key={align}
@@ -151,7 +154,7 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
         </button>
       ))}
 
-      {/* Code block */}
+      {/* --- CODE --------------------------------------------------------- */}
       <button
         type='button'
         className={`editor-toolbar__btn${
@@ -162,7 +165,6 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
         <Code2 size={16} />
       </button>
 
-      {/* Inline Code */}
       <button
         type='button'
         className={`editor-toolbar__btn${
@@ -173,7 +175,7 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
         <Code size={16} />
       </button>
 
-      {/* Undo / Redo */}
+      {/* --- UNDO / REDO -------------------------------------------------- */}
       <button
         type='button'
         className='editor-toolbar__btn'
@@ -189,7 +191,7 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
         <Redo2 size={16} />
       </button>
 
-      {/* Link */}
+      {/* --- LINKS -------------------------------------------------------- */}
       <button
         type='button'
         className={`editor-toolbar__btn${
@@ -199,8 +201,6 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
         onClick={openLinkDialog}>
         <LinkIcon size={16} />
       </button>
-
-      {/* Remove Link */}
       <button
         type='button'
         className='editor-toolbar__btn'
@@ -209,7 +209,7 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
         <Unlink size={16} />
       </button>
 
-      {/* --- TABLE GROUP --------------------------------------------------- */}
+      {/* --- TABLE GROUP -------------------------------------------------- */}
       <div className='editor-toolbar__group editor-toolbar__group--table'>
         {/* Insert Table (opens modal) */}
         <button
@@ -312,9 +312,8 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
           <Trash2 size={16} />
         </button>
       </div>
-      {/* --- END TABLE GROUP ---------------------------------------------- */}
 
-      {/* Actions */}
+      {/* --- ACTIONS ------------------------------------------------------ */}
       <div className='toolbar'>
         {onSaveDraft && (
           <button

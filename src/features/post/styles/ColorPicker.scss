@@ -1,0 +1,79 @@
+/* src/features/post/styles/ColorPicker.scss */
+
+.color-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  &__glyph {
+    font-weight: 700;
+    line-height: 1;
+    font-size: 14px;
+  }
+
+  &__indicator {
+    width: 14px;
+    height: 4px;
+    border-radius: 2px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+  }
+
+  &__panel {
+    position: absolute; // positioned via inline style (portal)
+    z-index: 1000;
+    min-width: 220px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb; // gray-200
+    border-radius: 8px;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.12);
+    padding: 10px;
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: repeat(9, 20px);
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  &__swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 1px solid #e5e7eb;
+    cursor: pointer;
+
+    &--active {
+      outline: 2px solid #3b82f6; // blue-500
+      outline-offset: 2px;
+    }
+  }
+
+  &__custom {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__label {
+    font-size: 12px;
+    color: #6b7280; // gray-500
+  }
+
+  &__input {
+    width: 36px;
+    height: 28px;
+    padding: 0;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+  }
+
+  &__apply,
+  &__clear {
+    font-size: 12px;
+    padding: 6px 8px;
+    border-radius: 6px;
+  }
+}
