@@ -1,4 +1,4 @@
-// File: /src/routes/PublicRoutes.tsx
+// /src/routes/PublicRoutes.tsx
 
 import { Routes, Route } from 'react-router-dom';
 import SitemapProxyRoutes from './SitemapProxyRoutes';
@@ -25,6 +25,10 @@ import NewsletterConfirmPage from '../features/notification/newsletter/pages/New
 import NewsletterUnsubscribePage from '../features/notification/newsletter/pages/NewsletterUnsubscribePage';
 import AiPromptsPage from '../features/aiPrompts/pages/AiPromptsPage';
 
+// ATS Generator Page (will be created in next step)
+
+/* import AtsGeneratorPage from '../features/ats/pages/AtsGeneratorPage'; */
+
 const NotFoundPage = () => (
   <div style={{ padding: '2rem', textAlign: 'center' }}>
     <h1>404 - Page Not Found</h1>
@@ -33,7 +37,7 @@ const NotFoundPage = () => (
 
 const PublicRoutes = () => (
   <Routes>
-    {/* forward the route request to the backend to be read by Google Search Console */}
+    {/* Forward sitemap routes to the backend for Google Search Console */}
     <Route path='/sitemap-posts.xml' element={<SitemapProxyRoutes />} />
     <Route path='/sitemap-quickposts.xml' element={<SitemapProxyRoutes />} />
     <Route path='/sitemap-prompts.xml' element={<SitemapProxyRoutes />} />
@@ -46,12 +50,14 @@ const PublicRoutes = () => (
     <Route path='/admin/*' element={<RedirectToBrowserLang />} />
     <Route path='/posts/:slug' element={<RedirectToBrowserLang />} />
 
-    {/* NEW: Support short URLs without lang prefix */}
+    {/* Support short URLs without lang prefix (redirects to browser language) */}
     <Route path='about' element={<RedirectToBrowserLang />} />
     <Route path='contact' element={<RedirectToBrowserLang />} />
     <Route path='posts/:slug' element={<RedirectToBrowserLang />} />
     <Route path='/shorts' element={<RedirectToBrowserLang />} />
     <Route path='/aiprompts' element={<RedirectToBrowserLang />} />
+    {/* NEW: short URL for ATS generator */}
+    <Route path='/ats' element={<RedirectToBrowserLang />} />
 
     {/* All multilanguage content inside /:lang */}
     <Route path='/:lang' element={<Layout />}>
@@ -74,6 +80,8 @@ const PublicRoutes = () => (
       <Route path='not-authorized' element={<NotAuthorizedPage />} />
       <Route path='newsletter/confirm/:token' element={<NewsletterConfirmPage />} />
       <Route path='newsletter/unsubscribe/:token' element={<NewsletterUnsubscribePage />} />
+
+      {/* Protected chat area */}
       <Route
         path='chat/*'
         element={
@@ -82,6 +90,11 @@ const PublicRoutes = () => (
           </PrivateRoute>
         }
       />
+
+      {/* ATS Generator route (multilingual path) */}
+      {/*   <Route path="ats" element={<AtsGeneratorPage />} /> */}
+
+      {/* 404 inside /:lang */}
       <Route path='*' element={<NotFoundPage />} />
     </Route>
 

@@ -1,0 +1,50 @@
+/* /src/features/ats/styles/GeneratorOptions.scss */
+
+.gen-options {
+  margin-top: var(--margin-base);
+
+  &__title {
+    font-size: var(--heading-h6);
+    margin: 0 0 var(--margin-sm) 0;
+    color: var(--text-color);
+    letter-spacing: var(--letter-spacing-small);
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: var(--gap-sm);
+    align-items: center;
+    margin-bottom: var(--margin-xs);
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+      align-items: stretch;
+    }
+  }
+
+  &__label {
+    font-size: var(--font-size-base);
+    color: var(--text-color-secondary);
+  }
+
+  &__select,
+  &__input {
+    width: 100%;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: var(--background-tertiary);
+    color: var(--text-color);
+    padding: 0.55rem 0.7rem;
+    outline: none;
+    transition: box-shadow 0.2s, border-color 0.2s;
+
+    &:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(29, 161, 242, 0.2);
+    }
+    &::placeholder {
+      color: var(--text-color-placeholder);
+    }
+  }
+}
