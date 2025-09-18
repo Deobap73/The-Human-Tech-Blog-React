@@ -7,12 +7,12 @@ import '../styles/CardList.scss';
 
 interface CardListProps {
   posts: Post[];
-  lang: string; // <-- Add lang here
+  lang: string;
 }
 
 const CardList: React.FC<CardListProps> = ({ posts, lang }) => {
-  if (!posts.length) {
-    return <p className='empty-message'>No posts found.</p>;
+  if (posts.length === 0) {
+    return <p className='card-list__empty'>No posts found.</p>;
   }
 
   return (

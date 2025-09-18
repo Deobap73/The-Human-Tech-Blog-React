@@ -20,7 +20,7 @@ type HexColor = `#${string}`;
  */
 const ColorPicker = ({ editor }: ColorPickerProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [customColor, setCustomColor] = useState<HexColor>('#000000');
+  const [customColor, setCustomColor] = useState<HexColor>('#1da1f2');
   const [panelPos, setPanelPos] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
 
   const triggerRef = useRef<HTMLButtonElement | null>(null);
