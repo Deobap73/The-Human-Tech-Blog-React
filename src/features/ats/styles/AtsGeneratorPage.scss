@@ -1,0 +1,111 @@
+/* /src/features/ats/styles/AtsGeneratorPage.scss */
+
+.ats-page {
+  padding: var(--padding-l) var(--padding-base);
+  color: var(--text-color);
+
+  &__header {
+    max-width: var(--layout-max-width);
+    margin: 0 auto var(--margin-base) auto;
+    text-align: center;
+  }
+
+  &__title {
+    font-size: var(--heading-h2);
+    line-height: 1.2;
+    margin: 0 0 var(--spacing-xs) 0;
+    color: var(--text-color);
+    letter-spacing: var(--letter-spacing-small);
+  }
+
+  &__subtitle {
+    font-size: var(--font-size-base);
+    color: var(--text-color-secondary);
+    max-width: 80ch;
+    margin: 0 auto;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-base);
+    max-width: var(--layout-max-width);
+    margin: 0 auto;
+  }
+
+  &__panel {
+    background: var(--background-glass);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--border-radius-base);
+    padding: var(--padding-base);
+    box-shadow: var(--shadow-card);
+
+    &--left {
+      order: 1;
+    }
+    &--right {
+      order: 2;
+    }
+  }
+
+  &__actions {
+    margin-top: var(--margin-base);
+    display: flex;
+    gap: var(--gap-base);
+    flex-wrap: wrap;
+  }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--gap-sm);
+    padding: 0.75rem 1.1rem;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+
+    &--primary {
+      background: var(--primary);
+      color: var(--text-color-inverse);
+      box-shadow: var(--shadow-card);
+
+      &:hover,
+      &:focus-visible {
+        background: var(--primary-hover);
+        transform: translateY(-1px) scale(1.01);
+        outline: 2px solid var(--primary-hover);
+      }
+      &:disabled {
+        background: var(--background-secondary);
+        color: var(--text-color-secondary);
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+    }
+  }
+
+  /* Desktop split layout */
+  @media (min-width: 1024px) {
+    &__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--gap-lg);
+    }
+    &__panel--left {
+      order: 1;
+    }
+    &__panel--right {
+      order: 2;
+    }
+  }
+
+  /* Tighten on small screens */
+  @media (max-width: 640px) {
+    padding: var(--padding-base) var(--padding-sm);
+    &__subtitle {
+      font-size: var(--font-size-sm);
+    }
+  }
+}

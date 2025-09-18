@@ -1,0 +1,64 @@
+/* /src/features/ats/styles/PaymentModal.scss */
+
+.payment-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: grid;
+  place-items: center;
+  z-index: 1000;
+  padding: var(--padding-base);
+
+  &__content {
+    width: min(520px, 96vw);
+    background: var(--background-glass);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-base);
+    padding: var(--padding-sm) var(--padding-sm) var(--padding-base);
+    box-shadow: var(--shadow-card-strong);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--margin-xs);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: var(--heading-h6);
+    color: var(--text-color);
+  }
+
+  &__close {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--border-radius-sm);
+    color: var(--text-color);
+    font-size: 1.125rem;
+    line-height: 1;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateY(-1px);
+    }
+  }
+
+  &__body {
+    padding: var(--padding-sm);
+  }
+
+  &__text {
+    margin-bottom: var(--margin-sm);
+    color: var(--text-color-secondary);
+    font-size: var(--font-size-base);
+  }
+
+  &__paypal {
+    min-height: 48px;
+  }
+}

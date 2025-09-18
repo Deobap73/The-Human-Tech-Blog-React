@@ -1,0 +1,33 @@
+/* /src/features/ats/styles/ResultPreview.scss */
+
+.result-preview {
+  position: relative;
+
+  &__title {
+    margin: 0 0 var(--margin-2xs) 0;
+    font-size: var(--heading-h6);
+    color: var(--text-color);
+  }
+
+  &__content {
+    min-height: 240px;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: var(--background-tertiary);
+    color: var(--text-color);
+    padding: var(--padding-base);
+    line-height: 1.6;
+  }
+
+  &--watermark {
+    .result-preview__content {
+      background-image: repeating-linear-gradient(
+        -45deg,
+        rgba(255, 255, 255, 0.06) 0,
+        rgba(255, 255, 255, 0.06) 10px,
+        transparent 10px,
+        transparent 20px
+      );
+    }
+  }
+}
