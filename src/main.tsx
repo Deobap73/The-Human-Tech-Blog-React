@@ -1,4 +1,4 @@
-// src/main.tsx
+// /src/main.tsx
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
@@ -16,7 +16,8 @@ import { RecaptchaProvider } from './shared/context/RecaptchaProvider';
 import ToastProvider from './shared/components/ToastProvider';
 import api from './shared/utils/axios';
 import { getAccessToken } from './shared/utils/authTokenStorage';
-import { LoginModalProvider } from './shared/context/LoginModalContext'; // ADICIONADO
+import { LoginModalProvider } from './shared/context/LoginModalContext';
+import { registerServiceWorker } from './utils/registerServiceWorker'; // <-- NEW (relative import)
 
 // Set up axios with access token if available
 const token = getAccessToken();
@@ -45,3 +46,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     </HelmetProvider>
   </React.StrictMode>
 );
+
+// Register SW after the app is mounted. This enables WebAPK on Android,
+// ensuring Add-to-Home-Screen uses icons from the manifest.
+registerServiceWorker();
