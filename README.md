@@ -107,6 +107,65 @@ The-Human-Tech-Blog-React/
 
 ---
 
+## 📱 PWA — Install to Home Screen (Android & iOS)
+
+### How users install
+
+** Android (Chrome): **
+
+1. Open https://thehumantechblog.com in Chrome
+
+2. Tap ⋮ Menu → Install app (or Add to Home screen)
+
+3. Confirm; the app icon lands on the home screen (WebAPK)
+
+** iPhone/iPad (iOS Safari): **
+
+1. Open https://thehumantechblog.com in Safari
+
+2. Tap Share → Add to Home Screen
+
+3. Confirm; the app icon appears on the home screen
+
+** What we implemented (dev notes) **
+
+- Service Worker: Minimal SW to enable installability (WebAPK on Android)
+  Path: /public/sw.js
+
+  - install → skipWaiting()
+
+  - activate → clients.claim()
+
+  - pass-through fetch (no caching yet)
+
+- Manifest (subpath-safe):
+  Path: /public/manifest.webmanifest
+
+  - Icons with purpose: "any maskable" and relative src paths (e.g., icons/icon-192.png)
+
+  - "start_url": ".", "scope": "." for deployments in subpaths
+
+  - Theme/background colors aligned with app
+
+- Index HTML (PWA links via Vite %BASE_URL% + cache-bust):
+
+  - <link rel="manifest" href="%BASE_URL%manifest.webmanifest?v=YYYYMMDD">
+
+  - <link rel="apple-touch-icon" ... href="%BASE_URL%icons/apple-icon-180.png?v=YYYYMMDD">
+
+  - This avoids broken paths when deploying under /subdir/ and forces iOS/Android to refresh icons
+
+- SW register (scope from BASE_URL):
+
+  - src/utils/registerServiceWorker.ts registers %BASE_URL%sw.js with { scope: BASE_URL }
+
+  - Called from src/main.tsx after app render
+
+Heads up: iOS uses the apple-touch-icon PNG from HTML (not manifest) for the home-screen icon.
+Android prefers manifest icons, but a Service Worker ensures WebAPK install and consistent icon usage.
+
+---
+
 ## 🌍 Internationalization
 
 - Full multilanguage: All public and admin resources in EN, PT, DE, ES
