@@ -102,7 +102,7 @@ The-Human-Tech-Blog-React/
 ---
 
 <br> <br>
-<img src="https://github.com/Deobap73/The-Human-Tech-Blog-React/blob/main/public/images/TechShortsPage.webp">
+<img src="public/images/techShortsPage.webp">
 <br> <br>
 
 ---
@@ -252,7 +252,7 @@ The **Chat module** in The Human Tech Blog provides a modern, secure, and seamle
   ***
 
   <br> <br>
-  <img src="https://github.com/Deobap73/The-Human-Tech-Blog-React/blob/main/public/images/aiPromptPage.webp">
+  <img src="hpublic/images/aiPromptPage.webp">
   <br> <br>
 
 ---
@@ -304,7 +304,7 @@ The **Chat module** in The Human Tech Blog provides a modern, secure, and seamle
 ---
 
 <br> <br>
-<img src="https://github.com/Deobap73/The-Human-Tech-Blog-React/blob/main/public/images/ContactPage.webp">
+<img src="public/images/contactPage.webp">
 <br> <br>
 
 ---
