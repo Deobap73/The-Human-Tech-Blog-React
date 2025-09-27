@@ -1,11 +1,10 @@
 // src/features/post/components/QuickPostCard.tsx
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Post } from '../../../shared/types/Post';
 import { getAvatar } from '../../../shared/utils/getAvatar';
 import { getPostTranslation, getCategoryName } from '../../../shared/utils/i18nHelpers';
-import { resolveLogoUrl } from '../../../shared/utils/mediaHelpers';
+import { getCategoryLogo } from '../../../shared/utils/categoryLogo';
 import '../styles/QuickPostCard.scss';
 
 interface Props {
@@ -13,19 +12,15 @@ interface Props {
   lang: string;
 }
 
-/**
- * Renders a Tech Short (QuickPost) card with category, image, title, and meta.
- */
 const QuickPostCard: React.FC<Props> = ({ post, lang }) => {
   const translation = getPostTranslation(post.translations, lang);
   if (!translation.title || !translation.description) return null;
 
   const user = (post as any).user || (post as any).author || {};
 
-  // Category is a string ID; resolve logo URL from that ID
-  const categoryId = post.categories?.[0];
-  const categoryName = getCategoryName(categoryId, lang);
-  const categoryLogo = categoryId ? resolveLogoUrl(categoryId) : '/default-logo.png';
+  const cat = post.categories?.[0];
+  const categoryName = getCategoryName(cat, lang);
+  const categoryLogo = getCategoryLogo(cat);
 
   return (
     <div className='quick-post-card'>

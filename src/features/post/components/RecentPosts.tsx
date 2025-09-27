@@ -1,40 +1,23 @@
-// /src/features/post/components/RecentPosts.tsx
-
+// src/features/post/components/RecentPosts.tsx
 import '../styles/RecentPosts.scss';
 import { Post } from '../../../shared/types/Post';
-import { Category } from '../../../shared/types/Category';
 import { getCategoryName } from '../../../shared/utils/i18nHelpers';
-import { resolveLogoUrl } from '../../../shared/utils/mediaHelpers';
 import { isValidPost } from '../../../shared/utils/validation';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { getCategoryLogo } from '../../../shared/utils/categoryLogo';
 
 interface RecentPostsProps {
   posts: Post[];
   lang: string;
 }
 
-/**
- * Safely get the logo URL from a category object, fallback to default if needed.
- */
-function getCategoryLogo(category: string | Category | undefined): string {
-  if (
-    category &&
-    typeof category === 'object' &&
-    'logo' in category &&
-    typeof category.logo === 'string' &&
-    category.logo
-  ) {
-    return resolveLogoUrl(category.logo);
-  }
-  return '/default-logo.png';
-}
-
 export const RecentPosts = ({ posts, lang }: RecentPostsProps) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const validPosts = posts
     .filter((post) => isValidPost(post, lang) && !post.isQuickPost)
     .slice(0, 4);
+
   if (validPosts.length === 0) return null;
 
   return (
@@ -54,7 +37,6 @@ export const RecentPosts = ({ posts, lang }: RecentPostsProps) => {
             const desc = translation.description || '';
             const displayDesc = desc.length > 120 ? desc.slice(0, 120) + '...' : desc;
 
-            // Assign a specific grid area for each card, for custom layouts
             const gridAreaClass = `recent-posts__card recent-posts__card--area${idx + 1}`;
 
             return (

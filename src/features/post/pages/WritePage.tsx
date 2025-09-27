@@ -119,6 +119,7 @@ const WritePage = () => {
           openOnClick: false,
           autolink: true,
           protocols: ['http', 'https', 'mailto'],
+          HTMLAttributes: { class: 'thtb-link' },
         }),
         Table.configure({
           resizable: true,

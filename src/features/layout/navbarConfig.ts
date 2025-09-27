@@ -68,6 +68,10 @@ export const navbarConfigs: Record<string, NavbarConfig> = {
     showTile: false,
     background: undefined,
   },
+  '/categories/': {
+    showTile: false,
+    background: undefined,
+  },
   '/chat': {
     showTile: false,
     background: undefined,
