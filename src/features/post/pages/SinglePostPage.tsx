@@ -1,9 +1,9 @@
 // /src/features/post/pages/SinglePostPage.tsx
 
 import { Helmet } from 'react-helmet-async';
-import '../styles/CodeBlock.scss'; // Include code block styles
-import hljs from 'highlight.js'; // import highlight.js
-import 'highlight.js/styles/github-dark.css'; // add desired theme
+import '../styles/CodeBlock.scss';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/github-dark.css';
 import '../styles/SinglePostPage.scss';
 import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -15,7 +15,7 @@ import { BookmarkButton } from '../components/BookmarkButton';
 import { ShareButton } from '../components/ShareButton';
 import Comments from '../components/Comments';
 import { ReactionButtons } from '../components/ReactionButtons';
-import { getPostTranslation, getCategoryName, getTagName } from '../../../shared/utils/i18nHelpers';
+import { getPostTranslation, getCategoryName } from '../../../shared/utils/i18nHelpers';
 import RecentCategoryPosts from '../components/RecentCategoryPosts';
 import CategoryList from '../components/CategoryList';
 import ScrollToTop from '../../../shared/components/ScrollToTop';
@@ -42,25 +42,46 @@ export const SinglePostPage = () => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    const fetchPost = async () => {
+    let active = true;
+    const controller = new AbortController();
+
+    (async () => {
       try {
-        const res = await axios.get(`/posts/slug/${slug}`);
+        setError(false);
+
+        if (!slug) {
+          setPost(null);
+          setError(true);
+          return;
+        }
+
+        const res = await axios.get(`/posts/slug/${slug}`, {
+          signal: controller.signal,
+        });
+
         const translation = getPostTranslation(res.data.translations, i18n.language);
-        const postIsValid =
+        const valid =
           res.data.status === 'published' &&
-          translation.title &&
+          !!translation?.title &&
           translation.title.trim().length > 0;
-        setPost(postIsValid ? res.data : null);
-        setError(!postIsValid);
-      } catch {
+
+        if (!active) return;
+        setPost(valid ? res.data : null);
+        setError(!valid);
+      } catch (err: any) {
+        if (!active) return;
+        if (err?.name === 'CanceledError') return;
         setError(true);
       }
+    })();
+
+    return () => {
+      active = false;
+      controller.abort();
     };
-    fetchPost();
   }, [slug, i18n.language]);
 
   useEffect(() => {
-    // ✅ Highlight code blocks after post content is rendered
     hljs.highlightAll();
   }, [post]);
 
@@ -92,16 +113,14 @@ export const SinglePostPage = () => {
       : '';
 
   const user: PostUser = (post as any).user || (post as any).author || {};
-
   const tags = Array.isArray(post.tags) ? post.tags : [];
 
   return (
     <>
       <Helmet>
-        {/* Hreflang alternates */}
         {post.translations &&
-          Object.entries(post.translations).map(([langCode, t]) => {
-            if (!t?.title?.trim()) return null;
+          Object.entries(post.translations).map(([langCode, tItem]) => {
+            if (!tItem?.title?.trim()) return null;
             const href = `https://thehumantechblog.com/${langCode}/posts/${post.slug}`;
             return <link key={langCode} rel='alternate' hrefLang={langCode} href={href} />;
           })}
@@ -111,17 +130,14 @@ export const SinglePostPage = () => {
           href={`https://thehumantechblog.com/en/posts/${post.slug}`}
         />
 
-        {/* Canonical URL */}
         <link
           rel='canonical'
           href={`https://thehumantechblog.com/${i18n.language}/posts/${post.slug}`}
         />
 
-        {/* Meta title & description */}
         <title>{translation.title}</title>
         <meta name='description' content={translation.description || translation.title} />
 
-        {/* Open Graph (Facebook, LinkedIn, etc.) */}
         <meta property='og:title' content={translation.title} />
         <meta property='og:description' content={translation.description || translation.title} />
         <meta property='og:type' content='article' />
@@ -131,17 +147,19 @@ export const SinglePostPage = () => {
         />
         {post.image && <meta property='og:image' content={post.image} />}
 
-        {/* Twitter Card */}
         <meta name='twitter:card' content='summary_large_image' />
         <meta name='twitter:title' content={translation.title} />
         <meta name='twitter:description' content={translation.description || translation.title} />
         {post.image && <meta name='twitter:image' content={post.image} />}
       </Helmet>
+
       <ScrollToTop />
+
       <div className='single-post-page'>
         <section className='single-post-page__header-row'>
           <div className='single-post-page__header-info'>
             <h1 className='single-post-page__title'>{translation.title}</h1>
+
             <div className='single-post-page__meta'>
               <img
                 src={getAvatar(user || undefined)}
@@ -158,9 +176,11 @@ export const SinglePostPage = () => {
                 </div>
               </div>
             </div>
+
             <BookmarkButton postId={post._id} className='single-post-page__bookmark-button' />
             <ShareButton className='single-post-page__share-button' />
           </div>
+
           <div className='single-post-page__header-image'>
             {post.image && (
               <img

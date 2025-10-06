@@ -1,8 +1,7 @@
-// ✅ The-Human-Tech-Blog-React/src/features/admin/styles/AdminLogTable.scss
+// src/features/admin/styles/AdminLogTable.scss
 
 .admin-log-table {
   margin-top: 2rem;
-
   h3 {
     font-size: 1.4rem;
     margin-bottom: 1rem;
@@ -17,20 +16,49 @@
     border-radius: 8px;
     overflow: hidden;
     font-size: 0.95rem;
+    // ⚠️ Adiciona table-layout: fixed para ajudar a manter as larguras das colunas
+    table-layout: fixed;
 
     thead {
       background-color: #f5f5f5;
+      // ⚠️ Necessário para o scroll funcionar corretamente, pois o thead precisa ficar fixo
+      display: table;
+      width: 100%;
+      // Ajuste para compensar a barra de rolagem do tbody
+      width: calc(100% - 8px); // Subtrai uma largura típica de scrollbar (aprox. 8-15px)
 
       th {
         padding: 0.75rem 1rem;
         text-align: left;
         border-bottom: 1px solid #ddd;
         color: #444;
+        // 💡 Defina larguras aproximadas para as colunas para evitar desalinhamento entre thead e tbody
+        // Exemplo:
+        &:nth-child(1) {
+          width: 30%;
+        } // Admin
+        &:nth-child(2) {
+          width: 15%;
+        } // Action
+        &:nth-child(3) {
+          width: 40%;
+        } // Description
+        &:nth-child(4) {
+          width: 15%;
+        } // Time
       }
     }
 
     tbody {
+      // 🚨 As propriedades chave para o scroll!
+      display: block; // Faz com que max-height e overflow funcionem
+      max-height: 400px; // 📏 Ajuste esta altura para mostrar aproximadamente 10 linhas.
+      // Como cada linha tem cerca de 40px de altura, 400px exibe ~10.
+      overflow-y: auto; // Ativa a barra de rolagem vertical
+
       tr {
+        display: table; // Necessário para que o TR preencha 100% da largura do TBODY
+        width: 100%; // Garante que o TR preencha a largura
         border-bottom: 1px solid #eee;
 
         &:hover {
@@ -40,6 +68,20 @@
         td {
           padding: 0.75rem 1rem;
           color: #222;
+          // 💡 Defina larguras consistentes para as colunas
+          // Exemplo (deve ser o mesmo que no <th>):
+          &:nth-child(1) {
+            width: 30%;
+          }
+          &:nth-child(2) {
+            width: 15%;
+          }
+          &:nth-child(3) {
+            width: 40%;
+          }
+          &:nth-child(4) {
+            width: 15%;
+          }
         }
       }
     }
