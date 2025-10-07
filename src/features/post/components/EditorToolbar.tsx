@@ -1,4 +1,4 @@
-// Path: /src/features/post/components/EditorToolbar.tsx
+// /src/features/post/components/EditorToolbar.tsx
 import { useState } from 'react';
 import { Editor } from '@tiptap/react';
 import {
@@ -25,6 +25,7 @@ import {
   Split,
   Merge,
   PlusSquare,
+  Quote, // ← Blockquote icon
 } from 'lucide-react';
 import InsertTableModal from './InsertTableModal';
 import ColorPicker from './ColorPicker';
@@ -37,8 +38,8 @@ interface EditorToolbarProps {
 }
 
 /**
- * Editor toolbar with formatting, color, and table actions.
- * All actions are wrapped in chain().focus() to ensure correct editor state handling.
+ * Editor toolbar with formatting, color, blockquote and table actions.
+ * All actions are wrapped in chain().focus() to ensure correct editor state.
  */
 const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
   const [isTableModalOpen, setIsTableModalOpen] = useState<boolean>(false);
@@ -96,7 +97,7 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
         <Strikethrough size={16} />
       </button>
 
-      {/* --- COLOR PICKER (uniform button) ------------------------------- */}
+      {/* --- COLOR PICKER ------------------------------------------------- */}
       <ColorPicker editor={editor} />
 
       {/* --- HEADINGS (H1..H6 textual buttons) --------------------------- */}
@@ -154,6 +155,26 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
         </button>
       ))}
 
+      {/* --- BLOCKQUOTE --------------------------------------------------- */}
+      <button
+        type='button'
+        className={`editor-toolbar__btn${
+          editor.isActive('blockquote') ? ' editor-toolbar__btn--active' : ''
+        }`}
+        aria-label='Toggle Blockquote'
+        title='Toggle blockquote'
+        onClick={() => editor.chain().focus().toggleBlockquote().run()}>
+        <Quote size={16} />
+      </button>
+      <button
+        type='button'
+        className='editor-toolbar__btn'
+        aria-label='Remove Blockquote'
+        title='Remove blockquote'
+        onClick={() => editor.chain().focus().unsetBlockquote().run()}>
+        <Trash2 size={16} />
+      </button>
+
       {/* --- CODE --------------------------------------------------------- */}
       <button
         type='button'
@@ -164,7 +185,6 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
         onClick={() => editor.chain().focus().toggleCodeBlock().run()}>
         <Code2 size={16} />
       </button>
-
       <button
         type='button'
         className={`editor-toolbar__btn${
@@ -211,7 +231,6 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
 
       {/* --- TABLE GROUP -------------------------------------------------- */}
       <div className='editor-toolbar__group editor-toolbar__group--table'>
-        {/* Insert Table (opens modal) */}
         <button
           type='button'
           className='editor-toolbar__btn'
@@ -220,7 +239,6 @@ const Toolbar = ({ editor, onSaveDraft, onPublish }: EditorToolbarProps) => {
           <TableIcon size={16} />
         </button>
 
-        {/* Quick Insert 3x3 with header */}
         <button
           type='button'
           className='editor-toolbar__btn'

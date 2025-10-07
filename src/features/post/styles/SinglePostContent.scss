@@ -1,4 +1,4 @@
-// src/features/post/styles/SinglePostContent.scss
+// /src/features/post/styles/SinglePostContent.scss
 
 /* BEM methodology - Single Post Content */
 .post-content {
@@ -53,6 +53,24 @@
   }
 }
 
+/* ===== Blockquote in Single Post page ===== */
+.single-post-page blockquote {
+  position: relative;
+  margin: 1rem 0;
+  padding: 0.9rem 1.1rem 0.9rem 1.3rem;
+  font-style: italic;
+  color: var(--text-color);
+  background: rgba(17, 24, 39, 0.28);
+  border-radius: 10px;
+
+  /* Left rail identical to editor */
+  border-left: 4px solid #2995e2;
+
+  p {
+    margin: 0.25rem 0;
+  }
+}
+
 /* Fallback: ensure inline code looks acceptable even outside .single-post-page */
 code {
   background: rgba(128, 128, 128, 0.15);
@@ -103,6 +121,9 @@ code {
     border-radius: 6px;
     margin: 0.8rem 0;
   }
+  .single-post-page blockquote {
+    padding: 0.75rem 0.95rem 0.75rem 1.1rem;
+  }
   .single-post-page p code,
   .single-post-page li code,
   .single-post-page h1 code,
@@ -132,6 +153,7 @@ code {
   box-sizing: border-box;
   width: 100%;
   max-width: 100%;
+
   a {
     color: var(--primary);
     text-decoration: none;
@@ -142,7 +164,6 @@ code {
       color: var(--primary-hover);
     }
 
-    // Linhas em cima e em baixo apenas no hover
     &:hover::before,
     &:hover::after {
       content: '';
@@ -161,17 +182,14 @@ code {
       transform: scaleX(1);
     }
 
-    // Linha de cima
     &:hover::before {
       top: -6px;
     }
 
-    // Linha de baixo
     &:hover::after {
       bottom: -6px;
     }
 
-    // Estado inicial (sem hover) — escondemos
     &::before,
     &::after {
       content: '';

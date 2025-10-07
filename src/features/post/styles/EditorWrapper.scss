@@ -1,4 +1,4 @@
-/* src/features/post/styles/EditorWrapper.scss */
+/* /src/features/post/styles/EditorWrapper.scss */
 
 .editor-wrapper {
   .editor-wrapper {
@@ -12,7 +12,6 @@
         color: var(--primary-hover);
       }
 
-      // Linhas em cima e em baixo apenas no hover
       &:hover::before,
       &:hover::after {
         content: '';
@@ -31,17 +30,14 @@
         transform: scaleX(1);
       }
 
-      // Linha de cima
       &:hover::before {
         top: -6px;
       }
 
-      // Linha de baixo
       &:hover::after {
         bottom: -6px;
       }
 
-      // Estado inicial (sem hover) — escondemos
       &::before,
       &::after {
         content: '';
@@ -55,14 +51,14 @@
     }
   }
 
-  // Garantir que o link inline se destaca mesmo dentro de blocos de código ou texto alinhado
+  /* Ensure links are readable inside code */
   & pre a,
   & code a {
     color: var(--primary);
     text-decoration: none;
   }
 
-  // Inline code (ex: `git`, `docker`)
+  /* Inline code */
   & code {
     font-family: 'Fira Code', monospace;
     font-size: 0.95rem;
@@ -74,7 +70,7 @@
     white-space: break-spaces;
   }
 
-  // Code block (já deves ter isto configurado no CodeBlock.scss, mas mantemos como fallback aqui)
+  /* Code block fallback */
   & pre {
     background-color: #1e1e1e;
     color: #f5f5f5;
@@ -92,9 +88,30 @@
     font-family: 'Fira Code', monospace;
   }
 
+  /* ===== Blockquote inside the editor (TipTap ProseMirror) ===== */
+  & .ProseMirror blockquote {
+    /* BEM-ish within the editor wrapper */
+    position: relative;
+    margin: 1rem 0;
+    padding: 0.75rem 1rem 0.75rem 1.25rem;
+    font-style: italic;
+    color: var(--text-color);
+    background: rgba(17, 24, 39, 0.35); /* subtle bg for dark theme */
+    border-radius: 10px;
+
+    /* Left rail */
+    border-left: 4px solid #2995e2;
+
+    /* Make sure nested elements look good */
+    p {
+      margin: 0.25rem 0;
+    }
+  }
+
   /* Responsive adjustments */
   @media (max-width: 768px) {
     padding: var(--padding-sm);
+
     & code {
       font-size: 0.85rem;
     }
@@ -102,6 +119,10 @@
     & pre {
       font-size: 0.85rem;
       padding: 0.75rem;
+    }
+
+    & .ProseMirror blockquote {
+      padding: 0.65rem 0.85rem 0.65rem 1rem;
     }
   }
 }
