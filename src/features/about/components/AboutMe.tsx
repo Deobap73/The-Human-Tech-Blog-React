@@ -3,7 +3,7 @@
 import '../../about/styles/AboutMe.scss';
 import IdImage from '../../../assets/IdImage.webp';
 import { FaLinkedinIn, FaGithub } from 'react-icons/fa';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 
 export const AboutMe = () => {
   const { t } = useTranslation();
@@ -84,14 +84,19 @@ export const AboutMe = () => {
               </li>
             </ul>
           </div>
-          <a
-            href='https://github.com/Deobap73?tab=repositories'
-            className='aboutMe__button'
-            target='_blank'
-            rel='noopener noreferrer'>
-            {t('about.me.viewProjects')}
-          </a>
         </div>
+      </div>
+      <div className='aboutMe__story'>
+        <p className='aboutMe__story__description'>
+          <Trans i18nKey='about.me.story.body' components={{ strong: <strong />, br: <br /> }} />
+        </p>
+        <a
+          href='https://github.com/Deobap73?tab=repositories'
+          className='aboutMe__button'
+          target='_blank'
+          rel='noopener noreferrer'>
+          {t('about.me.viewProjects')}
+        </a>
       </div>
     </section>
   );

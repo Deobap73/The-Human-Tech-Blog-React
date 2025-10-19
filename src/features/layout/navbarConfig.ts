@@ -1,4 +1,5 @@
 // /src/features/layout/navbarConfig.ts
+'use strict';
 
 import { TFunction } from 'i18next';
 
@@ -8,6 +9,8 @@ import aboutPageBg from '../../assets/aboutPage.webp';
 import contactPageBg from '../../assets/contactPage.webp';
 import techShortsPage from '../../assets/techShortsPage.webp';
 import aiPromptPage from '../../assets/aiPromptPage.webp';
+// 👉 aproveitamos uma imagem existente para a secção Projects
+import frontEndUx from '../../assets/frontEndUx.webp';
 
 export interface NavbarConfig {
   background?: string;
@@ -19,12 +22,7 @@ export interface NavbarConfig {
 
 // Helper to guarantee t() always returns a string
 function safeT(t: TFunction, key: string, defaultValue?: string): string {
-  let value: string | object;
-  if (defaultValue !== undefined) {
-    value = t(key, { defaultValue });
-  } else {
-    value = t(key);
-  }
+  const value = defaultValue !== undefined ? t(key, { defaultValue }) : t(key);
   return typeof value === 'string' ? value : defaultValue ?? '';
 }
 
@@ -55,6 +53,14 @@ export const navbarConfigs: Record<string, NavbarConfig> = {
     background: aiPromptPage,
     showTile: false,
   },
+  // ✅ novo: Projects
+  '/projects': {
+    background: frontEndUx,
+    showTile: true,
+    tileTitle: (t) => safeT(t, 'navbar.title.projects', 'Projects'),
+    tileDescription: (t) =>
+      safeT(t, 'navbar.description.projects', 'Figma drafts, UI, and full projects'),
+  },
   '/admin': {
     showTile: false,
   },
@@ -77,7 +83,6 @@ export const navbarConfigs: Record<string, NavbarConfig> = {
     background: undefined,
     hideNavbar: true,
   },
-  // Add more routes as needed
 };
 
 export function getNavbarConfig(pathname: string): NavbarConfig {

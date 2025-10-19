@@ -24,6 +24,7 @@ import NotAuthorizedPage from '../pages/NotAuthorizedPage';
 import NewsletterConfirmPage from '../features/notification/newsletter/pages/NewsletterConfirmPage';
 import NewsletterUnsubscribePage from '../features/notification/newsletter/pages/NewsletterUnsubscribePage';
 import AiPromptsPage from '../features/aiPrompts/pages/AiPromptsPage';
+import ProjectsPage from '../features/projects/pages/ProjectsPage';
 
 // ATS Generator Page (will be created in next step)
 
@@ -80,6 +81,7 @@ const PublicRoutes = () => (
       <Route path='not-authorized' element={<NotAuthorizedPage />} />
       <Route path='newsletter/confirm/:token' element={<NewsletterConfirmPage />} />
       <Route path='newsletter/unsubscribe/:token' element={<NewsletterUnsubscribePage />} />
+      <Route path='projects' element={<ProjectsPage />} />
 
       {/* Protected chat area */}
       <Route

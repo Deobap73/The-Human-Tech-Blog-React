@@ -1,0 +1,22 @@
+// /src/features/projects/styles/ProjectsPage.scss
+.projectsPage {
+  &__container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: var(--padding-xl);
+  }
+
+  &__title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+  }
+
+  &__error,
+  &__empty {
+    text-align: center;
+    color: var(--color-text-secondary);
+    margin-top: 2rem;
+  }
+}
