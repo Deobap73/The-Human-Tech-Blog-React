@@ -57,6 +57,7 @@ const PublicRoutes = () => (
     <Route path='posts/:slug' element={<RedirectToBrowserLang />} />
     <Route path='/shorts' element={<RedirectToBrowserLang />} />
     <Route path='/aiprompts' element={<RedirectToBrowserLang />} />
+    <Route path='/projects' element={<RedirectToBrowserLang />} />
     {/* NEW: short URL for ATS generator */}
     <Route path='/ats' element={<RedirectToBrowserLang />} />
 

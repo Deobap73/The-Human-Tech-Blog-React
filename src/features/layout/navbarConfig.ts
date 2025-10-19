@@ -9,8 +9,7 @@ import aboutPageBg from '../../assets/aboutPage.webp';
 import contactPageBg from '../../assets/contactPage.webp';
 import techShortsPage from '../../assets/techShortsPage.webp';
 import aiPromptPage from '../../assets/aiPromptPage.webp';
-// 👉 aproveitamos uma imagem existente para a secção Projects
-import frontEndUx from '../../assets/frontEndUx.webp';
+import projectsPage from '../../assets/projectsPage.webp';
 
 export interface NavbarConfig {
   background?: string;
@@ -55,7 +54,7 @@ export const navbarConfigs: Record<string, NavbarConfig> = {
   },
   // ✅ novo: Projects
   '/projects': {
-    background: frontEndUx,
+    background: projectsPage,
     showTile: true,
     tileTitle: (t) => safeT(t, 'navbar.title.projects', 'Projects'),
     tileDescription: (t) =>
