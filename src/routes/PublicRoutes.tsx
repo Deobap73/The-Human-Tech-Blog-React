@@ -1,5 +1,7 @@
 // /src/routes/PublicRoutes.tsx
 
+'use strict';
+
 import { Routes, Route } from 'react-router-dom';
 import SitemapProxyRoutes from './SitemapProxyRoutes';
 
@@ -25,10 +27,10 @@ import NewsletterConfirmPage from '../features/notification/newsletter/pages/New
 import NewsletterUnsubscribePage from '../features/notification/newsletter/pages/NewsletterUnsubscribePage';
 import AiPromptsPage from '../features/aiPrompts/pages/AiPromptsPage';
 import ProjectsPage from '../features/projects/pages/ProjectsPage';
+import ProjectDetailPage from '../features/projects/pages/ProjectDetailPage';
 
 // ATS Generator Page (will be created in next step)
-
-/* import AtsGeneratorPage from '../features/ats/pages/AtsGeneratorPage'; */
+// import AtsGeneratorPage from '../features/ats/pages/AtsGeneratorPage';
 
 const NotFoundPage = () => (
   <div style={{ padding: '2rem', textAlign: 'center' }}>
@@ -44,6 +46,8 @@ const PublicRoutes = () => (
     <Route path='/sitemap-prompts.xml' element={<SitemapProxyRoutes />} />
     <Route path='/sitemap-categories.xml' element={<SitemapProxyRoutes />} />
     <Route path='/sitemap-static.xml' element={<SitemapProxyRoutes />} />
+    {/* projects sitemap */}
+    <Route path='/sitemap-projects.xml' element={<SitemapProxyRoutes />} />
 
     {/* Redirect root and top-level routes without lang prefix */}
     <Route path='/' element={<RedirectToBrowserLang />} />
@@ -58,7 +62,9 @@ const PublicRoutes = () => (
     <Route path='/shorts' element={<RedirectToBrowserLang />} />
     <Route path='/aiprompts' element={<RedirectToBrowserLang />} />
     <Route path='/projects' element={<RedirectToBrowserLang />} />
-    {/* NEW: short URL for ATS generator */}
+    {/* detail short URL */}
+    <Route path='/projects/:slug' element={<RedirectToBrowserLang />} />
+    {/* short URL for ATS generator */}
     <Route path='/ats' element={<RedirectToBrowserLang />} />
 
     {/* All multilanguage content inside /:lang */}
@@ -82,7 +88,10 @@ const PublicRoutes = () => (
       <Route path='not-authorized' element={<NotAuthorizedPage />} />
       <Route path='newsletter/confirm/:token' element={<NewsletterConfirmPage />} />
       <Route path='newsletter/unsubscribe/:token' element={<NewsletterUnsubscribePage />} />
+
+      {/*  projects routes */}
       <Route path='projects' element={<ProjectsPage />} />
+      <Route path='projects/:slug' element={<ProjectDetailPage />} />
 
       {/* Protected chat area */}
       <Route
@@ -95,7 +104,7 @@ const PublicRoutes = () => (
       />
 
       {/* ATS Generator route (multilingual path) */}
-      {/*   <Route path="ats" element={<AtsGeneratorPage />} /> */}
+      {/* <Route path="ats" element={<AtsGeneratorPage />} /> */}
 
       {/* 404 inside /:lang */}
       <Route path='*' element={<NotFoundPage />} />

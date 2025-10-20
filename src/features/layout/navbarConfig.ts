@@ -1,9 +1,9 @@
 // /src/features/layout/navbarConfig.ts
+
 'use strict';
 
 import { TFunction } from 'i18next';
 
-// Import backgrounds using ES modules — this is more robust in Vite/React
 import homePageBg from '../../assets/homePage.webp';
 import aboutPageBg from '../../assets/aboutPage.webp';
 import contactPageBg from '../../assets/contactPage.webp';
@@ -19,7 +19,6 @@ export interface NavbarConfig {
   hideNavbar?: boolean;
 }
 
-// Helper to guarantee t() always returns a string
 function safeT(t: TFunction, key: string, defaultValue?: string): string {
   const value = defaultValue !== undefined ? t(key, { defaultValue }) : t(key);
   return typeof value === 'string' ? value : defaultValue ?? '';
@@ -52,13 +51,18 @@ export const navbarConfigs: Record<string, NavbarConfig> = {
     background: aiPromptPage,
     showTile: false,
   },
-  // ✅ novo: Projects
+  // Projects list
   '/projects': {
     background: projectsPage,
     showTile: true,
     tileTitle: (t) => safeT(t, 'navbar.title.projects', 'Projects'),
     tileDescription: (t) =>
       safeT(t, 'navbar.description.projects', 'Figma drafts, UI, and full projects'),
+  },
+  // Projects detail (no tile — clean header)
+  '/projects/': {
+    showTile: false,
+    background: projectsPage,
   },
   '/admin': {
     showTile: false,
@@ -85,7 +89,6 @@ export const navbarConfigs: Record<string, NavbarConfig> = {
 };
 
 export function getNavbarConfig(pathname: string): NavbarConfig {
-  // Remove language prefix, e.g., /en/about → /about
   const path = typeof pathname === 'string' ? pathname.replace(/^\/[a-z]{2}(\/|$)/, '/') : '/';
 
   // 1. Exact match
@@ -98,7 +101,12 @@ export function getNavbarConfig(pathname: string): NavbarConfig {
     return navbarConfigs['/posts/'];
   }
 
-  // 3. Starts with route (protect against non-string)
+  // Project detail route: /projects/:slug
+  if (typeof path === 'string' && /^\/projects\/[^/]+/.test(path)) {
+    return navbarConfigs['/projects/'];
+  }
+
+  // 3. Starts with route
   const match = Object.keys(navbarConfigs).find(
     (route) => route !== '/' && typeof path === 'string' && path.startsWith(route)
   );
@@ -106,6 +114,6 @@ export function getNavbarConfig(pathname: string): NavbarConfig {
     return navbarConfigs[match];
   }
 
-  // 4. Fallback home
+  // 4. Fallback
   return navbarConfigs['/'] || { showTile: false };
 }

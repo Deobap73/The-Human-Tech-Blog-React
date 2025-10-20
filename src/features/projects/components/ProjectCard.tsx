@@ -1,7 +1,9 @@
 // /src/features/projects/components/ProjectCard.tsx
+
 'use strict';
 
 import React from 'react';
+import { Link, useParams } from 'react-router-dom';
 import type { Project } from '../../../shared/types/Project';
 import '../styles/ProjectCard.scss';
 
@@ -9,19 +11,35 @@ interface Props {
   project: Project;
 }
 
+/**
+ * ProjectCard
+ * - Shows cover, title, excerpt, tags
+ * - Primary CTA navigates to the local detail route `/:lang/projects/:slug`
+ * - External links remain available as secondary actions
+ */
 const ProjectCard: React.FC<Props> = ({ project }) => {
-  const { coverImage, title, excerpt, tags, links } = project;
+  const { lang } = useParams<{ lang: string }>();
+  const { coverImage, title, excerpt, tags, links, slug } = project;
+
+  const detailHref = `/${lang || 'en'}/projects/${slug}`;
 
   return (
     <div className='projectCard'>
-      {coverImage && (
-        <div className='projectCard__image-wrapper'>
+      <Link to={detailHref} className='projectCard__image-wrapper' aria-label={`Open ${title}`}>
+        {coverImage ? (
           <img src={coverImage} alt={title} className='projectCard__image' />
-        </div>
-      )}
+        ) : (
+          <div className='projectCard__image projectCard__image--placeholder' />
+        )}
+      </Link>
 
       <div className='projectCard__content'>
-        <h3 className='projectCard__title'>{title}</h3>
+        <h3 className='projectCard__title'>
+          <Link to={detailHref} className='projectCard__title-link'>
+            {title}
+          </Link>
+        </h3>
+
         {excerpt && <p className='projectCard__description'>{excerpt}</p>}
 
         {tags && tags.length > 0 && (
@@ -33,6 +51,12 @@ const ProjectCard: React.FC<Props> = ({ project }) => {
             ))}
           </ul>
         )}
+
+        <div className='projectCard__cta'>
+          <Link to={detailHref} className='projectCard__button'>
+            View details
+          </Link>
+        </div>
 
         <div className='projectCard__links'>
           {links?.github && (
