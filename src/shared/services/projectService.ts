@@ -15,13 +15,14 @@ export interface PaginatedResponse<T> {
 /**
  * GET /projects
  * - Supports filtering by type and optional text search.
- * - Always returns a valid PaginatedResponse; throws with a clear message on failure.
+ * - Accepts optional AbortSignal for proper cancellation.
  */
 export async function fetchProjects(
   type?: string,
   page = 1,
   limit = 9,
-  search?: string
+  search?: string,
+  signal?: AbortSignal
 ): Promise<PaginatedResponse<Project>> {
   const params = new URLSearchParams();
   if (type) params.append('type', type);
@@ -30,10 +31,12 @@ export async function fetchProjects(
   params.append('limit', String(limit));
 
   try {
-    const response = await api.get<PaginatedResponse<Project>>(`/projects?${params.toString()}`);
+    const response = await api.get<PaginatedResponse<Project>>(`/projects?${params.toString()}`, {
+      signal,
+    });
     return response.data;
   } catch (error) {
-    // Ensure a consistent thrown error for callers (UI can show a friendly message)
+    // Normalize error for UI layer
     throw new Error('Failed to fetch projects.');
   }
 }
@@ -42,9 +45,9 @@ export async function fetchProjects(
  * GET /projects/:slug
  * - Returns a single Project; throws on failure.
  */
-export async function fetchProjectBySlug(slug: string): Promise<Project> {
+export async function fetchProjectBySlug(slug: string, signal?: AbortSignal): Promise<Project> {
   try {
-    const response = await api.get<Project>(`/projects/${encodeURIComponent(slug)}`);
+    const response = await api.get<Project>(`/projects/${encodeURIComponent(slug)}`, { signal });
     return response.data;
   } catch {
     throw new Error('Failed to fetch project by slug.');

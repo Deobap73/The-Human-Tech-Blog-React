@@ -23,14 +23,17 @@ const ProjectCard: React.FC<Props> = ({ project }) => {
 
   const detailHref = `/${lang || 'en'}/projects/${slug}`;
 
-  // Contextual CTA label (keeps it subtle; main action is details page)
-  const primaryCta = 'View details';
-
   return (
     <article className='projectCard'>
       <Link to={detailHref} className='projectCard__image-wrapper' aria-label={`Open ${title}`}>
         {coverImage ? (
-          <img src={coverImage} alt={title} className='projectCard__image' />
+          <img
+            src={coverImage}
+            alt={title || 'Project cover'}
+            className='projectCard__image'
+            loading='lazy'
+            decoding='async'
+          />
         ) : (
           <div className='projectCard__image projectCard__image--placeholder' />
         )}
@@ -50,7 +53,7 @@ const ProjectCard: React.FC<Props> = ({ project }) => {
         {excerpt && <p className='projectCard__description'>{excerpt}</p>}
 
         {tags && tags.length > 0 && (
-          <ul className='projectCard__tags'>
+          <ul className='projectCard__tags' aria-label='Project tags'>
             {tags.map((tag) => (
               <li key={tag} className='projectCard__tag'>
                 #{tag}
@@ -61,7 +64,7 @@ const ProjectCard: React.FC<Props> = ({ project }) => {
 
         <div className='projectCard__cta'>
           <Link to={detailHref} className='projectCard__button'>
-            {primaryCta}
+            View details
           </Link>
         </div>
 

@@ -2,6 +2,7 @@
 'use strict';
 
 import React from 'react';
+import { useGitHubMeta } from '../hooks/useGitHubMeta';
 
 interface GitHubMetaProps {
   meta: {
@@ -11,42 +12,53 @@ interface GitHubMetaProps {
     topics?: string[];
     description?: string;
   };
+  live?: boolean; // opt-in to fetch live meta from GitHub API
 }
 
 /**
  * GitHubMeta
- * - Shows simple metadata about the associated GitHub repo
- * - Keep it minimal and readable
+ * - Shows readable metadata about the associated GitHub repo.
+ * - If "live" is true and "repo" is provided, shows live stars/last commit.
  */
-const GitHubMeta: React.FC<GitHubMetaProps> = ({ meta }) => {
-  const { repo, stars, lastCommitAt, topics, description } = meta;
+const GitHubMeta: React.FC<GitHubMetaProps> = ({ meta, live = true }) => {
+  const defaults = {
+    stars: meta.stars,
+    lastCommitAt: meta.lastCommitAt,
+    description: meta.description,
+    topics: meta.topics,
+  };
+
+  const { meta: liveMeta } = useGitHubMeta(meta.repo, defaults);
+  const data = live ? liveMeta : defaults;
 
   return (
     <div className='githubMeta'>
-      {description && <p className='githubMeta__description'>{description}</p>}
+      {data.description && <p className='githubMeta__description'>{data.description}</p>}
 
-      <ul className='githubMeta__stats'>
-        {repo && (
-          <li className='githubMeta__stat'>
-            <span className='githubMeta__label'>Repository:</span> {repo}
-          </li>
+      <dl className='githubMeta__stats' aria-label='GitHub repository stats'>
+        {meta.repo && (
+          <>
+            <dt className='githubMeta__label'>Repository:</dt>
+            <dd className='githubMeta__value'>{meta.repo}</dd>
+          </>
         )}
-        {typeof stars === 'number' && (
-          <li className='githubMeta__stat'>
-            <span className='githubMeta__label'>Stars:</span> {stars}
-          </li>
+        {typeof data.stars === 'number' && (
+          <>
+            <dt className='githubMeta__label'>Stars:</dt>
+            <dd className='githubMeta__value'>{data.stars}</dd>
+          </>
         )}
-        {lastCommitAt && (
-          <li className='githubMeta__stat'>
-            <span className='githubMeta__label'>Last commit:</span>{' '}
-            {new Date(lastCommitAt).toLocaleString()}
-          </li>
+        {data.lastCommitAt && (
+          <>
+            <dt className='githubMeta__label'>Last commit:</dt>
+            <dd className='githubMeta__value'>{new Date(data.lastCommitAt).toLocaleString()}</dd>
+          </>
         )}
-      </ul>
+      </dl>
 
-      {topics && topics.length > 0 && (
-        <ul className='githubMeta__topics'>
-          {topics.map((t) => (
+      {data.topics && data.topics.length > 0 && (
+        <ul className='githubMeta__topics' aria-label='Repository topics'>
+          {data.topics.map((t) => (
             <li key={t} className='githubMeta__topic'>
               {t}
             </li>

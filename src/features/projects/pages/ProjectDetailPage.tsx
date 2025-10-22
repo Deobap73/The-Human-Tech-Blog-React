@@ -1,17 +1,16 @@
 // /src/features/projects/pages/ProjectDetailPage.tsx
-
 'use strict';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import '../styles/ProjectDetailPage.scss'; // ← caminho corrigido
+import '../styles/ProjectDetailPage.scss';
 import type { Project as BaseProject } from '../../../shared/types/Project';
 import { fetchProjectBySlug } from '../../../shared/services/projectService';
 import Loader from '../../../shared/components/Loader';
 import FigmaEmbed from '../components/FigmaEmbed';
 import GitHubMeta from '../components/GitHubMeta';
+import { useGitHubMeta } from '../hooks/useGitHubMeta';
 
-// Extende o tipo do frontend com os campos opcionais vindos do backend
 type ProjectDetail = BaseProject & {
   source?: 'figma' | 'github' | 'mixed';
   meta?: {
@@ -32,28 +31,61 @@ const ProjectDetailPage: React.FC = () => {
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
-    let isMounted = true;
+    const controller = new AbortController();
 
     const load = async () => {
       try {
         if (!slug) return;
         setLoading(true);
         setError('');
-        const data = await fetchProjectBySlug(slug);
-        if (isMounted) setProject(data as ProjectDetail);
+        const data = await fetchProjectBySlug(slug, controller.signal);
+        setProject(data as ProjectDetail);
       } catch (err) {
-        console.error(err);
-        if (isMounted) setError('Failed to load project.');
+        if ((err as Error).name !== 'CanceledError') {
+          console.error(err);
+          setError('Failed to load project.');
+        }
       } finally {
-        if (isMounted) setLoading(false);
+        setLoading(false);
       }
     };
 
     void load();
-    return () => {
-      isMounted = false;
-    };
+    return () => controller.abort();
   }, [slug]);
+
+  const { meta: liveGitMeta } = useGitHubMeta(project?.meta?.github?.repo, {
+    stars: project?.meta?.github?.stars,
+    lastCommitAt: project?.meta?.github?.lastCommitAt,
+    description: project?.meta?.github?.description,
+    topics: project?.meta?.github?.topics,
+  });
+
+  const jsonLd = useMemo(() => {
+    if (!project) return null;
+    const base: Record<string, unknown> = {
+      '@context': 'https://schema.org',
+      '@type': 'CreativeWork',
+      name: project.title,
+      url: typeof window !== 'undefined' ? window.location.href : undefined,
+      about: project.excerpt,
+      inLanguage: lang || 'en',
+      dateCreated: project.createdAt,
+      dateModified: project.updatedAt,
+      thumbnailUrl: project.coverImage,
+      genre: project.type,
+      keywords: project.tags?.join(', '),
+      isAccessibleForFree: true,
+    };
+
+    if (project.links?.github || project.meta?.github?.repo) {
+      base['codeRepository'] =
+        project.links?.github ?? `https://github.com/${project.meta?.github?.repo}`;
+    }
+    if (project.links?.live) base['mainEntityOfPage'] = project.links.live;
+
+    return JSON.stringify(base);
+  }, [project, lang]);
 
   if (loading) return <Loader />;
 
@@ -89,9 +121,8 @@ const ProjectDetailPage: React.FC = () => {
 
   const { coverImage, title, excerpt, tags, links, type, meta, source } = project;
 
-  // Fallback caso o backend não envie "source"
   const sourceLabel =
-    source ||
+    project.source ||
     (links?.figma && links?.github
       ? 'mixed'
       : links?.figma
@@ -103,6 +134,11 @@ const ProjectDetailPage: React.FC = () => {
   return (
     <section className='projectDetail'>
       <div className='projectDetail__container'>
+        {/* JSON-LD for SEO */}
+        {jsonLd && (
+          <script type='application/ld+json' dangerouslySetInnerHTML={{ __html: jsonLd }} />
+        )}
+
         <div className='projectDetail__header'>
           <div className='projectDetail__info'>
             <h1 className='projectDetail__title'>{title}</h1>
@@ -120,7 +156,7 @@ const ProjectDetailPage: React.FC = () => {
             </div>
 
             {tags && tags.length > 0 && (
-              <ul className='projectDetail__tags'>
+              <ul className='projectDetail__tags' aria-label='Project tags'>
                 {tags.map((tag) => (
                   <li key={tag} className='projectDetail__tag'>
                     #{tag}
@@ -177,7 +213,13 @@ const ProjectDetailPage: React.FC = () => {
 
           {coverImage && (
             <div className='projectDetail__cover'>
-              <img src={coverImage} alt={title} className='projectDetail__cover-image' />
+              <img
+                src={coverImage}
+                alt={title || 'Project cover'}
+                className='projectDetail__cover-image'
+                loading='lazy'
+                decoding='async'
+              />
             </div>
           )}
         </div>
@@ -186,15 +228,24 @@ const ProjectDetailPage: React.FC = () => {
         {links?.figmaEmbedUrl && (
           <div className='projectDetail__block'>
             <h2 className='projectDetail__section-title'>Figma Preview</h2>
-            <FigmaEmbed embedUrl={links.figmaEmbedUrl} />
+            <FigmaEmbed embedUrl={links.figmaEmbedUrl} ratio={56.25} />
           </div>
         )}
 
         {/* GitHub metadata (if present) */}
-        {meta?.github && (
+        {(meta?.github || liveGitMeta) && (
           <div className='projectDetail__block'>
             <h2 className='projectDetail__section-title'>GitHub</h2>
-            <GitHubMeta meta={meta.github} />
+            <GitHubMeta
+              meta={{
+                repo: meta?.github?.repo,
+                stars: liveGitMeta?.stars ?? meta?.github?.stars,
+                lastCommitAt: liveGitMeta?.lastCommitAt ?? meta?.github?.lastCommitAt,
+                topics: liveGitMeta?.topics ?? meta?.github?.topics,
+                description: liveGitMeta?.description ?? meta?.github?.description,
+              }}
+              live
+            />
           </div>
         )}
       </div>

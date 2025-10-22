@@ -9,6 +9,9 @@
     "login": "Anmelden",
     "profile": "Profil",
     "chat": "Chat",
+    "projects": "Projekte",
+    "backgroundAlt": "Hintergrund der Navigation",
+
     "title": "Der Human Tech Blog",
     "description": "Entdecken Sie die Welt des Projektmanagements, Frontend, UI/UX und Scrum durch meine Augen. Persönliche Reflexionen und Einblicke in Leben und Technologie",
     "title.home": "Der Human Tech Blog",
@@ -350,6 +353,36 @@
       "hint": "Gäste-Kommentare bleiben bis zur Freigabe ausstehend.",
       "submitSuccess": "Kommentar gesendet. Bitte auf die Moderation warten.",
       "sendErrorFallback": "Kommentar konnte nicht gesendet werden"
+    }
+  },
+
+  "projects": {
+    "title": "Projekte",
+    "search": {
+      "placeholder": "Nach Titel oder Tag suchen…",
+      "button": "Anwenden"
+    },
+    "empty": {
+      "title": "Keine Projekte für diesen Filter gefunden.",
+      "hint": "Versuchen Sie, Filter zu entfernen oder die Suchbegriffe zu ändern.",
+      "clear": "Filter löschen"
+    },
+    "type": {
+      "frontendUi": "Frontend UI",
+      "uxFigma": "UX · Figma",
+      "full": "Vollständige Projekte"
+    },
+    "source": {
+      "figma": "Figma",
+      "github": "GitHub",
+      "mixed": "Gemischt"
+    },
+    "viewDetails": "Details anzeigen",
+    "external": {
+      "github": "GitHub",
+      "figma": "Figma",
+      "live": "Live",
+      "article": "Artikel"
     }
   }
 }

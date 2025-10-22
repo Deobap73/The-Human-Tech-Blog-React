@@ -9,6 +9,9 @@
     "login": "Entrar",
     "profile": "Perfil",
     "chat": "Chat",
+    "projects": "Projectos",
+    "backgroundAlt": "Fundo da barra de navegação",
+
     "title": "O Blog de Tecnologia Humana",
     "description": "Explore o mundo da gestão de projetos, frontend, UI/UX e Scrum através dos meus olhos. Reflexões pessoais e insights sobre vida e tecnologia",
     "title.home": "O Blog de Tecnologia Humana",
@@ -354,6 +357,36 @@
       "hint": "Comentários de convidados ficam pendentes até aprovação.",
       "submitSuccess": "Comentário enviado. Aguarda moderação.",
       "sendErrorFallback": "Falha ao enviar comentário"
+    }
+  },
+
+  "projects": {
+    "title": "Projectos",
+    "search": {
+      "placeholder": "Pesquisar por título ou etiqueta…",
+      "button": "Aplicar"
+    },
+    "empty": {
+      "title": "Nenhum projecto encontrado para este filtro.",
+      "hint": "Tente remover filtros ou alterar os termos de pesquisa.",
+      "clear": "Limpar filtros"
+    },
+    "type": {
+      "frontendUi": "UI Frontend",
+      "uxFigma": "UX · Figma",
+      "full": "Projectos Completos"
+    },
+    "source": {
+      "figma": "Figma",
+      "github": "GitHub",
+      "mixed": "Misto"
+    },
+    "viewDetails": "Ver detalhes",
+    "external": {
+      "github": "GitHub",
+      "figma": "Figma",
+      "live": "Live",
+      "article": "Artigo"
     }
   }
 }
