@@ -1,4 +1,4 @@
-// src/routes/AdminRoutes.tsx
+// /src/routes/AdminRoutes.tsx
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import AdminPage from '../features/admin/pages/AdminPage';
@@ -11,6 +11,7 @@ import ModerationCommentsPage from '../features/admin/pages/ModerationCommentsPa
 import AdminTagsPage from '../features/admin/pages/AdminTagsPage';
 import AdminCategoriesPage from '../features/admin/pages/AdminCategoriesPage';
 import DebugPage from './DebugPage';
+import AdminProjectsPage from '../features/admin/pages/AdminProjectsPage'; // ← NEW import
 
 // Dynamic imports for better performance
 const AdminChatPage = lazy(() => import('../features/chat/pages/ChatRoutes'));
@@ -33,6 +34,7 @@ const AdminRoutes = () => (
       <Route path='posts/edit/:id' element={<DebugPage />} />
       <Route path='tags' element={<AdminTagsPage />} />
       <Route path='categories' element={<AdminCategoriesPage />} />
+      <Route path='projects' element={<AdminProjectsPage />} /> {/* ← NEW route */}
       <Route
         path='messages'
         element={

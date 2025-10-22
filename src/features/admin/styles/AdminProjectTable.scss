@@ -1,0 +1,86 @@
+// /src/features/admin/styles/AdminProjectTable.scss
+
+.adminProjectTable {
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  &__head {
+    background: var(--surface-2, #f6f7fb);
+  }
+
+  &__row {
+    &--head {
+      text-align: left;
+    }
+  }
+
+  &__cell {
+    padding: 0.65rem 0.75rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+
+    &--check {
+      width: 52px;
+    }
+    &--title {
+      min-width: 260px;
+    }
+    &--repo,
+    &--figma {
+      min-width: 180px;
+    }
+  }
+
+  &__title {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+  }
+
+  &__thumb {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  &__name {
+    font-weight: 600;
+  }
+
+  &__excerpt {
+    font-size: 0.9rem;
+    color: var(--text-2, #546178);
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  &__action {
+    padding: 0.35rem 0.6rem;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: #fff;
+    cursor: pointer;
+
+    &--github {
+    }
+    &--figma {
+    }
+    &--edit {
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  &__fresh {
+    margin-top: 0.25rem;
+  }
+}

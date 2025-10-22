@@ -153,7 +153,7 @@ const DashboardHome = () => {
                 cy='50%'
                 outerRadius={60}
                 label={({ name }) => name}>
-                {postsPerCategoryPie.map((entry, idx) => (
+                {postsPerCategoryPie.map((_, idx: number) => (
                   <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
                 ))}
               </Pie>

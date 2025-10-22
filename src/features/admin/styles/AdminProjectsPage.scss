@@ -1,0 +1,93 @@
+// /src/features/admin/styles/AdminProjectsPage.scss
+
+.adminProjects {
+  &__header {
+    margin-bottom: 1rem;
+  }
+
+  &__title {
+    font-size: clamp(1.1rem, 1.8vw, 1.6rem);
+    margin: 0 0 0.25rem;
+  }
+
+  &__subtitle {
+    color: var(--text-2, #546178);
+    margin: 0 0 1rem;
+  }
+
+  &__filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  &__tabs {
+    display: inline-flex;
+    background: var(--surface-2, #f6f7fb);
+    border-radius: 10px;
+    padding: 0.25rem;
+  }
+
+  &__tab {
+    border: 0;
+    background: transparent;
+    padding: 0.5rem 0.8rem;
+    border-radius: 8px;
+    cursor: pointer;
+
+    &--active {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  &__search {
+    flex: 1 1 260px;
+  }
+
+  &__search-input {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: #fff;
+  }
+
+  &__bulk {
+    display: inline-flex;
+    gap: 0.5rem;
+  }
+
+  &__bulk-btn {
+    padding: 0.5rem 0.8rem;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: #fff;
+    cursor: pointer;
+
+    &--github {
+    }
+    &--figma {
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__tableWrap {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  &__pagination {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+  }
+}

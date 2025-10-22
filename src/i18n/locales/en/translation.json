@@ -52,7 +52,27 @@
     "posts": "Posts",
     "messages": "Messages",
     "moderateComments": "Moderate Comments",
-    "settings": "Settings"
+    "settings": "Settings",
+    "projects": {
+      "title": "Projects",
+      "subtitle": "Manage integrations, freshness and bulk sync",
+      "searchPlaceholder": "Search by title or tag...",
+      "bulkSync": "Bulk Sync",
+      "syncGitHub": "Sync GitHub",
+      "syncFigma": "Sync Figma",
+      "edit": "Edit",
+      "repo": "Repository",
+      "fileKey": "Figma file key",
+      "figmaUrl": "Figma public URL",
+      "updated": "Updated",
+      "fresh": "Fresh",
+      "stale": "Stale",
+      "confirmBulk": "Proceed with bulk sync for the selected items?",
+      "successSync": "Sync executed successfully",
+      "errorSync": "Sync failed",
+      "save": "Save",
+      "cancel": "Cancel"
+    }
   },
 
   "adminCategoryForm": {

@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { useGitHubMeta } from '../hooks/useGitHubMeta';
+import ProjectFreshnessBadge from './ProjectFreshnessBadge';
 
 interface GitHubMetaProps {
   meta: {
@@ -51,7 +52,12 @@ const GitHubMeta: React.FC<GitHubMetaProps> = ({ meta, live = true }) => {
         {data.lastCommitAt && (
           <>
             <dt className='githubMeta__label'>Last commit:</dt>
-            <dd className='githubMeta__value'>{new Date(data.lastCommitAt).toLocaleString()}</dd>
+            <dd className='githubMeta__value'>
+              {new Date(data.lastCommitAt).toLocaleString()}
+              <span style={{ marginLeft: 8 }}>
+                <ProjectFreshnessBadge label='GitHub' timestampIso={data.lastCommitAt} />
+              </span>
+            </dd>
           </>
         )}
       </dl>
