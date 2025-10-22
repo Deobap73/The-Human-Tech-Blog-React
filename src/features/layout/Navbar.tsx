@@ -1,4 +1,5 @@
 // /src/features/layout/Navbar.tsx
+'use strict';
 
 import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useState } from 'react';
@@ -57,7 +58,7 @@ const Navbar = () => {
       {config.background && !isCompact && (
         <img
           src={config.background}
-          alt='Navbar background'
+          alt={t('navbar.backgroundAlt', { defaultValue: 'Navbar background' })}
           className='navbar__background'
           aria-hidden='true'
           loading='lazy'
@@ -101,6 +102,16 @@ const Navbar = () => {
                 onClick={handleNavClick}>
                 {t('navbar.home')}
               </Link>
+
+              {/* NEW: Projects link */}
+              <Link
+                to={buildUrl('projects', activeLang)}
+                className={`navbar__item${isActive('projects') ? ' navbar__item--active' : ''}`}
+                aria-current={isActive('projects') ? 'page' : undefined}
+                onClick={handleNavClick}>
+                {t('navbar.projects', { defaultValue: 'Projects' })}
+              </Link>
+
               <Link
                 to={buildUrl('contact', activeLang)}
                 className={`navbar__item${isActive('contact') ? ' navbar__item--active' : ''}`}

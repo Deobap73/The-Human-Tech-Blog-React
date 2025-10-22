@@ -4,12 +4,12 @@
 import React, { useEffect, useState } from 'react';
 import ProjectsTabs from '../components/ProjectsTabs';
 import ProjectCard from '../components/ProjectCard';
+import ProjectsFilterBar from './ProjectsFilterBar';
 import '../styles/ProjectsPage.scss';
 import '../styles/ProjectsGrid.scss';
 import { fetchProjects } from '../../../shared/services/projectService';
 import type { Project } from '../../../shared/types/Project';
 import Loader from '../../../shared/components/Loader';
-// ✅ Pagination está em /src/ui/Pagination.tsx (não em /src/features/ui)
 import Pagination from '../../ui/Pagination';
 
 const DEFAULT_LIMIT = 9;
@@ -21,21 +21,19 @@ const ProjectsPage: React.FC = () => {
   const [error, setError] = useState<string>('');
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [search, setSearch] = useState<string>('');
 
-  // Reset page to 1 whenever tab changes
+  // Reset page to 1 whenever tab or search changes
   useEffect(() => {
     setPage(1);
-  }, [activeTab]);
+  }, [activeTab, search]);
 
   useEffect(() => {
-    const controller = new AbortController();
-
-    const load = async () => {
+    const load = async (): Promise<void> => {
       try {
         setLoading(true);
         setError('');
-        const data = await fetchProjects(activeTab, page, DEFAULT_LIMIT);
-        // ✅ Backend retorna { page, limit, total, items }
+        const data = await fetchProjects(activeTab, page, DEFAULT_LIMIT, search);
         setProjects(data.items);
         setTotalPages(Math.max(1, Math.ceil(data.total / data.limit)));
       } catch (err) {
@@ -47,14 +45,23 @@ const ProjectsPage: React.FC = () => {
     };
 
     void load();
-    return () => controller.abort();
-  }, [activeTab, page]);
+  }, [activeTab, page, search]);
 
   return (
     <section className='projectsPage'>
       <div className='projectsPage__container'>
         <h1 className='projectsPage__title'>Projects</h1>
+
+        {/* Keep existing tabs for familiarity */}
         <ProjectsTabs activeTab={activeTab} onChange={setActiveTab} />
+
+        {/* New filter bar adds search; tabs are duplicated intentionally for layout flexibility */}
+        <ProjectsFilterBar
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          search={search}
+          onSearchChange={setSearch}
+        />
 
         {loading && <Loader />}
         {error && <p className='projectsPage__error'>{error}</p>}

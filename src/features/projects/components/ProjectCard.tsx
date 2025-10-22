@@ -1,10 +1,10 @@
 // /src/features/projects/components/ProjectCard.tsx
-
 'use strict';
 
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import type { Project } from '../../../shared/types/Project';
+import ProjectTypeTag from './ProjectTypeTag';
 import '../styles/ProjectCard.scss';
 
 interface Props {
@@ -13,18 +13,21 @@ interface Props {
 
 /**
  * ProjectCard
- * - Shows cover, title, excerpt, tags
+ * - Shows cover, title, excerpt, tags and a type/source chip
  * - Primary CTA navigates to the local detail route `/:lang/projects/:slug`
  * - External links remain available as secondary actions
  */
 const ProjectCard: React.FC<Props> = ({ project }) => {
   const { lang } = useParams<{ lang: string }>();
-  const { coverImage, title, excerpt, tags, links, slug } = project;
+  const { coverImage, title, excerpt, tags, links, slug, type, source } = project;
 
   const detailHref = `/${lang || 'en'}/projects/${slug}`;
 
+  // Contextual CTA label (keeps it subtle; main action is details page)
+  const primaryCta = 'View details';
+
   return (
-    <div className='projectCard'>
+    <article className='projectCard'>
       <Link to={detailHref} className='projectCard__image-wrapper' aria-label={`Open ${title}`}>
         {coverImage ? (
           <img src={coverImage} alt={title} className='projectCard__image' />
@@ -34,6 +37,10 @@ const ProjectCard: React.FC<Props> = ({ project }) => {
       </Link>
 
       <div className='projectCard__content'>
+        <div className='projectCard__header'>
+          <ProjectTypeTag type={type} source={source} />
+        </div>
+
         <h3 className='projectCard__title'>
           <Link to={detailHref} className='projectCard__title-link'>
             {title}
@@ -54,7 +61,7 @@ const ProjectCard: React.FC<Props> = ({ project }) => {
 
         <div className='projectCard__cta'>
           <Link to={detailHref} className='projectCard__button'>
-            View details
+            {primaryCta}
           </Link>
         </div>
 
@@ -97,7 +104,7 @@ const ProjectCard: React.FC<Props> = ({ project }) => {
           )}
         </div>
       </div>
-    </div>
+    </article>
   );
 };
 

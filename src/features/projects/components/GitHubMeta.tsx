@@ -1,5 +1,4 @@
 // /src/features/projects/components/GitHubMeta.tsx
-
 'use strict';
 
 import React from 'react';

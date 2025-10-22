@@ -1,8 +1,8 @@
 // /src/features/projects/components/FigmaEmbed.tsx
-
 'use strict';
 
 import React from 'react';
+import '../styles/FigmaEmbed.scss';
 
 /**
  * FigmaEmbed

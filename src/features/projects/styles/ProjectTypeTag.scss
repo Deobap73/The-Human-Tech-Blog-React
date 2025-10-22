@@ -1,0 +1,39 @@
+// /src/features/projects/styles/ProjectTypeTag.scss
+
+.projectTypeTag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+
+  &__pill {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 999px;
+    font-size: var(--font-size-sm, 0.85rem);
+    line-height: 1;
+    font-weight: 600;
+    background: var(--surface-2, #f5f7fb);
+    border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
+    color: var(--text-1, #0e1627);
+
+    &--frontend-ui {
+      background: rgba(41, 149, 226, 0.12);
+      border-color: rgba(41, 149, 226, 0.35);
+    }
+
+    &--ux-figma {
+      background: rgba(162, 89, 255, 0.12);
+      border-color: rgba(162, 89, 255, 0.35);
+    }
+
+    &--full {
+      background: rgba(15, 157, 88, 0.12);
+      border-color: rgba(15, 157, 88, 0.35);
+    }
+  }
+
+  &__source {
+    font-size: var(--font-size-sm, 0.85rem);
+    color: var(--text-2, #3a4252);
+  }
+}
