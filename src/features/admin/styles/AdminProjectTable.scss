@@ -4,21 +4,29 @@
   &__table {
     width: 100%;
     border-collapse: collapse;
+    background: var(--background, #fff);
   }
 
   &__head {
-    background: var(--surface-2, #f6f7fb);
+    background: var(--background-secondary, #f6f8fc);
+    border-bottom: 1px solid #e6eaf5;
   }
 
   &__row {
     &--head {
       text-align: left;
     }
+
+    &:not(&--head):hover {
+      background: #fbfdff;
+    }
   }
 
   &__cell {
     padding: 0.65rem 0.75rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    vertical-align: middle;
+    color: var(--text-color, #1c2331);
 
     &--check {
       width: 52px;
@@ -44,28 +52,50 @@
     border-radius: 8px;
     object-fit: cover;
     border: 1px solid rgba(0, 0, 0, 0.06);
+    background: #fff;
   }
 
   &__name {
-    font-weight: 600;
+    font-weight: 700;
+    color: var(--text-color, #1c2331);
   }
 
   &__excerpt {
-    font-size: 0.9rem;
-    color: var(--text-2, #546178);
+    font-size: 0.92rem;
+    color: var(--text-color-secondary, #546178);
   }
 
   &__actions {
     display: flex;
-    gap: 0.4rem;
+    gap: 0.45rem;
+    flex-wrap: wrap;
   }
 
   &__action {
-    padding: 0.35rem 0.6rem;
-    border-radius: 8px;
-    border: 1px solid rgba(0, 0, 0, 0.12);
+    padding: 0.45rem 0.7rem;
+    border-radius: 10px;
+    border: 2px solid var(--primary, #2995e2);
+    border-left: none;
+    border-right: none;
     background: #fff;
+    color: var(--primary, #2995e2);
+    font-weight: 700;
     cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 48, 104, 0.06);
+    transition: border 0.2s, box-shadow 0.2s, background 0.2s, color 0.2s;
+
+    &:hover,
+    &:focus {
+      background: var(--primary, #2995e2);
+      color: #fff;
+      outline: none;
+    }
+
+    &:active {
+      background: rgba(0, 48, 104, 0.1);
+      color: var(--primary);
+      box-shadow: none;
+    }
 
     &--github {
     }
@@ -77,6 +107,8 @@
     &:disabled {
       opacity: 0.6;
       cursor: not-allowed;
+      background: #f1f5fb;
+      color: var(--text-color-secondary, #546178);
     }
   }
 

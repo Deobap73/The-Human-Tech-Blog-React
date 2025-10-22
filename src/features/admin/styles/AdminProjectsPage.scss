@@ -1,71 +1,127 @@
 // /src/features/admin/styles/AdminProjectsPage.scss
 
 .adminProjects {
+  padding: var(--padding-xl) 0;
+  max-width: 1080px;
+  margin: 0 auto;
+
   &__header {
-    margin-bottom: 1rem;
+    margin-bottom: var(--margin-md, 1rem);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--gap-base, 0.75rem);
   }
 
   &__title {
-    font-size: clamp(1.1rem, 1.8vw, 1.6rem);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary, #2995e2);
     margin: 0 0 0.25rem;
+    letter-spacing: 0.6px;
   }
 
   &__subtitle {
-    color: var(--text-2, #546178);
+    color: var(--text-color-secondary, #546178);
     margin: 0 0 1rem;
+    font-size: 1rem;
   }
 
   &__filter {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
+    gap: var(--gap-base, 0.75rem);
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: var(--margin-md, 1rem);
   }
 
   &__tabs {
     display: inline-flex;
-    background: var(--surface-2, #f6f7fb);
-    border-radius: 10px;
+    gap: var(--gap-sm, 0.25rem);
     padding: 0.25rem;
+    border-bottom: 2px solid var(--primary, #2995e2);
   }
 
   &__tab {
-    border: 0;
-    background: transparent;
-    padding: 0.5rem 0.8rem;
-    border-radius: 8px;
-    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--text-color-secondary, #4d5a70);
+    padding: var(--padding-sm, 0.6rem) var(--padding-md, 0.9rem);
+    border-radius: 1rem 1rem 0 0;
+    text-decoration: none;
+    transition: color 0.2s, background 0.2s;
 
-    &--active {
-      background: #fff;
-      border: 1px solid rgba(0, 0, 0, 0.08);
+    &--active,
+    &.active {
+      color: var(--primary, #2995e2);
+      background: var(--background, #fff);
+      box-shadow: 0 2px 12px 0 rgba(29, 161, 242, 0.06);
+      border-bottom: 2px solid var(--background, #fff);
+    }
+
+    &:not(.active):hover {
+      color: var(--primary-hover, #1e7fc4);
+      background: var(--background-secondary, #f6f8fc);
     }
   }
 
   &__search {
     flex: 1 1 260px;
+    min-width: 240px;
   }
 
   &__search-input {
     width: 100%;
-    padding: 0.6rem 0.8rem;
+    padding: var(--padding-sm, 0.6rem) var(--padding-md, 0.8rem);
     border-radius: 10px;
-    border: 1px solid rgba(0, 0, 0, 0.12);
-    background: #fff;
+    border: 1.5px solid var(--primary, #2995e2);
+    background: var(--background-secondary, #f6f8fc);
+    color: var(--text-color, #1c2331);
+    outline: none;
+    box-shadow: 0 1px 6px rgba(29, 161, 242, 0.06);
+    transition: border 0.2s, box-shadow 0.2s;
+
+    &:focus {
+      border-color: var(--primary-hover, #1e7fc4);
+      box-shadow: 0 0 0 2px var(--primary-hover, #1e7fc4), 0 2px 8px rgba(29, 161, 242, 0.07);
+    }
   }
 
   &__bulk {
     display: inline-flex;
     gap: 0.5rem;
+    flex-wrap: wrap;
   }
 
   &__bulk-btn {
-    padding: 0.5rem 0.8rem;
-    border-radius: 10px;
-    border: 1px solid rgba(0, 0, 0, 0.12);
-    background: #fff;
+    padding: 0.5rem 0.9rem;
+    min-height: 42px;
+    border-radius: 12px;
+    border: 2px solid var(--primary, #2995e2);
+    border-left: none;
+    border-right: none;
+    background: var(--primary, #2995e2);
+    color: #fff;
+    font-weight: 700;
     cursor: pointer;
+    box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
+    transition: border 0.2s, box-shadow 0.2s, background 0.25s, transform 0.15s;
+
+    &:hover,
+    &:focus {
+      background: rgba(0, 48, 104, 0.388);
+      transform: translateY(-1px) scale(1.01);
+      outline: none;
+    }
+
+    &:active {
+      background: none !important;
+      color: var(--primary);
+      border-color: var(--primary-hover);
+      box-shadow: none;
+    }
 
     &--github {
     }
@@ -73,20 +129,22 @@
     }
 
     &:disabled {
-      opacity: 0.5;
+      opacity: 0.6;
       cursor: not-allowed;
+      transform: none;
     }
   }
 
   &__tableWrap {
-    background: #fff;
+    background: var(--background, #fff);
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 12px;
     overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 48, 104, 0.08);
   }
 
   &__pagination {
-    margin-top: 1rem;
+    margin-top: var(--margin-md, 1rem);
     display: flex;
     justify-content: center;
   }

@@ -335,6 +335,7 @@ li {
 button {
   text-decoration: none;
   background: none;
+  border: none;
 }
 
 /* 
@@ -346,8 +347,7 @@ button:not([class]) {
   display: inline-flex;
   align-items: center;
   gap: 0.5em;
-  border-radius: var(--border-radius-sm);
-  border: 1px solid transparent;
+  border: none;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
