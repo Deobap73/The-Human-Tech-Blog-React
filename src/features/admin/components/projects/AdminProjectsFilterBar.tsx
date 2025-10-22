@@ -2,11 +2,12 @@
 'use strict';
 
 import React from 'react';
+import type { ProjectType } from '../../../../shared/types/Project';
 import '../../styles/AdminProjectsPage.scss';
 
 interface Props {
-  type: 'frontend-ui' | 'ux-figma' | 'full';
-  onTypeChange: (t: 'frontend-ui' | 'ux-figma' | 'full') => void;
+  type: ProjectType;
+  onTypeChange: (t: ProjectType) => void;
   search: string;
   onSearchChange: (v: string) => void;
   onBulkSyncGitHub: () => void;
@@ -16,8 +17,9 @@ interface Props {
 
 /**
  * AdminProjectsFilterBar
- * - Simple filter bar: tabs for type + search input
- * - Bulk actions enabled when selectionCount > 0
+ * - Tabs to switch project type + search input
+ * - Bulk actions (GitHub / Figma) enabled only if selectionCount > 0
+ * - Uses AdminProjectsPage.scss styles to keep visual consistency
  */
 const AdminProjectsFilterBar: React.FC<Props> = ({
   type,
@@ -28,45 +30,65 @@ const AdminProjectsFilterBar: React.FC<Props> = ({
   onBulkSyncFigma,
   selectionCount,
 }) => {
+  const TABS: Readonly<ProjectType[]> = ['frontend-ui', 'ux-figma', 'full'] as const;
+
+  const getTabLabel = (t: ProjectType): string =>
+    t === 'frontend-ui' ? 'Frontend UI' : t === 'ux-figma' ? 'UX · Figma' : 'Full';
+
+  const disabled = selectionCount === 0;
+
   return (
     <div className='adminProjects__filter'>
-      <div className='adminProjects__tabs' role='tablist' aria-label='Project Type'>
-        {(['frontend-ui', 'ux-figma', 'full'] as const).map((t) => (
-          <button
-            key={t}
-            role='tab'
-            aria-selected={type === t}
-            className={`adminProjects__tab${type === t ? ' adminProjects__tab--active' : ''}`}
-            onClick={() => onTypeChange(t)}>
-            {t === 'frontend-ui' ? 'Frontend UI' : t === 'ux-figma' ? 'UX · Figma' : 'Full'}
-          </button>
-        ))}
+      <div className='adminProjects__tabs' role='tablist' aria-label='Project type'>
+        {TABS.map((t) => {
+          const active = type === t;
+          return (
+            <button
+              key={t}
+              type='button'
+              role='tab'
+              aria-selected={active}
+              className={`adminProjects__tab${active ? ' adminProjects__tab--active' : ''}`}
+              onClick={() => onTypeChange(t)}>
+              {getTabLabel(t)}
+            </button>
+          );
+        })}
       </div>
 
       <div className='adminProjects__search'>
+        <label htmlFor='adminProjectsSearch' className='visually-hidden'>
+          Search projects
+        </label>
         <input
+          id='adminProjectsSearch'
           type='text'
           className='adminProjects__search-input'
           placeholder='Search by title or tag...'
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
           aria-label='Search projects'
+          autoComplete='off'
         />
       </div>
 
-      <div className='adminProjects__bulk'>
+      <div className='adminProjects__bulk' role='group' aria-label='Bulk actions'>
         <button
+          type='button'
           className='adminProjects__bulk-btn adminProjects__bulk-btn--github'
-          disabled={selectionCount === 0}
+          disabled={disabled}
           onClick={onBulkSyncGitHub}
-          aria-disabled={selectionCount === 0}>
+          aria-disabled={disabled}
+          title={disabled ? 'Select at least one project' : 'Sync selected projects with GitHub'}>
           Bulk Sync GitHub ({selectionCount})
         </button>
         <button
+          type='button'
           className='adminProjects__bulk-btn adminProjects__bulk-btn--figma'
-          disabled={selectionCount === 0}
+          disabled={disabled}
           onClick={onBulkSyncFigma}
-          aria-disabled={selectionCount === 0}>
+          aria-disabled={disabled}
+          title={disabled ? 'Select at least one project' : 'Sync selected projects with Figma'}>
           Bulk Sync Figma ({selectionCount})
         </button>
       </div>

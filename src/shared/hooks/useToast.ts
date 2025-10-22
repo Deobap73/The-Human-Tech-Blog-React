@@ -1,6 +1,10 @@
-// src/shared/hooks/useToast.ts
+// /src/shared/hooks/useToast.ts
 import toast, { ToastOptions } from 'react-hot-toast';
 
+/**
+ * useToast
+ * - Thin adapter around react-hot-toast to keep a consistent interface across the app.
+ */
 export const useToast = () => {
   return {
     success: (msg: string, opts?: ToastOptions) => toast.success(msg, opts),

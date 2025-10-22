@@ -1,4 +1,5 @@
 // /src/features/admin/pages/DashboardHome.tsx
+'use strict';
 
 import { useEffect, useState } from 'react';
 import api from '../../../shared/utils/axios';
@@ -22,21 +23,69 @@ import { resolveLogoUrl } from '../../../shared/utils/mediaHelpers';
 import { getCategoryName } from '../../../shared/utils/i18nHelpers';
 import { useTranslation } from 'react-i18next';
 import '../styles/DashboardHome.scss';
-import { Category } from '../../../shared/types/Category';
+import type { Category } from '../../../shared/types/Category';
 
-const COLORS = ['#457b9d', '#a8dadc', '#f1faee', '#e63946', '#2d3142'];
+// Palette for pie slices
+const COLORS = ['#457b9d', '#a8dadc', '#f1faee', '#e63946', '#2d3142'] as const;
+
+// Weekday labels (Sun..Sat), typed as readonly tuple for safety
+const DAYS: readonly ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] = [
+  'Sun',
+  'Mon',
+  'Tue',
+  'Wed',
+  'Thu',
+  'Fri',
+  'Sat',
+] as const;
+
+// --- Types for dashboard KPIs (align to the backend response used here) ---
+interface PostsPerCategoryItem {
+  slug: string;
+  name: string;
+  value: number;
+}
+
+interface TopCategoryItem {
+  slug: string;
+  name: string;
+  postsCount: number;
+  logo?: string;
+}
+
+interface TopUserItem {
+  name: string;
+  posts: number;
+}
+
+interface AnalyticsKpis {
+  totalUsers: number;
+  totalPosts: number;
+  totalComments: number;
+  totalCategories: number;
+  commentsPending: number;
+  postsToday: number;
+  usersToday: number;
+
+  postsWeek: number[]; // length 7
+  usersWeek: number[]; // length 7
+
+  postsPerCategory: PostsPerCategoryItem[];
+  topCategories: TopCategoryItem[];
+  topUsers: TopUserItem[];
+}
 
 const DashboardHome = () => {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<AnalyticsKpis | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [loadingCategories, setLoadingCategories] = useState(true);
+  const [loadingCategories, setLoadingCategories] = useState<boolean>(true);
   const { i18n } = useTranslation();
   const lang = i18n.language.split('-')[0] || 'en';
 
   // Fetch main dashboard analytics
   useEffect(() => {
     api
-      .get('/analytics/kpis')
+      .get<AnalyticsKpis>('/analytics/kpis')
       .then((res) => setData(res.data))
       .catch(() => setData(null));
   }, []);
@@ -54,10 +103,10 @@ const DashboardHome = () => {
     return <p className='dashboard-home__loading'>Loading dashboard...</p>;
   }
 
-  // Find category object by slug (or fallback)
+  // Find category object by slug (or null)
   const findCategoryBySlug = (slug: string) => categories.find((cat) => cat.slug === slug) || null;
 
-  // KPIs
+  // KPIs (simple bar chart)
   const chartData = [
     { name: 'Users', count: data.totalUsers },
     { name: 'Posts', count: data.totalPosts },
@@ -69,17 +118,17 @@ const DashboardHome = () => {
   ];
 
   const postsWeekData = (data.postsWeek || []).map((count: number, i: number) => ({
-    day: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][i],
+    day: DAYS[i] ?? '',
     posts: count,
   }));
 
   const usersWeekData = (data.usersWeek || []).map((count: number, i: number) => ({
-    day: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][i],
+    day: DAYS[i] ?? '',
     users: count,
   }));
 
   // Pie data: add translations and logos to each entry
-  const postsPerCategoryPie = (data.postsPerCategory || []).map((cat: any) => {
+  const postsPerCategoryPie = (data.postsPerCategory || []).map((cat) => {
     const found = findCategoryBySlug(cat.slug);
     return {
       ...cat,
@@ -88,8 +137,8 @@ const DashboardHome = () => {
     };
   });
 
-  // Top categories for list (with translated name and logo)
-  const topCategories = (data.topCategories || []).map((cat: any) => {
+  // Top categories with translated name and resolved logo
+  const topCategories = (data.topCategories || []).map((cat) => {
     const found = findCategoryBySlug(cat.slug);
     return {
       ...cat,
@@ -103,7 +152,7 @@ const DashboardHome = () => {
       <h2 className='dashboard-home__title'>📊 Admin Dashboard</h2>
 
       {/* KPIs */}
-      <div className='dashboard-home__kpis'>{/* ...as before... */}</div>
+      <div className='dashboard-home__kpis'>{/* ... */}</div>
 
       {/* Main bar chart */}
       <ResponsiveContainer width='100%' height={220}>
@@ -128,6 +177,7 @@ const DashboardHome = () => {
             </LineChart>
           </ResponsiveContainer>
         </div>
+
         {/* Users registered per week */}
         <div className='dashboard-home__chart'>
           <h4 className='dashboard-home__chart-title'>Utilizadores / Semana</h4>
@@ -140,6 +190,7 @@ const DashboardHome = () => {
             </LineChart>
           </ResponsiveContainer>
         </div>
+
         {/* Pie chart: posts per category */}
         <div className='dashboard-home__chart'>
           <h4 className='dashboard-home__chart-title'>Distribuição Posts/Categoria</h4>
@@ -152,7 +203,7 @@ const DashboardHome = () => {
                 cx='50%'
                 cy='50%'
                 outerRadius={60}
-                label={({ name }) => name}>
+                label={({ name }: { name: string }) => name}>
                 {postsPerCategoryPie.map((_, idx: number) => (
                   <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
                 ))}
@@ -168,7 +219,7 @@ const DashboardHome = () => {
       <div className='dashboard-home__top-users'>
         <h3>Top Users (Posts)</h3>
         <ul>
-          {data.topUsers.map((user: any) => (
+          {data.topUsers.map((user) => (
             <li key={user.name} className='dashboard-home__user-item'>
               <span className='dashboard-home__user-name'>{user.name}</span>
               <span className='dashboard-home__user-posts'>{user.posts} posts</span>
@@ -181,7 +232,7 @@ const DashboardHome = () => {
       <div className='dashboard-home__top-categories'>
         <h3>Top Categories</h3>
         <ul>
-          {topCategories.map((cat: any) => (
+          {topCategories.map((cat) => (
             <li key={cat.slug} className='dashboard-home__category-item'>
               {cat.logo && (
                 <img

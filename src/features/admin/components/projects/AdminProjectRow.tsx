@@ -18,21 +18,24 @@ interface Props {
 
 /**
  * AdminProjectRow
- * - Renders a single project row with controls.
+ * - Single project row with selection, quick sync buttons and edit modal.
  * - Uses toast helpers from useToast: success() and error().
  */
 const AdminProjectRow: React.FC<Props> = ({ project, selected, onToggle, onReload }) => {
-  // The existing hook exposes success/error/info… (no showToast)
   const { success: toastSuccess, error: toastError } = useToast();
-  const [editOpen, setEditOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState<boolean>(false);
 
+  /**
+   * Handle save from Edit Modal:
+   * - Will call GitHub and/or Figma sync based on provided fields
+   * - On success, closes modal and triggers a reload
+   */
   async function handleSave(data: {
     repo?: string;
     figmaPublicUrl?: string;
     figmaFileKey?: string;
   }) {
     try {
-      // Try syncing both as per provided fields
       if (data.repo) {
         const r = await syncGitHub(project._id, { repo: data.repo });
         if (!r.ok) throw new Error(r.message || 'GitHub sync failed.');
@@ -63,6 +66,7 @@ const AdminProjectRow: React.FC<Props> = ({ project, selected, onToggle, onReloa
             aria-label={`Select ${project.title}`}
           />
         </td>
+
         <td className='adminProjectTable__cell adminProjectTable__cell--title'>
           <div className='adminProjectTable__title'>
             {project.coverImage && (
@@ -81,10 +85,13 @@ const AdminProjectRow: React.FC<Props> = ({ project, selected, onToggle, onReloa
             </div>
           </div>
         </td>
+
         <td className='adminProjectTable__cell adminProjectTable__cell--type'>{project.type}</td>
+
         <td className='adminProjectTable__cell adminProjectTable__cell--source'>
           {project.source ?? '-'}
         </td>
+
         <td className='adminProjectTable__cell adminProjectTable__cell--repo'>
           {project.meta?.github?.repo ?? '-'}
           {project.meta?.github?.lastCommitAt && (
@@ -97,6 +104,7 @@ const AdminProjectRow: React.FC<Props> = ({ project, selected, onToggle, onReloa
             </div>
           )}
         </td>
+
         <td className='adminProjectTable__cell adminProjectTable__cell--figma'>
           {project.meta?.figma?.fileKey ?? '-'}
           {project.meta?.figma?.lastModified && (
@@ -109,6 +117,7 @@ const AdminProjectRow: React.FC<Props> = ({ project, selected, onToggle, onReloa
             </div>
           )}
         </td>
+
         <td className='adminProjectTable__cell adminProjectTable__cell--actions'>
           <AdminProjectSyncButtons
             id={project._id}
@@ -118,8 +127,10 @@ const AdminProjectRow: React.FC<Props> = ({ project, selected, onToggle, onReloa
             onDone={onReload}
           />
           <button
+            type='button'
             className='adminProjectTable__action adminProjectTable__action--edit'
-            onClick={() => setEditOpen(true)}>
+            onClick={() => setEditOpen(true)}
+            aria-label={`Edit project ${project.title}`}>
             Edit
           </button>
         </td>
