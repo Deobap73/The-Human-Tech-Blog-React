@@ -1,11 +1,12 @@
 // /src/features/projects/components/ProjectCard.tsx
 'use strict';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import type { Project } from '../../../shared/types/Project';
 import ProjectTypeTag from './ProjectTypeTag';
 import '../styles/ProjectCard.scss';
+import { fetchProjectBySlug } from '../../../shared/services/projectService';
 
 interface Props {
   project: Project;
@@ -13,18 +14,28 @@ interface Props {
 
 /**
  * ProjectCard
- * - Shows cover, title, excerpt, tags and a type/source chip
- * - Primary CTA navigates to the local detail route `/:lang/projects/:slug`
- * - External links remain available as secondary actions
+ * - Adds a tiny prefetch on hover/focus to warm browser/cache for detail.
  */
 const ProjectCard: React.FC<Props> = ({ project }) => {
   const { lang } = useParams<{ lang: string }>();
   const { coverImage, title, excerpt, tags, links, slug, type, source } = project;
-
   const detailHref = `/${lang || 'en'}/projects/${slug}`;
+  const abortRef = useRef<AbortController | null>(null);
+
+  const prefetch = (): void => {
+    try {
+      if (abortRef.current) abortRef.current.abort();
+      const controller = new AbortController();
+      abortRef.current = controller;
+      // Fire and forget; ignore errors
+      void fetchProjectBySlug(slug, controller.signal);
+    } catch {
+      // ignore
+    }
+  };
 
   return (
-    <article className='projectCard'>
+    <article className='projectCard' onMouseEnter={prefetch} onFocus={prefetch}>
       <Link to={detailHref} className='projectCard__image-wrapper' aria-label={`Open ${title}`}>
         {coverImage ? (
           <img

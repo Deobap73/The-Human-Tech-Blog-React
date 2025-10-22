@@ -1,7 +1,7 @@
 // /src/features/projects/pages/ProjectsPage.tsx
 'use strict';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import ProjectsTabs from '../components/ProjectsTabs';
 import ProjectCard from '../components/ProjectCard';
 import ProjectsFilterBar from './ProjectsFilterBar';
@@ -13,11 +13,12 @@ import '../styles/ProjectsGrid.scss';
 
 import { fetchProjects } from '../../../shared/services/projectService';
 import type { Project } from '../../../shared/types/Project';
-import Loader from '../../../shared/components/Loader';
 import Pagination from '../../ui/Pagination';
 
 import { useQueryParams } from '../../../shared/hooks/useQueryParams';
 import { useDebouncedValue } from '../../../shared/hooks/useDebouncedValue';
+import { useProjectsCache } from '../hooks/useProjectsCache';
+import { makeProjectsKey } from '../utils/queryKeys';
 
 const DEFAULT_LIMIT = 9;
 
@@ -37,10 +38,24 @@ const ProjectsPage: React.FC = () => {
   const [totalPages, setTotalPages] = useState<number>(1);
   const [search, setSearch] = useState<string>(initialSearch);
 
-  // Debounced search to reduce API calls
   const debouncedSearch = useDebouncedValue(search, 450);
 
-  // Sync URL whenever tab/search/page change (debounced search governs)
+  // Cache
+  const cache = useProjectsCache<{
+    items: Project[];
+    total: number;
+    page: number;
+    limit: number;
+  }>();
+  const cacheHitRef = useRef<boolean>(false);
+
+  // Stable cache key
+  const key = useMemo(
+    () => makeProjectsKey({ type: activeTab, search: debouncedSearch, page, limit: DEFAULT_LIMIT }),
+    [activeTab, debouncedSearch, page]
+  );
+
+  // Sync URL (replace to avoid history noise while typing)
   useEffect(() => {
     setMany(
       {
@@ -48,23 +63,36 @@ const ProjectsPage: React.FC = () => {
         page,
         search: debouncedSearch || undefined,
       },
-      true // replace to avoid polluting history with each keystroke
+      true
     );
   }, [activeTab, page, debouncedSearch, setMany]);
 
-  // Reset page to 1 whenever tab or search changes
+  // Reset page to 1 on filters
   useEffect(() => {
     setPage(1);
   }, [activeTab, debouncedSearch]);
 
-  // Load projects with cancellation
+  // Load with cache + cancellation
   useEffect(() => {
     const controller = new AbortController();
 
     const load = async (): Promise<void> => {
+      setError('');
+
+      // Try cache first
+      const cached = cache.get(key);
+      if (cached) {
+        cacheHitRef.current = true;
+        setProjects(cached.items);
+        setTotalPages(Math.max(1, Math.ceil(cached.total / cached.limit)));
+      } else {
+        cacheHitRef.current = false;
+      }
+
       try {
-        setLoading(true);
-        setError('');
+        // Avoid full-page skeleton if we had a cache hit
+        if (!cacheHitRef.current) setLoading(true);
+
         const data = await fetchProjects(
           activeTab,
           page,
@@ -72,10 +100,13 @@ const ProjectsPage: React.FC = () => {
           debouncedSearch,
           controller.signal
         );
+
         setProjects(data.items);
         setTotalPages(Math.max(1, Math.ceil(data.total / data.limit)));
+        cache.set(key, data);
       } catch (err) {
         if ((err as Error).name !== 'CanceledError') {
+          // eslint-disable-next-line no-console
           console.error(err);
           setError('Failed to load projects.');
         }
@@ -86,7 +117,41 @@ const ProjectsPage: React.FC = () => {
 
     void load();
     return () => controller.abort();
-  }, [activeTab, page, debouncedSearch]);
+  }, [key, activeTab, page, debouncedSearch, cache]);
+
+  // Prefetch next page in background to improve perceived perf
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const prefetch = async (): Promise<void> => {
+      if (page < totalPages) {
+        const nextKey = makeProjectsKey({
+          type: activeTab,
+          search: debouncedSearch,
+          page: page + 1,
+          limit: DEFAULT_LIMIT,
+        });
+
+        if (!cache.has(nextKey)) {
+          try {
+            const data = await fetchProjects(
+              activeTab,
+              page + 1,
+              DEFAULT_LIMIT,
+              debouncedSearch,
+              controller.signal
+            );
+            cache.set(nextKey, data);
+          } catch {
+            // silently ignore prefetch errors
+          }
+        }
+      }
+    };
+
+    void prefetch();
+    return () => controller.abort();
+  }, [activeTab, page, totalPages, debouncedSearch, cache]);
 
   const clearFilters = useMemo(
     () => () => {
@@ -102,10 +167,8 @@ const ProjectsPage: React.FC = () => {
       <div className='projectsPage__container'>
         <h1 className='projectsPage__title'>Projects</h1>
 
-        {/* Existing tabs for continuity */}
         <ProjectsTabs activeTab={activeTab} onChange={setActiveTab} />
 
-        {/* Filter bar with search */}
         <ProjectsFilterBar
           activeTab={activeTab}
           onTabChange={setActiveTab}
@@ -113,11 +176,10 @@ const ProjectsPage: React.FC = () => {
           onSearchChange={setSearch}
         />
 
-        {/* Error state */}
         {error && <p className='projectsPage__error'>{error}</p>}
 
-        {/* Loading skeletons */}
-        {loading && !error && (
+        {/* Loading skeletons only if no cache available */}
+        {loading && !error && !cacheHitRef.current && (
           <div className='projectsGrid'>
             {Array.from({ length: 6 }).map((_, i) => (
               <ProjectCardSkeleton key={i} />
@@ -125,13 +187,11 @@ const ProjectsPage: React.FC = () => {
           </div>
         )}
 
-        {/* Empty state */}
         {!loading && !error && projects.length === 0 && (
           <ProjectsEmptyState onClear={clearFilters} />
         )}
 
-        {/* Results */}
-        {!loading && !error && projects.length > 0 && (
+        {!error && projects.length > 0 && (
           <>
             <div className='projectsGrid'>
               {projects.map((project) => (

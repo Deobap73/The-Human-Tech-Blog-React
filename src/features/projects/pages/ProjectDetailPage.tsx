@@ -10,6 +10,7 @@ import Loader from '../../../shared/components/Loader';
 import FigmaEmbed from '../components/FigmaEmbed';
 import GitHubMeta from '../components/GitHubMeta';
 import { useGitHubMeta } from '../hooks/useGitHubMeta';
+import ProjectMetaHead from '../components/ProjectMetaHead';
 
 type ProjectDetail = BaseProject & {
   source?: 'figma' | 'github' | 'mixed';
@@ -42,6 +43,7 @@ const ProjectDetailPage: React.FC = () => {
         setProject(data as ProjectDetail);
       } catch (err) {
         if ((err as Error).name !== 'CanceledError') {
+          // eslint-disable-next-line no-console
           console.error(err);
           setError('Failed to load project.');
         }
@@ -61,31 +63,11 @@ const ProjectDetailPage: React.FC = () => {
     topics: project?.meta?.github?.topics,
   });
 
-  const jsonLd = useMemo(() => {
-    if (!project) return null;
-    const base: Record<string, unknown> = {
-      '@context': 'https://schema.org',
-      '@type': 'CreativeWork',
-      name: project.title,
-      url: typeof window !== 'undefined' ? window.location.href : undefined,
-      about: project.excerpt,
-      inLanguage: lang || 'en',
-      dateCreated: project.createdAt,
-      dateModified: project.updatedAt,
-      thumbnailUrl: project.coverImage,
-      genre: project.type,
-      keywords: project.tags?.join(', '),
-      isAccessibleForFree: true,
-    };
-
-    if (project.links?.github || project.meta?.github?.repo) {
-      base['codeRepository'] =
-        project.links?.github ?? `https://github.com/${project.meta?.github?.repo}`;
-    }
-    if (project.links?.live) base['mainEntityOfPage'] = project.links.live;
-
-    return JSON.stringify(base);
-  }, [project, lang]);
+  const canonical = useMemo(() => {
+    const base =
+      typeof window !== 'undefined' ? window.location.origin : 'https://thehumantechblog.com';
+    return `${base}/${lang || 'en'}/projects/${slug || ''}`;
+  }, [lang, slug]);
 
   if (loading) return <Loader />;
 
@@ -122,7 +104,7 @@ const ProjectDetailPage: React.FC = () => {
   const { coverImage, title, excerpt, tags, links, type, meta, source } = project;
 
   const sourceLabel =
-    project.source ||
+    source ||
     (links?.figma && links?.github
       ? 'mixed'
       : links?.figma
@@ -134,10 +116,14 @@ const ProjectDetailPage: React.FC = () => {
   return (
     <section className='projectDetail'>
       <div className='projectDetail__container'>
-        {/* JSON-LD for SEO */}
-        {jsonLd && (
-          <script type='application/ld+json' dangerouslySetInnerHTML={{ __html: jsonLd }} />
-        )}
+        {/* SEO head tags */}
+        <ProjectMetaHead
+          title={title}
+          excerpt={excerpt}
+          coverImage={coverImage}
+          canonical={canonical}
+          lang={lang}
+        />
 
         <div className='projectDetail__header'>
           <div className='projectDetail__info'>
