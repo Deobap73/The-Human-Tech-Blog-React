@@ -22,6 +22,11 @@ import { makeProjectsKey } from '../utils/queryKeys';
 
 const DEFAULT_LIMIT = 9;
 
+/**
+ * ProjectsPage
+ * - Displays paginated projects by type and optional search.
+ * - Uses in-memory cache, cancellation and debounce to avoid flashing & loops.
+ */
 const ProjectsPage: React.FC = () => {
   const { get, setMany } = useQueryParams();
 
@@ -67,12 +72,12 @@ const ProjectsPage: React.FC = () => {
     );
   }, [activeTab, page, debouncedSearch, setMany]);
 
-  // Reset page to 1 on filters
+  // Reset page to 1 on filters (only if needed)
   useEffect(() => {
-    setPage(1);
+    setPage((prev) => (prev !== 1 ? 1 : prev));
   }, [activeTab, debouncedSearch]);
 
-  // Load with cache + cancellation
+  // Load with cache + cancellation + guard
   useEffect(() => {
     const controller = new AbortController();
 
@@ -90,7 +95,6 @@ const ProjectsPage: React.FC = () => {
       }
 
       try {
-        // Avoid full-page skeleton if we had a cache hit
         if (!cacheHitRef.current) setLoading(true);
 
         const data = await fetchProjects(
@@ -104,12 +108,11 @@ const ProjectsPage: React.FC = () => {
         setProjects(data.items);
         setTotalPages(Math.max(1, Math.ceil(data.total / data.limit)));
         cache.set(key, data);
-      } catch (err) {
-        if ((err as Error).name !== 'CanceledError') {
-          // eslint-disable-next-line no-console
-          console.error(err);
-          setError('Failed to load projects.');
-        }
+      } catch (err: any) {
+        // Ignore canceled requests silently
+        if (err?.name === 'AbortError') return;
+        console.error(err);
+        setError('Failed to load projects.');
       } finally {
         setLoading(false);
       }
@@ -119,7 +122,7 @@ const ProjectsPage: React.FC = () => {
     return () => controller.abort();
   }, [key, activeTab, page, debouncedSearch, cache]);
 
-  // Prefetch next page in background to improve perceived perf
+  // Prefetch next page (silent, ignored on cancel)
   useEffect(() => {
     const controller = new AbortController();
 
@@ -142,8 +145,8 @@ const ProjectsPage: React.FC = () => {
               controller.signal
             );
             cache.set(nextKey, data);
-          } catch {
-            // silently ignore prefetch errors
+          } catch (err: any) {
+            if (err?.name === 'AbortError') return;
           }
         }
       }
@@ -178,7 +181,6 @@ const ProjectsPage: React.FC = () => {
 
         {error && <p className='projectsPage__error'>{error}</p>}
 
-        {/* Loading skeletons only if no cache available */}
         {loading && !error && !cacheHitRef.current && (
           <div className='projectsGrid'>
             {Array.from({ length: 6 }).map((_, i) => (
