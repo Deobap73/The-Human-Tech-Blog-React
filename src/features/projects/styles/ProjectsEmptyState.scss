@@ -3,14 +3,13 @@
 .projectsEmpty {
   text-align: center;
   padding: var(--s-8) var(--s-4);
-  background: var(--surface-1, #fff);
   border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
   border-radius: 12px;
 
   &__title {
     font-size: clamp(1rem, 2.6vw, 1.25rem);
     margin-bottom: var(--s-2);
-    color: var(--text-1, #0e1627);
+    color: var(--text-color);
   }
 
   &__hint {
@@ -19,16 +18,21 @@
   }
 
   &__button {
-    display: inline-block;
-    padding: 0.6rem 1rem;
-    border-radius: 10px;
-    font-weight: 700;
+    display: inline-flex;
+    gap: var(--s-2);
+    flex-wrap: wrap;
+    appearance: none;
     border: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
-    background: var(--surface-2, #f5f7fb);
+    background: var(--surface-1, #fff);
+    color: var(--text-1, #0e1627);
+    padding: 0.5rem 0.75rem;
+    border-radius: 999px;
+    font-weight: 600;
     cursor: pointer;
-
-    &:hover {
-      background: #eef2f9;
+    &--active {
+      border-color: transparent;
+      background: var(--brand-1, #2995e2);
+      color: #fff;
     }
   }
 }

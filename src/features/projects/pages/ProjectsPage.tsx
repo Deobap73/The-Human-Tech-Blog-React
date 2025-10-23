@@ -15,88 +15,56 @@ import { fetchProjects } from '../../../shared/services/projectService';
 import type { Project } from '../../../shared/types/Project';
 import Pagination from '../../ui/Pagination';
 
-import { useQueryParams } from '../../../shared/hooks/useQueryParams';
 import { useDebouncedValue } from '../../../shared/hooks/useDebouncedValue';
-import { useProjectsCache } from '../hooks/useProjectsCache';
-import { makeProjectsKey } from '../utils/queryKeys';
 
 const DEFAULT_LIMIT = 9;
 
 /**
- * ProjectsPage
- * - Displays paginated projects by type and optional search.
- * - Uses in-memory cache, cancellation and debounce to avoid flashing & loops.
+ * ProjectsPage (lean)
+ * - Estado local simples (sem sincronizar URL)
+ * - Debounce na pesquisa
+ * - Um único useEffect com AbortController
+ * - Sem prefetch nem cache in-memory (menos moving parts)
  */
 const ProjectsPage: React.FC = () => {
-  const { get, setMany } = useQueryParams();
-
-  // Read initial values from querystring
-  const initialTab = (get('type') as 'frontend-ui' | 'ux-figma' | 'full') || 'frontend-ui';
-  const initialPage = Math.max(1, Number(get('page') || 1));
-  const initialSearch = get('search') || '';
-
   const [projects, setProjects] = useState<Project[]>([]);
-  const [activeTab, setActiveTab] = useState<'frontend-ui' | 'ux-figma' | 'full'>(initialTab);
+  const [activeTab, setActiveTab] = useState<'frontend-ui' | 'ux-figma' | 'full'>('frontend-ui');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
-  const [page, setPage] = useState<number>(initialPage);
+  const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [search, setSearch] = useState<string>(initialSearch);
+  const [search, setSearch] = useState<string>('');
 
   const debouncedSearch = useDebouncedValue(search, 450);
 
-  // Cache
-  const cache = useProjectsCache<{
-    items: Project[];
-    total: number;
-    page: number;
-    limit: number;
-  }>();
-  const cacheHitRef = useRef<boolean>(false);
+  // Reset page para 1 quando muda tab/pesquisa
+  useEffect(() => {
+    setPage(1);
+  }, [activeTab, debouncedSearch]);
 
-  // Stable cache key
+  // Chave só para debug/estabilidade (não é usada noutros sítios)
   const key = useMemo(
-    () => makeProjectsKey({ type: activeTab, search: debouncedSearch, page, limit: DEFAULT_LIMIT }),
+    () => `${activeTab}::${debouncedSearch || ''}::${page}::${DEFAULT_LIMIT}`,
     [activeTab, debouncedSearch, page]
   );
 
-  // Sync URL (replace to avoid history noise while typing)
+  // Ref para ignorar setState após unmount
+  const mountedRef = useRef(true);
   useEffect(() => {
-    setMany(
-      {
-        type: activeTab,
-        page,
-        search: debouncedSearch || undefined,
-      },
-      true
-    );
-  }, [activeTab, page, debouncedSearch, setMany]);
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
-  // Reset page to 1 on filters (only if needed)
-  useEffect(() => {
-    setPage((prev) => (prev !== 1 ? 1 : prev));
-  }, [activeTab, debouncedSearch]);
-
-  // Load with cache + cancellation + guard
+  // Fetch simples com cancelamento
   useEffect(() => {
     const controller = new AbortController();
 
-    const load = async (): Promise<void> => {
+    const load = async () => {
       setError('');
-
-      // Try cache first
-      const cached = cache.get(key);
-      if (cached) {
-        cacheHitRef.current = true;
-        setProjects(cached.items);
-        setTotalPages(Math.max(1, Math.ceil(cached.total / cached.limit)));
-      } else {
-        cacheHitRef.current = false;
-      }
-
+      setLoading(true);
       try {
-        if (!cacheHitRef.current) setLoading(true);
-
         const data = await fetchProjects(
           activeTab,
           page,
@@ -104,73 +72,41 @@ const ProjectsPage: React.FC = () => {
           debouncedSearch,
           controller.signal
         );
+        if (!mountedRef.current) return;
 
         setProjects(data.items);
         setTotalPages(Math.max(1, Math.ceil(data.total / data.limit)));
-        cache.set(key, data);
       } catch (err: any) {
-        // Ignore canceled requests silently
-        if (err?.name === 'AbortError') return;
-        console.error(err);
-        setError('Failed to load projects.');
+        // Ignorar cancelamentos silenciosamente
+        const canceled =
+          err?.name === 'AbortError' ||
+          err?.name === 'CanceledError' ||
+          err?.code === 'ERR_CANCELED';
+        if (!canceled) {
+          console.error('[ProjectsPage][load]', key, err);
+          setError('Failed to load projects.');
+        }
       } finally {
-        setLoading(false);
+        if (mountedRef.current) setLoading(false);
       }
     };
 
     void load();
     return () => controller.abort();
-  }, [key, activeTab, page, debouncedSearch, cache]);
+  }, [key, activeTab, page, debouncedSearch]);
 
-  // Prefetch next page (silent, ignored on cancel)
-  useEffect(() => {
-    const controller = new AbortController();
-
-    const prefetch = async (): Promise<void> => {
-      if (page < totalPages) {
-        const nextKey = makeProjectsKey({
-          type: activeTab,
-          search: debouncedSearch,
-          page: page + 1,
-          limit: DEFAULT_LIMIT,
-        });
-
-        if (!cache.has(nextKey)) {
-          try {
-            const data = await fetchProjects(
-              activeTab,
-              page + 1,
-              DEFAULT_LIMIT,
-              debouncedSearch,
-              controller.signal
-            );
-            cache.set(nextKey, data);
-          } catch (err: any) {
-            if (err?.name === 'AbortError') return;
-          }
-        }
-      }
-    };
-
-    void prefetch();
-    return () => controller.abort();
-  }, [activeTab, page, totalPages, debouncedSearch, cache]);
-
-  const clearFilters = useMemo(
-    () => () => {
-      setSearch('');
-      setActiveTab('frontend-ui');
-      setPage(1);
-    },
-    []
-  );
+  const clearFilters = () => {
+    setSearch('');
+    setActiveTab('frontend-ui');
+    setPage(1);
+  };
 
   return (
     <section className='projectsPage'>
       <div className='projectsPage__container'>
         <h1 className='projectsPage__title'>Projects</h1>
 
-        <ProjectsTabs activeTab={activeTab} onChange={setActiveTab} />
+        {/*  <ProjectsTabs activeTab={activeTab} onChange={setActiveTab} /> */}
 
         <ProjectsFilterBar
           activeTab={activeTab}
@@ -181,7 +117,8 @@ const ProjectsPage: React.FC = () => {
 
         {error && <p className='projectsPage__error'>{error}</p>}
 
-        {loading && !error && !cacheHitRef.current && (
+        {/* Skeletons durante o carregamento */}
+        {loading && !error && (
           <div className='projectsGrid'>
             {Array.from({ length: 6 }).map((_, i) => (
               <ProjectCardSkeleton key={i} />

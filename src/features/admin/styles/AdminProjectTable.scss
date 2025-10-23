@@ -4,11 +4,9 @@
   &__table {
     width: 100%;
     border-collapse: collapse;
-    background: var(--background, #fff);
   }
 
   &__head {
-    background: var(--background-secondary, #f6f8fc);
     border-bottom: 1px solid #e6eaf5;
   }
 
@@ -18,7 +16,7 @@
     }
 
     &:not(&--head):hover {
-      background: #fbfdff;
+      background: none;
     }
   }
 
@@ -52,7 +50,6 @@
     border-radius: 8px;
     object-fit: cover;
     border: 1px solid rgba(0, 0, 0, 0.06);
-    background: #fff;
   }
 
   &__name {
@@ -77,7 +74,7 @@
     border: 2px solid var(--primary, #2995e2);
     border-left: none;
     border-right: none;
-    background: #fff;
+
     color: var(--primary, #2995e2);
     font-weight: 700;
     cursor: pointer;
@@ -107,7 +104,7 @@
     &:disabled {
       opacity: 0.6;
       cursor: not-allowed;
-      background: #f1f5fb;
+
       color: var(--text-color-secondary, #546178);
     }
   }
