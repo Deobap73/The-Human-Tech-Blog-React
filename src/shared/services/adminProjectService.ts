@@ -5,6 +5,7 @@ import api from '../../shared/utils/axios';
 import type { PaginatedResponse } from './projectService';
 import type { Project } from '../types/Project';
 import type { CreateProjectPayload } from '../../features/admin/components/projects/AdminProjectCreateModal';
+import { ensureCsrf } from '../services/csrfService';
 
 export interface ListAdminProjectsParams {
   type?: string;
@@ -36,9 +37,17 @@ export async function listAdminProjects(
 /**
  * createProject
  * - POST /api/projects
+ * - Ensures CSRF token and injects required headers.
  */
 export async function createProject(payload: CreateProjectPayload) {
-  const res = await api.post<Project>('/projects', payload);
+  const token = await ensureCsrf();
+  const res = await api.post<Project>('/projects', payload, {
+    headers: {
+      'X-CSRF-Token': token,
+      'X-XSRF-TOKEN': token, // some middlewares look for this variant
+    },
+    withCredentials: true,
+  });
   return res.data;
 }
 
@@ -47,7 +56,14 @@ export async function createProject(payload: CreateProjectPayload) {
  * - POST /api/projects/sync/github/:id
  */
 export async function syncGitHub(id: string, body?: { repo?: string }) {
-  const res = await api.post(`/projects/sync/github/${encodeURIComponent(id)}`, body ?? {});
+  const token = await ensureCsrf();
+  const res = await api.post(`/projects/sync/github/${encodeURIComponent(id)}`, body ?? {}, {
+    headers: {
+      'X-CSRF-Token': token,
+      'X-XSRF-TOKEN': token,
+    },
+    withCredentials: true,
+  });
   return res.data as { ok: boolean; message?: string };
 }
 
@@ -59,6 +75,13 @@ export async function syncFigma(
   id: string,
   body?: { figmaPublicUrl?: string; figmaFileKey?: string }
 ) {
-  const res = await api.post(`/projects/sync/figma/${encodeURIComponent(id)}`, body ?? {});
+  const token = await ensureCsrf();
+  const res = await api.post(`/projects/sync/figma/${encodeURIComponent(id)}`, body ?? {}, {
+    headers: {
+      'X-CSRF-Token': token,
+      'X-XSRF-TOKEN': token,
+    },
+    withCredentials: true,
+  });
   return res.data as { ok: boolean; message?: string };
 }
