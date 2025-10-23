@@ -1,6 +1,15 @@
-// /src/features/admin/styles/AdminProjectEditModal.scss
+/* /src/features/admin/styles/AdminProjectEditModal.scss */
+/* 
+  AdminProjectEdit modal
+  - Visual aligned with AdminCategoriesPage.scss
+  - Uses CSS variables (colors, spacing)
+  - Inputs with same border/shadow/focus
+  - Buttons with same interaction and shape
+  - BEM consistent + responsive
+*/
 
 .adminProjectEdit {
+  /* Dim background overlay */
   &__overlay {
     position: fixed;
     inset: 0;
@@ -8,100 +17,198 @@
     z-index: 50;
   }
 
+  /* Centered modal card */
   &__modal {
     position: fixed;
     top: 50%;
     left: 50%;
+    width: min(94vw, 760px);
     transform: translate(-50%, -50%);
-    width: min(92vw, 560px);
-    background: var(--background, #fff);
-    border: 1.5px solid var(--primary, #2995e2);
+    background: var(--background);
+    border-radius: 2rem;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+    transition: background 0.3s;
+    z-index: 60;
+
+    /* Top/bottom border accent (like admin buttons) */
+    border: 2px solid var(--primary);
     border-left: none;
     border-right: none;
-    border-radius: 1.6rem;
-    padding: var(--padding-xl, 1.25rem);
-    z-index: 60;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+
+    padding: var(--padding-xl);
+
+    @media (max-width: 768px) {
+      width: 96vw;
+      border-radius: 1rem;
+      padding: var(--padding-base);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    }
   }
 
+  /* Title */
   &__title {
-    margin: 0 0 var(--margin-md, 0.75rem);
-    font-size: 1.4rem;
+    margin: 0 0 var(--margin-md);
+    font-size: 1.6rem;
     font-weight: 700;
-    color: var(--primary, #2995e2);
+    color: var(--primary);
+    text-align: left;
     letter-spacing: 0.4px;
   }
 
+  /* Optional container for form rows */
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-base);
+  }
+
+  /* Form row grid (2 cols on desktop, 1 col on mobile) */
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--gap-lg);
+
+    @media (max-width: 720px) {
+      grid-template-columns: 1fr;
+      gap: var(--gap-base);
+    }
+  }
+
+  /* Label + input wrapper */
   &__label {
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
-    margin: 0.5rem 0 0.25rem;
+    gap: 4px;
+    margin-bottom: var(--margin-base);
     font-weight: 600;
-    color: var(--text-color-secondary, #4d5a70);
+    color: var(--text-color-secondary);
+    font-size: var(--font-size-base);
+    letter-spacing: 0.3px;
   }
 
+  /* Text input + textarea (same style as AdminCategoriesPage) */
   &__input,
   &__textarea {
     width: 100%;
-    padding: var(--padding-sm, 0.55rem) var(--padding-md, 0.7rem);
+    margin-bottom: 0;
+    padding: var(--padding-sm) var(--padding-md);
+    font-size: var(--font-size-md);
     border-radius: 10px;
-    border: 1.5px solid var(--primary, #2995e2);
-    background: var(--background-secondary, #f6f8fc);
-    color: var(--text-color, #1c2331);
+    border: 1.5px solid var(--primary);
+    background: var(--background-secondary);
+    color: var(--text-color);
     outline: none;
     box-shadow: 0 1px 6px rgba(29, 161, 242, 0.06);
     transition: border 0.2s, box-shadow 0.2s;
 
     &:focus {
-      border-color: var(--primary-hover, #1e7fc4);
-      box-shadow: 0 0 0 2px var(--primary-hover, #1e7fc4), 0 2px 8px rgba(29, 161, 242, 0.07);
+      border-color: var(--primary-hover);
+      box-shadow: 0 0 0 2px var(--primary-hover), 0 2px 8px rgba(29, 161, 242, 0.07);
     }
   }
 
-  &__actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: var(--gap-base, 0.5rem);
-    margin-top: var(--margin-lg, 0.8rem);
+  /* Error state for inputs (same pattern) */
+  &__input--error,
+  &__textarea--error {
+    border: 2px solid var(--error) !important;
+    background: #fff0f0;
   }
 
+  /* Inline field error text */
+  &__field-error {
+    color: var(--error);
+    font-size: 0.97em;
+    margin-top: 3px;
+    margin-bottom: 0;
+    font-weight: 500;
+  }
+
+  /* Actions row (buttons aligned to end) */
+  &__actions {
+    display: flex;
+    gap: var(--gap-base);
+    justify-content: flex-end;
+    margin-top: var(--margin-md);
+
+    @media (max-width: 768px) {
+      justify-content: stretch;
+      flex-direction: column-reverse;
+    }
+  }
+
+  /* Button base — matches AdminCategoriesPage __btn */
   &__btn {
-    min-height: 42px;
-    padding: 0.5rem 0.9rem;
-    border-radius: 12px;
-    border: 2px solid var(--primary, #2995e2);
+    display: inline-block;
+    justify-content: center;
+    min-width: 48px;
+    min-height: 48px;
+    padding: 0 1.5rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    border: 2px solid var(--primary);
     border-left: none;
     border-right: none;
-    background: var(--primary, #2995e2);
+    border-radius: 12px;
+    background: var(--primary);
     color: #fff;
-    font-weight: 700;
-    cursor: pointer;
     box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
+    backdrop-filter: blur(2.5px);
+    cursor: pointer;
     transition: border 0.2s, box-shadow 0.2s, background 0.25s, transform 0.15s;
 
     &:hover,
     &:focus {
       background: rgba(0, 48, 104, 0.388);
-      transform: translateY(-1px) scale(1.01);
+      transform: translateY(-2px) scale(1.02);
       outline: none;
     }
 
     &:active {
       background: none !important;
       color: var(--primary);
-      border-color: var(--primary-hover, #1e7fc4);
+      border-color: var(--primary-hover);
     }
 
-    &--secondary {
+    &:disabled {
+      background: #c0c0c0;
+      cursor: not-allowed;
+      color: var(--text-color-secondary);
+      opacity: 0.7;
+      transform: none;
+    }
+
+    /* Secondary (cancel) variant — mirrors AdminCategoriesPage __btn--cancel */
+    &--secondary,
+    &--cancel {
       background: #fff;
       color: var(--primary);
+      border: 2px solid var(--primary);
+      border-left: none;
+      border-right: none;
 
       &:hover,
       &:focus {
         background: #f8f8fc;
         color: var(--primary-hover);
       }
+
+      &:active {
+        background: none !important;
+        color: var(--primary);
+        border-color: var(--primary-hover);
+      }
     }
+
+    /* Full-width on mobile for easier tapping */
+    @media (max-width: 768px) {
+      width: 100%;
+    }
+  }
+
+  /* Optional helper to group small hint texts under inputs */
+  &__hint {
+    color: var(--text-color-secondary);
+    font-size: 0.95em;
+    margin-top: 4px;
   }
 }

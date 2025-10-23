@@ -19,24 +19,19 @@ import { ensureCsrf } from '../services/csrfService';
  * Accepts friendly aliases and extra optional fields the form may produce.
  */
 export type CreateProjectPayloadLoose = {
-  // Required by schema (excerpt can be auto-derived)
   title: string;
   excerpt?: string;
-  source?: string; // we will normalize to 'figma' | 'github' | 'mixed'
-  type?: string; // we will normalize to 'frontend-ui' | 'ux-figma' | 'full'
+  source?: string;
+  type?: string;
+  tags?: string[] | string;
+  coverUrl?: string;
+  coverImage?: string;
 
-  // Optional/friendly inputs coming from the form
-  tags?: string[] | string; // allow comma-separated strings, we'll normalize
-  coverUrl?: string; // friendly alias
-  coverImage?: string; // backend-expected
-
-  // Flat link inputs (friendly aliases)
   repoUrl?: string;
   figmaUrl?: string;
   liveUrl?: string;
   blogUrl?: string;
 
-  // Or nested links (backend-expected)
   links?: {
     figma?: string;
     figmaEmbedUrl?: string;
@@ -45,7 +40,6 @@ export type CreateProjectPayloadLoose = {
     blog?: string;
   };
 
-  // Optional translations (UI can send at least one)
   translations?: Array<{
     lang: 'en' | 'pt' | 'de' | 'es';
     title: string;
@@ -53,13 +47,10 @@ export type CreateProjectPayloadLoose = {
     slug?: string;
   }>;
 
-  // Extra fields we may use to derive excerpt if not provided
   description?: string;
   summary?: string;
   shortDescription?: string;
-
-  // Visibility
-  isPublic?: boolean | string; // accept "true"/"false" and normalize to boolean
+  isPublic?: boolean | string;
 };
 
 export interface ListAdminProjectsParams {
@@ -74,12 +65,30 @@ export interface ListAdminProjectsParams {
  * Normalizers & helpers
  * ============================ */
 
-/** Normalize whitespace and lowercase */
 function normalizeToken(v?: string): string {
   return (v ?? '').toString().trim().toLowerCase();
 }
 
-/** Map many friendly variants to strict Project.source enum */
+/** Extract {owner}/{repo} from a GitHub URL */
+function parseGithubRepoSlug(url?: string): string | null {
+  if (!url) return null;
+  try {
+    const u = new URL(url);
+    if (!/github\.com$/i.test(u.hostname)) return null;
+    const [owner, repo] = u.pathname.replace(/^\/+/, '').split('/');
+    if (!owner || !repo) return null;
+    return `${owner}/${repo.replace(/\.git$/i, '')}`;
+  } catch {
+    return null;
+  }
+}
+
+/** Build GitHub OpenGraph image URL */
+function githubOgImageFromSlug(slug: string): string {
+  return `https://opengraph.githubassets.com/1/${slug}`;
+}
+
+/** Normalize Project.source */
 function normalizeSource(
   input?: string,
   links?: { github?: string; figma?: string }
@@ -87,52 +96,41 @@ function normalizeSource(
   const v = normalizeToken(input);
 
   if (v === 'figma' || v === 'github' || v === 'mixed') return v;
-
-  // Friendly aliases
   if (['gh', 'git', 'repo', 'repository', 'github.com'].includes(v)) return 'github';
   if (['fig', 'design', 'ui', 'ux', 'figma.com'].includes(v)) return 'figma';
   if (['mix', 'hybrid', 'both', 'figma+github', 'github+figma'].includes(v)) return 'mixed';
 
-  // Derive from links if not explicitly set
   const hasGitHub = !!links?.github;
   const hasFigma = !!links?.figma;
   if (hasGitHub && hasFigma) return 'mixed';
   if (hasGitHub) return 'github';
   if (hasFigma) return 'figma';
-
   return undefined;
 }
 
-/** Map many friendly variants to strict Project.type enum */
+/** Normalize Project.type */
 function normalizeType(input?: string): 'frontend-ui' | 'ux-figma' | 'full' | undefined {
   const v = normalizeToken(input);
 
-  // Exact
   if (v === 'frontend-ui' || v === 'ux-figma' || v === 'full') return v;
-
-  // Friendly aliases
   if (['frontend', 'ui', 'fe', 'ui-only', 'ui-kit'].includes(v)) return 'frontend-ui';
   if (['ux', 'design', 'figma', 'ux-fig', 'ux_figma'].includes(v)) return 'ux-figma';
   if (['full-project', 'fullstack', 'app', 'full_project', 'full stack'].includes(v)) return 'full';
-
   return undefined;
 }
 
-/** Convert comma-separated string to tags array, trimming empties */
+/** Normalize tags */
 function normalizeTags(input?: string[] | string): string[] {
-  if (Array.isArray(input)) {
-    return input.map((t) => t.trim()).filter(Boolean);
-  }
-  if (typeof input === 'string') {
+  if (Array.isArray(input)) return input.map((t) => t.trim()).filter(Boolean);
+  if (typeof input === 'string')
     return input
       .split(',')
       .map((t) => t.trim())
       .filter(Boolean);
-  }
   return [];
 }
 
-/** Build a short excerpt from a longer text or title */
+/** Build a short excerpt */
 function toExcerpt(source?: string, fallbackTitle?: string): string | undefined {
   const text = (source ?? '').replace(/\s+/g, ' ').trim() || (fallbackTitle ?? '').trim();
   if (!text) return undefined;
@@ -144,15 +142,6 @@ function toExcerpt(source?: string, fallbackTitle?: string): string | undefined 
  * Normalization core
  * ============================ */
 
-/**
- * Normalize a loose payload from the Admin UI into the backend-expected shape.
- * - Maps coverUrl -> coverImage
- * - Maps repoUrl/figmaUrl/liveUrl/blogUrl -> links.github/figma/live/blog
- * - Derives excerpt when missing (from translations/summary/description/title)
- * - Normalizes enums (source/type) and deduces source from links when absent
- * - Normalizes tags (comma-separated strings accepted)
- * - Normalizes isPublic from string/boolean
- */
 function normalizeCreatePayload(input: CreateProjectPayloadLoose) {
   const links = {
     figma: input.links?.figma ?? input.figmaUrl ?? undefined,
@@ -168,16 +157,14 @@ function normalizeCreatePayload(input: CreateProjectPayloadLoose) {
     toExcerpt(input.summary, input.title) ||
     toExcerpt(input.description, input.title) ||
     toExcerpt(input.shortDescription, input.title) ||
-    toExcerpt(undefined, input.title); // final fallback from title
+    toExcerpt(undefined, input.title);
 
-  // Normalize enums (accept friendly values and infer from links)
   const normalizedSource = normalizeSource(input.source, {
     github: links.github,
     figma: links.figma,
   });
   const normalizedType = normalizeType(input.type);
 
-  // Normalize visibility flag
   const isPublic =
     typeof input.isPublic === 'string'
       ? input.isPublic.trim().toLowerCase() !== 'false'
@@ -188,14 +175,25 @@ function normalizeCreatePayload(input: CreateProjectPayloadLoose) {
   const normalized = {
     title: input.title?.trim(),
     excerpt,
-    source: normalizedSource, // may be undefined here; we'll check before POST
-    type: normalizedType, // may be undefined here; we'll check before POST
+    source: normalizedSource,
+    type: normalizedType,
     tags: normalizeTags(input.tags),
     coverImage: input.coverImage ?? input.coverUrl ?? undefined,
     links,
     translations: Array.isArray(input.translations) ? input.translations : [],
     isPublic,
   };
+
+  /* ✅ Auto-fill coverImage for GitHub projects */
+  if (!normalized.coverImage && (normalized.source === 'github' || links.github)) {
+    const slug = parseGithubRepoSlug(links.github);
+    if (slug) {
+      normalized.coverImage = githubOgImageFromSlug(slug);
+      (normalized as any).meta = (normalized as any).meta ?? {};
+      (normalized as any).meta.github = (normalized as any).meta.github ?? {};
+      (normalized as any).meta.github.repo = (normalized as any).meta.github.repo ?? slug;
+    }
+  }
 
   return normalized;
 }
@@ -204,10 +202,6 @@ function normalizeCreatePayload(input: CreateProjectPayloadLoose) {
  * Public API
  * ============================ */
 
-/**
- * listAdminProjects
- * - Reuses public /projects listing for now.
- */
 export async function listAdminProjects(
   params: ListAdminProjectsParams
 ): Promise<PaginatedResponse<Project>> {
@@ -223,31 +217,18 @@ export async function listAdminProjects(
   return res.data;
 }
 
-/**
- * createProject
- * - POST /api/projects
- * - Ensures CSRF token and injects required headers.
- * - Normalizes the payload to match backend schema and enums.
- */
 export async function createProject(payload: CreateProjectPayloadLoose) {
   const token = await ensureCsrf();
   const body = normalizeCreatePayload(payload);
 
-  // Client-side assertions (friendly messages). We avoid blocking on excerpt because we derive it.
   if (!body?.title) throw new Error('Title is required.');
-
-  // If source/type still undefined after normalization, guide the user with allowed values.
-  if (!body?.source) {
-    throw new Error('Source must be one of: figma | github | mixed.');
-  }
-  if (!body?.type) {
-    throw new Error('Type must be one of: frontend-ui | ux-figma | full.');
-  }
+  if (!body?.source) throw new Error('Source must be one of: figma | github | mixed.');
+  if (!body?.type) throw new Error('Type must be one of: frontend-ui | ux-figma | full.');
 
   const res = await api.post<Project>('/projects', body, {
     headers: {
       'X-CSRF-Token': token,
-      'X-XSRF-TOKEN': token, // accepted by backend CORS
+      'X-XSRF-TOKEN': token,
     },
     withCredentials: true,
   });
@@ -258,9 +239,6 @@ export async function createProject(payload: CreateProjectPayloadLoose) {
  * Sync endpoints with 404 admin/public fallback
  * ========================================= */
 
-/**
- * Try a POST and if the route doesn't exist (404), retry an alternative path.
- */
 async function postWith404Fallback<T>(
   primaryPath: string,
   fallbackPath: string,
@@ -285,34 +263,19 @@ async function postWith404Fallback<T>(
   }
 }
 
-/**
- * syncGitHub
- * - Prefer admin route, fallback to public route if not found.
- */
 export async function syncGitHub(id: string, body?: { repo?: string }) {
   const token = await ensureCsrf();
-
-  // Prefer admin-only route (mounted at /api via projectSyncAdminRoutes)
   const primary = `/admin/projects/sync/github/${encodeURIComponent(id)}`;
-
-  // Fallback to public/projects-mounted route (mounted at /api/projects via projectSyncRoutes)
   const fallback = `/projects/sync/github/${encodeURIComponent(id)}`;
-
   return postWith404Fallback<{ ok: boolean; message?: string }>(primary, fallback, body, token);
 }
 
-/**
- * syncFigma
- * - Prefer admin route, fallback to public route if not found.
- */
 export async function syncFigma(
   id: string,
   body?: { figmaPublicUrl?: string; figmaFileKey?: string }
 ) {
   const token = await ensureCsrf();
-
   const primary = `/admin/projects/sync/figma/${encodeURIComponent(id)}`;
   const fallback = `/projects/sync/figma/${encodeURIComponent(id)}`;
-
   return postWith404Fallback<{ ok: boolean; message?: string }>(primary, fallback, body, token);
 }
