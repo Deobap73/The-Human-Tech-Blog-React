@@ -14,18 +14,23 @@ export interface FiltersBarProps {
   sort: SortOption;
   onSort: (value: SortOption) => void;
 
-  /** Available tags (we'll use the first matching type tag for backend type) */
+  /** Available tags to show */
   tags?: string[];
+  /** Currently active tags */
   activeTags?: string[];
+  /** Toggle one tag in/out of the selection */
   onToggleTag?: (tag: string) => void;
 
-  compact?: boolean;
+  /** Compact grid toggle (true => denser grid/cards/pagination) */
+  compact: boolean;
+  onToggleCompact: (value: boolean) => void;
 }
 
 /**
  * FiltersBar
  * - Stack on mobile, inline ≥768px.
- * - Accessible form with labels/legend.
+ * - Accessible: labels, legends, aria-pressed for tags.
+ * - Adds a "Compact grid" toggle to control density.
  */
 const FiltersBar: React.FC<FiltersBarProps> = ({
   search,
@@ -35,7 +40,8 @@ const FiltersBar: React.FC<FiltersBarProps> = ({
   tags = [],
   activeTags = [],
   onToggleTag,
-  compact = false,
+  compact,
+  onToggleCompact,
 }) => {
   const formId = useId();
   const legendId = `${formId}-legend`;
@@ -49,7 +55,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({
   };
 
   return (
-    <section className={`filters ${compact ? 'filters--compact' : ''}`} aria-labelledby={legendId}>
+    <section className='filters' aria-labelledby={legendId}>
       <form className='filters__form' role='search' onSubmit={(e) => e.preventDefault()}>
         <fieldset className='filters__set'>
           <legend id={legendId} className='filters__legend'>
@@ -125,6 +131,25 @@ const FiltersBar: React.FC<FiltersBarProps> = ({
               </div>
             </div>
           )}
+
+          {/* Compact toggle */}
+          <div className='filters__row'>
+            <span className='filters__label'>Layout</span>
+            <div className='filters__toggle'>
+              <input
+                id={`${formId}-compact`}
+                className='filters__switch'
+                type='checkbox'
+                role='switch'
+                aria-checked={compact}
+                checked={compact}
+                onChange={(e) => onToggleCompact(e.target.checked)}
+              />
+              <label htmlFor={`${formId}-compact`} className='filters__switchLabel'>
+                Compact grid
+              </label>
+            </div>
+          </div>
         </fieldset>
       </form>
     </section>

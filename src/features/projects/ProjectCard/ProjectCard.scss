@@ -1,44 +1,29 @@
 // src/features/projects/ProjectCard/ProjectCard.scss
 
 .projectCard {
-  --color-bg: var(--background);
-  --color-surface: var(--background-secondary);
-  --color-text: var(--text-color);
-  --color-muted: var(--text-color-secondary);
-  --color-primary: var(--primary);
-  --color-border: rgba(0, 0, 0, 0.12);
-  --radius-md: var(--border-radius-md);
-  --shadow-sm: var(--shadow-card);
-  --shadow-md: var(--shadow-card-strong);
-
-  --s-2: 0.25rem;
-  --s-4: var(--gap-base);
-  --s-6: var(--gap-m);
-  --s-8: var(--gap-md);
-  --s-12: var(--gap-lg);
-
   display: grid;
   grid-template-rows: auto 1fr auto;
-  gap: var(--s-8);
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  padding: var(--s-12);
+  gap: var(--gap-md);
+  background: var(--background-secondary);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-card);
+  padding: var(--gap-lg);
   transition: transform 160ms ease, box-shadow 160ms ease;
+  min-height: 32.2rem;
 
   &:hover,
   &:focus-within {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    transform: translateY(-5px) scale(1.018);
+    box-shadow: var(--neon-border-shadow);
   }
 
   &__media {
     margin: 0;
-    border-radius: var(--radius-md);
+    border-radius: var(--border-radius-md);
     overflow: hidden;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
+    background: var(--background-secondary);
+    border: 1px solid rgba(0, 0, 0, 0.12);
     aspect-ratio: 16 / 9;
   }
 
@@ -51,19 +36,19 @@
 
   &__body {
     display: grid;
-    gap: var(--s-6);
+    gap: var(--gap-m);
   }
 
   &__header {
     display: grid;
-    gap: var(--s-2);
+    gap: 0.25rem;
   }
 
   &__title {
     margin: 0;
     font-size: clamp(1.125rem, 1.05rem + 0.5vw, var(--heading-h4));
     line-height: 1.2;
-    color: var(--color-text);
+    color: var(--text-color);
   }
 
   &__titleLink {
@@ -73,7 +58,7 @@
 
     &:hover,
     &:focus-visible {
-      border-bottom-color: var(--color-primary);
+      border-bottom-color: var(--primary);
       outline: none;
     }
   }
@@ -81,13 +66,13 @@
   &__subtitle {
     margin: 0;
     font-size: var(--font-size-sm);
-    color: var(--color-muted);
+    color: var(--text-color-secondary);
   }
 
   &__excerpt {
     margin: 0;
     font-size: var(--font-size-base);
-    color: var(--color-text);
+    color: var(--text-color);
     opacity: 0.95;
   }
 
@@ -95,7 +80,7 @@
     list-style: none;
     display: flex;
     flex-wrap: wrap;
-    gap: var(--s-4);
+    gap: var(--gap-base);
     margin: 0;
     padding: 0;
   }
@@ -103,9 +88,9 @@
   &__tag {
     display: inline-block;
     padding: 0.3rem 0.6rem;
-    border: 1px solid var(--color-border);
-    background: color-mix(in oklab, var(--color-bg) 90%, #fff);
-    color: var(--color-text);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: color-mix(in oklab, var(--background) 90%, #fff);
+    color: var(--text-color);
     border-radius: 999px;
     font-size: var(--font-size-xs);
     font-weight: 700;
@@ -116,8 +101,8 @@
   &__footer {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--s-4);
-    margin-top: var(--s-6);
+    gap: var(--gap-base);
+    margin-top: var(--gap-m);
   }
 
   &__btn {
@@ -125,7 +110,7 @@
     align-items: center;
     justify-content: center;
     padding: 0.45rem 0.8rem;
-    border-radius: var(--radius-md);
+    border-radius: var(--border-radius-md);
     font-weight: 600;
     line-height: 1;
     border: 1px solid transparent;
@@ -133,23 +118,23 @@
       box-shadow 0.2s ease;
 
     &--primary {
-      background: var(--color-primary);
+      background: var(--primary);
       color: #fff;
       &:hover,
       &:focus-visible {
         transform: translateY(-1px);
-        box-shadow: var(--shadow-sm);
+        box-shadow: var(--shadow-card);
         outline: none;
       }
     }
 
     &--secondary {
       background: transparent;
-      color: var(--color-text);
-      border-color: var(--color-border);
+      color: var(--text-color);
+      border-color: rgba(0, 0, 0, 0.12);
       &:hover,
       &:focus-visible {
-        border-color: var(--color-primary);
+        border-color: var(--primary);
         transform: translateY(-1px);
         outline: none;
       }
@@ -157,7 +142,7 @@
 
     &--ghost {
       background: transparent;
-      color: var(--color-text);
+      color: var(--text-color);
       &:hover,
       &:focus-visible {
         text-decoration: underline;

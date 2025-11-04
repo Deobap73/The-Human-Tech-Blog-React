@@ -1,40 +1,12 @@
 // src/features/projects/FiltersBar/FiltersBar.scss
 
-/* Local binding to blog tokens */
 .filters {
-  --color-bg: var(--background);
-  --color-surface: var(--background-secondary);
-  --color-text: var(--text-color);
-  --color-muted: var(--text-color-secondary);
-  --color-primary: var(--primary);
-  --color-border: rgba(0, 0, 0, 0.12);
-  --radius-md: var(--border-radius-md);
-  --shadow-sm: var(--shadow-card);
-  --shadow-md: var(--shadow-card-strong);
-
-  --s-4: var(--gap-base);
-  --s-6: var(--gap-m);
-  --s-8: var(--gap-md);
-  --s-12: var(--gap-lg);
-  --s-20: var(--gap-xxl);
-
-  --fs-xs: var(--font-size-xs);
-  --fs-sm: var(--font-size-sm);
-  --fs-md: var(--font-size-base);
-
-  background: var(--color-bg);
-  padding-block: var(--s-12);
-  border-radius: var(--border-radius-base);
-  box-shadow: var(--shadow-sm);
-
-  &--compact {
-    padding-block: var(--s-8);
-  }
+  padding-block: var(--gap-lg);
 
   &__form {
     max-width: var(--layout-max-width);
     margin-inline: auto;
-    padding-inline: var(--s-12);
+    padding-inline: var(--gap-lg);
   }
 
   &__set {
@@ -58,8 +30,8 @@
   &__row {
     display: grid;
     align-items: start;
-    gap: var(--s-4);
-    margin-bottom: var(--s-8);
+    gap: var(--gap-base);
+    margin-bottom: var(--gap-md);
 
     @media (min-width: 768px) {
       grid-template-columns: 120px 1fr;
@@ -68,10 +40,11 @@
   }
 
   &__label {
-    font-size: var(--fs-sm);
-    color: var(--color-muted);
+    font-size: var(--font-size-sm);
+    color: var(--text-color-secondary);
   }
 
+  /* Search */
   &__searchWrap {
     position: relative;
     display: flex;
@@ -85,8 +58,8 @@
     background: var(--background-tertiary);
     color: var(--text-color-inverse);
     border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-card);
 
     &::placeholder {
       color: var(--text-color-placeholder);
@@ -96,7 +69,7 @@
     &:focus-visible {
       outline: none;
       box-shadow: 0 0 0 3px rgba(29, 161, 242, 0.18);
-      border-color: var(--color-primary);
+      border-color: var(--primary);
     }
   }
 
@@ -117,10 +90,11 @@
 
   &__hint {
     grid-column: 1 / -1;
-    color: var(--color-muted);
-    font-size: var(--fs-xs);
+    color: var(--text-color-secondary);
+    font-size: var(--font-size-xs);
   }
 
+  /* Select */
   &__select {
     inline-size: 100%;
     font: inherit;
@@ -128,18 +102,19 @@
     background: var(--background-tertiary);
     color: var(--text-color-inverse);
     border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-card);
 
     @media (min-width: 768px) {
       inline-size: 280px;
     }
   }
 
+  /* Tags */
   &__tags {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--s-4);
+    gap: var(--gap-base);
   }
 
   &__tag {
@@ -149,15 +124,65 @@
     color: var(--text-color-inverse);
     padding: 0.4rem 0.8rem;
     border-radius: 999px;
-    font-size: var(--fs-sm);
+    font-size: var(--font-size-sm);
     font-weight: 700;
     letter-spacing: 0.03em;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-card);
 
     &--active {
-      background: var(--color-primary);
+      background: var(--primary);
       color: #fff;
       border-color: transparent;
     }
+  }
+
+  /* Compact toggle */
+  &__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--gap-m);
+  }
+
+  &__switch {
+    appearance: none;
+    inline-size: 42px;
+    block-size: 24px;
+    border-radius: 999px;
+    background: var(--background-tertiary);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset-block: 3px;
+      left: 3px;
+      inline-size: 18px;
+      block-size: 18px;
+      border-radius: 50%;
+      background: var(--text-color-inverse);
+      transition: transform 0.2s ease;
+    }
+
+    &:checked {
+      background: var(--primary);
+      border-color: var(--primary);
+
+      &::before {
+        transform: translateX(18px);
+      }
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(29, 161, 242, 0.18);
+    }
+  }
+
+  &__switchLabel {
+    font-size: var(--font-size-sm);
+    color: var(--text-color);
   }
 }

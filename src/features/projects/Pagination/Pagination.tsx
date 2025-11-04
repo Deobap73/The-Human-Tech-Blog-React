@@ -11,6 +11,8 @@ export interface PaginationProps {
   onPageChange: (page: number) => void;
   siblingCount?: number;
   ariaLabel?: string;
+  /** Compact density mode (reduces paddings/gaps) */
+  compact?: boolean;
 }
 
 const clamp = (n: number, min: number, max: number): number => Math.max(min, Math.min(n, max));
@@ -18,6 +20,7 @@ const clamp = (n: number, min: number, max: number): number => Math.max(min, Mat
 /**
  * Pagination (Figma-to-code parity)
  * - Ellipses, keyboard-friendly, accessible.
+ * - Compact mode supported via BEM modifier.
  */
 const Pagination: React.FC<PaginationProps> = ({
   currentPage,
@@ -25,6 +28,7 @@ const Pagination: React.FC<PaginationProps> = ({
   onPageChange,
   siblingCount = 1,
   ariaLabel = 'Paginação de projetos',
+  compact = false,
 }) => {
   if (totalPages <= 1) return null;
 
@@ -39,8 +43,10 @@ const Pagination: React.FC<PaginationProps> = ({
   if (end < totalPages - 1) range.push('…');
   if (totalPages > 1) range.push(totalPages);
 
+  const rootCls = ['pag', compact ? 'pag--compact' : ''].filter(Boolean).join(' ');
+
   return (
-    <nav className='pag' role='navigation' aria-label={ariaLabel}>
+    <nav className={rootCls} role='navigation' aria-label={ariaLabel}>
       <ul className='pag__list'>
         <li className='pag__item'>
           <button

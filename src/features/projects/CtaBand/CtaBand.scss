@@ -1,22 +1,8 @@
 // /src/features/projects/CtaBand/CtaBand.scss
 
-/* Local token mapping to blog variables */
 .cta {
-  --color-bg: var(--background);
-  --color-surface: var(--background-secondary);
-  --color-text: var(--text-color);
-  --color-inverse: var(--text-color-inverse);
-  --color-primary: var(--primary);
-  --color-primary-hover: var(--primary-hover);
-  --color-border: rgba(255, 255, 255, 0.15);
-
-  --radius: var(--border-radius-base);
-  --pad: var(--padding-xl);
-  --gap: var(--gap-lg);
-
-  background: var(--color-surface);
-  color: var(--color-inverse);
-  border-radius: var(--radius);
+  color: var(--text-color-inverse);
+  border-radius: var(--border-radius-base);
   box-shadow: var(--shadow-card-strong);
   margin: var(--margin-lg) 0;
 
@@ -32,27 +18,23 @@
     text-align: center;
   }
 
-  &--accent {
-    background: var(--color-primary);
-  }
-
   &__inner {
     max-width: 1100px;
     margin: 0 auto;
-    padding: var(--pad);
+    padding: var(--padding-xl);
     display: grid;
-    gap: var(--gap);
+    gap: var(--gap-lg);
   }
 
   &__header {
     display: grid;
-    gap: var(--gap);
+    gap: var(--gap-lg);
   }
 
   &__title {
     font-size: var(--heading-h3);
     line-height: 1.2;
-    color: var(--color-inverse);
+    color: var(--text-color-inverse);
   }
 
   &__text {
@@ -79,20 +61,38 @@
     border: 1px solid transparent;
 
     &--primary {
-      background: var(--color-inverse);
-      color: var(--color-text);
+      display: flex;
+      align-items: center;
+      gap: var(--gap-xs);
+      padding: 0.45rem 1.3rem 0.45rem 0.95rem;
+      font-size: var(--font-size-sm);
+      font-weight: 500;
+      border: 2px solid #2995e2; // azul claro (ajusta se tua paleta for diferente)
+      border-left: none;
+      border-right: none;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
+      backdrop-filter: blur(2.5px); // Glass effect!
+      transition: border 0.2s, box-shadow 0.2s, background 0.25s;
+      outline: none;
+      text-decoration: none;
+      color: inherit;
+
+      cursor: pointer;
+
       &:hover,
-      &:focus-visible {
-        transform: translateY(-1px);
-        box-shadow: var(--shadow-card);
-        outline: none;
+      &:focus {
+        background: rgba(0, 48, 104, 0.388);
+      }
+      &:active {
+        background: none !important;
       }
     }
 
     &--secondary {
       background: transparent;
-      color: var(--color-inverse);
-      border-color: var(--color-inverse);
+      color: var(--text-color-inverse);
+      border-color: var(--text-color-inverse);
       &:hover,
       &:focus-visible {
         background: rgba(255, 255, 255, 0.12);

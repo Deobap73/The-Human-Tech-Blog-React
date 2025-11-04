@@ -1,12 +1,15 @@
 // src/features/projects/ProjectsGrid/ProjectsGrid.scss
 
 .projGrid {
+  /* Default gap (roomy) */
   --grid-gap: var(--gap-lg);
 
   padding-block: var(--gap-lg);
 
   &--compact {
+    /* Denser layout: less vertical padding and smaller grid gap */
     padding-block: var(--gap-md);
+    --grid-gap: var(--gap-base);
   }
 
   &__grid {
@@ -52,4 +55,19 @@
     font-size: var(--font-size-base);
     color: var(--text-color-secondary);
   }
+}
+
+/* Compact card adjustments scoped to grid */
+.projGrid--compact .projectCard {
+  padding: var(--gap-m);
+  gap: var(--gap-base);
+}
+
+.projGrid--compact .projectCard__body {
+  gap: var(--gap-base);
+}
+
+.projGrid--compact .projectCard__footer {
+  gap: var(--gap-base);
+  margin-top: var(--gap-base);
 }
