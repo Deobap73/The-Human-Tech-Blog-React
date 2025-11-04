@@ -1,72 +1,74 @@
+// /src/features/projects/pages/ProjectsPage.tsx
+
 'use strict';
 
-/**
- * Path: /src/features/projects/pages/ProjectsPage.tsx
- */
+import React from 'react';
+import './ProjectsPage.scss';
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-// Components
-import ProjectsTabs from '../components/ProjectsTabs';
-import ProjectCard from '../components/ProjectCard';
+// Local pieces
+import FiltersBar, { SortOption } from '../FiltersBar/FiltersBar';
+import ProjectsGrid, { ProjectGridItem } from '../ProjectsGrid/ProjectsGrid';
+import Pagination from '../Pagination/Pagination';
+import CtaBand from '../CtaBand/CtaBand';
+
+// Reuse existing components if needed
 import ProjectsEmptyState from '../components/ProjectsEmptyState';
-import CtaBand from '../components/CtaBand';
-import FiltersBar from '../components/FiltersBar';
-import ProjectsGrid from '../components/ProjectsGrid';
-import Pagination from '../components/Pagination';
 
-// Styles
-import '../styles/ProjectsPage.scss';
-import '../styles/ProjectsGrid.scss';
-import '../styles/FiltersBar.scss';
-import '../styles/Pagination.scss';
-import '../styles/CtaBand.scss';
-
-import { fetchProjects } from '../../../shared/services/projectService';
+// Backend types/services
 import type { Project } from '../../../shared/types/Project';
-import ProjectCardSkeleton from '../components/ProjectCardSkeleton';
+import { fetchProjects } from '../../../shared/services/projectService';
+
+// Helpers
 import { useDebouncedValue } from '../../../shared/hooks/useDebouncedValue';
 
+/**
+ * ProjectsPage
+ * - Keeps dynamic fetching to backend with optional "type" derived from tags.
+ * - If no type-tag is active, defaults to 'frontend-ui' to preserve current behavior.
+ */
 const DEFAULT_LIMIT = 9;
 
-/**
- * ProjectsPage (lean)
- * - Local state only (no URL sync)
- * - Debounced search
- * - Single useEffect with AbortController
- * - No prefetch/cache (keep moving parts minimal)
- */
+// map UI tags to backend type
+const TYPE_TAGS: Record<string, Project['type']> = {
+  'Frontend UI': 'frontend-ui',
+  'UX · Figma': 'ux-figma',
+  'Full Projects': 'full',
+};
+
+const AVAILABLE_TAGS = Object.keys(TYPE_TAGS); // we can add more non-type tags in the future
+
 const ProjectsPage: React.FC = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [activeTab, setActiveTab] = useState<'frontend-ui' | 'ux-figma' | 'full'>('frontend-ui');
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
-  const [page, setPage] = useState<number>(1);
-  const [totalPages, setTotalPages] = useState<number>(1);
-  const [search, setSearch] = useState<string>('');
+  // ======= STATE =======
+  const [q, setQ] = React.useState<string>('');
+  const [sort, setSort] = React.useState<SortOption>('newest');
+  const [activeTags, setActiveTags] = React.useState<string[]>([]);
+  const [page, setPage] = React.useState<number>(1);
 
-  const debouncedSearch = useDebouncedValue(search, 450);
+  // Data state
+  const [items, setItems] = React.useState<Project[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string>('');
+  const [totalPages, setTotalPages] = React.useState<number>(1);
 
-  // Reset page to 1 when tab/search changes
-  useEffect(() => {
+  const debouncedQ = useDebouncedValue(q, 450);
+
+  // ======= TAG FILTER HANDLING (extract backend type) =======
+  const activeType: Project['type'] =
+    (activeTags.find((t) => TYPE_TAGS[t as keyof typeof TYPE_TAGS]) &&
+      TYPE_TAGS[activeTags.find((t) => TYPE_TAGS[t as keyof typeof TYPE_TAGS]) as string]) ||
+    'frontend-ui';
+
+  const toggleTag = (tag: string): void => {
+    setActiveTags((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]));
+  };
+
+  // Reset page on filters change
+  React.useEffect(() => {
     setPage(1);
-  }, [activeTab, debouncedSearch]);
+  }, [debouncedQ, activeType, sort]);
 
-  const key = useMemo(
-    () => `${activeTab}::${debouncedSearch || ''}::${page}::${DEFAULT_LIMIT}`,
-    [activeTab, debouncedSearch, page]
-  );
-
-  // Guard against setState after unmount
-  const mountedRef = useRef(true);
-  useEffect(() => {
-    mountedRef.current = true;
-    return () => {
-      mountedRef.current = false;
-    };
-  }, []);
-
-  // Fetch with cancellation
-  useEffect(() => {
+  // ======= FETCH (backend) =======
+  React.useEffect(() => {
     const controller = new AbortController();
 
     const load = async (): Promise<void> => {
@@ -74,89 +76,105 @@ const ProjectsPage: React.FC = () => {
       setLoading(true);
       try {
         const data = await fetchProjects(
-          activeTab,
+          activeType,
           page,
           DEFAULT_LIMIT,
-          debouncedSearch,
+          debouncedQ,
           controller.signal
         );
-        if (!mountedRef.current) return;
+        setItems(data.items);
 
-        setProjects(data.items);
-        setTotalPages(Math.max(1, Math.ceil(data.total / data.limit)));
-      } catch (err: unknown) {
-        // Ignore silent cancellations
-        const e = err as { name?: string; code?: string };
-        const canceled =
-          e?.name === 'AbortError' || e?.name === 'CanceledError' || e?.code === 'ERR_CANCELED';
-        if (!canceled) {
+        // client-side sort (title-based); backend can be extended later
+        const sorted = [...data.items].sort((a, b) => {
+          if (sort === 'az') return a.title.localeCompare(b.title);
+          if (sort === 'za') return b.title.localeCompare(a.title);
+          // newest/oldest fallback based on updatedAt if present else by title
+          const aT = (a as any).updatedAt ? Date.parse((a as any).updatedAt) : 0;
+          const bT = (b as any).updatedAt ? Date.parse((b as any).updatedAt) : 0;
+          if (aT && bT) return sort === 'newest' ? bT - aT : aT - bT;
+          return sort === 'newest'
+            ? b.title.localeCompare(a.title)
+            : a.title.localeCompare(b.title);
+        });
+
+        const totalPagesCalc = Math.max(1, Math.ceil(data.total / data.limit));
+        setTotalPages(totalPagesCalc);
+        setItems(sorted);
+      } catch (err) {
+        if ((err as { name?: string }).name !== 'AbortError') {
           // eslint-disable-next-line no-console
-          console.error('[ProjectsPage][load]', key, err);
+          console.error('[ProjectsPage] load error', err);
           setError('Failed to load projects.');
         }
       } finally {
-        if (mountedRef.current) setLoading(false);
+        setLoading(false);
       }
     };
 
     void load();
     return () => controller.abort();
-  }, [key, activeTab, page, debouncedSearch]);
+  }, [activeType, page, debouncedQ, sort]);
 
-  const clearFilters = (): void => {
-    setSearch('');
-    setActiveTab('frontend-ui');
-    setPage(1);
-  };
+  // Transform to grid items
+  const pageItems: ProjectGridItem[] = items.map((p) => ({
+    id: p._id,
+    title: p.title,
+    subtitle: p.type ? p.type : undefined,
+    excerpt: p.excerpt,
+    imageSrc: p.coverImage,
+    imageAlt: p.title || 'Project cover',
+    tags: p.tags || [],
+    links: {
+      details: `/${(p as any).lang || 'en'}/projects/${p.slug}`,
+      repo: p.links?.github,
+      live: p.links?.live,
+    },
+  }));
 
   return (
-    <section className='projectsPage'>
-      <div className='projectsPage__container'>
-        <h1 id='projects-title' className='projectsPage__title'>
-          Projects
-        </h1>
+    <main aria-labelledby='ProjectsPage-title' className='projectsPage'>
+      <h1 id='ProjectsPage-title' className='projectsPage__title'>
+        Projects
+      </h1>
 
-        {/* CTA band (optional, helps UX and parity with "Figma to code") */}
-        <CtaBand />
+      <FiltersBar
+        search={q}
+        onSearch={setQ}
+        sort={sort}
+        onSort={setSort}
+        tags={AVAILABLE_TAGS}
+        activeTags={activeTags}
+        onToggleTag={toggleTag}
+      />
 
-        {/* Unified FiltersBar (moved from /pages to /components) */}
-        <FiltersBar
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          search={search}
-          onSearchChange={setSearch}
-        />
+      {error && <p className='projectsPage__error'>{error}</p>}
 
-        {error && <p className='projectsPage__error'>{error}</p>}
+      {loading && !error && <ProjectsEmptyState message='Loading projects…' />}
 
-        {/* Skeletons while loading */}
-        {loading && !error && (
-          <ProjectsGrid labelledById='projects-title'>
-            {Array.from({ length: 6 }).map((_, i) => (
-              <ProjectCardSkeleton key={i} />
-            ))}
-          </ProjectsGrid>
-        )}
+      {!loading && !error && pageItems.length === 0 && (
+        <ProjectsEmptyState message='No projects found for the current filter.' />
+      )}
 
-        {!loading && !error && projects.length === 0 && (
-          <ProjectsEmptyState onClear={clearFilters} />
-        )}
+      {!error && pageItems.length > 0 && (
+        <>
+          <ProjectsGrid items={pageItems} emptyText='Nenhum projeto encontrado.' />
+          <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
+        </>
+      )}
 
-        {!error && projects.length > 0 && (
-          <>
-            <ProjectsGrid labelledById='projects-title'>
-              {projects.map((project) => (
-                <ProjectCard key={project._id} project={project} />
-              ))}
-            </ProjectsGrid>
-
-            {totalPages > 1 && (
-              <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
-            )}
-          </>
-        )}
-      </div>
-    </section>
+      <CtaBand
+        title='Tem um projeto em mente?'
+        text='Fale comigo para desenharmos juntos a melhor solução — com qualidade, acessibilidade e foco no detalhe.'
+        primary={{ label: 'Contactar', href: '/contact' }}
+        secondary={{
+          label: 'LinkedIn',
+          href: 'https://www.linkedin.com/in/palmirasolochi/',
+          target: '_blank',
+        }}
+        align='center'
+        tone='accent'
+      />
+    </main>
   );
 };
 

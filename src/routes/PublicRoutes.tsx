@@ -27,7 +27,6 @@ import NewsletterConfirmPage from '../features/notification/newsletter/pages/New
 import NewsletterUnsubscribePage from '../features/notification/newsletter/pages/NewsletterUnsubscribePage';
 import AiPromptsPage from '../features/aiPrompts/pages/AiPromptsPage';
 import ProjectsPage from '../features/projects/pages/ProjectsPage';
-import ProjectDetailPage from '../features/projects/pages/ProjectDetailPage';
 
 // ATS Generator Page (will be created in next step)
 // import AtsGeneratorPage from '../features/ats/pages/AtsGeneratorPage';
@@ -91,7 +90,7 @@ const PublicRoutes = () => (
 
       {/*  projects routes */}
       <Route path='projects' element={<ProjectsPage />} />
-      <Route path='projects/:slug' element={<ProjectDetailPage />} />
+      {/*  <Route path='projects/:slug' element={<ProjectDetailPage />} /> */}
 
       {/* Protected chat area */}
       <Route

@@ -1,0 +1,104 @@
+// /src/features/projects/CtaBand/CtaBand.scss
+
+/* Local token mapping to blog variables */
+.cta {
+  --color-bg: var(--background);
+  --color-surface: var(--background-secondary);
+  --color-text: var(--text-color);
+  --color-inverse: var(--text-color-inverse);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-border: rgba(255, 255, 255, 0.15);
+
+  --radius: var(--border-radius-base);
+  --pad: var(--padding-xl);
+  --gap: var(--gap-lg);
+
+  background: var(--color-surface);
+  color: var(--color-inverse);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card-strong);
+  margin: var(--margin-lg) 0;
+
+  &--compact {
+    --pad: var(--padding-md);
+  }
+
+  &--left .cta__inner {
+    text-align: left;
+  }
+
+  &--center .cta__inner {
+    text-align: center;
+  }
+
+  &--accent {
+    background: var(--color-primary);
+  }
+
+  &__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: var(--pad);
+    display: grid;
+    gap: var(--gap);
+  }
+
+  &__header {
+    display: grid;
+    gap: var(--gap);
+  }
+
+  &__title {
+    font-size: var(--heading-h3);
+    line-height: 1.2;
+    color: var(--color-inverse);
+  }
+
+  &__text {
+    font-size: var(--font-size-base);
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  &__actions {
+    display: inline-flex;
+    gap: var(--gap-base);
+    justify-content: center;
+  }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.7rem 1.1rem;
+    border-radius: var(--border-radius-md);
+    font-weight: 600;
+    line-height: 1;
+    transition: transform 0.12s ease, background 0.2s ease, box-shadow 0.2s ease,
+      border-color 0.2s ease;
+    border: 1px solid transparent;
+
+    &--primary {
+      background: var(--color-inverse);
+      color: var(--color-text);
+      &:hover,
+      &:focus-visible {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-card);
+        outline: none;
+      }
+    }
+
+    &--secondary {
+      background: transparent;
+      color: var(--color-inverse);
+      border-color: var(--color-inverse);
+      &:hover,
+      &:focus-visible {
+        background: rgba(255, 255, 255, 0.12);
+        transform: translateY(-1px);
+        outline: none;
+      }
+    }
+  }
+}

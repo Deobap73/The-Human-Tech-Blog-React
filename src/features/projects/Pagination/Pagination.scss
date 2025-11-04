@@ -1,0 +1,72 @@
+// src/features/projects/Pagination/Pagination.scss
+
+.pag {
+  --color-bg: var(--background);
+  --color-text: var(--text-color);
+  --color-primary: var(--primary);
+  --color-border: rgba(0, 0, 0, 0.12);
+  --radius-md: var(--border-radius-md);
+  --shadow-sm: var(--shadow-card);
+  --shadow-md: var(--shadow-card-strong);
+  --s-4: var(--gap-base);
+  --s-12: var(--gap-lg);
+
+  display: grid;
+  place-items: center;
+  padding-block: var(--s-12);
+
+  &__list {
+    list-style: none;
+    display: flex;
+    gap: var(--s-4);
+    margin: 0;
+    padding: 0;
+    align-items: center;
+  }
+
+  &__item {
+    display: inline-flex;
+  }
+
+  &__btn {
+    appearance: none;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+    color: var(--color-text);
+    padding: 0.5rem 0.8rem;
+    border-radius: var(--radius-md);
+    font: inherit;
+    line-height: 1;
+    box-shadow: var(--shadow-sm);
+    min-inline-size: 2.25rem;
+    text-align: center;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+
+    &:hover:not(:disabled),
+    &:focus-visible {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    &--active {
+      background: var(--color-primary);
+      color: #fff;
+      border-color: var(--color-primary);
+    }
+  }
+
+  &__dots {
+    display: inline-block;
+    padding: 0.5rem 0.4rem;
+    color: var(--text-color-secondary);
+    user-select: none;
+  }
+}

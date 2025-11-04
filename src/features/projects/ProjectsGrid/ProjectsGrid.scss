@@ -1,0 +1,55 @@
+// src/features/projects/ProjectsGrid/ProjectsGrid.scss
+
+.projGrid {
+  --grid-gap: var(--gap-lg);
+
+  padding-block: var(--gap-lg);
+
+  &--compact {
+    padding-block: var(--gap-md);
+  }
+
+  &__grid {
+    max-width: var(--layout-max-width);
+    margin-inline: auto;
+    padding-inline: var(--padding-base);
+
+    display: grid;
+    gap: var(--grid-gap);
+
+    /* 1 col */
+    grid-template-columns: 1fr;
+
+    /* 2 col: ≥576px */
+    @media (min-width: 576px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* 3 col: ≥992px */
+    @media (min-width: 992px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  &__cell {
+    /* reserved for per-card modifiers */
+  }
+
+  &__empty {
+    max-width: var(--layout-max-width);
+    margin-inline: auto;
+    padding: var(--gap-xxl) var(--padding-base);
+    display: grid;
+    place-items: center;
+    text-align: center;
+    border: 1px dashed rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius-md);
+    background: color-mix(in oklab, var(--background) 86%, var(--background-secondary));
+  }
+
+  &__emptyText {
+    margin: 0;
+    font-size: var(--font-size-base);
+    color: var(--text-color-secondary);
+  }
+}
