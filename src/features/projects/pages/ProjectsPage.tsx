@@ -1,30 +1,39 @@
-// /src/features/projects/pages/ProjectsPage.tsx
 'use strict';
 
+/**
+ * Path: /src/features/projects/pages/ProjectsPage.tsx
+ */
+
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+// Components
 import ProjectsTabs from '../components/ProjectsTabs';
 import ProjectCard from '../components/ProjectCard';
-import ProjectsFilterBar from './ProjectsFilterBar';
-import ProjectCardSkeleton from '../components/ProjectCardSkeleton';
 import ProjectsEmptyState from '../components/ProjectsEmptyState';
+import CtaBand from '../components/CtaBand';
+import FiltersBar from '../components/FiltersBar';
+import ProjectsGrid from '../components/ProjectsGrid';
+import Pagination from '../components/Pagination';
 
+// Styles
 import '../styles/ProjectsPage.scss';
 import '../styles/ProjectsGrid.scss';
+import '../styles/FiltersBar.scss';
+import '../styles/Pagination.scss';
+import '../styles/CtaBand.scss';
 
 import { fetchProjects } from '../../../shared/services/projectService';
 import type { Project } from '../../../shared/types/Project';
-import Pagination from '../../ui/Pagination';
-
+import ProjectCardSkeleton from '../components/ProjectCardSkeleton';
 import { useDebouncedValue } from '../../../shared/hooks/useDebouncedValue';
 
 const DEFAULT_LIMIT = 9;
 
 /**
  * ProjectsPage (lean)
- * - Estado local simples (sem sincronizar URL)
- * - Debounce na pesquisa
- * - Um único useEffect com AbortController
- * - Sem prefetch nem cache in-memory (menos moving parts)
+ * - Local state only (no URL sync)
+ * - Debounced search
+ * - Single useEffect with AbortController
+ * - No prefetch/cache (keep moving parts minimal)
  */
 const ProjectsPage: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -37,18 +46,17 @@ const ProjectsPage: React.FC = () => {
 
   const debouncedSearch = useDebouncedValue(search, 450);
 
-  // Reset page para 1 quando muda tab/pesquisa
+  // Reset page to 1 when tab/search changes
   useEffect(() => {
     setPage(1);
   }, [activeTab, debouncedSearch]);
 
-  // Chave só para debug/estabilidade (não é usada noutros sítios)
   const key = useMemo(
     () => `${activeTab}::${debouncedSearch || ''}::${page}::${DEFAULT_LIMIT}`,
     [activeTab, debouncedSearch, page]
   );
 
-  // Ref para ignorar setState após unmount
+  // Guard against setState after unmount
   const mountedRef = useRef(true);
   useEffect(() => {
     mountedRef.current = true;
@@ -57,11 +65,11 @@ const ProjectsPage: React.FC = () => {
     };
   }, []);
 
-  // Fetch simples com cancelamento
+  // Fetch with cancellation
   useEffect(() => {
     const controller = new AbortController();
 
-    const load = async () => {
+    const load = async (): Promise<void> => {
       setError('');
       setLoading(true);
       try {
@@ -76,13 +84,13 @@ const ProjectsPage: React.FC = () => {
 
         setProjects(data.items);
         setTotalPages(Math.max(1, Math.ceil(data.total / data.limit)));
-      } catch (err: any) {
-        // Ignorar cancelamentos silenciosamente
+      } catch (err: unknown) {
+        // Ignore silent cancellations
+        const e = err as { name?: string; code?: string };
         const canceled =
-          err?.name === 'AbortError' ||
-          err?.name === 'CanceledError' ||
-          err?.code === 'ERR_CANCELED';
+          e?.name === 'AbortError' || e?.name === 'CanceledError' || e?.code === 'ERR_CANCELED';
         if (!canceled) {
+          // eslint-disable-next-line no-console
           console.error('[ProjectsPage][load]', key, err);
           setError('Failed to load projects.');
         }
@@ -95,7 +103,7 @@ const ProjectsPage: React.FC = () => {
     return () => controller.abort();
   }, [key, activeTab, page, debouncedSearch]);
 
-  const clearFilters = () => {
+  const clearFilters = (): void => {
     setSearch('');
     setActiveTab('frontend-ui');
     setPage(1);
@@ -104,11 +112,15 @@ const ProjectsPage: React.FC = () => {
   return (
     <section className='projectsPage'>
       <div className='projectsPage__container'>
-        <h1 className='projectsPage__title'>Projects</h1>
+        <h1 id='projects-title' className='projectsPage__title'>
+          Projects
+        </h1>
 
-        {/*  <ProjectsTabs activeTab={activeTab} onChange={setActiveTab} /> */}
+        {/* CTA band (optional, helps UX and parity with "Figma to code") */}
+        <CtaBand />
 
-        <ProjectsFilterBar
+        {/* Unified FiltersBar (moved from /pages to /components) */}
+        <FiltersBar
           activeTab={activeTab}
           onTabChange={setActiveTab}
           search={search}
@@ -117,13 +129,13 @@ const ProjectsPage: React.FC = () => {
 
         {error && <p className='projectsPage__error'>{error}</p>}
 
-        {/* Skeletons durante o carregamento */}
+        {/* Skeletons while loading */}
         {loading && !error && (
-          <div className='projectsGrid'>
+          <ProjectsGrid labelledById='projects-title'>
             {Array.from({ length: 6 }).map((_, i) => (
               <ProjectCardSkeleton key={i} />
             ))}
-          </div>
+          </ProjectsGrid>
         )}
 
         {!loading && !error && projects.length === 0 && (
@@ -132,11 +144,11 @@ const ProjectsPage: React.FC = () => {
 
         {!error && projects.length > 0 && (
           <>
-            <div className='projectsGrid'>
+            <ProjectsGrid labelledById='projects-title'>
               {projects.map((project) => (
                 <ProjectCard key={project._id} project={project} />
               ))}
-            </div>
+            </ProjectsGrid>
 
             {totalPages > 1 && (
               <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />

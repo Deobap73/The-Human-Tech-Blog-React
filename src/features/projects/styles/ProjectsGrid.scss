@@ -1,6 +1,27 @@
-// /src/features/projects/styles/ProjectsGrid.scss
+/* Path: /src/features/projects/styles/ProjectsGrid.scss */
+/* Harmonized with "Figma to code" layout, using blog tokens */
+
 .projectsGrid {
+  --_min-card-width: 280px;
+  --_gap: var(--gap-lg);
+
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(var(--_min-card-width), 1fr));
+  gap: var(--_gap);
+  align-items: stretch;
+
+  /* Card elevation context */
+  & > * {
+    will-change: transform, box-shadow;
+  }
+
+  @media (max-width: 1024px) {
+    --_min-card-width: 260px;
+    --_gap: var(--gap-md);
+  }
+
+  @media (max-width: 768px) {
+    --_min-card-width: 240px;
+    --_gap: var(--gap-base);
+  }
 }

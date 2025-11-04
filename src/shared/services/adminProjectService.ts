@@ -83,9 +83,37 @@ function parseGithubRepoSlug(url?: string): string | null {
   }
 }
 
-/** Build GitHub OpenGraph image URL */
+/** GitHub OpenGraph */
 function githubOgImageFromSlug(slug: string): string {
   return `https://opengraph.githubassets.com/1/${slug}`;
+}
+
+/** Cloudinary fetch helpers */
+const CLOUD = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME?.trim();
+const DEFAULT_TRANSFORM =
+  import.meta.env.VITE_CLOUDINARY_FETCH_TRANSFORM?.trim() ||
+  // bom para thumbs/hero: formato automático + qualidade auto + cover 1200x630
+  'f_auto,q_auto,c_fill,w_1200,h_630';
+
+function isCloudinaryUrl(url?: string): boolean {
+  if (!url) return false;
+  try {
+    const u = new URL(url);
+    return /res\.cloudinary\.com$/i.test(u.hostname);
+  } catch {
+    return false;
+  }
+}
+
+function toCloudinaryFetch(rawUrl?: string): string | undefined {
+  if (!rawUrl) return undefined;
+  if (!CLOUD) return rawUrl; // sem cloud name, devolve original
+  if (isCloudinaryUrl(rawUrl)) return rawUrl; // já é cloudinary
+
+  // https://res.cloudinary.com/<cloud>/image/fetch/<transform>/<encoded-remote-url>
+  return `https://res.cloudinary.com/${CLOUD}/image/fetch/${DEFAULT_TRANSFORM}/${encodeURIComponent(
+    rawUrl
+  )}`;
 }
 
 /** Normalize Project.source */
@@ -172,28 +200,37 @@ function normalizeCreatePayload(input: CreateProjectPayloadLoose) {
       ? input.isPublic
       : true;
 
+  // 1) Prefer SEMPRE o que o utilizador colocou no input (coverImage/coverUrl)
+  let coverCandidate = input.coverImage ?? input.coverUrl;
+
+  // 2) Se não veio nada e é GitHub, usar OG como fallback
+  if (!coverCandidate && (normalizedSource === 'github' || links.github)) {
+    const slug = parseGithubRepoSlug(links.github);
+    if (slug) {
+      coverCandidate = githubOgImageFromSlug(slug);
+      // guardar repo slug em meta.github.repo (útil para sync)
+      (input as any).meta = (input as any).meta ?? {};
+      (input as any).meta.github = (input as any).meta.github ?? {};
+      (input as any).meta.github.repo = (input as any).meta.github.repo ?? slug;
+    }
+  }
+
+  // 3) Uniformizar: embrulhar no Cloudinary fetch (se cloud configurado)
+  const coverImage = toCloudinaryFetch(coverCandidate) || coverCandidate;
+
   const normalized = {
     title: input.title?.trim(),
     excerpt,
     source: normalizedSource,
     type: normalizedType,
     tags: normalizeTags(input.tags),
-    coverImage: input.coverImage ?? input.coverUrl ?? undefined,
+    coverImage,
     links,
     translations: Array.isArray(input.translations) ? input.translations : [],
     isPublic,
+    // se o passo 2 definiu meta.github.repo, preserva:
+    ...((input as any).meta ? { meta: (input as any).meta } : {}),
   };
-
-  /* ✅ Auto-fill coverImage for GitHub projects */
-  if (!normalized.coverImage && (normalized.source === 'github' || links.github)) {
-    const slug = parseGithubRepoSlug(links.github);
-    if (slug) {
-      normalized.coverImage = githubOgImageFromSlug(slug);
-      (normalized as any).meta = (normalized as any).meta ?? {};
-      (normalized as any).meta.github = (normalized as any).meta.github ?? {};
-      (normalized as any).meta.github.repo = (normalized as any).meta.github.repo ?? slug;
-    }
-  }
 
   return normalized;
 }
@@ -226,10 +263,7 @@ export async function createProject(payload: CreateProjectPayloadLoose) {
   if (!body?.type) throw new Error('Type must be one of: frontend-ui | ux-figma | full.');
 
   const res = await api.post<Project>('/projects', body, {
-    headers: {
-      'X-CSRF-Token': token,
-      'X-XSRF-TOKEN': token,
-    },
+    headers: { 'X-CSRF-Token': token, 'X-XSRF-TOKEN': token },
     withCredentials: true,
   });
   return res.data;

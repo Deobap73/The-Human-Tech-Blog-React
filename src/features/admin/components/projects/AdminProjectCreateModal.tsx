@@ -11,6 +11,8 @@ export interface CreateProjectPayload {
   slug: string;
   type: ProjectType;
   tags: string[];
+  // NOVO: permite enviar a capa escolhida manualmente
+  coverUrl?: string; // será normalizado para coverImage no service
   links?: {
     github?: string;
     figma?: string;
@@ -26,9 +28,8 @@ export interface CreateProjectPayload {
 
 /**
  * AdminProjectCreateModal
- * - Accessible modal that collects minimum fields to create a Project.
- * - It suggests a slug from the title (editable).
- * - Validates required fields (title, type).
+ * - Modal de criação com campo dedicado para "Cover image URL".
+ * - Se a capa for preenchida, sobrepõe qualquer fallback (GitHub OG / Figma).
  */
 interface Props {
   isOpen: boolean;
@@ -41,6 +42,9 @@ const AdminProjectCreateModal: React.FC<Props> = ({ isOpen, onClose, onCreate })
   const [slug, setSlug] = useState<string>('');
   const [type, setType] = useState<ProjectType>('frontend-ui');
   const [tagsInput, setTagsInput] = useState<string>('');
+
+  const [coverUrl, setCoverUrl] = useState<string>(''); // NOVO
+
   const [githubUrl, setGithubUrl] = useState<string>('');
   const [githubRepo, setGithubRepo] = useState<string>('');
   const [figmaUrl, setFigmaUrl] = useState<string>('');
@@ -63,14 +67,9 @@ const AdminProjectCreateModal: React.FC<Props> = ({ isOpen, onClose, onCreate })
     return s;
   }, [title]);
 
-  // If slug is empty or matches previous auto suggestion, keep in sync with title.
+  // If slug is empty keep in sync with title.
   useEffect(() => {
-    setSlug((prev) => {
-      // If user has already edited slug manually (doesn't equal prior auto), do not overwrite.
-      // We detect manual edits by checking if prev string differs from previous slugFromTitle pattern.
-      // For simplicity, only auto-assign when empty.
-      return prev || slugFromTitle;
-    });
+    setSlug((prev) => (prev ? prev : slugFromTitle));
   }, [slugFromTitle]);
 
   if (!isOpen) return null;
@@ -93,6 +92,7 @@ const AdminProjectCreateModal: React.FC<Props> = ({ isOpen, onClose, onCreate })
     setSlug('');
     setType('frontend-ui');
     setTagsInput('');
+    setCoverUrl(''); // NOVO
     setGithubUrl('');
     setGithubRepo('');
     setFigmaUrl('');
@@ -114,6 +114,8 @@ const AdminProjectCreateModal: React.FC<Props> = ({ isOpen, onClose, onCreate })
       type,
       tags,
       isPublic,
+      // se preenchido, este URL será usado como cover e sobrepõe fallback
+      coverUrl: coverUrl || undefined, // NOVO
       links: {
         github: githubUrl || undefined,
         figma: figmaUrl || undefined,
@@ -135,6 +137,9 @@ const AdminProjectCreateModal: React.FC<Props> = ({ isOpen, onClose, onCreate })
       setSubmitting(false);
     }
   }
+
+  // pré-visualização simples da capa
+  const canPreviewCover = coverUrl && /^https?:\/\//i.test(coverUrl);
 
   return (
     <div className='adminProjectCreate' aria-hidden={!isOpen}>
@@ -270,6 +275,22 @@ const AdminProjectCreateModal: React.FC<Props> = ({ isOpen, onClose, onCreate })
               placeholder='https://thehumantechblog.com/en/posts/some-article'
               inputMode='url'
             />
+          </label>
+
+          {/* Cover image URL — NOVO */}
+          <label className='adminProjectCreate__label'>
+            Cover image URL (overrides GitHub/Figma)
+            <input
+              className='adminProjectCreate__input'
+              value={coverUrl}
+              onChange={(e) => setCoverUrl(e.target.value)}
+              placeholder='https://... (Cloudinary, site próprio, etc.)'
+              inputMode='url'
+            />
+            <small className='adminProjectCreate__hint'>
+              Se preencheres, esta imagem será usada como capa e substituirá a imagem automática do
+              GitHub/Figma. (Será otimizada no backend via Cloudinary fetch, se configurado.)
+            </small>
           </label>
 
           {/* Public */}

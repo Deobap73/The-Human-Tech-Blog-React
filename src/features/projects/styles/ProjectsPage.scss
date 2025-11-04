@@ -1,4 +1,5 @@
-// /src/features/projects/styles/ProjectsPage.scss
+/* Path: /src/features/projects/styles/ProjectsPage.scss */
+
 .projectsPage {
   &__container {
     max-width: 1100px;
@@ -11,12 +12,13 @@
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 1.5rem;
+    color: var(--text-color);
   }
 
   &__error,
   &__empty {
     text-align: center;
-    color: var(--color-text-secondary);
+    color: var(--text-color-secondary);
     margin-top: 2rem;
   }
 }

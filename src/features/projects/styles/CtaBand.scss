@@ -1,0 +1,81 @@
+/* Path: /src/features/projects/styles/CtaBand.scss */
+/* BEM, blog tokens only */
+
+.ctaBand {
+  background: var(--background-secondary);
+  color: var(--text-color-inverse);
+  border-radius: var(--border-radius-base);
+  box-shadow: var(--shadow-card-strong);
+  margin: var(--margin-lg) 0;
+
+  &__container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: var(--padding-xl);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap-lg);
+  }
+
+  &__content {
+    display: grid;
+    gap: var(--gap-sm);
+  }
+
+  &__title {
+    font-size: var(--heading-h3);
+    line-height: 1.2;
+    color: var(--text-color-inverse);
+  }
+
+  &__subtitle {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: var(--font-size-base);
+  }
+
+  &__actions {
+    flex-shrink: 0;
+  }
+
+  &__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--border-radius-md);
+    background: var(--primary);
+    color: var(--text-color-inverse);
+    font-weight: 600;
+    transition: transform 0.12s ease, background 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover,
+    &:focus-visible {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25), var(--neon-shadow, 0 0 0 rgba(0, 0, 0, 0));
+      outline: none;
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    &__container {
+      flex-direction: column;
+      text-align: center;
+      padding: var(--padding-lg, 2rem);
+    }
+
+    &__actions {
+      width: 100%;
+    }
+
+    &__button {
+      width: 100%;
+    }
+  }
+}
