@@ -3,6 +3,7 @@
 'use strict';
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import './ProjectCard.scss';
 
 export interface ProjectLinks {
@@ -23,11 +24,6 @@ export interface ProjectCardProps {
   className?: string;
 }
 
-/**
- * ProjectCard
- * - Standalone card with internal link buttons, no external Button dependency.
- * - 16:9 image wrapper, tags list, and footer actions.
- */
 const ProjectCard: React.FC<ProjectCardProps> = ({
   title,
   subtitle,
@@ -39,6 +35,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   ariaLabel,
   className = '',
 }) => {
+  const { t } = useTranslation();
   const rootCls = ['projectCard', className].filter(Boolean).join(' ');
 
   const Title: React.FC = () =>
@@ -93,18 +90,28 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       {(links?.live || links?.repo || links?.details) && (
         <footer className='projectCard__footer' aria-label='Ações do projeto'>
           {links?.live && (
-            <LinkBtn href={links.live} label='Live' variant='primary' aria='Abrir demonstração' />
+            <LinkBtn
+              href={links.live}
+              label={t('projectsPage.live')}
+              variant='primary'
+              aria={t('projectsPage.live')}
+            />
           )}
           {links?.repo && (
             <LinkBtn
               href={links.repo}
-              label='GitHub'
+              label={t('projectsPage.github')}
               variant='secondary'
-              aria='Abrir repositório'
+              aria={t('projectsPage.github')}
             />
           )}
           {links?.details && (
-            <LinkBtn href={links.details} label='Detalhes' variant='ghost' aria='Ver detalhes' />
+            <LinkBtn
+              href={links.details}
+              label={t('projectsPage.details')}
+              variant='ghost'
+              aria={t('projectsPage.details')}
+            />
           )}
         </footer>
       )}

@@ -3,6 +3,7 @@
 'use strict';
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import './ProjectsPage.scss';
 
 // Local pieces
@@ -45,6 +46,7 @@ const AVAILABLE_TAGS = Object.keys(TYPE_TAGS);
  */
 const ProjectsPage: React.FC = () => {
   // ======= STATE =======
+  const { t } = useTranslation();
   const [q, setQ] = React.useState<string>('');
   const [sort, setSort] = React.useState<SortOption>('newest');
   const [activeTags, setActiveTags] = React.useState<string[]>([]);
@@ -204,12 +206,12 @@ const ProjectsPage: React.FC = () => {
       )}
 
       <CtaBand
-        title='Tem um projeto em mente?'
-        text='Fale comigo para desenharmos juntos a melhor solução — com qualidade, acessibilidade e foco no detalhe.'
-        primary={{ label: 'Contactar', href: '/contact' }}
+        title={t('projectsPage.ctaTitle')}
+        text={t('projectsPage.ctaText')}
+        primary={{ label: t('projectsPage.ctaPrimary'), href: '/contact' }}
         secondary={{
-          label: 'LinkedIn',
-          href: 'https://www.linkedin.com/in/palmirasolochi/',
+          label: t('projectsPage.ctaSecondary'),
+          href: 'https://www.linkedin.com/in/deolindobaptista/',
           target: '_blank',
         }}
         align='center'

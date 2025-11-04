@@ -388,5 +388,26 @@
       "live": "Live",
       "article": "Artigo"
     }
+  },
+  "projectsPage": {
+    "filter": "Filtrar projetos",
+    "searchPlaceholder": "Pesquisar por título ou tecnologias...",
+    "searchHint": "Prima Enter para confirmar ou use as opções de ordenação.",
+    "order": "Ordenar por",
+    "newest": "Mais recentes",
+    "oldest": "Mais antigos",
+    "az": "A–Z",
+    "za": "Z–A",
+    "tags": "Etiquetas",
+    "layout": "Disposição",
+    "compact": "Grelha compacta",
+    "empty": "Nenhum projeto encontrado com os filtros atuais.",
+    "ctaTitle": "Tem um projeto em mente?",
+    "ctaText": "Vamos desenhar a melhor solução juntos — com qualidade, acessibilidade e atenção ao detalhe.",
+    "ctaPrimary": "Contactar",
+    "ctaSecondary": "LinkedIn",
+    "live": "Demo",
+    "github": "GitHub",
+    "details": "Detalhes"
   }
 }

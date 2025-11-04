@@ -384,5 +384,26 @@
       "live": "Live",
       "article": "Artikel"
     }
+  },
+  "projectsPage": {
+    "filter": "Projekte filtern",
+    "searchPlaceholder": "Nach Titel oder Technologien suchen...",
+    "searchHint": "Enter drücken zum Bestätigen oder Sortieroptionen nutzen.",
+    "order": "Sortieren nach",
+    "newest": "Neueste",
+    "oldest": "Älteste",
+    "az": "A–Z",
+    "za": "Z–A",
+    "tags": "Tags",
+    "layout": "Layout",
+    "compact": "Kompaktes Raster",
+    "empty": "Keine Projekte mit den aktuellen Filtern gefunden.",
+    "ctaTitle": "Haben Sie ein Projekt im Sinn?",
+    "ctaText": "Lassen Sie uns die beste Lösung gemeinsam entwerfen — mit Qualität, Barrierefreiheit und Liebe zum Detail.",
+    "ctaPrimary": "Kontakt",
+    "ctaSecondary": "LinkedIn",
+    "live": "Live",
+    "github": "GitHub",
+    "details": "Details"
   }
 }

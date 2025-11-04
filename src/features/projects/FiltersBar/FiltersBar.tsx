@@ -3,6 +3,7 @@
 'use strict';
 
 import React, { useId } from 'react';
+import { useTranslation } from 'react-i18next';
 import './FiltersBar.scss';
 
 export type SortOption = 'newest' | 'oldest' | 'az' | 'za';
@@ -10,28 +11,15 @@ export type SortOption = 'newest' | 'oldest' | 'az' | 'za';
 export interface FiltersBarProps {
   search: string;
   onSearch: (value: string) => void;
-
   sort: SortOption;
   onSort: (value: SortOption) => void;
-
-  /** Available tags to show */
   tags?: string[];
-  /** Currently active tags */
   activeTags?: string[];
-  /** Toggle one tag in/out of the selection */
   onToggleTag?: (tag: string) => void;
-
-  /** Compact grid toggle (true => denser grid/cards/pagination) */
   compact: boolean;
   onToggleCompact: (value: boolean) => void;
 }
 
-/**
- * FiltersBar
- * - Stack on mobile, inline ≥768px.
- * - Accessible: labels, legends, aria-pressed for tags.
- * - Adds a "Compact grid" toggle to control density.
- */
 const FiltersBar: React.FC<FiltersBarProps> = ({
   search,
   onSearch,
@@ -45,6 +33,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({
 }) => {
   const formId = useId();
   const legendId = `${formId}-legend`;
+  const { t } = useTranslation();
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     onSearch(e.target.value);
@@ -59,13 +48,13 @@ const FiltersBar: React.FC<FiltersBarProps> = ({
       <form className='filters__form' role='search' onSubmit={(e) => e.preventDefault()}>
         <fieldset className='filters__set'>
           <legend id={legendId} className='filters__legend'>
-            Filtrar projetos
+            {t('projectsPage.filter')}
           </legend>
 
           {/* Search */}
           <div className='filters__row'>
             <label htmlFor={`${formId}-q`} className='filters__label'>
-              Procurar
+              {t('projectsPage.search')}
             </label>
             <div className='filters__searchWrap'>
               <input
@@ -73,7 +62,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({
                 className='filters__search'
                 type='search'
                 inputMode='search'
-                placeholder='Pesquisar por título, stack…'
+                placeholder={t('projectsPage.searchPlaceholder')}
                 value={search}
                 onChange={handleSearchChange}
                 aria-describedby={`${formId}-q-hint`}
@@ -82,39 +71,39 @@ const FiltersBar: React.FC<FiltersBarProps> = ({
                 <button
                   type='button'
                   className='filters__clear'
-                  aria-label='Limpar pesquisa'
+                  aria-label={t('common.clear') || 'Clear'}
                   onClick={() => onSearch('')}>
                   ×
                 </button>
               )}
             </div>
             <small id={`${formId}-q-hint`} className='filters__hint'>
-              Pressione Enter para confirmar ou use as opções de ordenação.
+              {t('projectsPage.searchHint')}
             </small>
           </div>
 
           {/* Sort */}
           <div className='filters__row'>
             <label htmlFor={`${formId}-sort`} className='filters__label'>
-              Ordenar
+              {t('projectsPage.order')}
             </label>
             <select
               id={`${formId}-sort`}
               className='filters__select'
               value={sort}
               onChange={handleSortChange}>
-              <option value='newest'>Mais recentes</option>
-              <option value='oldest'>Mais antigos</option>
-              <option value='az'>A–Z</option>
-              <option value='za'>Z–A</option>
+              <option value='newest'>{t('projectsPage.newest')}</option>
+              <option value='oldest'>{t('projectsPage.oldest')}</option>
+              <option value='az'>{t('projectsPage.az')}</option>
+              <option value='za'>{t('projectsPage.za')}</option>
             </select>
           </div>
 
           {/* Tags */}
           {tags.length > 0 && (
             <div className='filters__row'>
-              <span className='filters__label'>Tags</span>
-              <div className='filters__tags' role='group' aria-label='Filtrar por tags'>
+              <span className='filters__label'>{t('projectsPage.tags')}</span>
+              <div className='filters__tags' role='group' aria-label={t('projectsPage.tags')}>
                 {tags.map((tag) => {
                   const active = activeTags.includes(tag);
                   return (
@@ -134,7 +123,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({
 
           {/* Compact toggle */}
           <div className='filters__row'>
-            <span className='filters__label'>Layout</span>
+            <span className='filters__label'>{t('projectsPage.layout')}</span>
             <div className='filters__toggle'>
               <input
                 id={`${formId}-compact`}
@@ -146,7 +135,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({
                 onChange={(e) => onToggleCompact(e.target.checked)}
               />
               <label htmlFor={`${formId}-compact`} className='filters__switchLabel'>
-                Compact grid
+                {t('projectsPage.compact')}
               </label>
             </div>
           </div>

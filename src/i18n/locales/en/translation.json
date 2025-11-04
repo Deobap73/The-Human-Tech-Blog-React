@@ -432,5 +432,26 @@
       "live": "Live",
       "article": "Article"
     }
+  },
+  "projectsPage": {
+    "filter": "Filter projects",
+    "searchPlaceholder": "Search by title or stack...",
+    "searchHint": "Press Enter to confirm or use sorting options.",
+    "order": "Order by",
+    "newest": "Newest",
+    "oldest": "Oldest",
+    "az": "A–Z",
+    "za": "Z–A",
+    "tags": "Tags",
+    "layout": "Layout",
+    "compact": "Compact grid",
+    "empty": "No projects found for current filters.",
+    "ctaTitle": "Have a project in mind?",
+    "ctaText": "Let’s design the best solution together — with quality, accessibility, and attention to detail.",
+    "ctaPrimary": "Contact",
+    "ctaSecondary": "LinkedIn",
+    "live": "Live",
+    "github": "GitHub",
+    "details": "Details"
   }
 }
