@@ -453,5 +453,14 @@
     "live": "Live",
     "github": "GitHub",
     "details": "Details"
+  },
+  "projectsDetail": {
+    "back": "Back",
+    "loading": "Loading…",
+    "error": "Failed to load project.",
+    "notFound": "Project not found.",
+    "updated": "Updated",
+    "actions": "Actions",
+    "about": "About this project"
   }
 }

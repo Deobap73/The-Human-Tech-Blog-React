@@ -3,19 +3,19 @@
 .projectCard {
   display: grid;
   grid-template-rows: auto 1fr auto;
-  gap: var(--gap-md);
+  gap: var(--gap-lg);
   background: var(--background-secondary);
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-card);
+
+  box-shadow: var(--neon-border-shadow-small);
   padding: var(--gap-lg);
   transition: transform 160ms ease, box-shadow 160ms ease;
   min-height: 32.2rem;
 
   &:hover,
   &:focus-within {
-    transform: translateY(-5px) scale(1.018);
-    box-shadow: var(--neon-border-shadow);
+    transform: translateY(-5px) scale(1.001);
   }
 
   &__media {

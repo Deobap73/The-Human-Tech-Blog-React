@@ -405,5 +405,14 @@
     "live": "En vivo",
     "github": "GitHub",
     "details": "Detalles"
+  },
+  "projectsDetail": {
+    "back": "Volver",
+    "loading": "Cargando…",
+    "error": "Error al cargar el proyecto.",
+    "notFound": "Proyecto no encontrado.",
+    "updated": "Actualizado",
+    "actions": "Acciones",
+    "about": "Sobre este proyecto"
   }
 }

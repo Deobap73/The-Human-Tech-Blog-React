@@ -10,6 +10,7 @@ export interface ProjectLinks {
   github?: string;
   live?: string;
   blog?: string;
+  article?: string;
 }
 
 export interface ProjectMetaFigma {
@@ -33,6 +34,7 @@ export interface Project {
   type: ProjectType;
   title: string;
   excerpt?: string;
+  description?: string;
   coverImage?: string;
   tags: string[];
   links: ProjectLinks;

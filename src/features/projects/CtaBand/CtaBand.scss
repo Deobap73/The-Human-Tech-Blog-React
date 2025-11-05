@@ -2,8 +2,6 @@
 
 .cta {
   color: var(--text-color-inverse);
-  border-radius: var(--border-radius-base);
-  box-shadow: var(--shadow-card-strong);
   margin: var(--margin-lg) 0;
 
   &--compact {
@@ -44,7 +42,7 @@
 
   &__actions {
     display: inline-flex;
-    gap: var(--gap-base);
+    gap: var(--gap-lg);
     justify-content: center;
   }
 

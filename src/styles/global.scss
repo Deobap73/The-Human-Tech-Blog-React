@@ -174,6 +174,8 @@ The-Human-Tech-Blog-React\src\styles\global.scss
   --neon-shadow: 0 0 12px #1da1f2, 0 6px 30px #1da1f2;
   --neon-border-shadow: 0 0 5px var(--primary), 0 0 12px var(--primary), 0 0 16px var(--primary),
     0 0 35px var(--primary);
+  --neon-border-shadow-small: 0 0 5px var(--primary), 0 0 12px var(--primary),
+    0 0 16px var(--primary), 0 0 10px var(--primary);
   color-scheme: dark;
 }
 
@@ -419,7 +421,7 @@ button:not([class]) {
   :root {
     --layout-max-width: 1366px;
     --layout-padding-x: 40px;
-    --gap-lg: 1.2rem;
+    --gap-lg: 2rem;
     --gap-base: 0.8rem;
   }
 }

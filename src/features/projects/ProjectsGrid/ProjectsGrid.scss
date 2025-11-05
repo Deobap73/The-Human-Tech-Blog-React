@@ -1,15 +1,11 @@
 // src/features/projects/ProjectsGrid/ProjectsGrid.scss
 
 .projGrid {
-  /* Default gap (roomy) */
-  --grid-gap: var(--gap-lg);
-
-  padding-block: var(--gap-lg);
+  padding-block: var(--gap-md);
 
   &--compact {
     /* Denser layout: less vertical padding and smaller grid gap */
     padding-block: var(--gap-md);
-    --grid-gap: var(--gap-base);
   }
 
   &__grid {
@@ -18,7 +14,7 @@
     padding-inline: var(--padding-base);
 
     display: grid;
-    gap: var(--grid-gap);
+    gap: var(--gap-lg);
 
     /* 1 col */
     grid-template-columns: 1fr;
