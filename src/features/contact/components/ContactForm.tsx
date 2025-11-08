@@ -1,13 +1,28 @@
 // /src/features/contact/components/ContactForm.tsx
+'use strict';
 
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { safeApiPost } from '../../../shared/utils/apiHelpers';
 import '../styles/ContactForm.scss';
 
-export const ContactForm = () => {
+interface ContactPayload {
+  name: string;
+  email: string;
+  message: string;
+  // subject is optional in UI, but we do NOT send it to backend anymore
+  subject?: string;
+}
+
+export const ContactForm: React.FC = () => {
   const { t } = useTranslation();
-  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
+
+  const [form, setForm] = useState<ContactPayload>({
+    name: '',
+    email: '',
+    message: '',
+    subject: '', // kept only for UI display; not sent
+  });
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -23,9 +38,16 @@ export const ContactForm = () => {
     setLoading(true);
 
     try {
-      await safeApiPost('/contact', form);
+      // Send only name, email, message
+      await safeApiPost('/contact', {
+        name: form.name,
+        email: form.email,
+        message: form.message,
+        // subject intentionally omitted (controller builds the final subject)
+      });
+
       setSuccess(t('contact.form.success'));
-      setForm({ name: '', email: '', subject: '', message: '' });
+      setForm({ name: '', email: '', message: '', subject: '' });
     } catch (err: any) {
       setError(
         err?.response?.data?.error || err?.response?.data?.message || err.message || 'Send failed'
@@ -39,6 +61,7 @@ export const ContactForm = () => {
     <form className='contact-form' autoComplete='off' onSubmit={handleSubmit}>
       <h2 className='contact-form__title'>{t('contact.form.title')}</h2>
       <p className='contact-form__desc'>{t('contact.form.desc')}</p>
+
       <input
         type='text'
         className='contact-form__input'
@@ -48,6 +71,7 @@ export const ContactForm = () => {
         onChange={handleChange}
         required
       />
+
       <input
         type='email'
         className='contact-form__input'
@@ -57,6 +81,8 @@ export const ContactForm = () => {
         onChange={handleChange}
         required
       />
+
+      {/* Optional UI field. Kept for user context only, not sent to server. */}
       <input
         type='text'
         className='contact-form__input'
@@ -65,6 +91,7 @@ export const ContactForm = () => {
         value={form.subject}
         onChange={handleChange}
       />
+
       <textarea
         className='contact-form__input contact-form__textarea'
         placeholder={t('contact.form.placeholderMessage')}
@@ -73,9 +100,11 @@ export const ContactForm = () => {
         onChange={handleChange}
         required
       />
+
       <button className='contact-form__button' type='submit' disabled={loading}>
         {loading ? t('contact.form.sending') || 'Sending...' : t('contact.form.button')}
       </button>
+
       {success && <div className='success-text'>{success}</div>}
       {error && <div className='error-text'>{error}</div>}
     </form>
