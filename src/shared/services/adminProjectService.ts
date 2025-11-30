@@ -3,7 +3,7 @@
 
 /**
  * Admin Project Service
- * - Normalizes create payload to match backend schema strictly.
+ * - Normalizes create/update payloads to match backend schema strictly.
  * - Handles CSRF preflight and credentials.
  * - Provides sync endpoints with 404 fallback (admin route → public route).
  * - All imports are relative, TypeScript strict friendly, and comments in English.
@@ -51,6 +51,21 @@ export type CreateProjectPayloadLoose = {
   summary?: string;
   shortDescription?: string;
   isPublic?: boolean | string;
+
+  // Meta is used mainly for GitHub/Figma sync helpers
+  meta?: {
+    github?: { repo?: string };
+    figma?: { fileKey?: string };
+  };
+};
+
+/**
+ * Loose payload for update.
+ * - Same shape as create, plus optional slug.
+ * - All fields are optional on the caller side; the normalizer decides what to send.
+ */
+export type UpdateProjectPayloadLoose = CreateProjectPayloadLoose & {
+  slug?: string;
 };
 
 export interface ListAdminProjectsParams {
@@ -91,9 +106,7 @@ function githubOgImageFromSlug(slug: string): string {
 /** Cloudinary fetch helpers */
 const CLOUD = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME?.trim();
 const DEFAULT_TRANSFORM =
-  import.meta.env.VITE_CLOUDINARY_FETCH_TRANSFORM?.trim() ||
-  // bom para thumbs/hero: formato automático + qualidade auto + cover 1200x630
-  'f_auto,q_auto,c_fill,w_1200,h_630';
+  import.meta.env.VITE_CLOUDINARY_FETCH_TRANSFORM?.trim() || 'f_auto,q_auto,c_fill,w_1200,h_630';
 
 function isCloudinaryUrl(url?: string): boolean {
   if (!url) return false;
@@ -107,10 +120,9 @@ function isCloudinaryUrl(url?: string): boolean {
 
 function toCloudinaryFetch(rawUrl?: string): string | undefined {
   if (!rawUrl) return undefined;
-  if (!CLOUD) return rawUrl; // sem cloud name, devolve original
-  if (isCloudinaryUrl(rawUrl)) return rawUrl; // já é cloudinary
+  if (!CLOUD) return rawUrl;
+  if (isCloudinaryUrl(rawUrl)) return rawUrl;
 
-  // https://res.cloudinary.com/<cloud>/image/fetch/<transform>/<encoded-remote-url>
   return `https://res.cloudinary.com/${CLOUD}/image/fetch/${DEFAULT_TRANSFORM}/${encodeURIComponent(
     rawUrl
   )}`;
@@ -167,7 +179,7 @@ function toExcerpt(source?: string, fallbackTitle?: string): string | undefined 
 }
 
 /* ============================
- * Normalization core
+ * Normalization core (CREATE)
  * ============================ */
 
 function normalizeCreatePayload(input: CreateProjectPayloadLoose) {
@@ -200,22 +212,18 @@ function normalizeCreatePayload(input: CreateProjectPayloadLoose) {
       ? input.isPublic
       : true;
 
-  // 1) Prefer SEMPRE o que o utilizador colocou no input (coverImage/coverUrl)
   let coverCandidate = input.coverImage ?? input.coverUrl;
 
-  // 2) Se não veio nada e é GitHub, usar OG como fallback
   if (!coverCandidate && (normalizedSource === 'github' || links.github)) {
     const slug = parseGithubRepoSlug(links.github);
     if (slug) {
       coverCandidate = githubOgImageFromSlug(slug);
-      // guardar repo slug em meta.github.repo (útil para sync)
       (input as any).meta = (input as any).meta ?? {};
       (input as any).meta.github = (input as any).meta.github ?? {};
       (input as any).meta.github.repo = (input as any).meta.github.repo ?? slug;
     }
   }
 
-  // 3) Uniformizar: embrulhar no Cloudinary fetch (se cloud configurado)
   const coverImage = toCloudinaryFetch(coverCandidate) || coverCandidate;
 
   const normalized = {
@@ -228,11 +236,123 @@ function normalizeCreatePayload(input: CreateProjectPayloadLoose) {
     links,
     translations: Array.isArray(input.translations) ? input.translations : [],
     isPublic,
-    // se o passo 2 definiu meta.github.repo, preserva:
     ...((input as any).meta ? { meta: (input as any).meta } : {}),
   };
 
   return normalized;
+}
+
+/* ============================
+ * Normalization core (UPDATE)
+ * ============================ */
+
+function normalizeUpdatePayload(input: UpdateProjectPayloadLoose): Record<string, unknown> {
+  const body: Record<string, unknown> = {};
+
+  // Basic fields
+  if (typeof input.title === 'string') {
+    body.title = input.title.trim();
+  }
+
+  if (typeof input.slug === 'string' && input.slug.trim().length > 0) {
+    body.slug = input.slug.trim();
+  }
+
+  // Tags
+  const tags = normalizeTags(input.tags);
+  if (tags.length > 0) {
+    body.tags = tags;
+  }
+
+  // Links (same merging logic as create)
+  const links = {
+    figma: input.links?.figma ?? input.figmaUrl ?? undefined,
+    figmaEmbedUrl: input.links?.figmaEmbedUrl ?? undefined,
+    github: input.links?.github ?? input.repoUrl ?? undefined,
+    live: input.links?.live ?? input.liveUrl ?? undefined,
+    blog: input.links?.blog ?? input.blogUrl ?? undefined,
+  };
+
+  const hasAnyLink = Object.values(links).some(Boolean);
+  if (hasAnyLink) {
+    body.links = links;
+  }
+
+  // Excerpt and description: only touch if caller sends something
+  if (typeof input.excerpt === 'string') {
+    body.excerpt = input.excerpt.trim();
+  }
+
+  if (typeof input.description === 'string') {
+    body.description = input.description;
+  }
+
+  // Source + type
+  const normalizedSource = normalizeSource(input.source, {
+    github: links.github,
+    figma: links.figma,
+  });
+  if (normalizedSource) {
+    body.source = normalizedSource;
+  }
+
+  const normalizedType = normalizeType(input.type);
+  if (normalizedType) {
+    body.type = normalizedType;
+  }
+
+  // isPublic: only touch if explicitly present
+  if (typeof input.isPublic !== 'undefined') {
+    const isPublic =
+      typeof input.isPublic === 'string'
+        ? input.isPublic.trim().toLowerCase() !== 'false'
+        : typeof input.isPublic === 'boolean'
+        ? input.isPublic
+        : undefined;
+    if (typeof isPublic === 'boolean') {
+      body.isPublic = isPublic;
+    }
+  }
+
+  // Meta (GitHub/Figma)
+  const meta: {
+    github?: { repo?: string };
+    figma?: { fileKey?: string };
+  } = {};
+
+  if (input.meta?.github?.repo) {
+    meta.github = { repo: input.meta.github.repo };
+  }
+
+  if (input.meta?.figma?.fileKey) {
+    meta.figma = { fileKey: input.meta.figma.fileKey };
+  }
+
+  // Cover image: same strategy as create, but only if there is a candidate
+  let coverCandidate = input.coverImage ?? input.coverUrl;
+
+  if (!coverCandidate && (normalizedSource === 'github' || links.github)) {
+    const slug = parseGithubRepoSlug(links.github);
+    if (slug) {
+      coverCandidate = githubOgImageFromSlug(slug);
+      if (!meta.github) {
+        meta.github = { repo: slug };
+      } else if (!meta.github.repo) {
+        meta.github.repo = slug;
+      }
+    }
+  }
+
+  const coverImage = toCloudinaryFetch(coverCandidate) || coverCandidate;
+  if (coverImage) {
+    body.coverImage = coverImage;
+  }
+
+  if (meta.github || meta.figma) {
+    body.meta = meta;
+  }
+
+  return body;
 }
 
 /* ============================
@@ -263,6 +383,22 @@ export async function createProject(payload: CreateProjectPayloadLoose) {
   if (!body?.type) throw new Error('Type must be one of: frontend-ui | ux-figma | full.');
 
   const res = await api.post<Project>('/projects', body, {
+    headers: { 'X-CSRF-Token': token, 'X-XSRF-TOKEN': token },
+    withCredentials: true,
+  });
+  return res.data;
+}
+
+/**
+ * Update project by id
+ * - Uses PUT /projects/:id (protected by JWT + admin).
+ * - Sends only the fields that make sense to update.
+ */
+export async function updateProject(id: string, payload: UpdateProjectPayloadLoose) {
+  const token = await ensureCsrf();
+  const body = normalizeUpdatePayload(payload);
+
+  const res = await api.put<Project>(`/projects/${encodeURIComponent(id)}`, body, {
     headers: { 'X-CSRF-Token': token, 'X-XSRF-TOKEN': token },
     withCredentials: true,
   });

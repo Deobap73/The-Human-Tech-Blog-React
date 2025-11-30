@@ -6,8 +6,11 @@ import type { Project } from '../../../../shared/types/Project';
 import AdminProjectEditModal from './AdminProjectEditModal';
 import AdminProjectSyncButtons from './AdminProjectSyncButtons';
 import { useToast } from '../../../../shared/hooks/useToast';
-import { syncFigma, syncGitHub } from '../../../../shared/services/adminProjectService';
 import ProjectFreshnessBadge from '../../../projects/components/ProjectFreshnessBadge';
+import {
+  updateProject,
+  type UpdateProjectPayloadLoose,
+} from '../../../../shared/services/adminProjectService';
 
 interface Props {
   project: Project;
@@ -18,8 +21,7 @@ interface Props {
 
 /**
  * AdminProjectRow
- * - Single project row with selection, quick sync buttons and edit modal.
- * - Uses toast helpers from useToast: success() and error().
+ * - Single project row with selection, quick sync buttons and full edit modal.
  */
 const AdminProjectRow: React.FC<Props> = ({ project, selected, onToggle, onReload }) => {
   const { success: toastSuccess, error: toastError } = useToast();
@@ -27,31 +29,18 @@ const AdminProjectRow: React.FC<Props> = ({ project, selected, onToggle, onReloa
 
   /**
    * Handle save from Edit Modal:
-   * - Will call GitHub and/or Figma sync based on provided fields
+   * - Calls updateProject with full payload
    * - On success, closes modal and triggers a reload
    */
-  async function handleSave(data: {
-    repo?: string;
-    figmaPublicUrl?: string;
-    figmaFileKey?: string;
-  }) {
+  async function handleSave(data: UpdateProjectPayloadLoose): Promise<void> {
     try {
-      if (data.repo) {
-        const r = await syncGitHub(project._id, { repo: data.repo });
-        if (!r.ok) throw new Error(r.message || 'GitHub sync failed.');
-      }
-      if (data.figmaPublicUrl || data.figmaFileKey) {
-        const r = await syncFigma(project._id, {
-          figmaPublicUrl: data.figmaPublicUrl,
-          figmaFileKey: data.figmaFileKey,
-        });
-        if (!r.ok) throw new Error(r.message || 'Figma sync failed.');
-      }
-      toastSuccess('Saved & synced successfully');
+      await updateProject(project._id, data);
+      toastSuccess('Project updated successfully');
       setEditOpen(false);
       onReload();
     } catch (e) {
-      toastError((e as Error).message || 'Failed to save/sync');
+      const message = (e as Error).message || 'Failed to update project';
+      toastError(message);
     }
   }
 
@@ -139,12 +128,8 @@ const AdminProjectRow: React.FC<Props> = ({ project, selected, onToggle, onReloa
       <AdminProjectEditModal
         isOpen={editOpen}
         onClose={() => setEditOpen(false)}
+        project={project}
         onSave={handleSave}
-        initial={{
-          repo: project.meta?.github?.repo,
-          figmaPublicUrl: project.links?.figma,
-          figmaFileKey: project.meta?.figma?.fileKey,
-        }}
       />
     </>
   );
