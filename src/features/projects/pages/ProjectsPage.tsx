@@ -22,14 +22,9 @@ import { fetchProjects } from '../../../shared/services/projectService';
 // Helpers
 import { useDebouncedValue } from '../../../shared/hooks/useDebouncedValue';
 
-/**
- * ProjectsPage
- * - Keeps dynamic fetching to backend with optional "type" derived from tags.
- * - If no type-tag is active, defaults to 'frontend-ui' to preserve current behavior.
- */
 const DEFAULT_LIMIT = 3;
 
-// UI tags -> backend type (ajusta se precisares)
+// UI tags -> backend type
 const TYPE_TAGS: Record<string, Project['type']> = {
   'Frontend UI': 'frontend-ui',
   'UX · Figma': 'ux-figma',
@@ -40,9 +35,10 @@ const AVAILABLE_TAGS = Object.keys(TYPE_TAGS);
 
 /**
  * ProjectsPage
- * - Reproduz o layout “Figma to code”: grid 3 col + paginação centrada.
- * - Se o backend NÃO paginar corretamente, paginamos no cliente (fallback).
- * - Se o backend paginar, usamos os dados tal como vêm.
+ * - Layout: grid 3 columns + centered pagination.
+ * - Shows ALL projects by default, ordered from newest to oldest.
+ * - When a tag is active, filters by that type.
+ * - If no tag is active, no `type` filter is sent to the backend.
  */
 const ProjectsPage: React.FC = () => {
   // ======= STATE =======
@@ -63,16 +59,26 @@ const ProjectsPage: React.FC = () => {
   const debouncedQ = useDebouncedValue(q, 450);
 
   // ======= TAG FILTER HANDLING (derive backend type) =======
-  const activeType: Project['type'] =
-    (activeTags.find((t) => TYPE_TAGS[t as keyof typeof TYPE_TAGS]) &&
-      TYPE_TAGS[activeTags.find((t) => TYPE_TAGS[t as keyof typeof TYPE_TAGS]) as string]) ||
-    'frontend-ui';
+  // If no tag is active, we do NOT send "type" to the backend.
+  // If one or more tags are active, we use the first known mapping.
+  const primaryTag = activeTags.find((tag) => TYPE_TAGS[tag as keyof typeof TYPE_TAGS]);
+  const activeType: Project['type'] | undefined = primaryTag
+    ? TYPE_TAGS[primaryTag as keyof typeof TYPE_TAGS]
+    : undefined;
 
   const toggleTag = (tag: string): void => {
-    setActiveTags((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]));
+    setActiveTags((prev) => {
+      const isActive = prev.includes(tag);
+      if (isActive) {
+        // Clicking an active tag removes it and goes back to "all projects"
+        return prev.filter((t) => t !== tag);
+      }
+      // Optional: keep it as "single selection" by replacing the array
+      return [tag];
+    });
   };
 
-  // Reset page nos filtros
+  // Reset page when filters or search or sort change
   React.useEffect(() => {
     setPage(1);
   }, [debouncedQ, activeType, sort]);
@@ -85,6 +91,8 @@ const ProjectsPage: React.FC = () => {
       setError('');
       setLoading(true);
       try {
+        // When "activeType" is undefined, fetchProjects will NOT send "type"
+        // and the backend should return all projects.
         const data = await fetchProjects(
           activeType,
           page,
@@ -93,17 +101,19 @@ const ProjectsPage: React.FC = () => {
           controller.signal
         );
 
-        // Ordenação client-side estável (fallback se não houver campo temporal)
+        // Client-side sorting, stable and predictable.
         const list = [...data.items].sort((a, b) => {
           if (sort === 'az') return a.title.localeCompare(b.title);
           if (sort === 'za') return b.title.localeCompare(a.title);
-          const aTs = (a as { updatedAt?: string }).updatedAt
-            ? Date.parse((a as { updatedAt?: string }).updatedAt as string)
-            : 0;
-          const bTs = (b as { updatedAt?: string }).updatedAt
-            ? Date.parse((b as { updatedAt?: string }).updatedAt as string)
-            : 0;
-          if (aTs && bTs) return sort === 'newest' ? bTs - aTs : aTs - bTs;
+
+          const aTs = a.updatedAt ? Date.parse(a.updatedAt) : 0;
+          const bTs = b.updatedAt ? Date.parse(b.updatedAt) : 0;
+
+          if (aTs && bTs) {
+            return sort === 'newest' ? bTs - aTs : aTs - bTs;
+          }
+
+          // Fallback: alphabetical if we do not have dates
           return sort === 'newest'
             ? b.title.localeCompare(a.title)
             : a.title.localeCompare(b.title);
@@ -128,11 +138,11 @@ const ProjectsPage: React.FC = () => {
   }, [activeType, page, debouncedQ, sort]);
 
   /**
-   * DETEÇÃO ROBUSTA DE PAGINAÇÃO DO BACKEND
-   * Só consideramos "paginado pelo servidor" quando:
-   *  - total e limit são válidos
-   *  - total > limit (há mais do que uma página)
-   *  - items devolvidos <= limit (o servidor fez slice)
+   * Backend pagination detection
+   * We only consider "server paginated" when:
+   *  - total and limit are valid
+   *  - total > limit (there is more than one page)
+   *  - items length <= limit (server performed the slice)
    */
   const backendPaginated =
     serverTotal !== null &&
@@ -141,17 +151,14 @@ const ProjectsPage: React.FC = () => {
     (serverTotal as number) > (serverLimit as number) &&
     itemsRaw.length <= (serverLimit as number);
 
-  // nº de páginas
   const totalPages = backendPaginated
     ? Math.max(1, Math.ceil((serverTotal as number) / (serverLimit as number)))
     : Math.max(1, Math.ceil(itemsRaw.length / DEFAULT_LIMIT));
 
-  // Itens a renderizar nesta página
   const visibleItems: Project[] = backendPaginated
-    ? itemsRaw // servidor já paginou
+    ? itemsRaw
     : itemsRaw.slice((page - 1) * DEFAULT_LIMIT, (page - 1) * DEFAULT_LIMIT + DEFAULT_LIMIT);
 
-  // Transform para o grid de cartões
   const pageItems: ProjectGridItem[] = visibleItems.map((p) => ({
     id: p._id,
     title: p.title,
