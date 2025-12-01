@@ -4,11 +4,10 @@ import { io, type Socket } from 'socket.io-client';
 import { getAccessToken } from '../utils/auth';
 import type { ChatMessage } from '../types/ChatMessage';
 
-// Variável global para manter a instância única do socket
 let globalSocket: Socket | null = null;
 
 const logSocketEvent = (event: string, payload?: unknown) => {
-  if (process.env.NODE_ENV === 'development') {
+  if (import.meta.env.MODE === 'development') {
     console.log(`[socket] ${event}`, payload ?? '');
   }
 };
@@ -18,26 +17,34 @@ export const useSocket = () => {
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
-    // Só cria nova conexão se não existir ou se desconectou
+    const enabled = String(import.meta.env.VITE_ENABLE_SOCKET ?? 'false') === 'true';
+    if (!enabled) {
+      logSocketEvent('disabled via VITE_ENABLE_SOCKET');
+      return;
+    }
+
     if (!globalSocket || globalSocket.disconnected) {
       const token = getAccessToken();
 
-      // Usa VITE_SOCKET_URL se disponível, caso contrário usa VITE_API_URL
-      const socketUrl = import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL;
+      const socketUrl = import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_BASE_URL || '';
+
+      if (!socketUrl) {
+        console.error('Socket URL not configured');
+        return;
+      }
 
       globalSocket = io(socketUrl, {
         auth: { token },
-        transports: ['websocket', 'polling'], // Fallback para polling se websocket falhar
+        transports: ['websocket', 'polling'],
         autoConnect: true,
         reconnection: true,
         reconnectionAttempts: 5,
         reconnectionDelay: 1000,
-        path: '/socket.io', // Certifique-se que corresponde ao path do servidor
+        path: '/socket.io',
       });
 
       socketRef.current = globalSocket;
 
-      // Event listeners
       globalSocket.on('connect', () => {
         logSocketEvent('connected', globalSocket?.id);
         setIsConnected(true);
@@ -58,8 +65,6 @@ export const useSocket = () => {
     }
 
     return () => {
-      // Não desconecta o socket global aqui - mantém a conexão ativa
-      // Apenas limpa a referência local
       socketRef.current = null;
     };
   }, []);
@@ -70,7 +75,7 @@ export const useSocket = () => {
         logSocketEvent('message:ack', ack);
       });
     } else {
-      console.error('Cannot send message - socket not connected');
+      console.error('Cannot send message, socket not connected');
     }
   };
 

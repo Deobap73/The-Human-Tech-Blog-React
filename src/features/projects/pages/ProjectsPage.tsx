@@ -47,7 +47,7 @@ const ProjectsPage: React.FC = () => {
   const [sort, setSort] = React.useState<SortOption>('newest');
   const [activeTags, setActiveTags] = React.useState<string[]>([]);
   const [page, setPage] = React.useState<number>(1);
-  const [compact, setCompact] = React.useState<boolean>(false);
+  const [compact, setCompact] = React.useState<boolean>(true);
 
   // Data state
   const [itemsRaw, setItemsRaw] = React.useState<Project[]>([]);
