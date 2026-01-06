@@ -49,10 +49,10 @@ export const AboutMe = () => {
                 <span className='aboutMe__info-label'>{t('about.me.info.name')}:</span>
                 <span className='aboutMe__info-value'>Deolindo Baptista</span>
               </li>
-              <li>
+              {/* <li>
                 <span className='aboutMe__info-label'>{t('about.me.info.phone')}:</span>
                 <span className='aboutMe__info-value'>(+49) 176 34644129</span>
-              </li>
+              </li> */}
               <li>
                 <span className='aboutMe__info-label'>{t('about.me.info.email')}:</span>
                 <span className='aboutMe__info-value'>contact@thehumantechblog.com</span>
