@@ -18,7 +18,7 @@ export const Card = ({ post, lang }: CardProps) => {
 
   const translation = getPostTranslation(post.translations, lang);
 
-  // --- Lógica igual à do SinglePostPage ---
+  // Category label for UI only
   let category = '';
   if (
     Array.isArray(post.categories) &&
@@ -28,15 +28,14 @@ export const Card = ({ post, lang }: CardProps) => {
     category = getCategoryName(post.categories[0] as any, lang);
   }
 
-  // Fallback (opcional)
-  // category = category || 'Uncategorized';
-
   const fullDescription = translation.description || '';
   const displayDescription =
     fullDescription.length > 60 ? fullDescription.substring(0, 60) + '...' : fullDescription;
 
+  const postUrl = `/${lang}/posts/${post.slug}`;
+
   return (
-    <div className='card-post'>
+    <div className='card-post' data-analytics-location='post_card'>
       <img
         src={post.image}
         alt={translation.title || 'No title'}
@@ -50,9 +49,18 @@ export const Card = ({ post, lang }: CardProps) => {
         <div className='card-post__text-content'>
           <p className='card-post__description'>{displayDescription}</p>
           <div className='card-post__actions'>
-            <Link to={`/${lang}/posts/${post.slug}`} className='card-post__read-more-link'>
+            <Link
+              to={postUrl}
+              className='card-post__read-more-link'
+              data-analytics-event='content_click'
+              data-analytics-link-text='Read More'
+              data-analytics-link-location='post_card'
+              data-analytics-content-type='post'
+              data-analytics-content-slug={post.slug}
+              data-analytics-link-url={postUrl}>
               Read More
             </Link>
+
             <BookmarkButton postId={post._id} />
           </div>
         </div>

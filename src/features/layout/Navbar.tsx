@@ -1,4 +1,5 @@
 // /src/features/layout/Navbar.tsx
+
 'use strict';
 
 import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
@@ -54,7 +55,7 @@ const Navbar = () => {
   const handleNavClick = () => setSidebarOpen(false);
 
   return (
-    <header className={navbarClasses}>
+    <header className={navbarClasses} data-analytics-location='navbar'>
       {config.background && !isCompact && (
         <img
           src={config.background}
@@ -64,10 +65,15 @@ const Navbar = () => {
           loading='lazy'
         />
       )}
+
       <div className='navbar__row'>
         <div className='navbar__topbar'>
           <div className='navbar__logo'>
-            <Link to={buildUrl('', activeLang)}>
+            <Link
+              to={buildUrl('', activeLang)}
+              data-analytics-event='nav_link_click'
+              data-analytics-link-text='Logo'
+              data-analytics-link-location='navbar_logo'>
               <img
                 src={logo}
                 alt={t('navbar.logoAlt')}
@@ -77,6 +83,7 @@ const Navbar = () => {
               />
             </Link>
           </div>
+
           <button
             className={`navbar__burger${sidebarOpen ? ' navbar__burger--open' : ''}`}
             aria-label='Open menu'
@@ -88,6 +95,7 @@ const Navbar = () => {
             <span />
           </button>
         </div>
+
         <nav
           id='navbar__nav'
           className={`navbar__nav${sidebarOpen ? ' navbar__nav--open' : ''}`}
@@ -99,16 +107,21 @@ const Navbar = () => {
                 to={buildUrl('', activeLang)}
                 className={`navbar__item${isActive('') ? ' navbar__item--active' : ''}`}
                 aria-current={isActive('') ? 'page' : undefined}
-                onClick={handleNavClick}>
+                onClick={handleNavClick}
+                data-analytics-event='nav_link_click'
+                data-analytics-link-text='Home'
+                data-analytics-link-location='navbar_main'>
                 {t('navbar.home')}
               </Link>
 
-              {/* NEW: Projects link */}
               <Link
                 to={buildUrl('projects', activeLang)}
                 className={`navbar__item${isActive('projects') ? ' navbar__item--active' : ''}`}
                 aria-current={isActive('projects') ? 'page' : undefined}
-                onClick={handleNavClick}>
+                onClick={handleNavClick}
+                data-analytics-event='nav_link_click'
+                data-analytics-link-text='Projects'
+                data-analytics-link-location='navbar_main'>
                 {t('navbar.projects', { defaultValue: 'Projects' })}
               </Link>
 
@@ -116,16 +129,24 @@ const Navbar = () => {
                 to={buildUrl('contact', activeLang)}
                 className={`navbar__item${isActive('contact') ? ' navbar__item--active' : ''}`}
                 aria-current={isActive('contact') ? 'page' : undefined}
-                onClick={handleNavClick}>
+                onClick={handleNavClick}
+                data-analytics-event='nav_link_click'
+                data-analytics-link-text='Contact'
+                data-analytics-link-location='navbar_main'>
                 {t('navbar.contact')}
               </Link>
+
               <Link
                 to={buildUrl('about', activeLang)}
                 className={`navbar__item${isActive('about') ? ' navbar__item--active' : ''}`}
                 aria-current={isActive('about') ? 'page' : undefined}
-                onClick={handleNavClick}>
+                onClick={handleNavClick}
+                data-analytics-event='nav_link_click'
+                data-analytics-link-text='About'
+                data-analytics-link-location='navbar_main'>
                 {t('navbar.about')}
               </Link>
+
               {user && (
                 <div className='navbar__user'>
                   {(user.role === 'admin' || user.role === 'editor') && (
@@ -133,10 +154,14 @@ const Navbar = () => {
                       to={buildUrl('write', activeLang)}
                       className={`navbar__item${isActive('write') ? ' navbar__item--active' : ''}`}
                       aria-current={isActive('write') ? 'page' : undefined}
-                      onClick={handleNavClick}>
+                      onClick={handleNavClick}
+                      data-analytics-event='nav_link_click'
+                      data-analytics-link-text='Write'
+                      data-analytics-link-location='navbar_user'>
                       {t('navbar.write')}
                     </Link>
                   )}
+
                   {user.role === 'admin' && (
                     <Link
                       to={buildUrl('admin', activeLang)}
@@ -144,16 +169,23 @@ const Navbar = () => {
                         isActive('admin') ? ' navbar__item--active' : ''
                       }`}
                       aria-current={isActive('admin') ? 'page' : undefined}
-                      onClick={handleNavClick}>
+                      onClick={handleNavClick}
+                      data-analytics-event='nav_link_click'
+                      data-analytics-link-text='Admin'
+                      data-analytics-link-location='navbar_user'>
                       {t('navbar.admin')}
                     </Link>
                   )}
+
                   <Link
                     to={buildUrl('user', activeLang)}
                     className='navbar__user-profile'
                     title={t('navbar.profile')}
                     aria-current={isActive('user') ? 'page' : undefined}
-                    onClick={handleNavClick}>
+                    onClick={handleNavClick}
+                    data-analytics-event='nav_link_click'
+                    data-analytics-link-text='Profile'
+                    data-analytics-link-location='navbar_user'>
                     {user.avatar ? (
                       <img
                         src={user.avatar}
@@ -166,15 +198,20 @@ const Navbar = () => {
                       <IoPersonSharp size={28} style={{ verticalAlign: 'middle' }} />
                     )}
                   </Link>
+
                   <Link
                     to={buildUrl('chat', activeLang)}
                     className='navbar__user-chat'
                     title={t('navbar.chat')}
                     aria-label={t('navbar.chat')}
                     onClick={handleNavClick}
-                    style={{ display: 'inline-flex', alignItems: 'center', marginLeft: 12 }}>
+                    style={{ display: 'inline-flex', alignItems: 'center', marginLeft: 12 }}
+                    data-analytics-event='nav_link_click'
+                    data-analytics-link-text='Chat'
+                    data-analytics-link-location='navbar_user'>
                     <IoIosChatbubbles size={26} style={{ verticalAlign: 'middle' }} />
                   </Link>
+
                   <button
                     onClick={handleLogout}
                     className='navbar__user-logout'
@@ -183,6 +220,7 @@ const Navbar = () => {
                   </button>
                 </div>
               )}
+
               {!user && (
                 <button
                   onClick={() => {
@@ -190,13 +228,17 @@ const Navbar = () => {
                     setSidebarOpen(false);
                   }}
                   className='navbar__login'
-                  aria-label={t('navbar.login')}>
+                  aria-label={t('navbar.login')}
+                  data-analytics-event='nav_link_click'
+                  data-analytics-link-text='Login'
+                  data-analytics-link-location='navbar_user'>
                   <IoPersonSharp />
                   <span>{t('navbar.login')}</span>
                 </button>
               )}
             </div>
           </div>
+
           <div className='navbar__choices'>
             <SearchBar />
             <ThemeToggle />
@@ -205,6 +247,7 @@ const Navbar = () => {
           </div>
         </nav>
       </div>
+
       {config.showTile && !isCompact && (
         <div className='navbar__tile'>
           <h1 className='navbar__tile-title'>{config.tileTitle ? config.tileTitle(t) : ''}</h1>
@@ -213,7 +256,9 @@ const Navbar = () => {
           </p>
         </div>
       )}
+
       {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
+
       {sidebarOpen && (
         <div className='navbar__overlay' onClick={() => setSidebarOpen(false)} aria-hidden />
       )}

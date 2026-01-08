@@ -52,7 +52,7 @@ export const Footer = () => {
   const currentLang = lang || i18n.language.split('-')[0] || 'en';
 
   return (
-    <footer className='footer' role='contentinfo'>
+    <footer className='footer' role='contentinfo' data-analytics-location='footer'>
       <div className='footer__container'>
         <div className='footer__top'>
           <div className='footer__branding'>
@@ -63,19 +63,44 @@ export const Footer = () => {
             <nav className='footer__nav' aria-label={t('footer.navigation', 'Footer navigation')}>
               <ul className='footer__nav-list'>
                 <li>
-                  <Link to={`/${currentLang}`}>{t('footer.home', 'Home')}</Link>
+                  <Link
+                    to={`/${currentLang}`}
+                    data-analytics-event='footer_link_click'
+                    data-analytics-link-text='Home'
+                    data-analytics-link-location='footer_nav'>
+                    {t('footer.home', 'Home')}
+                  </Link>
                 </li>
                 <li>
-                  <Link to={`/${currentLang}/about`}>{t('footer.about', 'About')}</Link>
+                  <Link
+                    to={`/${currentLang}/about`}
+                    data-analytics-event='footer_link_click'
+                    data-analytics-link-text='About'
+                    data-analytics-link-location='footer_nav'>
+                    {t('footer.about', 'About')}
+                  </Link>
                 </li>
                 <li>
-                  <Link to={`/${currentLang}/shorts`}>{t('footer.shorts', 'Tech Shorts')}</Link>
+                  <Link
+                    to={`/${currentLang}/shorts`}
+                    data-analytics-event='footer_link_click'
+                    data-analytics-link-text='Tech Shorts'
+                    data-analytics-link-location='footer_nav'>
+                    {t('footer.shorts', 'Tech Shorts')}
+                  </Link>
                 </li>
                 <li>
-                  <Link to={`/${currentLang}/contact`}>{t('footer.contact', 'Contact')}</Link>
+                  <Link
+                    to={`/${currentLang}/contact`}
+                    data-analytics-event='footer_link_click'
+                    data-analytics-link-text='Contact'
+                    data-analytics-link-location='footer_nav'>
+                    {t('footer.contact', 'Contact')}
+                  </Link>
                 </li>
               </ul>
             </nav>
+
             <div className='footer__social'>
               {socialLinks.map(({ label, url, icon }) => (
                 <a
@@ -85,7 +110,11 @@ export const Footer = () => {
                   target='_blank'
                   rel='noopener noreferrer'
                   aria-label={label}
-                  title={label}>
+                  title={label}
+                  data-analytics-event='footer_link_click'
+                  data-analytics-link-text={label}
+                  data-analytics-link-location='footer_social'
+                  data-analytics-link-url={url}>
                   {icon}
                   <span className='footer__sr-only'>{label}</span>
                 </a>
@@ -93,6 +122,7 @@ export const Footer = () => {
             </div>
           </div>
         </div>
+
         <div className='footer__bottom'>
           <div className='footer__desc'>
             {t(
@@ -107,7 +137,11 @@ export const Footer = () => {
               href='https://www.deolindobaptista.com'
               className='footer__author'
               target='_blank'
-              rel='noopener noreferrer'>
+              rel='noopener noreferrer'
+              data-analytics-event='footer_link_click'
+              data-analytics-link-text='Developer'
+              data-analytics-link-location='footer_author'
+              data-analytics-link-url='https://www.deolindobaptista.com'>
               {t('footer.by', 'by Deolindo Baptista')}
             </a>
           </div>

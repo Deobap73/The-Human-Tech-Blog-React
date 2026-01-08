@@ -6,10 +6,22 @@ import api from '../../../../shared/utils/axios';
 import { toast } from 'react-hot-toast';
 import '../styles/NewsletterForm.scss';
 
+type DataLayerEvent = {
+  event: string;
+  [key: string]: unknown;
+};
+
+function pushToDataLayer(payload: DataLayerEvent): void {
+  if (typeof window === 'undefined') return;
+  const w = window as unknown as { dataLayer?: unknown[] };
+  if (!Array.isArray(w.dataLayer)) w.dataLayer = [];
+  w.dataLayer.push(payload);
+}
+
 /**
  * NewsletterForm Component
  * Allows users to subscribe to the blog's newsletter.
- * Submits the email to the backend which sends a confirmation email (double opt-in).
+ * Analytics is handled by GTM using dataLayer events.
  */
 const NewsletterForm = () => {
   const { t } = useTranslation();
@@ -21,13 +33,31 @@ const NewsletterForm = () => {
    */
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Track click intent on submit
+    pushToDataLayer({
+      event: 'newsletter_subscribe_click',
+      link_location: 'newsletter_form',
+      content_type: 'newsletter',
+    });
+
     if (!email) {
       toast.error(t('newsletter.form.errorMissingEmail'));
       return;
     }
+
     setLoading(true);
+
     try {
       await api.post('/newsletter/subscribe', { email });
+
+      // Track success after backend response
+      pushToDataLayer({
+        event: 'newsletter_subscribe_success',
+        link_location: 'newsletter_form',
+        content_type: 'newsletter',
+      });
+
       toast.success(t('newsletter.form.confirmationMessage'));
       setEmail('');
     } catch (err: any) {
@@ -38,7 +68,11 @@ const NewsletterForm = () => {
   };
 
   return (
-    <form className='newsletter-form' onSubmit={handleSubscribe} data-testid='newsletter-form'>
+    <form
+      className='newsletter-form'
+      onSubmit={handleSubscribe}
+      data-testid='newsletter-form'
+      data-analytics-location='newsletter_form'>
       <input
         className='newsletter-form__input'
         type='email'
@@ -49,7 +83,13 @@ const NewsletterForm = () => {
         required
         autoComplete='email'
       />
-      <button className='newsletter-form__button' type='submit' disabled={loading}>
+      <button
+        className='newsletter-form__button'
+        type='submit'
+        disabled={loading}
+        data-analytics-event='newsletter_subscribe_click'
+        data-analytics-link-text='Subscribe'
+        data-analytics-link-location='newsletter_form'>
         {loading ? t('newsletter.form.loading') : t('newsletter.form.button')}
       </button>
     </form>

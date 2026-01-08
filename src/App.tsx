@@ -1,4 +1,5 @@
 // src/App.tsx
+
 import { useEffect } from 'react';
 import { useAuth } from './shared/hooks/useAuth';
 import { setAccessToken } from './shared/utils/authTokenStorage';
@@ -9,25 +10,13 @@ import NotAuthorizedPage from './pages/NotAuthorizedPage';
 import { useTranslation } from 'react-i18next';
 import NewsletterModal from './features/notification/newsletter/components/NewsletterModal';
 
-// Google Analytics helpers
-import { useAnalytics } from './hooks/useAnalytics';
-import { initGA } from './utils/analytics';
-
 /**
  * App entry point: Handles global loading state and main routes.
- * Note: Home and public pages are always accessible (not blocked by auth).
+ * Analytics is managed by Google Tag Manager.
  */
 function App() {
   const { user, loading } = useAuth();
   const { i18n } = useTranslation();
-
-  // Fire the first GA4 config on initial mount
-  useEffect(() => {
-    initGA();
-  }, []);
-
-  // Track pageviews on SPA navigation
-  useAnalytics();
 
   // OAuth2 patch: On first load, check for ?token=... in the URL (after OAuth login)
   useEffect(() => {
