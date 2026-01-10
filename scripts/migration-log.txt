@@ -1,3 +1,0 @@
-✘ Error moving hooks/useAuth.ts: ENOENT: no such file or directory, lstat '/home/berto/Blog projects/The-Human-Tech-Blog-React/src/hooks/useAuth.ts'
-✘ Error moving hooks/usePosts.ts: ENOENT: no such file or directory, lstat '/home/berto/Blog projects/The-Human-Tech-Blog-React/src/hooks/usePosts.ts'
-✘ Error moving hooks/useTheme.ts: ENOENT: no such file or directory, lstat '/home/berto/Blog projects/The-Human-Tech-Blog-React/src/hooks/useTheme.ts'
