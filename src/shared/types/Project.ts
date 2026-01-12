@@ -17,13 +17,13 @@ export interface ProjectMetaFigma {
   fileKey?: string;
   fileName?: string;
   thumbnailUrl?: string;
-  lastModified?: string; // ISO string
+  lastModified?: string;
 }
 
 export interface ProjectMetaGitHub {
-  repo?: string; // "owner/name"
+  repo?: string;
   stars?: number;
-  lastCommitAt?: string; // ISO string
+  lastCommitAt?: string;
   topics?: string[];
   description?: string;
 }
@@ -32,14 +32,16 @@ export interface Project {
   _id: string;
   slug: string;
   type: ProjectType;
+
   title: string;
   excerpt?: string;
   description?: string;
+
   coverImage?: string;
+
   tags: string[];
   links: ProjectLinks;
 
-  // optional (backend-provided)
   source?: ProjectSource;
   meta?: {
     figma?: ProjectMetaFigma;

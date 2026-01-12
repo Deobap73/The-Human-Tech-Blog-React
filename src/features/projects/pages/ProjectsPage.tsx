@@ -6,25 +6,19 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import './ProjectsPage.scss';
 
-// Local pieces
 import FiltersBar, { SortOption } from '../FiltersBar/FiltersBar';
 import ProjectsGrid, { ProjectGridItem } from '../ProjectsGrid/ProjectsGrid';
 import Pagination from '../Pagination/Pagination';
 import CtaBand from '../CtaBand/CtaBand';
 
-// Reuse existing components if needed
 import ProjectsEmptyState from '../components/ProjectsEmptyState';
 
-// Backend types/services
 import type { Project } from '../../../shared/types/Project';
 import { fetchProjects } from '../../../shared/services/projectService';
-
-// Helpers
 import { useDebouncedValue } from '../../../shared/hooks/useDebouncedValue';
 
 const DEFAULT_LIMIT = 3;
 
-// UI tags -> backend type
 const TYPE_TAGS: Record<string, Project['type']> = {
   'Frontend UI': 'frontend-ui',
   'UX · Figma': 'ux-figma',
@@ -33,23 +27,15 @@ const TYPE_TAGS: Record<string, Project['type']> = {
 
 const AVAILABLE_TAGS = Object.keys(TYPE_TAGS);
 
-/**
- * ProjectsPage
- * - Layout: grid 3 columns + centered pagination.
- * - Shows ALL projects by default, ordered from newest to oldest.
- * - When a tag is active, filters by that type.
- * - If no tag is active, no `type` filter is sent to the backend.
- */
 const ProjectsPage: React.FC = () => {
-  // ======= STATE =======
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
   const [q, setQ] = React.useState<string>('');
   const [sort, setSort] = React.useState<SortOption>('newest');
   const [activeTags, setActiveTags] = React.useState<string[]>([]);
   const [page, setPage] = React.useState<number>(1);
   const [compact, setCompact] = React.useState<boolean>(true);
 
-  // Data state
   const [itemsRaw, setItemsRaw] = React.useState<Project[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>('');
@@ -58,9 +44,6 @@ const ProjectsPage: React.FC = () => {
 
   const debouncedQ = useDebouncedValue(q, 450);
 
-  // ======= TAG FILTER HANDLING (derive backend type) =======
-  // If no tag is active, we do NOT send "type" to the backend.
-  // If one or more tags are active, we use the first known mapping.
   const primaryTag = activeTags.find((tag) => TYPE_TAGS[tag as keyof typeof TYPE_TAGS]);
   const activeType: Project['type'] | undefined = primaryTag
     ? TYPE_TAGS[primaryTag as keyof typeof TYPE_TAGS]
@@ -69,30 +52,23 @@ const ProjectsPage: React.FC = () => {
   const toggleTag = (tag: string): void => {
     setActiveTags((prev) => {
       const isActive = prev.includes(tag);
-      if (isActive) {
-        // Clicking an active tag removes it and goes back to "all projects"
-        return prev.filter((t) => t !== tag);
-      }
-      // Optional: keep it as "single selection" by replacing the array
+      if (isActive) return prev.filter((x) => x !== tag);
       return [tag];
     });
   };
 
-  // Reset page when filters or search or sort change
   React.useEffect(() => {
     setPage(1);
   }, [debouncedQ, activeType, sort]);
 
-  // ======= FETCH =======
   React.useEffect(() => {
     const controller = new AbortController();
 
     const load = async (): Promise<void> => {
       setError('');
       setLoading(true);
+
       try {
-        // When "activeType" is undefined, fetchProjects will NOT send "type"
-        // and the backend should return all projects.
         const data = await fetchProjects(
           activeType,
           page,
@@ -101,22 +77,18 @@ const ProjectsPage: React.FC = () => {
           controller.signal
         );
 
-        // Client-side sorting, stable and predictable.
         const list = [...data.items].sort((a, b) => {
-          if (sort === 'az') return a.title.localeCompare(b.title);
-          if (sort === 'za') return b.title.localeCompare(a.title);
+          if (sort === 'az') return (a.title || '').localeCompare(b.title || '');
+          if (sort === 'za') return (b.title || '').localeCompare(a.title || '');
 
           const aTs = a.updatedAt ? Date.parse(a.updatedAt) : 0;
           const bTs = b.updatedAt ? Date.parse(b.updatedAt) : 0;
 
-          if (aTs && bTs) {
-            return sort === 'newest' ? bTs - aTs : aTs - bTs;
-          }
+          if (aTs && bTs) return sort === 'newest' ? bTs - aTs : aTs - bTs;
 
-          // Fallback: alphabetical if we do not have dates
           return sort === 'newest'
-            ? b.title.localeCompare(a.title)
-            : a.title.localeCompare(b.title);
+            ? (b.title || '').localeCompare(a.title || '')
+            : (a.title || '').localeCompare(b.title || '');
         });
 
         setItemsRaw(list);
@@ -137,19 +109,12 @@ const ProjectsPage: React.FC = () => {
     return () => controller.abort();
   }, [activeType, page, debouncedQ, sort]);
 
-  /**
-   * Backend pagination detection
-   * We only consider "server paginated" when:
-   *  - total and limit are valid
-   *  - total > limit (there is more than one page)
-   *  - items length <= limit (server performed the slice)
-   */
   const backendPaginated =
     serverTotal !== null &&
     serverLimit !== null &&
     serverLimit > 0 &&
-    (serverTotal as number) > (serverLimit as number) &&
-    itemsRaw.length <= (serverLimit as number);
+    serverTotal > serverLimit &&
+    itemsRaw.length <= serverLimit;
 
   const totalPages = backendPaginated
     ? Math.max(1, Math.ceil((serverTotal as number) / (serverLimit as number)))
@@ -159,20 +124,25 @@ const ProjectsPage: React.FC = () => {
     ? itemsRaw
     : itemsRaw.slice((page - 1) * DEFAULT_LIMIT, (page - 1) * DEFAULT_LIMIT + DEFAULT_LIMIT);
 
-  const pageItems: ProjectGridItem[] = visibleItems.map((p) => ({
-    id: p._id,
-    title: p.title,
-    subtitle: p.type ? p.type : undefined,
-    excerpt: p.excerpt,
-    imageSrc: p.coverImage,
-    imageAlt: p.title || 'Project cover',
-    tags: p.tags || [],
-    links: {
-      details: `/${(p as { lang?: string }).lang || 'en'}/projects/${p.slug}`,
-      repo: p.links?.github,
-      live: p.links?.live,
-    },
-  }));
+  const pageItems: ProjectGridItem[] = visibleItems.map((p) => {
+    const langFromItem = (p as { lang?: string }).lang;
+    const activeLang = langFromItem || i18n.language.split('_')[0].split('-')[0] || 'en';
+
+    return {
+      id: p._id,
+      title: p.title,
+      subtitle: p.type ? p.type : undefined,
+      excerpt: p.excerpt,
+      imageSrc: p.coverImage,
+      imageAlt: p.title || 'Project cover',
+      tags: p.tags || [],
+      links: {
+        details: `/${activeLang}/projects/${p.slug}`,
+        repo: p.links?.github,
+        live: p.links?.live,
+      },
+    };
+  });
 
   return (
     <main aria-labelledby='ProjectsPage-title' className='projectsPage'>

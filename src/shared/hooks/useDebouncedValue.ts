@@ -3,16 +3,12 @@
 
 import { useEffect, useState } from 'react';
 
-/**
- * useDebouncedValue
- * - Debounces a primitive value by "delay" ms.
- */
-export function useDebouncedValue<T extends string | number>(value: T, delay = 400): T {
+export function useDebouncedValue<T>(value: T, delay = 400): T {
   const [debounced, setDebounced] = useState<T>(value);
 
   useEffect(() => {
-    const id = setTimeout(() => setDebounced(value), delay);
-    return () => clearTimeout(id);
+    const id = window.setTimeout(() => setDebounced(value), delay);
+    return () => window.clearTimeout(id);
   }, [value, delay]);
 
   return debounced;

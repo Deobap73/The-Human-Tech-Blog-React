@@ -1,0 +1,86 @@
+/* /src/features/projects/BrandHeader/BrandHeader.scss */
+
+.brandHeader {
+  padding-block: var(--gap-xxl);
+  background: color-mix(in oklab, var(--background) 92%, var(--background-secondary));
+
+  &__inner {
+    max-width: var(--layout-max-width);
+    margin-inline: auto;
+    padding-inline: var(--padding-base);
+    display: grid;
+    gap: var(--gap-base);
+  }
+
+  &__kicker {
+    margin: 0;
+    font-size: var(--font-size-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-color-secondary);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: clamp(1.8rem, 1.2rem + 2.2vw, 3rem);
+    line-height: 1.1;
+    color: var(--text-color);
+  }
+
+  &__subtitle {
+    margin: 0;
+    font-size: clamp(1rem, 0.9rem + 0.6vw, 1.25rem);
+    color: var(--text-color-secondary);
+  }
+
+  &__description {
+    margin: 0;
+    max-width: 68ch;
+    font-size: var(--font-size-base);
+    color: var(--text-color);
+    opacity: 0.92;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap-base);
+    margin-top: var(--gap-base);
+  }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.55rem 0.9rem;
+    border-radius: var(--border-radius-md);
+    font-weight: 700;
+    border: 1px solid transparent;
+    text-decoration: none;
+    line-height: 1;
+
+    &--primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    &--secondary {
+      background: transparent;
+      color: var(--text-color);
+      border-color: rgba(0, 0, 0, 0.12);
+    }
+
+    &--ghost {
+      background: transparent;
+      color: var(--text-color-secondary);
+      border-color: transparent;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(29, 161, 242, 0.18);
+    }
+  }
+}

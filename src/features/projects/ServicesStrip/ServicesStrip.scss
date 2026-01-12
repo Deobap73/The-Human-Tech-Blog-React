@@ -1,0 +1,60 @@
+/* /src/features/projects/ServicesStrip/ServicesStrip.scss */
+
+.servicesStrip {
+  padding-block: var(--gap-xl);
+
+  &__grid {
+    max-width: var(--layout-max-width);
+    margin-inline: auto;
+    padding-inline: var(--padding-base);
+
+    display: grid;
+    gap: var(--gap-lg);
+
+    /* mobile */
+    grid-template-columns: 1fr;
+
+    /* tablet */
+    @media (min-width: 640px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* desktop */
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 1rem;
+    height: 8rem;
+    background: var(--background-secondary);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 6px;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: clamp(1rem, 0.95rem + 0.4vw, 1.125rem);
+    font-weight: 700;
+    color: var(--text-color);
+    line-height: 1.25;
+  }
+
+  &__text {
+    margin: 0;
+    font-size: var(--font-size-sm);
+    color: var(--text-color-secondary);
+    line-height: 1.5;
+  }
+
+  &__icon {
+    inline-size: 32px;
+    block-size: 32px;
+    color: var(--primary);
+  }
+}

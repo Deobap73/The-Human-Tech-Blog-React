@@ -1,4 +1,4 @@
-/* The-Human-Tech-Blog-React/src/features/layout/styles/Navbar.scss */
+/* /src/features/layout/styles/Navbar.scss */
 
 /* --------- COMPACT MODE --------- */
 .navbar--compact {
@@ -12,6 +12,7 @@
   .navbar__tile {
     display: none !important;
   }
+
   .navbar__row {
     height: 100% !important;
     align-items: center !important;
@@ -34,36 +35,20 @@
     height: 50vh;
     min-height: 220px;
   }
+
   @media (max-width: 900px) {
     height: 32vh;
     min-height: 150px;
   }
+
   @media (max-width: 768px) {
-    height: 27vh; /* estava 35vh, reduzido para mais respiro */
+    height: 27vh;
     min-height: 120px;
   }
+
   @media (max-width: 600px) {
     height: 25vh;
     min-height: 100px;
-  }
-
-  .navbar--compact {
-    height: 80px !important;
-    min-height: 80px !important;
-    max-height: 80px !important;
-    overflow: hidden !important;
-    align-items: stretch !important;
-
-    .navbar__background,
-    .navbar__tile {
-      display: none !important;
-    }
-    .navbar__row {
-      height: 100% !important;
-      align-items: center !important;
-      padding-top: 0 !important;
-      padding-bottom: 0 !important;
-    }
   }
 
   &__background {
@@ -73,7 +58,7 @@
     height: 100%;
     min-height: 100%;
     object-fit: cover;
-    object-position: right center; // 👈 AJUSTE: privilegia o lado direito da imagem
+    object-position: right center;
     z-index: 0;
     pointer-events: none;
     aspect-ratio: 16 / 6;
@@ -81,17 +66,20 @@
     @media (max-width: 1024px) {
       aspect-ratio: 16 / 8;
     }
+
     @media (max-width: 900px) {
       aspect-ratio: 16 / 10;
-      object-position: 80% center; // privilegia ainda mais a direita
+      object-position: 80% center;
     }
+
     @media (max-width: 768px) {
       aspect-ratio: 16 / 11;
-      object-position: 90% center; // em telemóveis, mostra quase só o lado direito
+      object-position: 90% center;
     }
+
     @media (max-width: 600px) {
       aspect-ratio: 16 / 13;
-      object-position: 96% center; // foca na tua foto
+      object-position: 96% center;
     }
   }
 
@@ -110,7 +98,7 @@
     align-items: center;
     justify-content: space-between;
     width: 30%;
-    padding: 1.2rem 0 0 0; // Padding superior, lateral gerenciado por __row
+    padding: 1.2rem 0 0 0;
     z-index: 10;
     background: transparent;
   }
@@ -119,6 +107,7 @@
     display: flex;
     align-items: center;
     z-index: 20;
+
     &-image {
       width: 110px;
       min-width: 60px;
@@ -132,7 +121,7 @@
   &__burger {
     display: none;
     position: relative;
-    z-index: 21; // Garante que o ícone do burger esteja sempre no topo
+    z-index: 21;
     width: 38px;
     height: 38px;
     background: none;
@@ -154,28 +143,33 @@
       background: var(--primary);
       transition: all 0.3s;
     }
+
     &--open span:nth-child(1) {
       transform: translateY(7px) rotate(45deg);
     }
+
     &--open span:nth-child(2) {
       opacity: 0;
     }
+
     &--open span:nth-child(3) {
       transform: translateY(-7px) rotate(-45deg);
     }
   }
 
-  // O overlay não é exibido por padrão
   &__overlay {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100vw;
     height: 100vh;
     background: rgba(24, 28, 38, 0.45);
-    z-index: 12; // Abaixo do menu, mas acima do restante do conteúdo
+    z-index: 12;
     animation: fadeIn 0.3s;
+
+    &--open {
+      display: block;
+    }
   }
 
   &__nav {
@@ -185,7 +179,7 @@
     justify-content: space-between;
     width: 100%;
     padding: 0;
-    z-index: 15; // Z-index padrão do menu para desktop
+    z-index: 15;
     background: transparent;
 
     &-container {
@@ -212,6 +206,7 @@
     display: flex;
     align-items: center;
     gap: 1rem;
+
     &-profile {
       color: var(--text-color);
       display: flex;
@@ -220,6 +215,7 @@
       border-radius: 50%;
       overflow: hidden;
     }
+
     &-avatar {
       width: 32px;
       height: 32px;
@@ -228,20 +224,13 @@
       background: var(--background-secondary);
       border: 2px solid var(--primary);
     }
-    &-name {
-      color: var(--text-color);
-      font-size: 1rem;
-      font-weight: 500;
-      text-decoration: none;
-      transition: color 0.3s;
-      margin-left: 0.5rem;
-    }
+
     &-admin {
       color: var(--primary);
-
       font-weight: 600;
       margin-right: 0.75rem;
     }
+
     &-logout {
       color: var(--text-color);
       background: none;
@@ -251,6 +240,7 @@
       padding: 0.4rem 0.8rem;
       border-radius: 6px;
       transition: background 0.2s, color 0.2s;
+
       &:hover,
       &:focus {
         background: var(--primary-hover);
@@ -271,6 +261,7 @@
     padding: 0.4rem 1rem;
     transition: background 0.2s, color 0.2s, border 0.2s;
     gap: 0.4rem;
+
     &:hover,
     &:focus {
       background: var(--primary);
@@ -301,6 +292,7 @@
     background: rgba(255, 255, 255, 0.11);
     border-radius: 1rem;
     box-shadow: var(--shadow-card);
+
     &-title {
       color: var(--primary);
       font-size: 2.2rem;
@@ -308,6 +300,7 @@
       margin-bottom: 0.5rem;
       line-height: 1.1;
     }
+
     &-description {
       color: var(--text-color-secondary);
       font-size: 1.05rem;
@@ -315,15 +308,9 @@
     }
   }
 
-  // Burger & Sidebar
   @media (max-width: 1024px) {
     &__burger {
       display: flex;
-    }
-
-    // O overlay é ativado quando o menu está aberto, graças à nova estrutura JSX e seletor
-    &__nav--open + &__overlay {
-      display: block; // Mostra o overlay
     }
 
     &__nav {
@@ -334,18 +321,16 @@
       width: 75vw;
       max-width: 340px;
       background: var(--bg);
-      z-index: 16; // Garante que o menu esteja acima do overlay (z-index: 12)
+      z-index: 16;
       box-shadow: 2px 0 16px 0 rgba(20, 22, 34, 0.09);
       flex-direction: column;
       align-items: flex-start;
       justify-content: flex-start;
       transform: translateX(-100%);
       transition: transform 0.35s cubic-bezier(0.87, 0, 0.13, 1);
-      // Garante que o menu receba eventos de clique
-      pointer-events: none; // Por padrão, não permite cliques quando fechado
+      pointer-events: none;
 
       &--open {
-        width: min-content;
         transform: translateX(0);
         pointer-events: auto;
         background: rgba(5, 5, 5, 0.5);
@@ -363,10 +348,12 @@
         margin: 0;
         padding: 2.3rem 1.2rem 1.2rem 1.2rem;
       }
+
       .navbar__actions {
         gap: 0.8rem;
         width: 100%;
       }
+
       .navbar__item {
         width: 100%;
         text-align: left;
@@ -374,18 +361,22 @@
         border-radius: 0.6rem;
         font-size: 1.18rem;
       }
+
       .navbar__user {
         flex-wrap: wrap;
         justify-content: center;
       }
     }
+
     &__topbar {
-      width: 100%; // Ocupa a largura total dentro de __row
+      width: 100%;
       padding: 0.7rem 1rem 0.4rem 1rem;
     }
+
     &__logo-image {
       width: 80px;
     }
+
     &__tile {
       width: 45vw;
       max-width: 45vw;
@@ -400,15 +391,19 @@
       margin-top: 0.7rem;
       margin-bottom: 1.2rem;
     }
+
     &__tile-title {
       font-size: 1.3rem;
     }
+
     &__tile-description {
       font-size: 0.97rem;
     }
+
     &__logo-image {
       width: 56px;
     }
+
     &__topbar {
       padding: 0.7rem 0.4rem 0.4rem 0.4rem;
     }
@@ -418,6 +413,7 @@
     from {
       opacity: 0;
     }
+
     to {
       opacity: 1;
     }

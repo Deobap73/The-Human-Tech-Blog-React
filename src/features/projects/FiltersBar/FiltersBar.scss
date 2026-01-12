@@ -1,5 +1,4 @@
-// src/features/projects/FiltersBar/FiltersBar.scss
-
+/* /src/features/projects/FiltersBar/FiltersBar.scss */
 .filters {
   padding-block: var(--gap-lg);
 
@@ -44,7 +43,6 @@
     color: var(--text-color-secondary);
   }
 
-  /* Search */
   &__searchWrap {
     position: relative;
     display: flex;
@@ -94,7 +92,6 @@
     font-size: var(--font-size-xs);
   }
 
-  /* Select */
   &__select {
     inline-size: 100%;
     font: inherit;
@@ -110,7 +107,6 @@
     }
   }
 
-  /* Tags */
   &__tags {
     display: flex;
     flex-wrap: wrap;
@@ -134,55 +130,5 @@
       color: #fff;
       border-color: transparent;
     }
-  }
-
-  /* Compact toggle */
-  &__toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--gap-m);
-  }
-
-  &__switch {
-    appearance: none;
-    inline-size: 42px;
-    block-size: 24px;
-    border-radius: 999px;
-    background: var(--background-tertiary);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    position: relative;
-    cursor: pointer;
-    transition: background 0.2s ease, border-color 0.2s ease;
-
-    &::before {
-      content: '';
-      position: absolute;
-      inset-block: 3px;
-      left: 3px;
-      inline-size: 18px;
-      block-size: 18px;
-      border-radius: 50%;
-      background: var(--text-color-inverse);
-      transition: transform 0.2s ease;
-    }
-
-    &:checked {
-      background: var(--primary);
-      border-color: var(--primary);
-
-      &::before {
-        transform: translateX(18px);
-      }
-    }
-
-    &:focus-visible {
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(29, 161, 242, 0.18);
-    }
-  }
-
-  &__switchLabel {
-    font-size: var(--font-size-sm);
-    color: var(--text-color);
   }
 }

@@ -1,4 +1,5 @@
 // /src/features/projects/components/ProjectMetaHead.tsx
+
 'use strict';
 
 import React from 'react';
@@ -12,10 +13,6 @@ interface Props {
   lang?: string;
 }
 
-/**
- * ProjectMetaHead
- * - Centralizes SEO meta tags for project detail page.
- */
 const ProjectMetaHead: React.FC<Props> = ({ title, excerpt, coverImage, canonical, lang }) => {
   return (
     <Helmet

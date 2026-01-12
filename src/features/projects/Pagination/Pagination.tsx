@@ -1,27 +1,20 @@
 // src/features/projects/Pagination/Pagination.tsx
-
 'use strict';
 
 import React from 'react';
 import './Pagination.scss';
 
 export interface PaginationProps {
-  currentPage: number; // 1-based
-  totalPages: number; // >= 1
+  currentPage: number;
+  totalPages: number;
   onPageChange: (page: number) => void;
   siblingCount?: number;
   ariaLabel?: string;
-  /** Compact density mode (reduces paddings/gaps) */
   compact?: boolean;
 }
 
 const clamp = (n: number, min: number, max: number): number => Math.max(min, Math.min(n, max));
 
-/**
- * Pagination (Figma-to-code parity)
- * - Ellipses, keyboard-friendly, accessible.
- * - Compact mode supported via BEM modifier.
- */
 const Pagination: React.FC<PaginationProps> = ({
   currentPage,
   totalPages,
@@ -37,7 +30,7 @@ const Pagination: React.FC<PaginationProps> = ({
   const start = Math.max(2, currentPage - siblingCount);
   const end = Math.min(totalPages - 1, currentPage + siblingCount);
 
-  const range: (number | '…')[] = [1];
+  const range: Array<number | '…'> = [1];
   if (start > 2) range.push('…');
   for (let p = start; p <= end; p += 1) range.push(p);
   if (end < totalPages - 1) range.push('…');

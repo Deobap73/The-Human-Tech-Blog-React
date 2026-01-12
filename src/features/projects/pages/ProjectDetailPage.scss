@@ -1,4 +1,5 @@
 /* /src/features/projects/pages/ProjectDetailPage.scss */
+
 .projDetail {
   --gap: var(--gap-lg, 1.25rem);
   --gap-sm: var(--gap-base, 0.75rem);
@@ -13,12 +14,6 @@
   max-width: var(--layout-max-width, 1120px);
   margin-inline: auto;
   padding: var(--gap) var(--padding-base, 1rem) var(--gap-lg, 2rem);
-
-  &__top {
-    display: grid;
-    gap: 0.5rem;
-    margin-bottom: var(--gap);
-  }
 
   &__back {
     appearance: none;
@@ -41,6 +36,7 @@
   &__crumbs {
     font-size: 0.9rem;
     color: var(--muted);
+    margin-bottom: var(--gap-sm);
   }
 
   &__crumbList {
@@ -51,21 +47,15 @@
     margin: 0;
   }
 
-  &__state {
-    display: grid;
-    place-items: center;
-    padding: 4rem 1rem;
-    border: 1px dashed var(--border);
-    border-radius: var(--radius);
-    background: color-mix(in oklab, var(--bg) 86%, var(--background-secondary, #f6f6f6));
-  }
   &__stateText {
     color: var(--muted);
+    padding: 4rem 1rem;
+    text-align: center;
   }
 
-  /* Hero */
   &__hero {
     width: 50rem;
+    max-width: 100%;
     margin: 0 0 var(--gap);
     border-radius: var(--radius);
     overflow: hidden;
@@ -73,6 +63,7 @@
     background: var(--bg);
     aspect-ratio: 16 / 9;
   }
+
   &__heroImg {
     width: 100%;
     height: 100%;
@@ -80,18 +71,19 @@
     display: block;
   }
 
-  /* Header */
   &__header {
     display: grid;
     gap: 0.5rem;
     margin-bottom: var(--gap);
   }
+
   &__title {
     margin: 0;
     font-family: var(--font-heading, inherit);
     font-size: clamp(1.4rem, 1.1rem + 1.2vw, 2rem);
     color: var(--text);
   }
+
   &__meta {
     display: flex;
     flex-wrap: wrap;
@@ -100,6 +92,7 @@
     color: var(--muted);
     font-size: 0.9rem;
   }
+
   &__type {
     display: inline-block;
     padding: 0.2rem 0.6rem;
@@ -110,6 +103,7 @@
     font-weight: 700;
     letter-spacing: 0.02em;
   }
+
   &__updated {
     opacity: 0.9;
   }
@@ -120,13 +114,13 @@
     opacity: 0.95;
   }
 
-  /* Actions */
   &__actions {
     display: flex;
     flex-wrap: wrap;
     gap: 0.6rem;
     margin: 1rem 0 var(--gap);
   }
+
   &__btn {
     display: inline-block;
     padding: 0.5rem 0.9rem;
@@ -134,22 +128,24 @@
     text-decoration: none;
     border: 1px solid var(--border);
     box-shadow: var(--shadow);
+
     &--primary {
       background: var(--primary);
       color: #fff;
       border-color: var(--primary);
     }
+
     &--secondary {
       background: var(--bg);
       color: var(--text);
     }
+
     &--ghost {
       background: transparent;
       color: var(--text);
     }
   }
 
-  /* Tags */
   &__tags {
     list-style: none;
     padding: 0;
@@ -158,6 +154,7 @@
     flex-wrap: wrap;
     gap: 0.5rem;
   }
+
   &__tag {
     padding: 0.25rem 0.6rem;
     border-radius: 999px;
@@ -167,27 +164,28 @@
     font-weight: 700;
   }
 
-  /* Sections */
   &__section {
     margin-block: var(--gap);
   }
+
   &__sectionTitle {
     margin: 0 0 0.6rem;
     font-size: 1.1rem;
     color: var(--text);
   }
+
   &__content {
     color: var(--text);
     opacity: 0.95;
   }
 
-  /* Figma */
   &__figmaWrap {
     border: 1px solid var(--border);
     border-radius: var(--radius);
     overflow: hidden;
     box-shadow: var(--shadow);
   }
+
   &__figma {
     width: 100%;
     height: clamp(320px, 50vw, 680px);

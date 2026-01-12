@@ -1,5 +1,4 @@
 // /src/features/projects/FiltersBar/FiltersBar.tsx
-
 'use strict';
 
 import React, { useId } from 'react';
@@ -16,8 +15,6 @@ export interface FiltersBarProps {
   tags?: string[];
   activeTags?: string[];
   onToggleTag?: (tag: string) => void;
-  compact: boolean;
-  onToggleCompact: (value: boolean) => void;
 }
 
 const FiltersBar: React.FC<FiltersBarProps> = ({
@@ -28,8 +25,6 @@ const FiltersBar: React.FC<FiltersBarProps> = ({
   tags = [],
   activeTags = [],
   onToggleTag,
-  compact,
-  onToggleCompact,
 }) => {
   const formId = useId();
   const legendId = `${formId}-legend`;
@@ -51,11 +46,11 @@ const FiltersBar: React.FC<FiltersBarProps> = ({
             {t('projectsPage.filter')}
           </legend>
 
-          {/* Search */}
           <div className='filters__row'>
             <label htmlFor={`${formId}-q`} className='filters__label'>
               {t('projectsPage.search')}
             </label>
+
             <div className='filters__searchWrap'>
               <input
                 id={`${formId}-q`}
@@ -67,6 +62,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({
                 onChange={handleSearchChange}
                 aria-describedby={`${formId}-q-hint`}
               />
+
               {search.length > 0 && (
                 <button
                   type='button'
@@ -77,16 +73,17 @@ const FiltersBar: React.FC<FiltersBarProps> = ({
                 </button>
               )}
             </div>
+
             <small id={`${formId}-q-hint`} className='filters__hint'>
               {t('projectsPage.searchHint')}
             </small>
           </div>
 
-          {/* Sort */}
           <div className='filters__row'>
             <label htmlFor={`${formId}-sort`} className='filters__label'>
               {t('projectsPage.order')}
             </label>
+
             <select
               id={`${formId}-sort`}
               className='filters__select'
@@ -99,10 +96,10 @@ const FiltersBar: React.FC<FiltersBarProps> = ({
             </select>
           </div>
 
-          {/* Tags */}
           {tags.length > 0 && (
             <div className='filters__row'>
               <span className='filters__label'>{t('projectsPage.tags')}</span>
+
               <div className='filters__tags' role='group' aria-label={t('projectsPage.tags')}>
                 {tags.map((tag) => {
                   const active = activeTags.includes(tag);
@@ -120,25 +117,6 @@ const FiltersBar: React.FC<FiltersBarProps> = ({
               </div>
             </div>
           )}
-
-          {/* Compact toggle */}
-          <div className='filters__row'>
-            <span className='filters__label'>{t('projectsPage.layout')}</span>
-            <div className='filters__toggle'>
-              <input
-                id={`${formId}-compact`}
-                className='filters__switch'
-                type='checkbox'
-                role='switch'
-                aria-checked={compact}
-                checked={compact}
-                onChange={(e) => onToggleCompact(e.target.checked)}
-              />
-              <label htmlFor={`${formId}-compact`} className='filters__switchLabel'>
-                {t('projectsPage.compact')}
-              </label>
-            </div>
-          </div>
         </fieldset>
       </form>
     </section>

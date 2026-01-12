@@ -1,5 +1,4 @@
-// src/features/projects/ProjectsGrid/ProjectsGrid.tsx
-
+// /src/features/projects/ProjectsGrid/ProjectsGrid.tsx
 'use strict';
 
 import React from 'react';
@@ -13,24 +12,15 @@ export interface ProjectGridItem extends Omit<ProjectCardProps, 'className'> {
 export interface ProjectsGridProps {
   items: ProjectGridItem[];
   emptyText?: string;
-  compact?: boolean;
   className?: string;
 }
 
-/**
- * ProjectsGrid
- * - 1 col (mobile), 2 col ≥576px, 3 col ≥992px.
- * - Returns a friendly empty state if needed.
- */
 const ProjectsGrid: React.FC<ProjectsGridProps> = ({
   items,
   emptyText = 'Sem projetos para mostrar com os filtros atuais.',
-  compact = false,
   className = '',
 }) => {
-  const rootCls = ['projGrid', compact ? 'projGrid--compact' : '', className]
-    .filter(Boolean)
-    .join(' ');
+  const rootCls = ['projGrid', 'projGrid--compact', className].filter(Boolean).join(' ');
 
   if (!items || items.length === 0) {
     return (

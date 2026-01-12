@@ -30,16 +30,18 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { lang } = useParams<{ lang: string }>();
+
   const [showLogin, setShowLogin] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const activeLang = lang || i18n.language.split('-')[0] || 'en';
+  const activeLang = lang || i18n.language.split('_')[0].split('-')[0] || 'en';
 
   const config = getNavbarConfig(location.pathname);
   const isCompact = !config.background && !config.showTile;
-  const navbarClasses = `navbar ${theme === 'dark' ? 'navbar--dark' : 'navbar--light'}${
-    isCompact ? ' navbar--compact' : ''
-  }`;
+
+  const navbarClasses =
+    `navbar ${theme === 'dark' ? 'navbar--dark' : 'navbar--light'}` +
+    (isCompact ? ' navbar--compact' : '');
 
   const handleLogout = async () => {
     await logout();
@@ -100,7 +102,7 @@ const Navbar = () => {
           id='navbar__nav'
           className={`navbar__nav${sidebarOpen ? ' navbar__nav--open' : ''}`}
           role='navigation'
-          aria-label={t('navbar.ariaMainNav')}>
+          aria-label={t('navbar.ariaMainNav', { defaultValue: 'Main navigation' })}>
           <div className='navbar__nav-container'>
             <div className='navbar__actions'>
               <Link
@@ -259,9 +261,11 @@ const Navbar = () => {
 
       {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
 
-      {sidebarOpen && (
-        <div className='navbar__overlay' onClick={() => setSidebarOpen(false)} aria-hidden />
-      )}
+      <div
+        className={`navbar__overlay${sidebarOpen ? ' navbar__overlay--open' : ''}`}
+        onClick={() => setSidebarOpen(false)}
+        aria-hidden
+      />
     </header>
   );
 };

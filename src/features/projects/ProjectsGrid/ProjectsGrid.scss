@@ -1,12 +1,6 @@
-// src/features/projects/ProjectsGrid/ProjectsGrid.scss
-
+/* /src/features/projects/ProjectsGrid/ProjectsGrid.scss */
 .projGrid {
   padding-block: var(--gap-md);
-
-  &--compact {
-    /* Denser layout: less vertical padding and smaller grid gap */
-    padding-block: var(--gap-md);
-  }
 
   &__grid {
     max-width: var(--layout-max-width);
@@ -16,22 +10,18 @@
     display: grid;
     gap: var(--gap-lg);
 
-    /* 1 col */
     grid-template-columns: 1fr;
 
-    /* 2 col: ≥576px */
     @media (min-width: 576px) {
       grid-template-columns: repeat(2, 1fr);
     }
 
-    /* 3 col: ≥992px */
     @media (min-width: 992px) {
       grid-template-columns: repeat(3, 1fr);
     }
   }
 
   &__cell {
-    /* reserved for per-card modifiers */
   }
 
   &__empty {
@@ -53,7 +43,7 @@
   }
 }
 
-/* Compact card adjustments scoped to grid */
+/* compact is now always on */
 .projGrid--compact .projectCard {
   padding: var(--gap-m);
   gap: var(--gap-base);

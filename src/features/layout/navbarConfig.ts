@@ -54,7 +54,7 @@ export const navbarConfigs: Record<string, NavbarConfig> = {
   // Projects list
   '/projects': {
     background: projectsPage,
-    showTile: true,
+    showTile: false,
     tileTitle: (t) => safeT(t, 'navbar.title.projects', 'Projects'),
     tileDescription: (t) =>
       safeT(t, 'navbar.description.projects', 'Figma drafts, UI, and full projects'),

@@ -1,4 +1,4 @@
-// src/features/projects/ProjectCard/ProjectCard.scss
+/* /src/features/projects/ProjectCard/ProjectCard.scss */
 
 .projectCard {
   display: grid;
@@ -16,6 +16,11 @@
   &:hover,
   &:focus-within {
     transform: translateY(-5px) scale(1.001);
+  }
+
+  &:focus-within {
+    border-color: rgba(0, 0, 0, 0.18);
+    box-shadow: var(--shadow-card-strong);
   }
 
   &__media {
@@ -37,6 +42,7 @@
   &__body {
     display: grid;
     gap: var(--gap-m);
+    align-content: start;
   }
 
   &__header {
@@ -114,17 +120,24 @@
     font-weight: 600;
     line-height: 1;
     border: 1px solid transparent;
+    text-decoration: none;
+
     transition: transform 0.12s ease, border-color 0.2s ease, background 0.2s ease,
       box-shadow 0.2s ease;
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(29, 161, 242, 0.18);
+    }
 
     &--primary {
       background: var(--primary);
       color: #fff;
+
       &:hover,
       &:focus-visible {
         transform: translateY(-1px);
         box-shadow: var(--shadow-card);
-        outline: none;
       }
     }
 
@@ -132,21 +145,21 @@
       background: transparent;
       color: var(--text-color);
       border-color: rgba(0, 0, 0, 0.12);
+
       &:hover,
       &:focus-visible {
         border-color: var(--primary);
         transform: translateY(-1px);
-        outline: none;
       }
     }
 
     &--ghost {
       background: transparent;
       color: var(--text-color);
+
       &:hover,
       &:focus-visible {
         text-decoration: underline;
-        outline: none;
       }
     }
   }

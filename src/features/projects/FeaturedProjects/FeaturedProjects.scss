@@ -1,0 +1,39 @@
+/* /src/features/projects/FeaturedProjects/FeaturedProjects.scss */
+
+.featuredProjects {
+  padding-block: var(--gap-xl);
+
+  &__inner {
+    max-width: var(--layout-max-width);
+    margin-inline: auto;
+    padding-inline: var(--padding-base);
+    display: grid;
+    gap: var(--gap-lg);
+  }
+
+  &__head {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: clamp(1.25rem, 1.05rem + 0.6vw, 1.6rem);
+    color: var(--text-color);
+  }
+
+  &__subtitle {
+    margin: 0;
+    color: var(--text-color-secondary);
+    max-width: 72ch;
+  }
+
+  /* keep ProjectsGrid inner widths aligned */
+  .projGrid {
+    padding-block: 0;
+  }
+
+  .projGrid__grid {
+    padding-inline: 0;
+  }
+}

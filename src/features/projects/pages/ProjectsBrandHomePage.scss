@@ -1,0 +1,70 @@
+/* /src/features/projects/pages/ProjectsBrandHomePage.scss */
+
+.projectsBrand {
+  &__controls {
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  &__content {
+    padding-block: var(--gap-lg);
+  }
+
+  &__inner {
+    max-width: var(--layout-max-width);
+    margin-inline: auto;
+    padding-inline: var(--padding-base);
+  }
+
+  &__loading,
+  &__error {
+    background: var(--background-secondary);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-card);
+    padding: var(--gap-lg);
+    margin-bottom: var(--gap-lg);
+  }
+
+  &__error {
+    color: var(--text-color);
+  }
+
+  &__cta {
+    padding-block: var(--gap-xxl);
+    background: color-mix(in oklab, var(--background) 92%, var(--background-secondary));
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  &__ctaInner {
+    max-width: var(--layout-max-width);
+    margin-inline: auto;
+    padding-inline: var(--padding-base);
+    display: grid;
+    gap: var(--gap-base);
+  }
+
+  &__ctaTitle {
+    margin: 0;
+    font-size: clamp(1.25rem, 1.05rem + 1vw, 2rem);
+    color: var(--text-color);
+  }
+
+  &__ctaText {
+    margin: 0;
+    max-width: 70ch;
+    color: var(--text-color-secondary);
+  }
+
+  &__ctaBtn {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.55rem 0.95rem;
+    border-radius: var(--border-radius-md);
+    background: var(--primary);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+  }
+}

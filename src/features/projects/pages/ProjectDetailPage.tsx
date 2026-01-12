@@ -1,45 +1,43 @@
 // /src/features/projects/pages/ProjectDetailPage.tsx
+
 'use strict';
 
 import React from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import './ProjectDetailPage.scss';
 
-// Services & types
 import type { Project } from '../../../shared/types/Project';
 import { fetchProjectBySlug } from '../../../shared/services/projectService';
 
-/**
- * ProjectDetailPage
- * - Displays a single project with image, description, links, and metadata.
- * - Fetches data dynamically from backend using slug.
- * - Handles loading, error, and not-found states gracefully.
- */
+import ProjectMetaHead from '../components/ProjectMetaHead';
+
 const ProjectDetailPage: React.FC = () => {
   const { slug, lang } = useParams<{ slug: string; lang?: string }>();
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [project, setProject] = React.useState<Project | null>(null);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>('');
 
-  const currentLang = lang || i18n.language.split('-')[0] || 'en';
+  const currentLang = lang || i18n.language.split('_')[0].split('-')[0] || 'en';
 
-  // ===== Fetch project by slug =====
   React.useEffect(() => {
     if (!slug) return;
 
     const controller = new AbortController();
+
     const load = async (): Promise<void> => {
       try {
         setLoading(true);
         setError('');
         const data = await fetchProjectBySlug(slug, controller.signal);
         setProject(data);
-      } catch (err: any) {
-        if (err?.name === 'AbortError') return;
+      } catch (err: unknown) {
+        if ((err as { name?: string })?.name === 'AbortError') return;
+        // eslint-disable-next-line no-console
         console.error('[ProjectDetailPage] Error fetching project', err);
         setError('Failed to load project.');
       } finally {
@@ -51,11 +49,13 @@ const ProjectDetailPage: React.FC = () => {
     return () => controller.abort();
   }, [slug]);
 
-  // ===== UI: Loading / Error / Not Found =====
+  const canonical =
+    typeof window !== 'undefined' ? `${window.location.origin}${location.pathname}` : '';
+
   if (loading) {
     return (
       <main className='projDetail'>
-        <p className='projDetail__stateText'>{t('route.loading', 'Loading...')}</p>
+        <p className='projDetail__stateText'>{t('projectsDetail.loading', 'Loading…')}</p>
       </main>
     );
   }
@@ -80,10 +80,16 @@ const ProjectDetailPage: React.FC = () => {
     );
   }
 
-  // ===== UI: Render project content =====
   return (
     <main className='projDetail'>
-      {/* Breadcrumbs */}
+      <ProjectMetaHead
+        title={project.title}
+        excerpt={project.excerpt || undefined}
+        coverImage={project.coverImage || undefined}
+        canonical={canonical}
+        lang={currentLang}
+      />
+
       <nav className='projDetail__crumbs' aria-label='breadcrumb'>
         <ol className='projDetail__crumbList'>
           <li>
@@ -96,7 +102,6 @@ const ProjectDetailPage: React.FC = () => {
         </ol>
       </nav>
 
-      {/* Back button */}
       <button
         type='button'
         className='projDetail__back'
@@ -105,7 +110,6 @@ const ProjectDetailPage: React.FC = () => {
         ← {t('projectsDetail.back', 'Back')}
       </button>
 
-      {/* Image */}
       {project.coverImage && (
         <figure className='projDetail__hero'>
           <img
@@ -116,9 +120,9 @@ const ProjectDetailPage: React.FC = () => {
         </figure>
       )}
 
-      {/* Title and Meta */}
       <header className='projDetail__header'>
         <h1 className='projDetail__title'>{project.title}</h1>
+
         <div className='projDetail__meta'>
           {project.type && (
             <span className={`projDetail__type projDetail__type--${project.type}`}>
@@ -129,6 +133,7 @@ const ProjectDetailPage: React.FC = () => {
                 : t('projects.type.full', 'Full Projects')}
             </span>
           )}
+
           {project.updatedAt && (
             <time className='projDetail__updated' dateTime={project.updatedAt}>
               {t('projectsDetail.updated', 'Updated')}:{' '}
@@ -136,10 +141,10 @@ const ProjectDetailPage: React.FC = () => {
             </time>
           )}
         </div>
+
         {project.excerpt && <p className='projDetail__excerpt'>{project.excerpt}</p>}
       </header>
 
-      {/* Links */}
       <div
         className='projDetail__actions'
         role='group'
@@ -153,6 +158,7 @@ const ProjectDetailPage: React.FC = () => {
             {t('projects.external.live', 'Live')}
           </a>
         )}
+
         {project.links?.github && (
           <a
             href={project.links.github}
@@ -162,6 +168,7 @@ const ProjectDetailPage: React.FC = () => {
             {t('projects.external.github', 'GitHub')}
           </a>
         )}
+
         {project.links?.figma && (
           <a
             href={project.links.figma}
@@ -171,6 +178,7 @@ const ProjectDetailPage: React.FC = () => {
             {t('projects.external.figma', 'Figma')}
           </a>
         )}
+
         {project.links?.article && (
           <a
             href={project.links.article}
@@ -182,7 +190,6 @@ const ProjectDetailPage: React.FC = () => {
         )}
       </div>
 
-      {/* Tags */}
       {project.tags && project.tags.length > 0 && (
         <ul className='projDetail__tags' aria-label={t('projects.tags', 'Tags')}>
           {project.tags.map((tag) => (
@@ -193,7 +200,6 @@ const ProjectDetailPage: React.FC = () => {
         </ul>
       )}
 
-      {/* Description */}
       {project.description && (
         <section className='projDetail__section'>
           <h2 className='projDetail__sectionTitle'>
@@ -203,7 +209,6 @@ const ProjectDetailPage: React.FC = () => {
         </section>
       )}
 
-      {/* Figma embed */}
       {(project.meta?.figma?.fileKey || project.links?.figma) && (
         <section className='projDetail__section'>
           <h2 className='projDetail__sectionTitle'>{t('projects.external.figma', 'Figma')}</h2>
@@ -213,7 +218,7 @@ const ProjectDetailPage: React.FC = () => {
               src={
                 project.meta?.figma?.fileKey
                   ? `https://www.figma.com/embed?embed_host=thehumantechblog&url=https://www.figma.com/file/${project.meta.figma.fileKey}`
-                  : project.links!.figma!
+                  : (project.links?.figma as string)
               }
               title='Figma preview'
               allowFullScreen

@@ -19,11 +19,6 @@ export interface CtaBandProps {
   ariaLabel?: string;
 }
 
-/**
- * CtaBand
- * - Minimal CTA band with two links. No external button dependency.
- * - Uses blog tokens via local variable mapping in SCSS.
- */
 const CtaBand: React.FC<CtaBandProps> = ({
   title,
   text,
