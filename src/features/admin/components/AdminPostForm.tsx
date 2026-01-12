@@ -1,18 +1,19 @@
-// src/features/admin/components/AdminPostForm.tsx
+// ./src/features/admin/components/AdminPostForm.tsx
+'use strict';
 
 import { Helmet } from 'react-helmet-async';
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchTags } from '../../../shared/services/tagService';
 import { fetchCategories } from '../../../shared/services/categoryService';
-import { Tag } from '../../../shared/types/Tag';
-import { Category } from '../../../shared/types/Category';
-import { Post, PostTranslation, PostPayload } from '../../../shared/types/Post';
+import type { Tag } from '../../../shared/types/Tag';
+import type { Category } from '../../../shared/types/Category';
+import type { Post, PostTranslation, PostPayload } from '../../../shared/types/Post';
 import { createPost } from '../../../shared/services/postService';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '../../../shared/hooks/useToast';
 import Loader from '../../../shared/components/Loader';
+import api from '../../../shared/utils/axios';
 import '../../../features/admin/styles/AdminPostForm.scss';
 
 const LANGUAGES = ['en', 'pt', 'de', 'es'] as const;
@@ -30,9 +31,21 @@ interface Props {
   onSubmit?: (data: PostPayload) => void;
 }
 
+type UploadResponse = {
+  success: boolean;
+  imageUrl: string;
+  publicId: string;
+  displayName: string;
+  ticketSeq: number;
+  folder: string;
+  folderName: string;
+  reason: string;
+};
+
 const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
   const { t } = useTranslation();
   const { success, error: errorToast } = useToast();
+
   const [activeLang, setActiveLang] = useState<Lang>('en');
   const [translations, setTranslations] = useState<Record<Lang, PostTranslation>>(
     initialPost?.translations
@@ -44,24 +57,29 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
         }
       : emptyTranslations
   );
+
   const [tags, setTags] = useState<string[]>(initialPost?.tags || []);
   const [categories, setCategories] = useState<string[]>(
     initialPost?.categories
       ? initialPost.categories.map((cat: any) => (typeof cat === 'string' ? cat : cat._id))
       : []
   );
+
   const [availableTags, setAvailableTags] = useState<Tag[]>([]);
   const [availableCategories, setAvailableCategories] = useState<Category[]>([]);
+
   const initialStatus =
     initialPost?.status === 'published' || initialPost?.status === 'draft'
       ? initialPost.status
       : 'draft';
+
   const [status, setStatus] = useState<'draft' | 'published'>(initialStatus);
   const [image, setImage] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState(initialPost?.image || '');
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -94,43 +112,63 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
     setCategories(selected);
   };
 
-  // Image upload (Cloudinary)
-  const uploadImage = async (file: File): Promise<string> => {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', 'your_preset'); // Replace by your preset
-    const res = await fetch('https://api.cloudinary.com/v1_1/your_cloud_name/image/upload', {
-      method: 'POST',
-      body: formData,
-    });
-    const data = await res.json();
-    return data.secure_url;
+  const validateFields = (): boolean => {
+    const errorsMap: { [key: string]: string } = {};
+    if (!translations.en.title.trim())
+      errorsMap.title = t('adminPostForm.requiredTitle', 'Title is required (EN)');
+    if (!translations.en.description.trim())
+      errorsMap.description = t(
+        'adminPostForm.requiredDescription',
+        'Description is required (EN)'
+      );
+    if (!translations.en.content.trim())
+      errorsMap.content = t('adminPostForm.requiredContent', 'Content is required (EN)');
+    setFieldErrors(errorsMap);
+    return Object.keys(errorsMap).length === 0;
   };
 
-  // Multilanguage validation (EN required)
-  const validateFields = (): boolean => {
-    const errors: { [key: string]: string } = {};
-    if (!translations.en.title.trim())
-      errors.title = t('adminPostForm.requiredTitle', 'Title is required (EN)');
-    if (!translations.en.description.trim())
-      errors.description = t('adminPostForm.requiredDescription', 'Description is required (EN)');
-    if (!translations.en.content.trim())
-      errors.content = t('adminPostForm.requiredContent', 'Content is required (EN)');
-    setFieldErrors(errors);
-    return Object.keys(errors).length === 0;
+  const uploadCoverViaApi = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const categoryId = categories.length > 0 ? categories[0] : '';
+    if (categoryId) formData.append('categoryId', categoryId);
+
+    // AdminPostForm does not manage these flags, so we default
+    formData.append('isQuickPost', 'false');
+    formData.append('isAiPrompt', 'false');
+
+    const resToken = await api.get('/auth/csrf', { withCredentials: true });
+    const csrfToken = resToken.data.csrfToken as string;
+
+    const res = await api.post<UploadResponse>('/uploads/post-cover', formData, {
+      headers: { 'x-csrf-token': csrfToken },
+      withCredentials: true,
+    });
+
+    if (!res.data?.success) {
+      throw new Error('Upload failed');
+    }
+
+    return res.data.imageUrl;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
     if (!validateFields()) return;
+
     setLoading(true);
+
     try {
       let imgUrl = imageUrl;
+
       if (image) {
-        imgUrl = await uploadImage(image);
+        imgUrl = await uploadCoverViaApi(image);
         setImageUrl(imgUrl);
       }
+
       const data: PostPayload = {
         translations,
         tags,
@@ -138,17 +176,19 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
         status,
         image: imgUrl,
       };
+
       if (onSubmit) {
         await onSubmit(data);
       } else {
-        await createPost(data);
+        await createPost(data as any);
         success(t('adminPostForm.createSuccess', 'Post created successfully!'));
         navigate('/admin/posts');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       errorToast(t('adminPostForm.error', 'Failed to save post'));
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -161,7 +201,6 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
         {loading && <Loader />}
         {error && <div className='admin-post-form__error'>{error}</div>}
 
-        {/* Multilingual tabs */}
         <div className='admin-post-form__tabs'>
           {LANGUAGES.map((lang) => (
             <button
@@ -175,7 +214,6 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
           ))}
         </div>
 
-        {/* Multilingual fields */}
         <div className={`admin-post-form__fields admin-post-form__fields--${activeLang}`}>
           <label className='admin-post-form__label'>
             {t('adminPostForm.title', 'Title')}
@@ -195,6 +233,7 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
               <span className='admin-post-form__field-error'>{fieldErrors.title}</span>
             )}
           </label>
+
           <label className='admin-post-form__label'>
             {t('adminPostForm.description', 'Description')}
             {activeLang === 'en' && <span className='admin-post-form__asterisk'>*</span>}
@@ -213,6 +252,7 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
               <span className='admin-post-form__field-error'>{fieldErrors.description}</span>
             )}
           </label>
+
           <label className='admin-post-form__label'>
             {t('adminPostForm.content', 'Content')}
             {activeLang === 'en' && <span className='admin-post-form__asterisk'>*</span>}
@@ -233,7 +273,6 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
           </label>
         </div>
 
-        {/* Image upload */}
         <div className='admin-post-form__img'>
           <label>{t('adminPostForm.image', 'Post Image:')}</label>
           <input
@@ -255,7 +294,6 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
           )}
         </div>
 
-        {/* Tags and Categories */}
         <label>
           {t('adminPostForm.tags', 'Tags:')}
           <select multiple value={tags} onChange={handleTagChange}>
@@ -266,6 +304,7 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
             ))}
           </select>
         </label>
+
         <label>
           {t('adminPostForm.categories', 'Categories:')}
           <select multiple value={categories} onChange={handleCategoryChange}>
@@ -277,7 +316,6 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
           </select>
         </label>
 
-        {/* Status */}
         <label>
           {t('adminPostForm.status', 'Status:')}
           <select
@@ -287,6 +325,7 @@ const AdminPostForm = ({ initialPost, onSubmit }: Props) => {
             <option value='published'>{t('adminPostForm.published', 'Published')}</option>
           </select>
         </label>
+
         <button type='submit' className='admin-post-form__submit'>
           {t('adminPostForm.save', 'Save')}
         </button>

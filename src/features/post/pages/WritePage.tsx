@@ -1,4 +1,6 @@
-// src/features/post/pages/WritePage.tsx
+// ./src/features/post/pages/WritePage.tsx
+'use strict';
+
 import { useEffect, useState } from 'react';
 import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -10,7 +12,6 @@ import Table from '@tiptap/extension-table';
 import TableRow from '@tiptap/extension-table-row';
 import TableCell from '@tiptap/extension-table-cell';
 import TableHeader from '@tiptap/extension-table-header';
-// NEW: color tooling
 import TextStyle from '@tiptap/extension-text-style';
 import Color from '@tiptap/extension-color';
 
@@ -26,8 +27,8 @@ import {
   fetchPost,
   uploadPostImage,
 } from '../../../shared/services/postService';
-import { Tag } from '../../../shared/types/Tag';
-import { Category } from '../../../shared/types/Category';
+import type { Tag } from '../../../shared/types/Tag';
+import type { Category } from '../../../shared/types/Category';
 import { toast } from 'react-hot-toast';
 import '../styles/WritePage.scss';
 import '../styles/CodeBlock.scss';
@@ -47,10 +48,6 @@ const emptyTranslations = {
   es: { title: '', description: '', content: '' },
 };
 
-/**
- * Gather only non-empty translations beyond EN, preserving originals.
- * Ensures strict typing for the payload.
- */
 function getValidTranslationsForUpdate(
   current: typeof emptyTranslations,
   original: typeof emptyTranslations
@@ -64,15 +61,18 @@ function getValidTranslationsForUpdate(
     if (lng === 'en') continue;
     const cur = current[lng];
     if (cur.title.trim() || cur.content.trim() || cur.description.trim()) {
-      (result as any)[lng] = cur;
+      (result as Record<string, unknown>)[lng] = cur;
     } else if (
       original[lng] &&
       (original[lng].title || original[lng].content || original[lng].description)
     ) {
-      (result as any)[lng] = original[lng];
+      (result as Record<string, unknown>)[lng] = original[lng];
     }
   }
-  return result as any;
+
+  return result as { en: { title: string; description: string; content: string } } & Partial<
+    typeof emptyTranslations
+  >;
 }
 
 const WritePage = () => {
@@ -94,12 +94,7 @@ const WritePage = () => {
   const [isAiPrompt, setIsAiPrompt] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [saving, setSaving] = useState<boolean>(false);
-  const [postLoaded, setPostLoaded] = useState<boolean>(false);
 
-  /**
-   * Initialize a TipTap editor per language.
-   * NEW: Add TextStyle + Color to support text color formatting.
-   */
   const editors = LANGUAGES.reduce((acc, lng) => {
     acc[lng] = useEditor({
       extensions: [
@@ -111,7 +106,6 @@ const WritePage = () => {
           alignments: ['left', 'center', 'right', 'justify'],
           defaultAlignment: 'left',
         }),
-        // Color requires TextStyle mark
         TextStyle,
         Color,
         CustomCodeBlock,
@@ -125,22 +119,15 @@ const WritePage = () => {
           resizable: true,
           HTMLAttributes: { class: 'thtb-table' },
         }),
-        TableRow.configure({
-          HTMLAttributes: { class: 'thtb-table__row' },
-        }),
-        TableHeader.configure({
-          HTMLAttributes: { class: 'thtb-table__header' },
-        }),
-        TableCell.configure({
-          HTMLAttributes: { class: 'thtb-table__cell' },
-        }),
+        TableRow.configure({ HTMLAttributes: { class: 'thtb-table__row' } }),
+        TableHeader.configure({ HTMLAttributes: { class: 'thtb-table__header' } }),
+        TableCell.configure({ HTMLAttributes: { class: 'thtb-table__cell' } }),
       ],
       content: translations[lng].content,
     });
     return acc;
   }, {} as Record<Language, ReturnType<typeof useEditor>>);
 
-  // Load tags and categories on mount
   useEffect(() => {
     fetchTags()
       .then(setAvailableTags)
@@ -150,9 +137,9 @@ const WritePage = () => {
       .catch(() => toast.error('Failed to load categories'));
   }, []);
 
-  // Load existing post if editing
   useEffect(() => {
     if (!id) return;
+
     fetchPost(id)
       .then((post) => {
         setTranslations({
@@ -167,18 +154,17 @@ const WritePage = () => {
           de: post.translations.de || emptyTranslations.de,
           es: post.translations.es || emptyTranslations.es,
         });
+
         setTags(post.tags || []);
-        setCategories(post.categories || []); // prefill selection
+        setCategories(post.categories || []);
         setCoverUrl(post.image || '');
         setStatus(post.status);
         setIsQuickPost(post.isQuickPost || false);
         setIsAiPrompt(post.isAiPrompt || false);
-        setPostLoaded(true);
       })
       .catch(() => toast.error('Failed to load post'));
   }, [id]);
 
-  // Sync editor content into translations state
   useEffect(() => {
     LANGUAGES.forEach((lng) => {
       editors[lng]?.commands.setContent(translations[lng].content || '');
@@ -186,7 +172,6 @@ const WritePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [translations]);
 
-  // Switch language tab and capture current editor HTML
   const handleTabChange = (lng: Language): void => {
     const editor = editors[currentLang];
     if (editor) {
@@ -205,35 +190,42 @@ const WritePage = () => {
     }));
   };
 
-  const handleTags = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-    setTags(Array.from(e.target.selectedOptions).map((o) => o.value));
-  };
-
   const handleCategories = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     setCategories(Array.from(e.target.selectedOptions).map((o) => o.value));
   };
 
-  // Upload cover image
   const handleImageUpload = async (file: File): Promise<void> => {
     try {
-      const res = await uploadPostImage(file);
+      const categoryId = categories.length > 0 ? categories[0] : undefined;
+
+      const res = await uploadPostImage({
+        file,
+        isQuickPost,
+        isAiPrompt,
+        categoryId,
+      });
+
+      if (!res.success) {
+        toast.error('Failed to upload image');
+        return;
+      }
+
       setCoverUrl(res.imageUrl);
-      toast.success('Image uploaded!');
+      toast.success(`Image uploaded: ${res.displayName}`);
     } catch (err) {
       console.error(err);
       toast.error('Failed to upload image');
     }
   };
 
-  // Form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setSaving(true);
     setError('');
 
-    // Sync current editor content
     const editor = editors[currentLang];
     let updatedTranslations = translations;
+
     if (editor) {
       const html = editor.getHTML();
       updatedTranslations = {
@@ -244,7 +236,6 @@ const WritePage = () => {
       await new Promise((r) => setTimeout(r, 10));
     }
 
-    // Validate English fields
     if (
       !updatedTranslations.en.title.trim() ||
       !updatedTranslations.en.description.trim() ||
@@ -255,7 +246,6 @@ const WritePage = () => {
       return;
     }
 
-    // Prepare clean translations
     const cleanTranslations = getValidTranslationsForUpdate(
       updatedTranslations,
       originalTranslations
@@ -294,6 +284,7 @@ const WritePage = () => {
       <ScrollToTop />
       <div className='write-page'>
         <h2>{id ? 'Edit Post' : 'Create Post'}</h2>
+
         <div className='write-page__tabs'>
           {LANGUAGES.map((lng) => (
             <button
@@ -354,6 +345,7 @@ const WritePage = () => {
               }
             }}
           />
+
           {coverUrl && (
             <div className='write-page__cover-preview'>
               <img
