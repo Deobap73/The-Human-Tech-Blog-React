@@ -1,4 +1,4 @@
-// ./src/features/post/pages/WritePage.tsx
+// /src/features/post/pages/WritePage.tsx
 'use strict';
 
 import { useEffect, useState } from 'react';
@@ -30,6 +30,7 @@ import {
 import type { Tag } from '../../../shared/types/Tag';
 import type { Category } from '../../../shared/types/Category';
 import { toast } from 'react-hot-toast';
+
 import '../styles/WritePage.scss';
 import '../styles/CodeBlock.scss';
 import '../styles/EditorTables.scss';
@@ -41,38 +42,107 @@ const LANGUAGES = ['en', 'pt', 'de', 'es'] as const;
 type Language = (typeof LANGUAGES)[number];
 type PostStatus = 'draft' | 'published' | 'archived';
 
-const emptyTranslations = {
+type TranslationShape = { title: string; description: string; content: string };
+
+const emptyTranslations: Record<Language, TranslationShape> = {
   en: { title: '', description: '', content: '' },
   pt: { title: '', description: '', content: '' },
   de: { title: '', description: '', content: '' },
   es: { title: '', description: '', content: '' },
 };
 
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function looksLikeTiptapJsonString(value: unknown): boolean {
+  if (typeof value !== 'string') return false;
+  const s = value.trim();
+  if (!s.startsWith('{') || !s.endsWith('}')) return false;
+  try {
+    const parsed = JSON.parse(s);
+    return isPlainObject(parsed) && parsed.type === 'doc' && Array.isArray(parsed.content);
+  } catch {
+    return false;
+  }
+}
+
+function parseTiptapJsonString(value: string): Record<string, unknown> | null {
+  try {
+    const parsed = JSON.parse(value);
+    if (isPlainObject(parsed) && parsed.type === 'doc' && Array.isArray(parsed.content)) {
+      return parsed;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * What we feed into TipTap:
+ * If content is a TipTap JSON string, parse and feed object
+ * Else treat as HTML string (legacy content)
+ */
+function toEditorContent(value: unknown): string | Record<string, unknown> {
+  if (looksLikeTiptapJsonString(value)) {
+    const parsed = parseTiptapJsonString(String(value));
+    if (parsed) return parsed;
+  }
+  return typeof value === 'string' ? value : '';
+}
+
+/**
+ * What we store into Mongo:
+ * Always store as TipTap JSON string for consistency with automation.
+ */
+function editorToStoredContent(editor: any): string {
+  try {
+    const json = editor.getJSON();
+    return JSON.stringify(json);
+  } catch {
+    return '';
+  }
+}
+
+function toIdArray(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .map((item: any) => {
+      if (typeof item === 'string') return item;
+      if (item && typeof item === 'object' && typeof item._id === 'string') return item._id;
+      return '';
+    })
+    .filter((v: string) => Boolean(v));
+}
+
 function getValidTranslationsForUpdate(
-  current: typeof emptyTranslations,
-  original: typeof emptyTranslations
-): { en: { title: string; description: string; content: string } } & Partial<
-  typeof emptyTranslations
-> {
+  current: Record<Language, TranslationShape>,
+  original: Record<Language, TranslationShape>,
+): { en: TranslationShape } & Partial<Record<Language, TranslationShape>> {
   const result: Record<string, unknown> = {};
   result.en = current.en;
 
   for (const lng of LANGUAGES) {
     if (lng === 'en') continue;
+
     const cur = current[lng];
-    if (cur.title.trim() || cur.content.trim() || cur.description.trim()) {
-      (result as Record<string, unknown>)[lng] = cur;
-    } else if (
-      original[lng] &&
-      (original[lng].title || original[lng].content || original[lng].description)
-    ) {
-      (result as Record<string, unknown>)[lng] = original[lng];
+    const hadOriginal =
+      Boolean(original[lng]?.title) ||
+      Boolean(original[lng]?.description) ||
+      Boolean(original[lng]?.content);
+
+    if (cur.title.trim() || cur.description.trim() || cur.content.trim()) {
+      (result as any)[lng] = cur;
+      continue;
+    }
+
+    if (hadOriginal) {
+      (result as any)[lng] = original[lng];
     }
   }
 
-  return result as { en: { title: string; description: string; content: string } } & Partial<
-    typeof emptyTranslations
-  >;
+  return result as { en: TranslationShape } & Partial<Record<Language, TranslationShape>>;
 }
 
 const WritePage = () => {
@@ -81,57 +151,69 @@ const WritePage = () => {
   const activeLang: Language = (lang as Language) || 'en';
 
   const [currentLang, setCurrentLang] = useState<Language>(activeLang);
-  const [translations, setTranslations] = useState({ ...emptyTranslations });
-  const [originalTranslations, setOriginalTranslations] = useState({ ...emptyTranslations });
+  const [translations, setTranslations] = useState<Record<Language, TranslationShape>>({
+    ...emptyTranslations,
+  });
+  const [originalTranslations, setOriginalTranslations] = useState<
+    Record<Language, TranslationShape>
+  >({
+    ...emptyTranslations,
+  });
+
   const [status, setStatus] = useState<PostStatus>('published');
   const [tags, setTags] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [availableTags, setAvailableTags] = useState<Tag[]>([]);
   const [availableCategories, setAvailableCategories] = useState<Category[]>([]);
-  const [cover, setCover] = useState<File | null>(null);
   const [coverUrl, setCoverUrl] = useState<string>('');
   const [isQuickPost, setIsQuickPost] = useState<boolean>(false);
   const [isAiPrompt, setIsAiPrompt] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [saving, setSaving] = useState<boolean>(false);
 
-  const editors = LANGUAGES.reduce((acc, lng) => {
-    acc[lng] = useEditor({
-      extensions: [
-        StarterKit.configure({ codeBlock: false }),
-        Underline,
-        Image,
-        TextAlign.configure({
-          types: ['heading', 'paragraph'],
-          alignments: ['left', 'center', 'right', 'justify'],
-          defaultAlignment: 'left',
-        }),
-        TextStyle,
-        Color,
-        CustomCodeBlock,
-        LinkExtension.configure({
-          openOnClick: false,
-          autolink: true,
-          protocols: ['http', 'https', 'mailto'],
-          HTMLAttributes: { class: 'thtb-link' },
-        }),
-        Table.configure({
-          resizable: true,
-          HTMLAttributes: { class: 'thtb-table' },
-        }),
-        TableRow.configure({ HTMLAttributes: { class: 'thtb-table__row' } }),
-        TableHeader.configure({ HTMLAttributes: { class: 'thtb-table__header' } }),
-        TableCell.configure({ HTMLAttributes: { class: 'thtb-table__cell' } }),
-      ],
-      content: translations[lng].content,
-    });
-    return acc;
-  }, {} as Record<Language, ReturnType<typeof useEditor>>);
+  const extensions = [
+    StarterKit.configure({ codeBlock: false }),
+    Underline,
+    Image,
+    TextAlign.configure({
+      types: ['heading', 'paragraph'],
+      alignments: ['left', 'center', 'right', 'justify'],
+      defaultAlignment: 'left',
+    }),
+    TextStyle,
+    Color,
+    CustomCodeBlock,
+    LinkExtension.configure({
+      openOnClick: false,
+      autolink: true,
+      protocols: ['http', 'https', 'mailto'],
+      HTMLAttributes: { class: 'thtb-link' },
+    }),
+    Table.configure({
+      resizable: true,
+      HTMLAttributes: { class: 'thtb-table' },
+    }),
+    TableRow.configure({ HTMLAttributes: { class: 'thtb-table__row' } }),
+    TableHeader.configure({ HTMLAttributes: { class: 'thtb-table__header' } }),
+    TableCell.configure({ HTMLAttributes: { class: 'thtb-table__cell' } }),
+  ];
+
+  const editors = LANGUAGES.reduce(
+    (acc, lng) => {
+      acc[lng] = useEditor({
+        extensions,
+        content: toEditorContent(translations[lng].content),
+      });
+      return acc;
+    },
+    {} as Record<Language, ReturnType<typeof useEditor>>,
+  );
 
   useEffect(() => {
     fetchTags()
       .then(setAvailableTags)
       .catch(() => toast.error('Failed to load tags'));
+
     fetchCategories()
       .then(setAvailableCategories)
       .catch(() => toast.error('Failed to load categories'));
@@ -141,45 +223,57 @@ const WritePage = () => {
     if (!id) return;
 
     fetchPost(id)
-      .then((post) => {
-        setTranslations({
-          en: post.translations.en,
-          pt: post.translations.pt || emptyTranslations.pt,
-          de: post.translations.de || emptyTranslations.de,
-          es: post.translations.es || emptyTranslations.es,
-        });
-        setOriginalTranslations({
-          en: post.translations.en,
-          pt: post.translations.pt || emptyTranslations.pt,
-          de: post.translations.de || emptyTranslations.de,
-          es: post.translations.es || emptyTranslations.es,
-        });
+      .then((post: any) => {
+        const nextTranslations: Record<Language, TranslationShape> = {
+          en: post.translations?.en ?? emptyTranslations.en,
+          pt: post.translations?.pt ?? emptyTranslations.pt,
+          de: post.translations?.de ?? emptyTranslations.de,
+          es: post.translations?.es ?? emptyTranslations.es,
+        };
 
-        setTags(post.tags || []);
-        setCategories(post.categories || []);
+        setTranslations(nextTranslations);
+        setOriginalTranslations(nextTranslations);
+
+        setTags(toIdArray(post.tags));
+        setCategories(toIdArray(post.categories));
+
         setCoverUrl(post.image || '');
         setStatus(post.status);
-        setIsQuickPost(post.isQuickPost || false);
-        setIsAiPrompt(post.isAiPrompt || false);
+        setIsQuickPost(Boolean(post.isQuickPost));
+        setIsAiPrompt(Boolean(post.isAiPrompt));
       })
       .catch(() => toast.error('Failed to load post'));
   }, [id]);
 
   useEffect(() => {
     LANGUAGES.forEach((lng) => {
-      editors[lng]?.commands.setContent(translations[lng].content || '');
+      const editor = editors[lng];
+      if (!editor) return;
+
+      const contentForEditor = toEditorContent(translations[lng].content);
+      try {
+        editor.commands.setContent(contentForEditor as any);
+      } catch {
+        editor.commands.setContent('');
+      }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [translations]);
 
+  const persistCurrentEditorIntoState = (lng: Language): void => {
+    const editor = editors[lng];
+    if (!editor) return;
+
+    const stored = editorToStoredContent(editor);
+
+    setTranslations((prev) => ({
+      ...prev,
+      [lng]: { ...prev[lng], content: stored },
+    }));
+  };
+
   const handleTabChange = (lng: Language): void => {
-    const editor = editors[currentLang];
-    if (editor) {
-      setTranslations((prev) => ({
-        ...prev,
-        [currentLang]: { ...prev[currentLang], content: editor.getHTML() },
-      }));
-    }
+    persistCurrentEditorIntoState(currentLang);
     setCurrentLang(lng);
   };
 
@@ -223,33 +317,18 @@ const WritePage = () => {
     setSaving(true);
     setError('');
 
-    const editor = editors[currentLang];
-    let updatedTranslations = translations;
+    // Always persist current editor before validate and submit
+    persistCurrentEditorIntoState(currentLang);
 
-    if (editor) {
-      const html = editor.getHTML();
-      updatedTranslations = {
-        ...translations,
-        [currentLang]: { ...translations[currentLang], content: html },
-      };
-      setTranslations(updatedTranslations);
-      await new Promise((r) => setTimeout(r, 10));
-    }
+    const en = translations.en;
 
-    if (
-      !updatedTranslations.en.title.trim() ||
-      !updatedTranslations.en.description.trim() ||
-      !updatedTranslations.en.content.trim()
-    ) {
+    if (!en.title.trim() || !en.description.trim() || !en.content.trim()) {
       setError('Title, Description, and Content (EN) are required!');
       setSaving(false);
       return;
     }
 
-    const cleanTranslations = getValidTranslationsForUpdate(
-      updatedTranslations,
-      originalTranslations
-    );
+    const cleanTranslations = getValidTranslationsForUpdate(translations, originalTranslations);
 
     const payload = {
       translations: cleanTranslations,
@@ -340,7 +419,6 @@ const WritePage = () => {
             onChange={async (e) => {
               const file = e.target.files?.[0] ?? null;
               if (file) {
-                setCover(file);
                 await handleImageUpload(file);
               }
             }}
@@ -366,9 +444,9 @@ const WritePage = () => {
               value={categories}
               onChange={handleCategories}
               className='write-page__select'>
-              {availableCategories.map((cat: Category) => (
+              {availableCategories.map((cat: any) => (
                 <option key={cat._id} value={cat._id}>
-                  {cat.translation?.name || '[no name]'}
+                  {cat.translations?.en?.name || cat.translation?.name || '[no name]'}
                 </option>
               ))}
             </select>
@@ -382,6 +460,7 @@ const WritePage = () => {
               className='write-page__select'>
               <option value='draft'>Draft</option>
               <option value='published'>Published</option>
+              <option value='archived'>Archived</option>
             </select>
           </label>
 
