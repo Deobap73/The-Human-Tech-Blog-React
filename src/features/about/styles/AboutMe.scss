@@ -228,6 +228,9 @@
     font-weight: 500;
     margin-left: 0.2em;
     word-break: break-word;
+    &--email {
+      font-size: 0.9rem;
+    }
   }
 
   &__info-social {
@@ -272,7 +275,10 @@
     border-radius: 12px;
     box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
     backdrop-filter: blur(2.5px);
-    transition: border 0.2s, box-shadow 0.2s, background 0.25s;
+    transition:
+      border 0.2s,
+      box-shadow 0.2s,
+      background 0.25s;
 
     &:hover {
       background: rgba(0, 48, 104, 0.388);

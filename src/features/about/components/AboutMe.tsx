@@ -55,7 +55,7 @@ export const AboutMe = () => {
               </li> */}
               <li>
                 <span className='aboutMe__info-label'>{t('about.me.info.email')}:</span>
-                <span className='aboutMe__info-value'>contact@thehumantechblog.com</span>
+                <span className='aboutMe__info-value--email'>contact@thehumantechblog.com</span>
               </li>
               <li>
                 <span className='aboutMe__info-label'>{t('about.me.info.address')}:</span>
