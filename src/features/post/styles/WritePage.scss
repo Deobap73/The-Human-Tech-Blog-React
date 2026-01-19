@@ -1,7 +1,6 @@
-// /src/features/post/styles/WritePage.scss
+/* /src/features/post/styles/WritePage.scss */
 
 .write-page {
-  // Page container
   padding: var(--padding-xl) 0;
   max-width: 820px;
   margin: 0 auto;
@@ -39,7 +38,9 @@
     padding: var(--padding-sm) var(--padding-xl);
     border-radius: 2rem 2rem 0 0;
     cursor: pointer;
-    transition: color 0.2s, background 0.2s;
+    transition:
+      color 0.2s,
+      background 0.2s;
 
     &--active {
       color: var(--primary);
@@ -81,11 +82,15 @@
     color: var(--text-color);
     outline: none;
     box-shadow: 0 1px 6px rgba(29, 161, 242, 0.06);
-    transition: border 0.2s, box-shadow 0.2s;
+    transition:
+      border 0.2s,
+      box-shadow 0.2s;
 
     &:focus {
       border-color: var(--primary-hover);
-      box-shadow: 0 0 0 2px var(--primary-hover), 0 2px 8px rgba(29, 161, 242, 0.07);
+      box-shadow:
+        0 0 0 2px var(--primary-hover),
+        0 2px 8px rgba(29, 161, 242, 0.07);
     }
 
     option {
@@ -94,7 +99,6 @@
       padding: var(--padding-sm) var(--padding-md) !important;
     }
 
-    // For Firefox
     @-moz-document url-prefix() {
       color: var(--text-color) !important;
       background: var(--background-secondary) !important;
@@ -104,7 +108,6 @@
       }
     }
 
-    // For IE/Edge (if needed)
     @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
       &::-ms-value {
         background: var(--background-secondary) !important;
@@ -136,7 +139,11 @@
     box-shadow: 0 2px 12px rgba(0, 48, 104, 0.08);
     backdrop-filter: blur(2.5px);
     cursor: pointer;
-    transition: border 0.2s, box-shadow 0.2s, background 0.25s, color 0.18s;
+    transition:
+      border 0.2s,
+      box-shadow 0.2s,
+      background 0.25s,
+      color 0.18s;
 
     &:hover,
     &:focus-visible {
@@ -209,8 +216,6 @@
     overflow-y: auto;
   }
 
-  /* === Sticky Toolbar + Editor Scrollable Area === */
-
   &__editor-block {
     position: relative;
     margin-bottom: var(--margin-base);
@@ -218,7 +223,7 @@
 
   &__toolbar-sticky {
     position: sticky;
-    top: 0; // Sticks to the top of the form
+    top: 0;
     z-index: 20;
     background: var(--background);
     padding-bottom: 0.25rem;
@@ -234,7 +239,6 @@
     box-shadow: 0 2px 8px rgba(29, 161, 242, 0.04);
     padding: 0.6rem 0.7rem;
 
-    // The Tiptap ProseMirror should scroll internally
     .ProseMirror {
       min-height: 78vh;
       max-height: 78vh;
@@ -251,28 +255,45 @@
         border: none;
         box-shadow: none;
       }
-    }
-  }
 
-  /* Mobile adjustments */
-  @media (max-width: 768px) {
-    &__editor-content {
-      height: 62vh;
-      max-height: 62vh;
-      .ProseMirror {
-        min-height: 60vh;
-        max-height: 60vh;
+      /* Editor readability defaults */
+      p {
+        line-height: 1.65;
+      }
+
+      pre {
+        margin: 1rem 0;
+      }
+
+      ul,
+      ol {
+        padding-left: 1.25rem;
       }
     }
   }
 
-  /* Animation for feedback on save/publish */
+  @media (max-width: 768px) {
+    &__editor-content {
+      height: 62vh;
+      max-height: 62vh;
+
+      .ProseMirror {
+        min-height: 60vh;
+        max-height: 60vh;
+
+        ul,
+        ol {
+          padding-left: 1.1rem;
+        }
+      }
+    }
+  }
+
   &__btn:active {
     animation: bounce 0.24s;
   }
 }
 
-/* Animation for feedback on save/publish */
 @keyframes bounce {
   0% {
     transform: scale(1);
