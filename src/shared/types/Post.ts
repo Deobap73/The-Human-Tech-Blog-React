@@ -1,5 +1,4 @@
-// /src/shared/types/Post.ts
-
+// ./src/shared/types/Post.ts
 export interface PostTranslation {
   title: string;
   description: string;
@@ -14,10 +13,19 @@ export type PostTranslations = {
   [key: string]: PostTranslation | undefined;
 };
 
+export interface InstagramImageMeta {
+  url: string;
+  publicId: string;
+  displayName: string;
+  folder: string;
+  updatedAt: string;
+}
+
 export interface Post {
   _id: string;
   translations: PostTranslations;
   image?: string;
+  instagramImage?: InstagramImageMeta;
   slug: string;
   categories: string[];
   tags?: string[];
@@ -31,6 +39,7 @@ export interface Post {
   createdAt: string;
   updatedAt: string;
 }
+
 export interface Draft {
   _id: string;
   translations: PostTranslations;
@@ -50,6 +59,7 @@ export interface Draft {
 export interface PostPayload {
   translations: PostTranslations;
   image?: string;
+  instagramImage?: InstagramImageMeta;
   slug?: string;
   categories: string[];
   tags?: string[];

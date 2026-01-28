@@ -4,6 +4,14 @@
 import api from '../utils/axios';
 import type { Post } from '../types/Post';
 
+export interface InstagramImageMeta {
+  url: string;
+  publicId: string;
+  displayName: string;
+  folder: string;
+  updatedAt: string;
+}
+
 export interface PostData {
   translations: {
     en: { title: string; description: string; content: string };
@@ -14,6 +22,7 @@ export interface PostData {
   tags?: string[];
   categories?: string[];
   image?: string;
+  instagramImage?: InstagramImageMeta;
   isQuickPost?: boolean;
   isAiPrompt?: boolean;
   status?: 'draft' | 'published' | 'archived';
@@ -79,6 +88,37 @@ export async function uploadPostImage(params: UploadPostCoverParams) {
     folder: string;
     folderName: string;
     reason: string;
+  };
+}
+
+export type UploadPostInstagramParams = {
+  file: File;
+  postId?: string;
+  slug?: string;
+};
+
+export async function uploadPostInstagramImage(params: UploadPostInstagramParams) {
+  const formData = new FormData();
+  formData.append('image', params.file);
+  if (params.postId) formData.append('postId', params.postId);
+  if (params.slug) formData.append('slug', params.slug);
+
+  const resToken = await api.get('/auth/csrf', { withCredentials: true });
+  const csrfToken = resToken.data.csrfToken;
+
+  const res = await api.post('/uploads/post-instagram', formData, {
+    headers: { 'x-csrf-token': csrfToken },
+    withCredentials: true,
+  });
+
+  return res.data as {
+    success: boolean;
+    imageUrl: string;
+    publicId: string;
+    displayName: string;
+    ticketSeq: number;
+    folder: string;
+    folderName: string;
   };
 }
 

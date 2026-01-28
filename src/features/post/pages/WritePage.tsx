@@ -1,4 +1,4 @@
-// /src/features/post/pages/WritePage.tsx
+// ./src/features/post/pages/WritePage.tsx
 'use strict';
 
 import { useEffect, useState } from 'react';
@@ -26,6 +26,7 @@ import {
   updatePost,
   fetchPost,
   uploadPostImage,
+  uploadPostInstagramImage,
 } from '../../../shared/services/postService';
 import type { Tag } from '../../../shared/types/Tag';
 import type { Category } from '../../../shared/types/Category';
@@ -49,6 +50,14 @@ const emptyTranslations: Record<Language, TranslationShape> = {
   pt: { title: '', description: '', content: '' },
   de: { title: '', description: '', content: '' },
   es: { title: '', description: '', content: '' },
+};
+
+type InstagramImageMeta = {
+  url: string;
+  publicId: string;
+  displayName: string;
+  folder: string;
+  updatedAt: string;
 };
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
@@ -79,11 +88,6 @@ function parseTiptapJsonString(value: string): Record<string, unknown> | null {
   }
 }
 
-/**
- * What we feed into TipTap:
- * If content is a TipTap JSON string, parse and feed object
- * Else treat as HTML string (legacy content)
- */
 function toEditorContent(value: unknown): string | Record<string, unknown> {
   if (looksLikeTiptapJsonString(value)) {
     const parsed = parseTiptapJsonString(String(value));
@@ -92,10 +96,6 @@ function toEditorContent(value: unknown): string | Record<string, unknown> {
   return typeof value === 'string' ? value : '';
 }
 
-/**
- * What we store into Mongo:
- * Always store as TipTap JSON string for consistency with automation.
- */
 function editorToStoredContent(editor: any): string {
   try {
     const json = editor.getJSON();
@@ -166,6 +166,9 @@ const WritePage = () => {
   const [availableTags, setAvailableTags] = useState<Tag[]>([]);
   const [availableCategories, setAvailableCategories] = useState<Category[]>([]);
   const [coverUrl, setCoverUrl] = useState<string>('');
+
+  const [instagramImage, setInstagramImage] = useState<InstagramImageMeta | null>(null);
+
   const [isQuickPost, setIsQuickPost] = useState<boolean>(false);
   const [isAiPrompt, setIsAiPrompt] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
@@ -241,6 +244,19 @@ const WritePage = () => {
         setStatus(post.status);
         setIsQuickPost(Boolean(post.isQuickPost));
         setIsAiPrompt(Boolean(post.isAiPrompt));
+
+        if (post.instagramImage && typeof post.instagramImage === 'object') {
+          const ig = post.instagramImage;
+          if (typeof ig.url === 'string' && typeof ig.publicId === 'string') {
+            setInstagramImage({
+              url: ig.url,
+              publicId: String(ig.publicId),
+              displayName: typeof ig.displayName === 'string' ? ig.displayName : ig.publicId,
+              folder: typeof ig.folder === 'string' ? ig.folder : '',
+              updatedAt: typeof ig.updatedAt === 'string' ? ig.updatedAt : new Date().toISOString(),
+            });
+          }
+        }
       })
       .catch(() => toast.error('Failed to load post'));
   }, [id]);
@@ -257,7 +273,6 @@ const WritePage = () => {
         editor.commands.setContent('');
       }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [translations]);
 
   const persistCurrentEditorIntoState = (lng: Language): void => {
@@ -312,12 +327,46 @@ const WritePage = () => {
     }
   };
 
+  const handleInstagramImageUpload = async (file: File): Promise<void> => {
+    try {
+      const res = await uploadPostInstagramImage({
+        file,
+        postId: id,
+        slug: id
+          ? undefined
+          : translations.en.title.trim().toLowerCase().replace(/\s+/g, ' ').slice(0, 60),
+      });
+
+      if (!res.success) {
+        toast.error('Failed to upload Instagram image');
+        return;
+      }
+
+      setInstagramImage({
+        url: res.imageUrl,
+        publicId: res.publicId,
+        displayName: res.displayName,
+        folder: res.folder,
+        updatedAt: new Date().toISOString(),
+      });
+
+      toast.success(`Instagram image uploaded: ${res.displayName}`);
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to upload Instagram image');
+    }
+  };
+
+  const clearInstagramImage = (): void => {
+    setInstagramImage(null);
+    toast.success('Instagram image removed');
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setSaving(true);
     setError('');
 
-    // Always persist current editor before validate and submit
     persistCurrentEditorIntoState(currentLang);
 
     const en = translations.en;
@@ -330,7 +379,7 @@ const WritePage = () => {
 
     const cleanTranslations = getValidTranslationsForUpdate(translations, originalTranslations);
 
-    const payload = {
+    const payload: any = {
       translations: cleanTranslations,
       tags,
       categories,
@@ -339,6 +388,18 @@ const WritePage = () => {
       isAiPrompt,
       status,
     };
+
+    if (instagramImage) {
+      payload.instagramImage = {
+        url: instagramImage.url,
+        publicId: instagramImage.publicId,
+        displayName: instagramImage.displayName,
+        folder: instagramImage.folder,
+        updatedAt: instagramImage.updatedAt,
+      };
+    } else {
+      payload.instagramImage = undefined;
+    }
 
     try {
       if (id) {
@@ -408,32 +469,80 @@ const WritePage = () => {
             </div>
           )}
 
-          <label className='write-page__upload-btn' htmlFor='cover-upload'>
-            Upload cover
-          </label>
-          <input
-            id='cover-upload'
-            type='file'
-            accept='image/*'
-            style={{ display: 'none' }}
-            onChange={async (e) => {
-              const file = e.target.files?.[0] ?? null;
-              if (file) {
-                await handleImageUpload(file);
-              }
-            }}
-          />
+          <div className='write-page__upload-group'>
+            <label className='write-page__upload-btn' htmlFor='cover-upload'>
+              Upload cover
+            </label>
+            <input
+              id='cover-upload'
+              type='file'
+              accept='image/*'
+              style={{ display: 'none' }}
+              onChange={async (e) => {
+                const file = e.target.files?.[0] ?? null;
+                if (file) {
+                  await handleImageUpload(file);
+                }
+              }}
+            />
 
-          {coverUrl && (
-            <div className='write-page__cover-preview'>
-              <img
-                src={coverUrl}
-                alt='Cover Preview'
-                className='write-page__cover-img'
-                loading='lazy'
-              />
+            {coverUrl && (
+              <div className='write-page__cover-preview'>
+                <img
+                  src={coverUrl}
+                  alt='Cover Preview'
+                  className='write-page__cover-img'
+                  loading='lazy'
+                />
+              </div>
+            )}
+          </div>
+
+          <div className='write-page__instagram'>
+            <div className='write-page__instagram-head'>
+              <div className='write-page__instagram-title'>Instagram image</div>
+              <div className='write-page__instagram-hint'>
+                Optional. Stored in database for automation. Not used in the article.
+              </div>
             </div>
-          )}
+
+            <div className='write-page__instagram-actions'>
+              <label className='write-page__upload-btn' htmlFor='instagram-upload'>
+                Upload Instagram image
+              </label>
+              <input
+                id='instagram-upload'
+                type='file'
+                accept='image/*'
+                style={{ display: 'none' }}
+                onChange={async (e) => {
+                  const file = e.target.files?.[0] ?? null;
+                  if (file) {
+                    await handleInstagramImageUpload(file);
+                  }
+                }}
+              />
+
+              <button
+                type='button'
+                className='write-page__instagram-remove'
+                onClick={clearInstagramImage}
+                disabled={!instagramImage}>
+                Remove Instagram image
+              </button>
+            </div>
+
+            {instagramImage?.url && (
+              <div className='write-page__instagram-preview'>
+                <img
+                  src={instagramImage.url}
+                  alt='Instagram Preview'
+                  className='write-page__instagram-img'
+                  loading='lazy'
+                />
+              </div>
+            )}
+          </div>
 
           <TagSelector selectedTags={tags} setSelectedTags={setTags} />
 
