@@ -13,19 +13,11 @@ export type PostTranslations = {
   [key: string]: PostTranslation | undefined;
 };
 
-export interface InstagramImageMeta {
-  url: string;
-  publicId: string;
-  displayName: string;
-  folder: string;
-  updatedAt: string;
-}
-
 export interface Post {
   _id: string;
   translations: PostTranslations;
   image?: string;
-  instagramImage?: InstagramImageMeta;
+  instagramImage?: string; // APENAS STRING - simplificado!
   slug: string;
   categories: string[];
   tags?: string[];
@@ -44,6 +36,7 @@ export interface Draft {
   _id: string;
   translations: PostTranslations;
   image?: string;
+  instagramImage?: string;
   slug: string;
   categories: string[];
   tags?: string[];
@@ -59,7 +52,7 @@ export interface Draft {
 export interface PostPayload {
   translations: PostTranslations;
   image?: string;
-  instagramImage?: InstagramImageMeta;
+  instagramImage?: string; // APENAS STRING
   slug?: string;
   categories: string[];
   tags?: string[];

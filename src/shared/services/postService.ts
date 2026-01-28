@@ -4,14 +4,6 @@
 import api from '../utils/axios';
 import type { Post } from '../types/Post';
 
-export interface InstagramImageMeta {
-  url: string;
-  publicId: string;
-  displayName: string;
-  folder: string;
-  updatedAt: string;
-}
-
 export interface PostData {
   translations: {
     en: { title: string; description: string; content: string };
@@ -22,7 +14,7 @@ export interface PostData {
   tags?: string[];
   categories?: string[];
   image?: string;
-  instagramImage?: InstagramImageMeta;
+  instagramImage?: string;
   isQuickPost?: boolean;
   isAiPrompt?: boolean;
   status?: 'draft' | 'published' | 'archived';
@@ -111,14 +103,10 @@ export async function uploadPostInstagramImage(params: UploadPostInstagramParams
     withCredentials: true,
   });
 
+  // Retorna APENAS a URL como string
   return res.data as {
     success: boolean;
-    imageUrl: string;
-    publicId: string;
-    displayName: string;
-    ticketSeq: number;
-    folder: string;
-    folderName: string;
+    imageUrl: string; // Apenas a URL
   };
 }
 

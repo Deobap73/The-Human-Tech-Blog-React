@@ -52,14 +52,6 @@ const emptyTranslations: Record<Language, TranslationShape> = {
   es: { title: '', description: '', content: '' },
 };
 
-type InstagramImageMeta = {
-  url: string;
-  publicId: string;
-  displayName: string;
-  folder: string;
-  updatedAt: string;
-};
-
 function isPlainObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -167,7 +159,7 @@ const WritePage = () => {
   const [availableCategories, setAvailableCategories] = useState<Category[]>([]);
   const [coverUrl, setCoverUrl] = useState<string>('');
 
-  const [instagramImage, setInstagramImage] = useState<InstagramImageMeta | null>(null);
+  const [instagramImage, setInstagramImage] = useState<string>(''); // APENAS STRING
 
   const [isQuickPost, setIsQuickPost] = useState<boolean>(false);
   const [isAiPrompt, setIsAiPrompt] = useState<boolean>(false);
@@ -245,18 +237,8 @@ const WritePage = () => {
         setIsQuickPost(Boolean(post.isQuickPost));
         setIsAiPrompt(Boolean(post.isAiPrompt));
 
-        if (post.instagramImage && typeof post.instagramImage === 'object') {
-          const ig = post.instagramImage;
-          if (typeof ig.url === 'string' && typeof ig.publicId === 'string') {
-            setInstagramImage({
-              url: ig.url,
-              publicId: String(ig.publicId),
-              displayName: typeof ig.displayName === 'string' ? ig.displayName : ig.publicId,
-              folder: typeof ig.folder === 'string' ? ig.folder : '',
-              updatedAt: typeof ig.updatedAt === 'string' ? ig.updatedAt : new Date().toISOString(),
-            });
-          }
-        }
+        // InstagramImage agora é apenas string
+        setInstagramImage(typeof post.instagramImage === 'string' ? post.instagramImage : '');
       })
       .catch(() => toast.error('Failed to load post'));
   }, [id]);
@@ -342,15 +324,8 @@ const WritePage = () => {
         return;
       }
 
-      setInstagramImage({
-        url: res.imageUrl,
-        publicId: res.publicId,
-        displayName: res.displayName,
-        folder: res.folder,
-        updatedAt: new Date().toISOString(),
-      });
-
-      toast.success(`Instagram image uploaded: ${res.displayName}`);
+      setInstagramImage(res.imageUrl);
+      toast.success('Instagram image uploaded successfully');
     } catch (err) {
       console.error(err);
       toast.error('Failed to upload Instagram image');
@@ -358,7 +333,7 @@ const WritePage = () => {
   };
 
   const clearInstagramImage = (): void => {
-    setInstagramImage(null);
+    setInstagramImage('');
     toast.success('Instagram image removed');
   };
 
@@ -384,22 +359,11 @@ const WritePage = () => {
       tags,
       categories,
       image: coverUrl,
+      instagramImage: instagramImage || undefined, // APENAS STRING
       isQuickPost,
       isAiPrompt,
       status,
     };
-
-    if (instagramImage) {
-      payload.instagramImage = {
-        url: instagramImage.url,
-        publicId: instagramImage.publicId,
-        displayName: instagramImage.displayName,
-        folder: instagramImage.folder,
-        updatedAt: instagramImage.updatedAt,
-      };
-    } else {
-      payload.instagramImage = undefined;
-    }
 
     try {
       if (id) {
@@ -500,9 +464,9 @@ const WritePage = () => {
 
           <div className='write-page__instagram'>
             <div className='write-page__instagram-head'>
-              <div className='write-page__instagram-title'>Instagram image</div>
+              <div className='write-page__instagram-title'>Instagram image (URL only)</div>
               <div className='write-page__instagram-hint'>
-                Optional. Stored in database for automation. Not used in the article.
+                Optional. Just the URL string. Stored in database for automation.
               </div>
             </div>
 
@@ -532,14 +496,17 @@ const WritePage = () => {
               </button>
             </div>
 
-            {instagramImage?.url && (
+            {instagramImage && (
               <div className='write-page__instagram-preview'>
                 <img
-                  src={instagramImage.url}
+                  src={instagramImage}
                   alt='Instagram Preview'
                   className='write-page__instagram-img'
                   loading='lazy'
                 />
+                <div className='write-page__instagram-url'>
+                  <small>{instagramImage}</small>
+                </div>
               </div>
             )}
           </div>
