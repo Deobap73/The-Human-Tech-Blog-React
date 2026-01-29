@@ -1,12 +1,14 @@
-// src/features/admin/pages/AdminPostsPage.tsx
+// ./src/features/admin/pages/AdminPostsPage.tsx
+'use strict';
 
 import { Helmet } from 'react-helmet-async';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import api from '../../../shared/utils/axios';
-import { Post } from '../../../shared/types/Post';
+import type { Post } from '../../../shared/types/Post';
 import AdminPostForm from '../components/AdminPostForm';
 import '../../admin/styles/AdminPostsPage.scss';
+
+import { createPost, updatePost, deletePost } from '../../../shared/services/postService';
 
 const AdminPostsPage = () => {
   const { i18n } = useTranslation();
@@ -15,51 +17,68 @@ const AdminPostsPage = () => {
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState('');
 
-  // Load all posts
-  const loadPosts = async () => {
+  const loadPosts = async (): Promise<void> => {
     try {
-      const res = await api.get<Post[]>('/posts');
-      setPosts(res.data);
-    } catch (err) {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'}/posts`,
+        { credentials: 'include' },
+      );
+
+      if (!res.ok) {
+        setError('Failed to load posts');
+        return;
+      }
+
+      const data = (await res.json()) as Post[];
+      setPosts(data);
+    } catch {
       setError('Failed to load posts');
     }
   };
 
   useEffect(() => {
-    loadPosts();
+    void loadPosts();
   }, []);
 
-  // Create Post
-  const handleCreate = async (data: Partial<Post>) => {
+  const handleCreate = async (data: Partial<Post>): Promise<void> => {
     try {
-      await api.post('/posts', data);
+      setError('');
+
+      const payload = data as unknown as Parameters<typeof createPost>[0];
+      await createPost(payload);
+
       await loadPosts();
       setCreating(false);
     } catch (err: any) {
-      setError(err?.response?.data?.message || 'Failed to create post');
+      setError(err?.response?.data?.message || err?.message || 'Failed to create post');
     }
   };
 
-  // Edit Post
-  const handleEdit = async (data: Partial<Post>) => {
+  const handleEdit = async (data: Partial<Post>): Promise<void> => {
     if (!editing) return;
+
     try {
-      await api.patch(`/posts/${editing._id}`, data);
+      setError('');
+
+      const payload = data as unknown as Parameters<typeof updatePost>[1];
+      await updatePost(editing._id, payload);
+
       await loadPosts();
       setEditing(null);
     } catch (err: any) {
-      setError(err?.response?.data?.message || 'Failed to update post');
+      setError(err?.response?.data?.message || err?.message || 'Failed to update post');
     }
   };
 
-  // Delete Post
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string): Promise<void> => {
     if (!window.confirm('Are you sure you want to delete this post?')) return;
+
     try {
-      await api.delete(`/posts/${id}`);
+      setError('');
+      await deletePost(id);
       await loadPosts();
     } catch (err: any) {
-      setError(err?.response?.data?.message || 'Failed to delete post');
+      setError(err?.response?.data?.message || err?.message || 'Failed to delete post');
     }
   };
 
@@ -80,7 +99,6 @@ const AdminPostsPage = () => {
           </button>
         )}
 
-        {/* Formulário de Criação */}
         {creating && (
           <div className='admin-posts-page__form-wrapper'>
             <AdminPostForm onSubmit={handleCreate} />
@@ -90,7 +108,6 @@ const AdminPostsPage = () => {
           </div>
         )}
 
-        {/* Formulário de Edição */}
         {editing && (
           <div className='admin-posts-page__form-wrapper'>
             <AdminPostForm initialPost={editing} onSubmit={handleEdit} />
@@ -100,14 +117,13 @@ const AdminPostsPage = () => {
           </div>
         )}
 
-        {/* Lista de Posts */}
         <ul className='admin-posts-page__list'>
           {posts.map((post) => {
-            // Mostra o título no idioma corrente (ou fallback)
             const tr =
               post.translations[i18n.language] ||
               post.translations[i18n.language.split('-')[0]] ||
               post.translations.en;
+
             return (
               <li key={post._id} className='admin-posts-page__item'>
                 <div className='admin-posts-page__meta'>
@@ -119,19 +135,21 @@ const AdminPostsPage = () => {
                     {new Date(post.createdAt).toLocaleDateString()}
                   </span>
                 </div>
+
                 <div className='admin-posts-page__actions'>
                   <button className='admin-posts-page__edit' onClick={() => setEditing(post)}>
                     Edit
                   </button>
                   <button
                     className='admin-posts-page__delete'
-                    onClick={() => handleDelete(post._id)}>
+                    onClick={() => void handleDelete(post._id)}>
                     Delete
                   </button>
                 </div>
               </li>
             );
           })}
+
           {posts.length === 0 && <li>No posts found.</li>}
         </ul>
       </div>

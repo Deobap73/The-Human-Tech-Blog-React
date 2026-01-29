@@ -1,32 +1,31 @@
-// src/shared/utils/axios.ts
+// ./src/shared/utils/axios.ts
+'use strict';
 
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { setAccessToken, getAccessToken, removeAccessToken } from './authTokenStorage';
 
 /**
  * Custom Axios instance with interceptors for Auth.
- * CSRF is handled only via helpers, not here!
+ * CSRF is handled by service helpers that explicitly fetch /auth/csrf.
  */
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
   withCredentials: true,
   xsrfCookieName: 'XSRF-TOKEN',
-  xsrfHeaderName: 'X-CSRF-Token',
+  xsrfHeaderName: 'x-csrf-token',
 });
 
-// Flag to prevent infinite refresh loops
 let isRefreshing = false;
-let failedQueue: any[] = [];
+let failedQueue: Array<{ resolve: (token: string) => void; reject: (err: unknown) => void }> = [];
 
-const processQueue = (error: any, token: string | null = null) => {
+const processQueue = (error: unknown, token: string | null = null): void => {
   failedQueue.forEach((prom) => {
     if (error) prom.reject(error);
-    else prom.resolve(token);
+    else prom.resolve(token as string);
   });
   failedQueue = [];
 };
 
-// Axios Request Interceptor: Adds Authorization only!
 api.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     const token = getAccessToken();
@@ -36,16 +35,14 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (requestError) => Promise.reject(requestError)
+  (requestError) => Promise.reject(requestError),
 );
 
-// Axios Response Interceptor: Handles 401 errors and refreshes access token
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
-    // If 401 and not retried, attempt refresh
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
         return new Promise<string>((resolve, reject) => {
@@ -53,7 +50,7 @@ api.interceptors.response.use(
         })
           .then((newToken) => {
             if (originalRequest.headers)
-              originalRequest.headers['Authorization'] = 'Bearer ' + newToken;
+              originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
             return api(originalRequest);
           })
           .catch((err) => Promise.reject(err));
@@ -66,21 +63,24 @@ api.interceptors.response.use(
         const res = await axios.post(
           `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'}/auth/refresh`,
           {},
-          { withCredentials: true }
+          { withCredentials: true },
         );
-        const { accessToken } = res.data;
-        if (accessToken) {
+
+        const { accessToken } = res.data as { accessToken?: unknown };
+
+        if (typeof accessToken === 'string' && accessToken.trim().length > 0) {
           setAccessToken(accessToken);
           processQueue(null, accessToken);
+
           if (originalRequest.headers)
             originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
           return api(originalRequest);
-        } else {
-          processQueue(new Error('No access token in refresh response'), null);
-          removeAccessToken();
-          window.dispatchEvent(new CustomEvent('auth:logout'));
-          return Promise.reject(error);
         }
+
+        processQueue(new Error('No access token in refresh response'), null);
+        removeAccessToken();
+        window.dispatchEvent(new CustomEvent('auth:logout'));
+        return Promise.reject(error);
       } catch (err) {
         processQueue(err, null);
         removeAccessToken();
@@ -92,7 +92,7 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;

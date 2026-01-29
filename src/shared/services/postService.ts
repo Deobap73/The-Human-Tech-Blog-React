@@ -20,9 +20,23 @@ export interface PostData {
   status?: 'draft' | 'published' | 'archived';
 }
 
-export async function createPost(data: PostData) {
+/**
+ * Requests a CSRF token from the canonical endpoint.
+ * Backend sets XSRF TOKEN and CSRF secret cookies, and returns csrfToken in JSON.
+ */
+const fetchCsrfToken = async (): Promise<string> => {
   const resToken = await api.get('/auth/csrf', { withCredentials: true });
-  const csrfToken = resToken.data.csrfToken;
+
+  const token = (resToken.data as { csrfToken?: unknown })?.csrfToken;
+  if (typeof token !== 'string' || token.trim().length === 0) {
+    throw new Error('Failed to obtain CSRF token from /auth/csrf');
+  }
+
+  return token;
+};
+
+export async function createPost(data: PostData) {
+  const csrfToken = await fetchCsrfToken();
 
   const response = await api.post('/posts', data, {
     headers: { 'x-csrf-token': csrfToken },
@@ -38,8 +52,7 @@ export async function fetchPost(id: string) {
 }
 
 export async function updatePost(id: string, data: Partial<PostData>) {
-  const resToken = await api.get('/auth/csrf', { withCredentials: true });
-  const csrfToken = resToken.data.csrfToken;
+  const csrfToken = await fetchCsrfToken();
 
   const res = await api.put(`/posts/${id}`, data, {
     headers: { 'x-csrf-token': csrfToken },
@@ -47,6 +60,17 @@ export async function updatePost(id: string, data: Partial<PostData>) {
   });
 
   return res.data.post;
+}
+
+export async function deletePost(id: string): Promise<{ message: string }> {
+  const csrfToken = await fetchCsrfToken();
+
+  const res = await api.delete(`/posts/${id}`, {
+    headers: { 'x-csrf-token': csrfToken },
+    withCredentials: true,
+  });
+
+  return res.data as { message: string };
 }
 
 export type UploadPostCoverParams = {
@@ -63,8 +87,7 @@ export async function uploadPostImage(params: UploadPostCoverParams) {
   formData.append('isAiPrompt', String(params.isAiPrompt));
   if (params.categoryId) formData.append('categoryId', params.categoryId);
 
-  const resToken = await api.get('/auth/csrf', { withCredentials: true });
-  const csrfToken = resToken.data.csrfToken;
+  const csrfToken = await fetchCsrfToken();
 
   const res = await api.post('/uploads/post-cover', formData, {
     headers: { 'x-csrf-token': csrfToken },
@@ -95,18 +118,16 @@ export async function uploadPostInstagramImage(params: UploadPostInstagramParams
   if (params.postId) formData.append('postId', params.postId);
   if (params.slug) formData.append('slug', params.slug);
 
-  const resToken = await api.get('/auth/csrf', { withCredentials: true });
-  const csrfToken = resToken.data.csrfToken;
+  const csrfToken = await fetchCsrfToken();
 
   const res = await api.post('/uploads/post-instagram', formData, {
     headers: { 'x-csrf-token': csrfToken },
     withCredentials: true,
   });
 
-  // Retorna APENAS a URL como string
   return res.data as {
     success: boolean;
-    imageUrl: string; // Apenas a URL
+    imageUrl: string;
   };
 }
 
