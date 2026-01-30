@@ -22,7 +22,7 @@ export interface PostData {
 
 /**
  * Requests a CSRF token from the canonical endpoint.
- * Backend sets XSRF TOKEN and CSRF secret cookies, and returns csrfToken in JSON.
+ * Backend sets XSRF token and CSRF secret cookies, and returns csrfToken in JSON.
  */
 const fetchCsrfToken = async (): Promise<string> => {
   const resToken = await api.get('/auth/csrf', { withCredentials: true });
@@ -115,6 +115,7 @@ export type UploadPostInstagramParams = {
 export async function uploadPostInstagramImage(params: UploadPostInstagramParams) {
   const formData = new FormData();
   formData.append('image', params.file);
+
   if (params.postId) formData.append('postId', params.postId);
   if (params.slug) formData.append('slug', params.slug);
 
@@ -128,6 +129,10 @@ export async function uploadPostInstagramImage(params: UploadPostInstagramParams
   return res.data as {
     success: boolean;
     imageUrl: string;
+    ticketSeq?: number;
+    mode?: 'attached' | 'tmp';
+    postId?: string;
+    slug?: string;
   };
 }
 

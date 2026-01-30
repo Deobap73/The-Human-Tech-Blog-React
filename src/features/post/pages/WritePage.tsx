@@ -159,7 +159,7 @@ const WritePage = () => {
   const [availableCategories, setAvailableCategories] = useState<Category[]>([]);
   const [coverUrl, setCoverUrl] = useState<string>('');
 
-  const [instagramImage, setInstagramImage] = useState<string>(''); // APENAS STRING
+  const [instagramImage, setInstagramImage] = useState<string>('');
 
   const [isQuickPost, setIsQuickPost] = useState<boolean>(false);
   const [isAiPrompt, setIsAiPrompt] = useState<boolean>(false);
@@ -237,7 +237,6 @@ const WritePage = () => {
         setIsQuickPost(Boolean(post.isQuickPost));
         setIsAiPrompt(Boolean(post.isAiPrompt));
 
-        // InstagramImage agora é apenas string
         setInstagramImage(typeof post.instagramImage === 'string' ? post.instagramImage : '');
       })
       .catch(() => toast.error('Failed to load post'));
@@ -314,9 +313,6 @@ const WritePage = () => {
       const res = await uploadPostInstagramImage({
         file,
         postId: id,
-        slug: id
-          ? undefined
-          : translations.en.title.trim().toLowerCase().replace(/\s+/g, ' ').slice(0, 60),
       });
 
       if (!res.success) {
@@ -325,7 +321,13 @@ const WritePage = () => {
       }
 
       setInstagramImage(res.imageUrl);
-      toast.success('Instagram image uploaded successfully');
+
+      if (res.mode === 'attached') {
+        toast.success('Instagram image uploaded and saved to the post');
+        return;
+      }
+
+      toast.success('Instagram image uploaded');
     } catch (err) {
       console.error(err);
       toast.error('Failed to upload Instagram image');
@@ -359,7 +361,7 @@ const WritePage = () => {
       tags,
       categories,
       image: coverUrl,
-      instagramImage: instagramImage || undefined, // APENAS STRING
+      instagramImage: instagramImage || undefined,
       isQuickPost,
       isAiPrompt,
       status,
