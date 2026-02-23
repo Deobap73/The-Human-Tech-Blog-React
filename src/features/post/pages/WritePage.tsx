@@ -435,6 +435,23 @@ const WritePage = () => {
             </div>
           )}
 
+          <TagSelector selectedTags={tags} setSelectedTags={setTags} />
+
+          <label className='write-page__label'>
+            Categories:
+            <select
+              multiple
+              value={categories}
+              onChange={handleCategories}
+              className='write-page__select'>
+              {availableCategories.map((cat: any) => (
+                <option key={cat._id} value={cat._id}>
+                  {cat.translations?.en?.name || cat.translation?.name || '[no name]'}
+                </option>
+              ))}
+            </select>
+          </label>
+
           <div className='write-page__upload-group'>
             <label className='write-page__upload-btn' htmlFor='cover-upload'>
               Upload cover
@@ -512,23 +529,6 @@ const WritePage = () => {
               </div>
             )}
           </div>
-
-          <TagSelector selectedTags={tags} setSelectedTags={setTags} />
-
-          <label className='write-page__label'>
-            Categories:
-            <select
-              multiple
-              value={categories}
-              onChange={handleCategories}
-              className='write-page__select'>
-              {availableCategories.map((cat: any) => (
-                <option key={cat._id} value={cat._id}>
-                  {cat.translations?.en?.name || cat.translation?.name || '[no name]'}
-                </option>
-              ))}
-            </select>
-          </label>
 
           <label className='write-page__label'>
             Status:
