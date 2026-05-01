@@ -23,6 +23,7 @@ const TYPE_TAGS: Record<string, Project['type']> = {
   'Frontend UI': 'frontend-ui',
   'UX · Figma': 'ux-figma',
   'Full Projects': 'full',
+  Automation: 'automation',
 };
 
 const AVAILABLE_TAGS = Object.keys(TYPE_TAGS);
@@ -74,7 +75,7 @@ const ProjectsPage: React.FC = () => {
           page,
           DEFAULT_LIMIT,
           debouncedQ,
-          controller.signal
+          controller.signal,
         );
 
         const list = [...data.items].sort((a, b) => {

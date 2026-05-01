@@ -188,6 +188,7 @@ const AdminProjectEditModal: React.FC<Props> = ({ isOpen, onClose, project, onSa
               <option value='frontend-ui'>Frontend UI</option>
               <option value='ux-figma'>UX · Figma</option>
               <option value='full'>Full</option>
+              <option value='automation'>Automation</option>
             </select>
             {errors.type && <span className='adminProjectEdit__error'>{errors.type}</span>}
           </label>

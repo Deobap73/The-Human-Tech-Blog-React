@@ -18,16 +18,22 @@ interface ProjectTypeTagProps {
  */
 const ProjectTypeTag: React.FC<ProjectTypeTagProps> = ({ type, source }) => {
   const typeLabel =
-    type === 'frontend-ui' ? 'Frontend UI' : type === 'ux-figma' ? 'UX · Figma' : 'Full Project';
+    type === 'frontend-ui'
+      ? 'Frontend UI'
+      : type === 'ux-figma'
+        ? 'UX · Figma'
+        : type === 'automation'
+          ? 'Automation'
+          : 'Full Project';
 
   const sourceLabel =
     source === 'figma'
       ? 'Figma'
       : source === 'github'
-      ? 'GitHub'
-      : source === 'mixed'
-      ? 'Mixed'
-      : null;
+        ? 'GitHub'
+        : source === 'mixed'
+          ? 'Mixed'
+          : null;
 
   return (
     <div className='projectTypeTag' aria-label='Project type'>

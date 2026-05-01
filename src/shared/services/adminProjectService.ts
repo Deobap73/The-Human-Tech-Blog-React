@@ -158,13 +158,21 @@ function normalizeSource(
 }
 
 /** Normalize Project.type. */
-function normalizeType(input?: string): 'frontend-ui' | 'ux-figma' | 'full' | undefined {
+function normalizeType(
+  input?: string,
+): 'frontend-ui' | 'ux-figma' | 'full' | 'automation' | undefined {
   const v = normalizeToken(input);
 
-  if (v === 'frontend-ui' || v === 'ux-figma' || v === 'full') return v;
+  if (v === 'frontend-ui' || v === 'ux-figma' || v === 'full' || v === 'automation') {
+    return v;
+  }
+
   if (['frontend', 'ui', 'fe', 'ui-only', 'ui-kit'].includes(v)) return 'frontend-ui';
   if (['ux', 'design', 'figma', 'ux-fig', 'ux_figma'].includes(v)) return 'ux-figma';
   if (['full-project', 'fullstack', 'app', 'full_project', 'full stack'].includes(v)) return 'full';
+  if (['automation', 'automations', 'rpa', 'workflow', 'make', 'zapier'].includes(v)) {
+    return 'automation';
+  }
 
   return undefined;
 }
@@ -416,7 +424,9 @@ export async function createProject(payload: CreateProjectPayloadLoose) {
 
   if (!body?.title) throw new Error('Title is required.');
   if (!body?.source) throw new Error('Source must be one of: figma, github, mixed.');
-  if (!body?.type) throw new Error('Type must be one of: frontend-ui, ux-figma, full.');
+  if (!body?.type) {
+    throw new Error('Type must be one of: frontend-ui, ux-figma, full, automation.');
+  }
 
   const res = await api.post<Project>('/projects', body, {
     headers: { 'X-CSRF-Token': token, 'X-XSRF-TOKEN': token },

@@ -24,7 +24,9 @@ const LIMIT = 10;
 
 const AdminProjectsPage: React.FC = () => {
   const [items, setItems] = useState<Project[]>([]);
-  const [type, setType] = useState<'frontend-ui' | 'ux-figma' | 'full'>('frontend-ui');
+  const [type, setType] = useState<'frontend-ui' | 'ux-figma' | 'full' | 'automation'>(
+    'frontend-ui',
+  );
   const [search, setSearch] = useState<string>('');
   const [debouncedSearch, setDebouncedSearch] = useState<string>('');
   const [page, setPage] = useState<number>(1);
@@ -146,7 +148,7 @@ const AdminProjectsPage: React.FC = () => {
       // Reload current listing
       await load();
       // Ensure the correct tab is selected (in case type differs)
-      setType(created.type as 'frontend-ui' | 'ux-figma' | 'full');
+      setType(created.type as 'frontend-ui' | 'ux-figma' | 'full' | 'automation');
       setPage(1);
     } catch (e) {
       toastError('Failed to create project');

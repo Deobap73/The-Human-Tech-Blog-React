@@ -4,7 +4,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import '../../styles/AdminProjectCreateModal.scss';
 
-type ProjectType = 'frontend-ui' | 'ux-figma' | 'full';
+type ProjectType = 'frontend-ui' | 'ux-figma' | 'full' | 'automation';
 
 export interface CreateProjectPayload {
   title: string;
@@ -192,6 +192,7 @@ const AdminProjectCreateModal: React.FC<Props> = ({ isOpen, onClose, onCreate })
               <option value='frontend-ui'>Frontend UI</option>
               <option value='ux-figma'>UX · Figma</option>
               <option value='full'>Full</option>
+              <option value='automation'>Automation</option>
             </select>
             {errors.type && <span className='adminProjectCreate__error'>{errors.type}</span>}
           </label>

@@ -134,7 +134,9 @@ const ProjectDetailPage: React.FC = () => {
                 ? t('projects.type.frontendUi', 'Frontend UI')
                 : project.type === 'ux-figma'
                   ? t('projects.type.uxFigma', 'UX · Figma')
-                  : t('projects.type.full', 'Full Projects')}
+                  : project.type === 'automation'
+                    ? t('projects.type.automation', 'Automation')
+                    : t('projects.type.full', 'Full Projects')}
             </span>
           )}
 

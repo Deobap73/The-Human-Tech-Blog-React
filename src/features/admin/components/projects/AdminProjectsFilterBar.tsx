@@ -30,10 +30,16 @@ const AdminProjectsFilterBar: React.FC<Props> = ({
   onBulkSyncFigma,
   selectionCount,
 }) => {
-  const TABS: Readonly<ProjectType[]> = ['frontend-ui', 'ux-figma', 'full'] as const;
+  const TABS: Readonly<ProjectType[]> = ['frontend-ui', 'ux-figma', 'full', 'automation'] as const;
 
   const getTabLabel = (t: ProjectType): string =>
-    t === 'frontend-ui' ? 'Frontend UI' : t === 'ux-figma' ? 'UX · Figma' : 'Full';
+    t === 'frontend-ui'
+      ? 'Frontend UI'
+      : t === 'ux-figma'
+        ? 'UX · Figma'
+        : t === 'automation'
+          ? 'Automation'
+          : 'Full';
 
   const disabled = selectionCount === 0;
 
