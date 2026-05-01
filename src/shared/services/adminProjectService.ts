@@ -1,11 +1,12 @@
 // /src/shared/services/adminProjectService.ts
+
 'use strict';
 
 /**
  * Admin Project Service
  * - Normalizes create/update payloads to match backend schema strictly.
  * - Handles CSRF preflight and credentials.
- * - Provides sync endpoints with 404 fallback (admin route → public route).
+ * - Provides sync endpoints with 404 fallback.
  * - All imports are relative, TypeScript strict friendly, and comments in English.
  */
 
@@ -52,7 +53,7 @@ export type CreateProjectPayloadLoose = {
   shortDescription?: string;
   isPublic?: boolean | string;
 
-  // Meta is used mainly for GitHub/Figma sync helpers
+  // Meta is used mainly for GitHub and Figma sync helpers.
   meta?: {
     github?: { repo?: string };
     figma?: { fileKey?: string };
@@ -61,8 +62,7 @@ export type CreateProjectPayloadLoose = {
 
 /**
  * Loose payload for update.
- * - Same shape as create, plus optional slug.
- * - All fields are optional on the caller side; the normalizer decides what to send.
+ * Same shape as create, plus optional slug.
  */
 export type UpdateProjectPayloadLoose = CreateProjectPayloadLoose & {
   slug?: string;
@@ -77,39 +77,46 @@ export interface ListAdminProjectsParams {
 }
 
 /* ============================
- * Normalizers & helpers
+ * Normalizers and helpers
  * ============================ */
 
 function normalizeToken(v?: string): string {
   return (v ?? '').toString().trim().toLowerCase();
 }
 
-/** Extract {owner}/{repo} from a GitHub URL */
+/** Extract owner/repo from a GitHub URL. */
 function parseGithubRepoSlug(url?: string): string | null {
   if (!url) return null;
+
   try {
     const u = new URL(url);
+
     if (!/github\.com$/i.test(u.hostname)) return null;
+
     const [owner, repo] = u.pathname.replace(/^\/+/, '').split('/');
+
     if (!owner || !repo) return null;
+
     return `${owner}/${repo.replace(/\.git$/i, '')}`;
   } catch {
     return null;
   }
 }
 
-/** GitHub OpenGraph */
+/** GitHub OpenGraph image. */
 function githubOgImageFromSlug(slug: string): string {
   return `https://opengraph.githubassets.com/1/${slug}`;
 }
 
-/** Cloudinary fetch helpers */
+/** Cloudinary fetch helpers. */
 const CLOUD = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME?.trim();
+
 const DEFAULT_TRANSFORM =
   import.meta.env.VITE_CLOUDINARY_FETCH_TRANSFORM?.trim() || 'f_auto,q_auto,c_fill,w_1200,h_630';
 
 function isCloudinaryUrl(url?: string): boolean {
   if (!url) return false;
+
   try {
     const u = new URL(url);
     return /res\.cloudinary\.com$/i.test(u.hostname);
@@ -124,14 +131,14 @@ function toCloudinaryFetch(rawUrl?: string): string | undefined {
   if (isCloudinaryUrl(rawUrl)) return rawUrl;
 
   return `https://res.cloudinary.com/${CLOUD}/image/fetch/${DEFAULT_TRANSFORM}/${encodeURIComponent(
-    rawUrl
+    rawUrl,
   )}`;
 }
 
-/** Normalize Project.source */
+/** Normalize Project.source. */
 function normalizeSource(
   input?: string,
-  links?: { github?: string; figma?: string }
+  links?: { github?: string; figma?: string },
 ): 'figma' | 'github' | 'mixed' | undefined {
   const v = normalizeToken(input);
 
@@ -142,13 +149,15 @@ function normalizeSource(
 
   const hasGitHub = !!links?.github;
   const hasFigma = !!links?.figma;
+
   if (hasGitHub && hasFigma) return 'mixed';
   if (hasGitHub) return 'github';
   if (hasFigma) return 'figma';
+
   return undefined;
 }
 
-/** Normalize Project.type */
+/** Normalize Project.type. */
 function normalizeType(input?: string): 'frontend-ui' | 'ux-figma' | 'full' | undefined {
   const v = normalizeToken(input);
 
@@ -156,30 +165,39 @@ function normalizeType(input?: string): 'frontend-ui' | 'ux-figma' | 'full' | un
   if (['frontend', 'ui', 'fe', 'ui-only', 'ui-kit'].includes(v)) return 'frontend-ui';
   if (['ux', 'design', 'figma', 'ux-fig', 'ux_figma'].includes(v)) return 'ux-figma';
   if (['full-project', 'fullstack', 'app', 'full_project', 'full stack'].includes(v)) return 'full';
+
   return undefined;
 }
 
-/** Normalize tags */
+/** Normalize tags. */
 function normalizeTags(input?: string[] | string): string[] {
-  if (Array.isArray(input)) return input.map((t) => t.trim()).filter(Boolean);
-  if (typeof input === 'string')
+  if (Array.isArray(input)) {
+    return input.map((t) => t.trim()).filter(Boolean);
+  }
+
+  if (typeof input === 'string') {
     return input
       .split(',')
       .map((t) => t.trim())
       .filter(Boolean);
+  }
+
   return [];
 }
 
-/** Build a short excerpt */
+/** Build a short excerpt. */
 function toExcerpt(source?: string, fallbackTitle?: string): string | undefined {
   const text = (source ?? '').replace(/\s+/g, ' ').trim() || (fallbackTitle ?? '').trim();
+
   if (!text) return undefined;
+
   const MAX = 180;
+
   return text.length > MAX ? `${text.slice(0, MAX).trim()}…` : text;
 }
 
 /* ============================
- * Normalization core (CREATE)
+ * Normalization core, CREATE
  * ============================ */
 
 function normalizeCreatePayload(input: CreateProjectPayloadLoose) {
@@ -191,11 +209,17 @@ function normalizeCreatePayload(input: CreateProjectPayloadLoose) {
     blog: input.links?.blog ?? input.blogUrl ?? undefined,
   };
 
+  const description =
+    input.description?.trim() ||
+    input.summary?.trim() ||
+    input.shortDescription?.trim() ||
+    undefined;
+
   const excerpt =
     input.excerpt?.trim() ||
     input.translations?.[0]?.excerpt?.trim() ||
     toExcerpt(input.summary, input.title) ||
-    toExcerpt(input.description, input.title) ||
+    toExcerpt(description, input.title) ||
     toExcerpt(input.shortDescription, input.title) ||
     toExcerpt(undefined, input.title);
 
@@ -203,24 +227,26 @@ function normalizeCreatePayload(input: CreateProjectPayloadLoose) {
     github: links.github,
     figma: links.figma,
   });
+
   const normalizedType = normalizeType(input.type);
 
   const isPublic =
     typeof input.isPublic === 'string'
       ? input.isPublic.trim().toLowerCase() !== 'false'
       : typeof input.isPublic === 'boolean'
-      ? input.isPublic
-      : true;
+        ? input.isPublic
+        : true;
 
   let coverCandidate = input.coverImage ?? input.coverUrl;
 
   if (!coverCandidate && (normalizedSource === 'github' || links.github)) {
     const slug = parseGithubRepoSlug(links.github);
+
     if (slug) {
       coverCandidate = githubOgImageFromSlug(slug);
-      (input as any).meta = (input as any).meta ?? {};
-      (input as any).meta.github = (input as any).meta.github ?? {};
-      (input as any).meta.github.repo = (input as any).meta.github.repo ?? slug;
+      input.meta = input.meta ?? {};
+      input.meta.github = input.meta.github ?? {};
+      input.meta.github.repo = input.meta.github.repo ?? slug;
     }
   }
 
@@ -229,6 +255,7 @@ function normalizeCreatePayload(input: CreateProjectPayloadLoose) {
   const normalized = {
     title: input.title?.trim(),
     excerpt,
+    description,
     source: normalizedSource,
     type: normalizedType,
     tags: normalizeTags(input.tags),
@@ -236,20 +263,19 @@ function normalizeCreatePayload(input: CreateProjectPayloadLoose) {
     links,
     translations: Array.isArray(input.translations) ? input.translations : [],
     isPublic,
-    ...((input as any).meta ? { meta: (input as any).meta } : {}),
+    ...(input.meta ? { meta: input.meta } : {}),
   };
 
   return normalized;
 }
 
 /* ============================
- * Normalization core (UPDATE)
+ * Normalization core, UPDATE
  * ============================ */
 
 function normalizeUpdatePayload(input: UpdateProjectPayloadLoose): Record<string, unknown> {
   const body: Record<string, unknown> = {};
 
-  // Basic fields
   if (typeof input.title === 'string') {
     body.title = input.title.trim();
   }
@@ -258,13 +284,12 @@ function normalizeUpdatePayload(input: UpdateProjectPayloadLoose): Record<string
     body.slug = input.slug.trim();
   }
 
-  // Tags
   const tags = normalizeTags(input.tags);
+
   if (tags.length > 0) {
     body.tags = tags;
   }
 
-  // Links (same merging logic as create)
   const links = {
     figma: input.links?.figma ?? input.figmaUrl ?? undefined,
     figmaEmbedUrl: input.links?.figmaEmbedUrl ?? undefined,
@@ -274,47 +299,53 @@ function normalizeUpdatePayload(input: UpdateProjectPayloadLoose): Record<string
   };
 
   const hasAnyLink = Object.values(links).some(Boolean);
+
   if (hasAnyLink) {
     body.links = links;
   }
 
-  // Excerpt and description: only touch if caller sends something
-  if (typeof input.excerpt === 'string') {
+  if (typeof input.description === 'string') {
+    const description = input.description.trim();
+
+    body.description = description;
+
+    if (typeof input.excerpt !== 'string' || input.excerpt.trim().length === 0) {
+      body.excerpt = toExcerpt(description, input.title);
+    }
+  }
+
+  if (typeof input.excerpt === 'string' && input.excerpt.trim().length > 0) {
     body.excerpt = input.excerpt.trim();
   }
 
-  if (typeof input.description === 'string') {
-    body.description = input.description;
-  }
-
-  // Source + type
   const normalizedSource = normalizeSource(input.source, {
     github: links.github,
     figma: links.figma,
   });
+
   if (normalizedSource) {
     body.source = normalizedSource;
   }
 
   const normalizedType = normalizeType(input.type);
+
   if (normalizedType) {
     body.type = normalizedType;
   }
 
-  // isPublic: only touch if explicitly present
   if (typeof input.isPublic !== 'undefined') {
     const isPublic =
       typeof input.isPublic === 'string'
         ? input.isPublic.trim().toLowerCase() !== 'false'
         : typeof input.isPublic === 'boolean'
-        ? input.isPublic
-        : undefined;
+          ? input.isPublic
+          : undefined;
+
     if (typeof isPublic === 'boolean') {
       body.isPublic = isPublic;
     }
   }
 
-  // Meta (GitHub/Figma)
   const meta: {
     github?: { repo?: string };
     figma?: { fileKey?: string };
@@ -328,13 +359,14 @@ function normalizeUpdatePayload(input: UpdateProjectPayloadLoose): Record<string
     meta.figma = { fileKey: input.meta.figma.fileKey };
   }
 
-  // Cover image: same strategy as create, but only if there is a candidate
   let coverCandidate = input.coverImage ?? input.coverUrl;
 
   if (!coverCandidate && (normalizedSource === 'github' || links.github)) {
     const slug = parseGithubRepoSlug(links.github);
+
     if (slug) {
       coverCandidate = githubOgImageFromSlug(slug);
+
       if (!meta.github) {
         meta.github = { repo: slug };
       } else if (!meta.github.repo) {
@@ -344,6 +376,7 @@ function normalizeUpdatePayload(input: UpdateProjectPayloadLoose): Record<string
   }
 
   const coverImage = toCloudinaryFetch(coverCandidate) || coverCandidate;
+
   if (coverImage) {
     body.coverImage = coverImage;
   }
@@ -360,17 +393,20 @@ function normalizeUpdatePayload(input: UpdateProjectPayloadLoose): Record<string
  * ============================ */
 
 export async function listAdminProjects(
-  params: ListAdminProjectsParams
+  params: ListAdminProjectsParams,
 ): Promise<PaginatedResponse<Project>> {
   const qs = new URLSearchParams();
+
   if (params.type) qs.set('type', params.type);
   if (params.search) qs.set('search', params.search.trim());
+
   qs.set('page', String(params.page ?? 1));
   qs.set('limit', String(params.limit ?? 10));
 
   const res = await api.get<PaginatedResponse<Project>>(`/projects?${qs.toString()}`, {
     signal: params.signal,
   });
+
   return res.data;
 }
 
@@ -379,20 +415,21 @@ export async function createProject(payload: CreateProjectPayloadLoose) {
   const body = normalizeCreatePayload(payload);
 
   if (!body?.title) throw new Error('Title is required.');
-  if (!body?.source) throw new Error('Source must be one of: figma | github | mixed.');
-  if (!body?.type) throw new Error('Type must be one of: frontend-ui | ux-figma | full.');
+  if (!body?.source) throw new Error('Source must be one of: figma, github, mixed.');
+  if (!body?.type) throw new Error('Type must be one of: frontend-ui, ux-figma, full.');
 
   const res = await api.post<Project>('/projects', body, {
     headers: { 'X-CSRF-Token': token, 'X-XSRF-TOKEN': token },
     withCredentials: true,
   });
+
   return res.data;
 }
 
 /**
- * Update project by id
- * - Uses PUT /projects/:id (protected by JWT + admin).
- * - Sends only the fields that make sense to update.
+ * Update project by id.
+ * Uses PUT /projects/:id protected by JWT and admin.
+ * Sends only the fields that make sense to update.
  */
 export async function updateProject(id: string, payload: UpdateProjectPayloadLoose) {
   const token = await ensureCsrf();
@@ -402,6 +439,7 @@ export async function updateProject(id: string, payload: UpdateProjectPayloadLoo
     headers: { 'X-CSRF-Token': token, 'X-XSRF-TOKEN': token },
     withCredentials: true,
   });
+
   return res.data;
 }
 
@@ -413,22 +451,25 @@ async function postWith404Fallback<T>(
   primaryPath: string,
   fallbackPath: string,
   body: Record<string, unknown> | undefined,
-  token: string
+  token: string,
 ): Promise<T> {
   try {
     const res = await api.post<T>(primaryPath, body ?? {}, {
       headers: { 'X-CSRF-Token': token, 'X-XSRF-TOKEN': token },
       withCredentials: true,
     });
+
     return res.data;
   } catch (err: unknown) {
-    const status = (err as any)?.response?.status ?? 0;
+    const status = (err as { response?: { status?: number } })?.response?.status ?? 0;
+
     if (status !== 404) throw err;
 
     const res = await api.post<T>(fallbackPath, body ?? {}, {
       headers: { 'X-CSRF-Token': token, 'X-XSRF-TOKEN': token },
       withCredentials: true,
     });
+
     return res.data;
   }
 }
@@ -437,15 +478,17 @@ export async function syncGitHub(id: string, body?: { repo?: string }) {
   const token = await ensureCsrf();
   const primary = `/admin/projects/sync/github/${encodeURIComponent(id)}`;
   const fallback = `/projects/sync/github/${encodeURIComponent(id)}`;
+
   return postWith404Fallback<{ ok: boolean; message?: string }>(primary, fallback, body, token);
 }
 
 export async function syncFigma(
   id: string,
-  body?: { figmaPublicUrl?: string; figmaFileKey?: string }
+  body?: { figmaPublicUrl?: string; figmaFileKey?: string },
 ) {
   const token = await ensureCsrf();
   const primary = `/admin/projects/sync/figma/${encodeURIComponent(id)}`;
   const fallback = `/projects/sync/figma/${encodeURIComponent(id)}`;
+
   return postWith404Fallback<{ ok: boolean; message?: string }>(primary, fallback, body, token);
 }

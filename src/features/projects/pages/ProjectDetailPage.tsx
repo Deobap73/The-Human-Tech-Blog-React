@@ -33,11 +33,12 @@ const ProjectDetailPage: React.FC = () => {
       try {
         setLoading(true);
         setError('');
+
         const data = await fetchProjectBySlug(slug, controller.signal);
         setProject(data);
       } catch (err: unknown) {
         if ((err as { name?: string })?.name === 'AbortError') return;
-        // eslint-disable-next-line no-console
+
         console.error('[ProjectDetailPage] Error fetching project', err);
         setError('Failed to load project.');
       } finally {
@@ -46,6 +47,7 @@ const ProjectDetailPage: React.FC = () => {
     };
 
     void load();
+
     return () => controller.abort();
   }, [slug]);
 
@@ -80,11 +82,13 @@ const ProjectDetailPage: React.FC = () => {
     );
   }
 
+  const detailSummary = project.excerpt || project.description || '';
+
   return (
     <main className='projDetail'>
       <ProjectMetaHead
         title={project.title}
-        excerpt={project.excerpt || undefined}
+        excerpt={detailSummary || undefined}
         coverImage={project.coverImage || undefined}
         canonical={canonical}
         lang={currentLang}
@@ -142,7 +146,7 @@ const ProjectDetailPage: React.FC = () => {
           )}
         </div>
 
-        {project.excerpt && <p className='projDetail__excerpt'>{project.description}</p>}
+        {detailSummary && <p className='projDetail__excerpt'>{detailSummary}</p>}
       </header>
 
       <div
@@ -212,6 +216,7 @@ const ProjectDetailPage: React.FC = () => {
       {(project.meta?.figma?.fileKey || project.links?.figma) && (
         <section className='projDetail__section'>
           <h2 className='projDetail__sectionTitle'>{t('projects.external.figma', 'Figma')}</h2>
+
           <div className='projDetail__figmaWrap'>
             <iframe
               className='projDetail__figma'
