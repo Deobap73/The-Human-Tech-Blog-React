@@ -129,8 +129,8 @@ const ProjectDetailPage: React.FC = () => {
               {project.type === 'frontend-ui'
                 ? t('projects.type.frontendUi', 'Frontend UI')
                 : project.type === 'ux-figma'
-                ? t('projects.type.uxFigma', 'UX · Figma')
-                : t('projects.type.full', 'Full Projects')}
+                  ? t('projects.type.uxFigma', 'UX · Figma')
+                  : t('projects.type.full', 'Full Projects')}
             </span>
           )}
 
@@ -142,7 +142,7 @@ const ProjectDetailPage: React.FC = () => {
           )}
         </div>
 
-        {project.excerpt && <p className='projDetail__excerpt'>{project.excerpt}</p>}
+        {project.excerpt && <p className='projDetail__excerpt'>{project.description}</p>}
       </header>
 
       <div
